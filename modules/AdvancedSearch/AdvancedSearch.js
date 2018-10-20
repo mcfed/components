@@ -14,9 +14,9 @@ import {
   Select,
 } from 'antd'
 import classNames from 'classnames'
-import {FormItem,AdvancedForm} from 'app-components/BaseForm'
-import Permission from 'app-components/Permission'
-import FetchAPI from 'utils/FetchAPI'
+import {FormItem,AdvancedForm} from '../BaseForm'
+import Permission from '../Permission'
+//import FetchAPI from 'utils/FetchAPI'
 
 import styles from './AdvancedSearch.less'
 
@@ -109,6 +109,7 @@ export default class AdvancedSearchForm extends React.Component {
     var that=this
     let {module,showConfig}=this.props
     if(showConfig){
+      /*
       new FetchAPI().fetchGet('/search/getSearchFieldSetJson',{body:{module}}).then((json)=>{
       var json = json.map((it)=>{ return{key:it.code,title:it.name,type:it.type,checked:it.checked,id:it.id}})
           that.setState({
@@ -116,6 +117,7 @@ export default class AdvancedSearchForm extends React.Component {
             displayItem:json.filter((it)=>it.checked==1).map((it)=>it.key)
           })
       })
+      */
     }
   }
 
@@ -175,14 +177,14 @@ export default class AdvancedSearchForm extends React.Component {
     return renderChildren.map((it, i) => {
         if(it.props.allowClear==false){
           return (
-            <FormItem colon={false} {...formItemLayout} containerTo={false} className={classNames}>
+            <FormItem key={i} colon={false} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it)}
             </FormItem>
           )
         }else{
 
           return (
-            <FormItem colon={false} {...formItemLayout} containerTo={false} className={classNames}>
+            <FormItem key={i} colon={false} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it,{allowClear:true}) }
             </FormItem>
           )
@@ -266,6 +268,7 @@ export default class AdvancedSearchForm extends React.Component {
   handleSure(value){
     var {module} = this.props
     var data=this.state.items.filter(it=>value.indexOf(it.key)>=0).map(it=>{ return{searchId:it.id}})
+    /*
     new FetchAPI().fetchPost('/search/saveSelJson?module='+module,{
       body:{items:data}
     }).then((json)=>{
@@ -274,6 +277,7 @@ export default class AdvancedSearchForm extends React.Component {
           show:false
         })
     })
+    */
 
   }
   renderConfig(){

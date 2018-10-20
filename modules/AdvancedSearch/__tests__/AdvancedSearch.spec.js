@@ -6,7 +6,7 @@ import {
   Select,
 } from 'antd'
 import AdvancedSearchForm from '../AdvancedSearch'
-import CalendarPicker from 'components/CalendarPicker'
+//import CalendarPicker from 'components/CalendarPicker'
 
 const setup = (props={}) => {
   // 模拟 props
@@ -39,12 +39,11 @@ describe("AdvancedSearchForm shallow render", () => {
         label:"name",
         value:0
       }]}>
-        <CalendarPicker label="通话时间" name="callTime" />
         <Input name="callState" label="呼叫类型"  />
         <Select name="inputAcc" label="hr" />
       </AdvancedSearchForm>
     );
-    expect(wrapper.find('CalendarPicker[name="callTime"]').exists()).toBe(true)
+//    expect(wrapper.find('CalendarPicker[name="callTime"]').exists()).toBe(true)
     expect(wrapper.find('Input[name="callState"]').exists()).toBe(true)
     expect(wrapper.find('Select[name="inputAcc"]').exists()).toBe(true)
     done()
@@ -72,7 +71,6 @@ describe("AdvancedSearchForm shallow render", () => {
         label:"name",
         value:0
       }]}>
-        <CalendarPicker label="通话时间" name="callTime" />
         <Input name="callState" label="呼叫类型"  />
         <Input name="callState1" label="呼叫类型"  />
         <Input name="callState2" label="呼叫类型"  />
@@ -102,7 +100,6 @@ describe("AdvancedSearchForm mount render and behavior", () => {
         label:"name",
         value:0
       }]}>
-        <CalendarPicker label="通话时间" name="callTime" />
         <Input name="callState" label="呼叫类型"  />
         <Input name="callState1" label="呼叫类型"  />
         <Input name="callState2" label="呼叫类型"  />
@@ -157,5 +154,5 @@ describe("AdvancedSearchForm mount render and behavior", () => {
     done()
   })
 
-  xit('expand AdvancedSearchForm by children than 3')
+  xit('expand AdvancedSearchForm by children than 3',()=>{})
 })

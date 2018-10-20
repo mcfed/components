@@ -1,77 +1,7 @@
 import React,{Component} from "react"
 import ReactDOM from 'react-dom'
 import {Table,Icon,Checkbox,Button,Row,Col } from 'antd'
-import BaseForm,{FormItem} from 'components/BaseForm'
-import {FormPage} from 'components/Page'
-import API from '../../app_modules/Member/api'
-
-class TableMenu extends FormPage{
-  state = { visible: true }
-  //请求远程数据接口
-  componentWillMount() {
-    let {actions} = this.props;
-
-  //  actions.itemAction("1")
-  }
-  //处理表格提交后动作
-  handleOk(){
-    this.onSubmit()
-    let { onClosePopup } = this.props
-    onClosePopup()
-  }
-  handleSubmit(values){
-    var {onSelectChange}=this.props
-     return new API().fetchTableColumns(values).then(json => {
-       onSelectChange(values.isShowArr)
-       // console.log(json,values)
-     }).catch(ex => {
-       return "error"
-     })
-  }
-  render() {
-    const {
-      form,
-      initialValues,
-      handleSubmit,
-      children,
-      defaultValue,
-      columns,
-      onClosePopup
-    } = this.props
-    const saveFormRef=this.saveFormRef
-    const formFullItemLayout = {
-      labelCol: {
-        span: 6
-      },
-      wrapperCol: {
-        span: 18
-      }
-    }
-    // onChange={this.onSelectChange.bind(this)}
-
-    return (
-      <BaseForm onSubmit={handleSubmit} ref={saveFormRef} layout="inline">
-        <FormItem>
-          <Checkbox.Group name="isShowArr" style={{ width: '100%' }} defaultValue={defaultValue} >
-            <Row>
-              {
-               columns.filter(it=>{
-                 return it.title!='操作'
-               }).map((it,idx)=>{
-                 return (<Col span={8} key={idx}><Checkbox value={it.key} disabled ={it.isRead==1?true:false} >{it.title}</Checkbox></Col>)
-               })
-              }
-            </Row>
-          </Checkbox.Group>
-        </FormItem>
-        <div style={{textAlign:'right'}}>
-         <Button size="small" onClick={onClosePopup}>取消</Button>
-         <Button size="small" type="primary" onClick={this.handleOk.bind(this)} style={{marginLeft:'10px'}}>确定</Button>
-        </div>
-      </BaseForm>
-    )
-  }
-}
+import BaseForm,{FormItem} from '../BaseForm'
 
 class DataTable extends Component{
   state={

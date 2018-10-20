@@ -1,5 +1,16 @@
 {
   "presets": [
     "react-app"
-  ]
+  ],
+  "plugins": [
+    "transform-class-properties",
+     ["@babel/plugin-proposal-decorators", { "legacy": true }]
+  ],
+  "env": {
+    "test": {
+      "plugins":[
+        "transform-class-properties",
+      ]
+    }
+  }
 }
