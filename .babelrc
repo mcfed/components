@@ -1,15 +1,17 @@
 {
   "presets": [
-    "react-app"
+    "react-app",
   ],
   "plugins": [
     "transform-class-properties",
-     ["@babel/plugin-proposal-decorators", { "legacy": true }]
+     ["@babel/plugin-proposal-decorators", { "legacy": true }],
+     ["import", { "libraryName": "antd","libraryDirectory": "es","style": "true" }]
   ],
   "env": {
     "test": {
       "plugins":[
         "transform-class-properties",
+         ["import", { "libraryName": "antd","libraryDirectory": "lib","style": "true" }]
       ]
     }
   }

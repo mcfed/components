@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import {menu,Button,Icon,Tooltip,Popconfirm,Menu,Dropdown,Modal} from 'antd'
-import {hasPermission} from 'app/utils/ConfigUtils'
+import {Button,Icon,Tooltip,Menu,Dropdown,Modal} from 'antd'
+// import {hasPermission} from 'app/utils/ConfigUtils'
 
 /*
 *children 1个 多个数据格式处理
@@ -12,7 +12,7 @@ export class Comfirm extends Component{
   onConfirmClick(){
     const {onConfirm,title,content}=this.props
     return Modal.confirm({
-      title: "确认框",
+      title: title || "确认框",
       content: content,
       okText: '确认',
       onOk:onConfirm,
@@ -33,14 +33,14 @@ export default class ButtonGroups extends Component {
 
 
   renderButtonOnly(){
-    let {children,handleClick} = this.props
+    let {children} = this.props
     let childrenArray = React.Children.toArray(children)
-    let {appReducer} = this.context
+    // let {appReducer} = this.context
     // console.log(this.context.appReducer)
     return childrenArray
-    .filter((it)=>{
-      return it.props.permission==undefined?true:hasPermission(it.props.permission)
-    })
+    // .filter((it)=>{
+    //   return it.props.permission==undefined?true:hasPermission(it.props.permission)
+    // })
     .map((it,idx)=>{
       return this.renderReactElement(it,idx)
     })
@@ -48,31 +48,31 @@ export default class ButtonGroups extends Component {
 
   renderReactElement(it,idx){
     let {handleClick} = this.props
-    let {tooltext,confirm,placement,children,actionkey,block} = it.props
+    let {tip,confirm,placement,children,actionkey} = it.props
 
     if(confirm){
       return React.createElement(
         Comfirm,
         Object.assign({},{title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
-        React.createElement(Tooltip,Object.assign({},{key:idx,title:tooltext}),React.cloneElement(it,Object.assign({},it.props),children))
+        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props),children))
       )
     }else{
-      return React.createElement(Tooltip,Object.assign({},{key:idx,title:tooltext}),React.cloneElement(it,Object.assign({},it.props,{onClick:()=>{handleClick(actionkey)}}),children))
+      return React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props,{onClick:()=>{handleClick(actionkey)}}),children))
     }
   }
     // return
 
   renderMenuReactElement(it,idx){
-    let {tooltext,placement,children,actionkey} = it.props
+    let {tip,children} = it.props
     return React.createElement(
       Tooltip,
-      Object.assign({},{key:idx,title:tooltext}),
+      Object.assign({},{key:idx,title:tip}),
       React.cloneElement(it,Object.assign({},it.props),children)
     )
   }
 
   renderMixButtonMenu(){
-    let {children,showSize,handleClick} = this.props
+    let {children,showSize} = this.props
     let childrenArray = React.Children.toArray(children)
 
     let endArray = childrenArray.splice(showSize)
@@ -81,9 +81,10 @@ export default class ButtonGroups extends Component {
       <div>
         {
           childrenArray
-          .filter((it)=>{
-            return it.props.permission==undefined?true:hasPermission(it.props.permission)
-          })
+          // .filter((it)=>{
+          //   console.log(it.props.permission)
+          //   return it.props.permission==true
+          // })
           .map((it,idx)=>{
             return this.renderReactElement(it,idx)
           })
@@ -118,7 +119,6 @@ export default class ButtonGroups extends Component {
   }
 
   render(){
-    let {children} = this.props
     return (
       <div className="button-groups">
         {this.renderChildren()}
@@ -131,12 +131,12 @@ export default class ButtonGroups extends Component {
 * showSize:超过收起的数目
 * handleClick : 点击事件（需子元素以actionKey区分）
 * 子元素如需confirm确认 子元素自身添加confirm 属性 value为提醒文字
-* tooltext 为元素上移显示文字
+* tip 为元素上移显示文字
 */
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
-  children:PropTypes.element,
+  children:PropTypes.array,
 }
 ButtonGroups.defaultProps = {
   showSize:5,

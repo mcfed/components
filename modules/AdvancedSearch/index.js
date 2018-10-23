@@ -1,4 +1,4 @@
 
-import AdvancedSearch  from './AdvancedSearch'
+import AdvancedSearchForm  from './AdvancedSearch'
 
-export default AdvancedSearch
+export default AdvancedSearchForm

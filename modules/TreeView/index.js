@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Tree,Input,Button,TreeSelect } from 'antd'
-import style from './style.less'
 const Search = Input.Search;
 const { TreeNode,DirectoryTree } = Tree
 
@@ -32,7 +31,6 @@ export default class TreeView extends Component {
 		})
 	}
 	onCheck = (checkedKeys, e) => {
-		console.log('onCheckonCheckonCheckonCheck',checkedKeys)
 		this.setState({
 			checkedKeys: checkedKeys.checked
 		}, () => {
@@ -89,7 +87,6 @@ export class TreeSelectPicker extends Component {
 		}else{
 			return (<TreeSelect	{...otherProps} value={this.state.value}  treeData={treeData}	onSelect={this.onChange.bind(this)} />)
 		}
-		// return React.createElement(TreeSelect,Object.assign({},otherProps))
 	}
 }
 

@@ -1,15 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-  Menu,
   Row,
   Col,
   Input,
   Modal,
   Button,
   Transfer,
-  Dropdown,
-  Icon,
   message,
   Select,
 } from 'antd'
@@ -18,7 +15,7 @@ import {FormItem,AdvancedForm} from '../BaseForm'
 import Permission from '../Permission'
 //import FetchAPI from 'utils/FetchAPI'
 
-import styles from './AdvancedSearch.less'
+//import styles from './AdvancedSearch.less'
 
 const Option = Select.Option
 
@@ -34,7 +31,7 @@ class AdvancedSearchConfig extends React.Component{
   }
 
   componentWillReceiveProps(nextProps){
-    let {targetKeys,selectedKeys} = nextProps
+    let {selectedKeys} = nextProps
       this.setState({
         targetKeys:selectedKeys,
       });
@@ -106,10 +103,9 @@ export default class AdvancedSearchForm extends React.Component {
     }
   }
   componentWillMount(){
-    var that=this
-    let {module,showConfig}=this.props
+    // let {showConfig}=this.props
+    /*
     if(showConfig){
-      /*
       new FetchAPI().fetchGet('/search/getSearchFieldSetJson',{body:{module}}).then((json)=>{
       var json = json.map((it)=>{ return{key:it.code,title:it.name,type:it.type,checked:it.checked,id:it.id}})
           that.setState({
@@ -117,14 +113,13 @@ export default class AdvancedSearchForm extends React.Component {
             displayItem:json.filter((it)=>it.checked==1).map((it)=>it.key)
           })
       })
-      */
     }
+    */
   }
 
   handleSearch = (e,values) => {
     e.preventDefault()
     let {filterSubmitHandler} = this.props
-    console.log(values)
     if(values){
       filterSubmitHandler.call(this,values);
     }else{
@@ -149,10 +144,9 @@ export default class AdvancedSearchForm extends React.Component {
 
   // To generate mock Form.Item
   getFields() {
-    const {children, form,laylout,classNames} = this.props
+    const {children,layout,classNames} = this.props
     let renderChildren;
-
-    const formItemLayout =laylout&&layout!='inline'? {
+    const formItemLayout = layout && layout!=='inline'? {
       labelCol: {
         span: 6
       },
@@ -160,6 +154,7 @@ export default class AdvancedSearchForm extends React.Component {
         span: 18
       }
     }:{};
+    // console.log(formItemLayout)
     if(React.Children.count(children)===0){
       return (null)
     }
@@ -175,22 +170,25 @@ export default class AdvancedSearchForm extends React.Component {
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
-        if(it.props.allowClear==false){
+        if(it.props.allowClear===false){
           return (
-            <FormItem key={i} colon={false} {...formItemLayout} containerTo={false} className={classNames}>
-              {React.cloneElement(it)}
-            </FormItem>
+            <Col span={6} key={i}>
+              <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+                {React.cloneElement(it)}
+              </FormItem>
+            </Col>
           )
         }else{
-
           return (
-            <FormItem key={i} colon={false} {...formItemLayout} containerTo={false} className={classNames}>
-              {React.cloneElement(it,{allowClear:true}) }
-            </FormItem>
+            <Col span={6} key={i}>
+              <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+                {React.cloneElement(it,{allowClear:true}) }
+              </FormItem>
+            </Col>
           )
         }
     })
-    return children;
+    //return children;
   }
 
   onTypeChange(value,option){
@@ -199,11 +197,11 @@ export default class AdvancedSearchForm extends React.Component {
     })
   }
   handleAdvancedMenu(obj) {
-    if (obj.key == 'advanced') {
+    if (obj.key === 'advanced') {
       alert("call advanced")
-    } else if (obj.key == 'clear') {
+    } else if (obj.key === 'clear') {
       this.handleReset()
-    } else if (obj.key == 'preview') {
+    } else if (obj.key === 'preview') {
       alert("call restore")
     }
   }
@@ -224,7 +222,7 @@ export default class AdvancedSearchForm extends React.Component {
   }
   // 此处使用下标留坑
   renderKeyCatalog() {
-    let {defKeyType,placeHolder,children}= this.state
+    let {defKeyType,placeHolder}= this.state
     let {keysOption} = this.props
   //  let {label,value}=keysOption[0]
     if (keysOption.length ) {
@@ -259,15 +257,15 @@ export default class AdvancedSearchForm extends React.Component {
   renderKeyword(){
 
     return (
-      <Row gutter={10}>
+      <Row gutter={20}>
         {/* this.renderKeyCatalog() */}
         { this.getFields()}
       </Row>
     )
   }
   handleSure(value){
-    var {module} = this.props
-    var data=this.state.items.filter(it=>value.indexOf(it.key)>=0).map(it=>{ return{searchId:it.id}})
+    // var {module} = this.props
+    // var data=this.state.items.filter(it=>value.indexOf(it.key)>=0).map(it=>{ return{searchId:it.id}})
     /*
     new FetchAPI().fetchPost('/search/saveSelJson?module='+module,{
       body:{items:data}
@@ -278,39 +276,31 @@ export default class AdvancedSearchForm extends React.Component {
         })
     })
     */
-
   }
   renderConfig(){
-    let {placeHolder,items,displayItem,show} = this.state
-    let {showConfig,children} = this.props
+    let {items,displayItem,show} = this.state
+    let {showConfig} = this.props
     if(showConfig){
       return (<AdvancedSearchConfig handleSure={this.handleSure.bind(this)} handleClose={this.handleClose.bind(this)} items={items} selectedKeys={displayItem} show={show}/>)
     }
   }
   render() {
-    const formItemLayout = {
-      labelCol: {
-        span: 5
-      },
-      wrapperCol: {
-        span: 19
-      }
-    };
-    let {placeHolder,items,displayItem,show} = this.state
-    let {showConfig,children,isSearchBtnHide,className,autoSubmitForm} = this.props
+    let {showConfig,children,className,autoSubmitForm,layout} = this.props
     return (
       <div className={classNames("advanced-search-panel",className)}>
           {this.renderConfig()}
-        <AdvancedForm autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} ref={this.saveFormRef.bind(this)}>
+        <AdvancedForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} ref={this.saveFormRef.bind(this)}>
           { this.renderKeyword() }
           <div className="advanced-search-toolbar">
+            {/*
               <Permission expression={showConfig} >
                 <Button shape="circle" icon="setting" onClick={this.renderAdvancedConfigModal.bind(this)}/>
               </Permission>
               <Permission expression={React.Children.count(children)>3} >
-                <Button shape="circle" icon={this.state.expand==false?'down':'up'} onClick={this.toggleExpand.bind(this)}/>
+                <Button shape="circle" icon={this.state.expand===false?'down':'up'} onClick={this.toggleExpand.bind(this)}/>
               </Permission>
-							{isSearchBtnHide?null:<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">查询</Button>}
+            */}
+							{<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">查询</Button>}
 
           </div>
         </AdvancedForm>
@@ -336,12 +326,12 @@ AdvancedSearchForm.defaultProps = {
     label:"name",
     value:0
   }],
-  autoSubmitForm:true,
+  autoSubmitForm:false,
   showConfig:false,
   module:"",
   filterSubmitHandler: function() {},
 	showExpand:3,
-	layout:''
+	layout:'horizontal'
 }
 
 //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)

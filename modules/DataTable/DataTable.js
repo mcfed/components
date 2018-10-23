@@ -1,7 +1,7 @@
 import React,{Component} from "react"
-import ReactDOM from 'react-dom'
 import {Table,Icon,Checkbox,Button,Row,Col } from 'antd'
-import BaseForm,{FormItem} from '../BaseForm'
+//import BaseForm,{FormItem} from 'components/BaseForm'
+
 
 class DataTable extends Component{
   state={
@@ -19,7 +19,7 @@ class DataTable extends Component{
        showSizeChanger:true,
        pageSizeOptions:['10','20','50','100'],
     },
-    scroll:{ y: 500 },
+  //  scroll:{ y: 500 },
     style:{
       width:"100%"
     },
@@ -71,11 +71,12 @@ class DataTable extends Component{
     // console.log("menu")
     let {columns}= this.state
     var defaultValue=columns.filter(col=>(col.type!='config' && col.visible==true)).map((col)=>col.key)
-    return (
-        <div className="" style={{width:400,height:200,padding:'10px',border:'1px solid #cfdae5'}}>
-          <TableMenu defaultValue={defaultValue} columns={columns} onSelectChange={this.onSelectChange.bind(this)} onClosePopup={this.onClosePopup.bind(this)} ></TableMenu>
-        </div>
-      )
+    // return (
+    //     <div className="" style={{width:400,height:200,padding:'10px',border:'1px solid #cfdae5'}}>
+    //       <TableMenu defaultValue={defaultValue} columns={columns} onSelectChange={this.onSelectChange.bind(this)} onClosePopup={this.onClosePopup.bind(this)} ></TableMenu>
+    //     </div>
+    //   )
+    return (null)
   }
   render(){
     let {pagination,showConfig,page,...otherProps}= this.props
@@ -103,32 +104,4 @@ class DataTable extends Component{
 }
 
 
-class SelectDataTable extends Component{
-  state={
-    selectedRowKeys:[],
-    selectedRows:[]
-  }
-
-  onChange(selectedRowKeys, selectedRows){
-    // console.log(selectedRows,selectedRowKeys)
-    this.setState({
-      selectedRows:selectedRows,
-      selectedRowKeys:selectedRowKeys
-    })
-  }
-  render(){
-    let {pagination,showConfig,page,title,...otherProps}= this.props
-    let {selectedRowKeys,selectedRows} =this.state
-    let rowSelection={
-      onChange:this.onChange.bind(this)
-    }
-    let titlebox=()=>(<span>已选{selectedRowKeys.length}条数据{title && title(selectedRows)}</span>)
-    if(selectedRowKeys.length>0){
-      return (<DataTable {...otherProps} title={titlebox} rowSelection={rowSelection} pagination={!pagination?false:Object.assign({},pagination,page)}/>)
-    }else{
-      return (<DataTable {...otherProps} rowSelection={rowSelection} pagination={!pagination?false:Object.assign({},pagination,page)}/>)
-    }
-  }
-}
-export { SelectDataTable }
 export default DataTable

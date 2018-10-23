@@ -8,7 +8,7 @@ const setup = () => {
   // 模拟 props
   const props = {
     // Jest 提供的mock 函数
-    onAddClick: jest.fn()
+  //  onAddClick: jest.fn()
   }
 
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
@@ -27,10 +27,10 @@ describe('BaseForm shallow render', () => {
   const { wrapper, props } = setup();
 
   it('BaseForm render with props custom formLayout', (done) => {
-    const instance= shallow(<BaseForm itemLayout={{labelCol:12,wrapperCol:12}}><FormItem><Input name="aaa" /></FormItem></BaseForm>)
+    const instance= shallow(<BaseForm itemLayout={{labelCol:{span:12},wrapperCol:{span:12}}}><FormItem><Input name="aaa" /></FormItem></BaseForm>)
     // instance.render()
-    expect(instance.props('children').itemLayout).toHaveProperty('labelCol', 12);
-    expect(instance.props('children').itemLayout).toHaveProperty('wrapperCol', 12);
+    expect(instance.props('children').itemLayout).toHaveProperty('labelCol', {span:12});
+    expect(instance.props('children').itemLayout).toHaveProperty('wrapperCol', {span:12});
     done()
   })
 
@@ -56,11 +56,11 @@ describe('BaseForm shallow render', () => {
 
 describe('FormItem render with formLayout ', () => {
 
-  it('FormItem instanceOf', (done) => {
+  it('FormItem render labelCol wrapperCol', (done) => {
     // console.dir(instance.props())
-    const instance= shallow(<BaseForm><FormItem labelCol={8} wrapperCol={16}><Input name="aaa" /></FormItem></BaseForm>)
-    expect(instance.find(FormItem).props()).toHaveProperty('labelCol', 8);
-    expect(instance.find(FormItem).props()).toHaveProperty('wrapperCol', 16);
+    const instance= shallow(<BaseForm><FormItem labelCol={{span:8}} wrapperCol={{span:16}}><Input name="aaa" /></FormItem></BaseForm>)
+    expect(instance.find(FormItem).props()).toHaveProperty('labelCol', {span:8});
+    expect(instance.find(FormItem).props()).toHaveProperty('wrapperCol', {span:16});
     done()
   })
 })

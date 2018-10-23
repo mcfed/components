@@ -1,6 +1,6 @@
 module.exports = {
   "collectCoverageFrom": [
-    "src/**/*.{js,jsx}"
+    "moudles/**/*.{js,jsx}"
   ],
   "resolver": "jest-pnp-resolver",
   "setupFiles": [
@@ -20,7 +20,7 @@ module.exports = {
   },
   "transformIgnorePatterns": [
     "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$",
-    "^.+\\.module\\.(css|sass|scss)$"
+    "^.+\\.modules\\.(css|sass|scss)$"
   ],
   "moduleNameMapper": {
     "^react-native$": "react-native-web",
