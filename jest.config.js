@@ -9,7 +9,6 @@ module.exports = {
   "setupTestFrameworkScriptFile": "<rootDir>/config/jest/setupTest.js",
   "testMatch": [
     "<rootDir>/modules/**/__tests__/**/?(*.)(spec|test).{js,jsx}",
-    "<rootDir>/modules/**/?(*.)(spec|test).{js,jsx}"
   ],
   "testEnvironment": "jsdom",
   "testURL": "http://localhost",
