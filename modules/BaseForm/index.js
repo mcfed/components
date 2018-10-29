@@ -19,7 +19,7 @@ const FormCreate = Form.create
 export default class BaseForm extends Form{
 
 
-  static childContextTypes = {
+   childContextTypes = {
     formRef : PropTypes.any,
     formLayout:PropTypes.object
   }

@@ -1,5 +1,3 @@
-import DataTable,{SelectDataTable} from './DataTable'
-
+import DataTable from './DataTable'
 
 export default DataTable
-export {SelectDataTable}
