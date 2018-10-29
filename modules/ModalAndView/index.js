@@ -1,6 +1,6 @@
 import React, {Component, PropTypes,Children} from 'react'
 import {Modal} from 'antd'
-import {withRouter} from  'react-router'
+//import {withRouter} from  'react-router'
 // import ErrorBoundary from 'components/ErrorBoundary'
 
 class ModalAndView extends Component {
@@ -30,4 +30,5 @@ class ModalAndView extends Component {
   }
 }
 
-export default withRouter(ModalAndView)
+//export default withRouter(ModalAndView)
+export default ModalAndView

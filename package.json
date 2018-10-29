@@ -1,10 +1,11 @@
 {
-  "name": "@mcf/components",
-  "version": "0.1.0",
+  "name": "mcf-components",
+  "version": "1.0.0",
   "private": true,
   "main": "script/index.js",
-  "module": "module/index.js",
+  "module": "modules/index.js",
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.1.2",
     "@svgr/webpack": "2.4.1",
     "babel-eslint": "9.0.0",
     "babel-jest": "23.6.0",
