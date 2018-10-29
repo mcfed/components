@@ -12,7 +12,6 @@ import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
 import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
 import React, { Component } from 'react';
-import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
 import _Select from 'antd/es/select';
 import _Form from 'antd/es/form';
 import PropTypes from 'prop-types';
@@ -339,53 +338,33 @@ var BaseForm = (_temp = _class = (_dec = FormCreate({
   }
 }), _dec(_class2 =
 /*#__PURE__*/
-function (_Form2) {
-  _inherits(BaseForm, _Form2);
+function (_Component) {
+  _inherits(BaseForm, _Component);
 
   function BaseForm() {
-    var _getPrototypeOf2;
-
-    var _this4;
-
     _classCallCheck(this, BaseForm);
 
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    _this4 = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(BaseForm)).call.apply(_getPrototypeOf2, [this].concat(args)));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this4)), "childContextTypes", {
-      formRef: PropTypes.any,
-      formLayout: PropTypes.object
-    });
-
-    return _this4;
+    return _possibleConstructorReturn(this, _getPrototypeOf(BaseForm).apply(this, arguments));
   }
 
   _createClass(BaseForm, [{
-    key: "getChildContext",
-    value: function getChildContext() {
-      console.log(this.props);
+    key: "render",
+    // static childContextTypes = {
+    //   formRef : PropTypes.any,
+    //   formLayout:PropTypes.object
+    // }
+    value: function render() {
       var _this$props2 = this.props,
-          form = _this$props2.form,
-          itemLayout = _this$props2.itemLayout;
-      return {
-        formRef: form,
-        formLayout: itemLayout
-      };
-    }
-    /*
-    render(){
-     const {autoSubmitForm,itemLayout,...otherProps} = this.props
-    	return React.createElement(Form,otherProps)
-    }
-    */
+          autoSubmitForm = _this$props2.autoSubmitForm,
+          itemLayout = _this$props2.itemLayout,
+          otherProps = _objectWithoutProperties(_this$props2, ["autoSubmitForm", "itemLayout"]);
 
+      return React.createElement(_Form, otherProps);
+    }
   }]);
 
   return BaseForm;
-}(_Form)) || _class2), _defineProperty(_class, "propTypes", {
+}(Component)) || _class2), _defineProperty(_class, "propTypes", {
   layout: PropTypes.oneOf(['horizontal', 'inline', 'vertical']),
   itemLayout: PropTypes.object
 }), _defineProperty(_class, "defaultProps", {
@@ -398,7 +377,15 @@ function (_Form2) {
     wrapperCol: {
       span: 18
     }
-  }
+  } // getChildContext(){
+  //    var { form,itemLayout } =this.props;
+  //     console.log(this.props.form)
+  //    return {
+  //        formRef: form,
+  //        formLayout:itemLayout
+  //    };
+  // }
+
 }), _temp);
 /**
  * [AdvancedForm  高级Form组件带valuesChange特征]
@@ -618,12 +605,10 @@ function (_Form$Item) {
       var _element$props2 = element.props,
           defaultValue = _element$props2.defaultValue,
           allowClear = _element$props2.allowClear,
-          otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear"]);
+          otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear"]); // let {formRef:{getFieldDecorator},formLayout}= this.context
+      //    console.log(formRef)
 
-      var _this$context = this.context,
-          getFieldDecorator = _this$context.formRef.getFieldDecorator,
-          formLayout = _this$context.formLayout;
-      console.log(formRef);
+
       var styles = {}; // 类型转换
       // if(element.type.name=='CalendarPicker'){
       //   defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
@@ -638,14 +623,16 @@ function (_Form$Item) {
         };
       } //console.log(otherProps)
 
+      /*
+        {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
+      */
+
 
       return React.createElement(_Form.Item, _extends({
         label: label
-      }, Object.assign({}, formLayout, this.props), {
+      }, Object.assign({}, {}, this.props), {
         colon: false
-      }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
-        initialValue: defaultValue
-      }))(this.renderField()));
+      }, styles), this.renderField());
     }
   }]);
 

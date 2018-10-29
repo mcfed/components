@@ -16,13 +16,12 @@ const FormCreate = Form.create
     }
   }
 })
-export default class BaseForm extends Form{
+export default class BaseForm extends Component{
 
-
-   childContextTypes = {
-    formRef : PropTypes.any,
-    formLayout:PropTypes.object
-  }
+  // static childContextTypes = {
+  //   formRef : PropTypes.any,
+  //   formLayout:PropTypes.object
+  // }
 
   static propTypes={
     layout:PropTypes.oneOf(['horizontal','inline','vertical']),
@@ -41,20 +40,18 @@ export default class BaseForm extends Form{
     }
   }
 
-  getChildContext(){
-    console.log(this.props)
-     var { form,itemLayout } =this.props;
-     return {
-         formRef: form,
-         formLayout:itemLayout
-     };
-  }
-  /*
+  // getChildContext(){
+  //    var { form,itemLayout } =this.props;
+  //     console.log(this.props.form)
+  //    return {
+  //        formRef: form,
+  //        formLayout:itemLayout
+  //    };
+  // }
   render(){
 	  const {autoSubmitForm,itemLayout,...otherProps} = this.props
   	return React.createElement(Form,otherProps)
   }
-  */
 }
 
 /**
@@ -207,8 +204,8 @@ class FormItem extends Form.Item{
     let element=this.props.children
     let {name,label} = element.props
     let {defaultValue,allowClear,...otherProps} =element.props
-    let {formRef:{getFieldDecorator},formLayout}= this.context
-    console.log(formRef)
+    // let {formRef:{getFieldDecorator},formLayout}= this.context
+//    console.log(formRef)
     let styles={}
     // 类型转换
     // if(element.type.name=='CalendarPicker'){
@@ -221,8 +218,11 @@ class FormItem extends Form.Item{
       }
     }
 		//console.log(otherProps)
-    return (<Form.Item label={label} {...Object.assign({},formLayout,this.props)} colon={false} {...styles}>
+    /*
       {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
+    */
+    return (<Form.Item label={label} {...Object.assign({},{},this.props)} colon={false} {...styles}>
+      {this.renderField()}
     </Form.Item>)
   }
 }
