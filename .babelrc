@@ -6,6 +6,7 @@
   "plugins": [
     "@babel/plugin-proposal-class-properties",
     "transform-class-properties",
+    "external-helpers",
     [
       "@babel/plugin-proposal-decorators",
       {
@@ -13,5 +14,10 @@
       }
     ],
     ["import", { "libraryName": "antd","libraryDirectory": "es","style": "true" }]
-  ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [["import", { "libraryName": "antd","libraryDirectory": "lib","style": "true" }]],
+    }
+  }
 }

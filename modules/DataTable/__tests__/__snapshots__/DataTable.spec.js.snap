@@ -31,10 +31,9 @@ exports[`DataTable 组件是否渲染 DataTable Component should be render 1`] =
     }
   }
   rowKey="key"
-  rowSelection={null}
   showHeader={true}
   showQuickJumper={true}
-  size="large"
+  size="default"
   style={
     Object {
       "width": "100%",
