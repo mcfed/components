@@ -4,7 +4,7 @@ import BaseForm,{FormItem} from './BaseForm'
 import ButtonGroups from './ButtonGroups'
 import CustomTable from './CustomTable'
 import DataTable from './DataTable'
-import ModalAndView from './ModalAndView'
+// import ModalAndView from './ModalAndView'
 import Permission from './Permission'
 //import SmartLink from './SmartLink'
 import TreeView from './TreeView'
@@ -16,8 +16,8 @@ export {
   ButtonGroups,
   CustomTable,
   DataTable,
-  ModalAndView,
+  // ModalAndView,
   Permission,
- // SmartLink,
+//  SmartLink,
   TreeView
 }
