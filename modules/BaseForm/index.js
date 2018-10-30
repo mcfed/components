@@ -17,10 +17,10 @@ const FormCreate = Form.create
 })
 export default class BaseForm extends Component{
 
-  // static childContextTypes = {
-  //   formRef : PropTypes.any,
-  //   formLayout:PropTypes.object
-  // }
+  static childContextTypes = {
+    formRef : PropTypes.any,
+    formLayout:PropTypes.object
+  }
 
   static propTypes={
     layout:PropTypes.oneOf(['horizontal','inline','vertical']),
@@ -39,14 +39,14 @@ export default class BaseForm extends Component{
     }
   }
 
-  // getChildContext(){
-  //    var { form,itemLayout } =this.props;
-  //     console.log(this.props.form)
-  //    return {
-  //        formRef: form,
-  //        formLayout:itemLayout
-  //    };
-  // }
+  getChildContext(){
+     var { form,itemLayout } =this.props;
+      console.log(this.props.form)
+     return {
+         formRef: form,
+         formLayout:itemLayout
+     };
+  }
   render(){
 	  const {autoSubmitForm,itemLayout,...otherProps} = this.props
   	return React.createElement(Form,otherProps)

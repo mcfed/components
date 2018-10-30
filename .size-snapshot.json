@@ -1,0 +1,16 @@
+{
+  "esm/mcf-components.js": {
+    "bundled": 1957149,
+    "minified": 1140803,
+    "gzipped": 313789,
+    "treeshaked": {
+      "rollup": {
+        "code": 1022694,
+        "import_statements": 450
+      },
+      "webpack": {
+        "code": 1036100
+      }
+    }
+  }
+}

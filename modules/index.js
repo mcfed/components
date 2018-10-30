@@ -2,7 +2,7 @@
 import AdvancedSearch from './AdvancedSearch'
 import BaseForm,{FormItem} from './BaseForm'
 import ButtonGroups from './ButtonGroups'
-import CustomTable from './CustomTable'
+// import CustomTable from './CustomTable'
 import DataTable from './DataTable'
 // import ModalAndView from './ModalAndView'
 import Permission from './Permission'
@@ -14,7 +14,7 @@ export {
   BaseForm,
   FormItem,
   ButtonGroups,
-  CustomTable,
+  // CustomTable,
   DataTable,
   // ModalAndView,
   Permission,

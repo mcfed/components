@@ -9,10 +9,13 @@ import pkg from "./package.json"
 const name = "CRUD";
 const input = "./modules/index"
 
-
 const globals = {
-  react: "React"
+  react: "React",
+  "prop-types":"PropTypes",
+  "react-dom":"ReactDOM",
+  "fbjs/lib/ExecutionEnvironment":"canUseDOM"
 };
+
 const babelOptionsCJS = {
   exclude: /node_modules/
 };
@@ -29,10 +32,12 @@ const external = id => !id.startsWith(".") && !id.startsWith("/");
 export default [{
   input,
   output: { file: `esm/${pkg.name}.js`, format: "esm" },
-  external,
+  external:Object.keys(globals),
   plugins: [
     babel(babelOptionsESM),
-    nodeResolve()
+    nodeResolve(),
+    commonjs(commonjsOptions),
+    sizeSnapshot()
   ]
 /*
 },{

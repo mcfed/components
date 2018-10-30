@@ -8,6 +8,13 @@
     "transform-class-properties",
     "external-helpers",
     [
+    "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true
+      }
+    ],
+    [
       "@babel/plugin-proposal-decorators",
       {
         "legacy": true
