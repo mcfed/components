@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import {Form,Select,Input} from 'antd'
 // import  FetchAPI from 'app-utils/FetchAPI'
-import {TreeSelectPicker} from '../TreeView'
+import {TreeSelectPicker} from '../TreeView/index'
 const FormCreate = Form.create
 // const Option = Select.Option;
 

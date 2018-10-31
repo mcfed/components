@@ -1,6 +1,6 @@
 import babel from "rollup-plugin-babel"
 import replace from "rollup-plugin-replace"
-import commonjs from "rollup-plugin-commonjs"
+//import commonjs from "rollup-plugin-commonjs"
 import nodeResolve from "rollup-plugin-node-resolve"
 import { sizeSnapshot } from "rollup-plugin-size-snapshot"
 
@@ -20,9 +20,9 @@ const babelOptionsCJS = {
   exclude: /node_modules/
 };
 const babelOptionsESM = {
-  exclude: 'node_modules/**',
+  exclude: /node_modules/,
   runtimeHelpers: true,
-  plugins: [["@babel/transform-runtime", { useESModules: false }]]
+  plugins: [["@babel/plugin-transform-runtime", { useESModules: true }]]
 };
 const commonjsOptions = {
   include: /node_modules/
@@ -35,10 +35,9 @@ export default [{
   external:Object.keys(globals),
   plugins: [
     babel(babelOptionsESM),
-    nodeResolve(),
-    commonjs(commonjsOptions),
     sizeSnapshot()
   ]
+  /*
 },{
    input,
    output: { file: `umd/${pkg.name}.js`, format: "umd", name, globals },
@@ -50,4 +49,5 @@ export default [{
      replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
      sizeSnapshot()
    ]
+   */
 }]
