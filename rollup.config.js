@@ -6,7 +6,7 @@ import { sizeSnapshot } from "rollup-plugin-size-snapshot"
 
 
 import pkg from "./package.json"
-const name = "CRUD";
+const name = "components";
 const input = "./modules/index"
 
 const globals = {
@@ -20,9 +20,9 @@ const babelOptionsCJS = {
   exclude: /node_modules/
 };
 const babelOptionsESM = {
-  exclude: /node_modules/,
+  exclude: 'node_modules/**',
   runtimeHelpers: true,
-  plugins: [["@babel/transform-runtime", { useESModules: true }]]
+  plugins: [["@babel/transform-runtime", { useESModules: false }]]
 };
 const commonjsOptions = {
   include: /node_modules/
@@ -39,17 +39,15 @@ export default [{
     commonjs(commonjsOptions),
     sizeSnapshot()
   ]
-/*
 },{
    input,
    output: { file: `umd/${pkg.name}.js`, format: "umd", name, globals },
    external: Object.keys(globals),
    plugins: [
-     babel(babelOptionsESM),
      nodeResolve(),
+     babel(babelOptionsESM),
      commonjs(commonjsOptions),
      replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
      sizeSnapshot()
    ]
-*/
 }]
