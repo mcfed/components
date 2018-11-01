@@ -2,7 +2,8 @@
 import React from 'react';
 import {shallow,mount,render} from 'enzyme';
 import {Input} from 'antd';
-import BaseForm,{FormItem} from '../index'
+import BaseForm from '../index'
+import FormItem from '../../FormItem/index'
 
 const setup = () => {
   // 模拟 props
@@ -21,6 +22,7 @@ const setup = () => {
     wrapper
   }
 }
+
 
 describe('BaseForm shallow render', () => {
 
@@ -46,9 +48,9 @@ describe('BaseForm shallow render', () => {
   })
 
 
-  it.skip('BaseForm has childContext 需要结合子组件验证 ', (done) => {
-     console.log(wrapper.context('formRef'))
-     // expect(wrapper.context('formRef'))
+  it('BaseForm has childContext 需要结合子组件验证 ', (done) => {
+     console.log(wrapper.props())
+      // expect(wrapper.context('formRef'))
   //  console.log(expect().toBe.instanceOf)
     done()
   })

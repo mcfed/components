@@ -1,33 +1,135 @@
-import _Button from 'antd/es/button';
-import _TreeSelect from 'antd/es/tree-select';
 import _objectWithoutProperties from '@babel/runtime/helpers/esm/objectWithoutProperties';
-import _extends from '@babel/runtime/helpers/esm/extends';
 import _classCallCheck from '@babel/runtime/helpers/esm/classCallCheck';
 import _createClass from '@babel/runtime/helpers/esm/createClass';
 import _possibleConstructorReturn from '@babel/runtime/helpers/esm/possibleConstructorReturn';
 import _getPrototypeOf from '@babel/runtime/helpers/esm/getPrototypeOf';
 import _inherits from '@babel/runtime/helpers/esm/inherits';
-import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitialized';
 import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
+import _Form from 'antd/es/form';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import _Button from 'antd/es/button';
+import _TreeSelect from 'antd/es/tree-select';
+import _extends from '@babel/runtime/helpers/esm/extends';
+import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitialized';
 import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
-import React, { Component } from 'react';
+import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
 import _Select from 'antd/es/select';
-import _Form from 'antd/es/form';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
-import _Modal from 'antd/es/modal';
-import _Transfer from 'antd/es/transfer';
-import _message from 'antd/es/message';
-import _toConsumableArray from '@babel/runtime/helpers/esm/toConsumableArray';
 import classNames from 'classnames';
 import _Menu from 'antd/es/menu';
 import _Dropdown from 'antd/es/dropdown';
 import _Icon from 'antd/es/icon';
 import _Tooltip from 'antd/es/tooltip';
+import _Modal from 'antd/es/modal';
 import _Table from 'antd/es/table';
+
+var FormCreate = _Form.create;
+
+var BaseForm =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(BaseForm, _Component);
+
+  function BaseForm() {
+    _classCallCheck(this, BaseForm);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(BaseForm).apply(this, arguments));
+  }
+
+  _createClass(BaseForm, [{
+    key: "getChildContext",
+    value: function getChildContext() {
+      var _this$props = this.props,
+          form = _this$props.form,
+          itemLayout = _this$props.itemLayout; //  console.log("getChildContext",form)
+
+      return {
+        formRef: form,
+        formLayout: itemLayout
+      };
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props2 = this.props,
+          autoSubmitForm = _this$props2.autoSubmitForm,
+          itemLayout = _this$props2.itemLayout,
+          children = _this$props2.children,
+          otherProps = _objectWithoutProperties(_this$props2, ["autoSubmitForm", "itemLayout", "children"]); // console.log(otherProps.form)
+
+
+      return React.createElement(_Form, otherProps, children);
+    }
+  }]);
+
+  return BaseForm;
+}(Component);
+
+_defineProperty(BaseForm, "childContextTypes", {
+  formRef: PropTypes.any,
+  formLayout: PropTypes.object
+});
+
+_defineProperty(BaseForm, "propTypes", {
+  layout: PropTypes.oneOf(['horizontal', 'inline', 'vertical']),
+  itemLayout: PropTypes.object
+});
+
+_defineProperty(BaseForm, "defaultProps", {
+  prefixCls: 'ant-form',
+  layout: 'horizontal',
+  itemLayout: {
+    labelCol: {
+      span: 6
+    },
+    wrapperCol: {
+      span: 18
+    }
+  }
+});
+
+var SubmitForm = FormCreate()(BaseForm);
+/**
+ * [AdvancedForm  高级Form组件带valuesChange特征]
+ * @extends BaseForm
+ */
+
+var AdvancedForm =
+/*#__PURE__*/
+function (_SubmitForm) {
+  _inherits(AdvancedForm, _SubmitForm);
+
+  function AdvancedForm() {
+    _classCallCheck(this, AdvancedForm);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(AdvancedForm).apply(this, arguments));
+  }
+
+  return AdvancedForm;
+}(SubmitForm);
+
+_defineProperty(AdvancedForm, "propTypes", {
+  layout: PropTypes.oneOf(['horizontal', 'inline', 'vertical']),
+  itemLayout: PropTypes.object
+});
+
+_defineProperty(AdvancedForm, "defaultProps", {
+  // containerTo:true,
+  prefixCls: 'ant-form',
+  layout: "horizontal",
+  itemLayout: {
+    labelCol: {
+      span: 6
+    },
+    wrapperCol: {
+      span: 18
+    }
+  }
+});
 
 var Search = _Input.Search;
 var TreeNode = _Tree.TreeNode,
@@ -318,132 +420,10 @@ function (_Component3) {
   return TrewViewPanel;
 }(Component);
 
-var _class, _temp, _dec, _class2;
-var FormCreate = _Form.create; // const Option = Select.Option;
-
-var BaseForm = (_temp = _class = (_dec = FormCreate({
-  onValuesChange: function onValuesChange(props, changedValues, values) {
-    // console.log(props,values)
-    if (props.autoSubmitForm) {
-      props.onSubmit(new Event('submit'), values);
-    }
-  }
-}), _dec(_class2 =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(BaseForm, _Component);
-
-  function BaseForm() {
-    _classCallCheck(this, BaseForm);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(BaseForm).apply(this, arguments));
-  }
-
-  _createClass(BaseForm, [{
-    key: "getChildContext",
-    value: function getChildContext() {
-      var _this$props2 = this.props,
-          form = _this$props2.form,
-          itemLayout = _this$props2.itemLayout;
-      console.log(this.props.form);
-      return {
-        formRef: form,
-        formLayout: itemLayout
-      };
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var _this$props3 = this.props,
-          autoSubmitForm = _this$props3.autoSubmitForm,
-          itemLayout = _this$props3.itemLayout,
-          otherProps = _objectWithoutProperties(_this$props3, ["autoSubmitForm", "itemLayout"]);
-
-      return React.createElement(_Form, otherProps);
-    }
-  }]);
-
-  return BaseForm;
-}(Component)) || _class2), _defineProperty(_class, "childContextTypes", {
-  formRef: PropTypes.any,
-  formLayout: PropTypes.object
-}), _defineProperty(_class, "propTypes", {
-  layout: PropTypes.oneOf(['horizontal', 'inline', 'vertical']),
-  itemLayout: PropTypes.object
-}), _defineProperty(_class, "defaultProps", {
-  prefixCls: 'ant-form',
-  layout: 'horizontal',
-  itemLayout: {
-    labelCol: {
-      span: 6
-    },
-    wrapperCol: {
-      span: 18
-    }
-  }
-}), _temp);
-/**
- * [AdvancedForm  高级Form组件带valuesChange特征]
- * @extends BaseForm
- */
-
-var AdvancedForm =
-/*#__PURE__*/
-function (_BaseForm) {
-  _inherits(AdvancedForm, _BaseForm);
-
-  function AdvancedForm() {
-    _classCallCheck(this, AdvancedForm);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(AdvancedForm).apply(this, arguments));
-  }
-
-  return AdvancedForm;
-}(BaseForm);
-
-_defineProperty(AdvancedForm, "propTypes", {
-  layout: PropTypes.oneOf(['horizontal', 'inline', 'vertical']),
-  itemLayout: PropTypes.object
-});
-
-_defineProperty(AdvancedForm, "defaultProps", {
-  // containerTo:true,
-  prefixCls: 'ant-form',
-  layout: "horizontal",
-  itemLayout: {
-    labelCol: {
-      span: 6
-    },
-    wrapperCol: {
-      span: 18
-    }
-  }
-});
-
-var AutoSubmitForm =
-/*#__PURE__*/
-function (_BaseForm2) {
-  _inherits(AutoSubmitForm, _BaseForm2);
-
-  function AutoSubmitForm() {
-    _classCallCheck(this, AutoSubmitForm);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(AutoSubmitForm).apply(this, arguments));
-  }
-
-  return AutoSubmitForm;
-}(BaseForm);
-
-_defineProperty(AutoSubmitForm, "defaultProps", {
-  // containerTo:true,
-  prefixCls: 'ant-form',
-  layout: "vertical"
-});
-
 var FormItem =
 /*#__PURE__*/
-function (_Form$Item) {
-  _inherits(FormItem, _Form$Item);
+function (_Component) {
+  _inherits(FormItem, _Component);
 
   function FormItem(props) {
     var _this;
@@ -600,9 +580,11 @@ function (_Form$Item) {
       var _element$props2 = element.props,
           defaultValue = _element$props2.defaultValue,
           allowClear = _element$props2.allowClear,
-          otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear"]); // let {formRef:{getFieldDecorator},formLayout}= this.context
-      //    console.log(formRef)
+          otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear"]);
 
+      var _this$context = this.context,
+          getFieldDecorator = _this$context.formRef.getFieldDecorator,
+          formLayout = _this$context.formLayout; //    console.log(formRef)
 
       var styles = {}; // 类型转换
       // if(element.type.name=='CalendarPicker'){
@@ -627,12 +609,14 @@ function (_Form$Item) {
         label: label
       }, Object.assign({}, {}, this.props), {
         colon: false
-      }, styles), this.renderField());
+      }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
+        initialValue: defaultValue
+      }))(this.renderField()));
     }
   }]);
 
   return FormItem;
-}(_Form.Item);
+}(Component);
 
 _defineProperty(FormItem, "defaultProps", {
   containerTo: true
@@ -679,109 +663,19 @@ Permission.defaultProps = {
 
 var Option = _Select.Option;
 
-var AdvancedSearchConfig =
-/*#__PURE__*/
-function (_React$Component) {
-  _inherits(AdvancedSearchConfig, _React$Component);
-
-  function AdvancedSearchConfig(props) {
-    var _this;
-
-    _classCallCheck(this, AdvancedSearchConfig);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(AdvancedSearchConfig).call(this, props));
-
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-      targetKeys: [],
-      selectedKeys: [],
-      show: true
-    });
-
-    _this.state.targetKeys = props.selectedKeys;
-    return _this;
-  }
-
-  _createClass(AdvancedSearchConfig, [{
-    key: "componentWillReceiveProps",
-    value: function componentWillReceiveProps(nextProps) {
-      var selectedKeys = nextProps.selectedKeys;
-      this.setState({
-        targetKeys: selectedKeys
-      });
-    }
-  }, {
-    key: "handleSelectChange",
-    value: function handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
-      this.setState({
-        selectedKeys: _toConsumableArray(sourceSelectedKeys).concat(_toConsumableArray(targetSelectedKeys))
-      });
-    }
-  }, {
-    key: "handleChange",
-    value: function handleChange(nextTargetKeys, direction, moveKeys) {
-      if (nextTargetKeys.length >= 1 && nextTargetKeys.length <= 4) {
-        this.setState({
-          targetKeys: nextTargetKeys
-        });
-      } else {
-        _message.error("最多只能选择4项且最少选择1项");
-      }
-    }
-  }, {
-    key: "handleOk",
-    value: function handleOk() {
-      var handleSure = this.props.handleSure;
-      var targetKeys = this.state.targetKeys;
-      handleSure(targetKeys);
-    }
-  }, {
-    key: "handleCancel",
-    value: function handleCancel() {
-      var handleClose = this.props.handleClose;
-      handleClose.call();
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var state = this.state;
-      var _this$props = this.props,
-          items = _this$props.items,
-          show = _this$props.show;
-      return React.createElement(_Modal, {
-        title: "\u67E5\u8BE2\u9879\u914D\u7F6E",
-        visible: show,
-        onOk: this.handleOk.bind(this),
-        onCancel: this.handleCancel.bind(this)
-      }, React.createElement(_Transfer, {
-        dataSource: items,
-        titles: ['待选查询项', '已选查询项'],
-        targetKeys: state.targetKeys,
-        selectedKeys: state.selectedKeys,
-        onChange: this.handleChange.bind(this),
-        onSelectChange: this.handleSelectChange.bind(this),
-        render: function render(item) {
-          return item.title;
-        }
-      }));
-    }
-  }]);
-
-  return AdvancedSearchConfig;
-}(React.Component);
-
 var AdvancedSearchForm =
 /*#__PURE__*/
-function (_React$Component2) {
-  _inherits(AdvancedSearchForm, _React$Component2);
+function (_React$Component) {
+  _inherits(AdvancedSearchForm, _React$Component);
 
   function AdvancedSearchForm(props) {
-    var _this2;
+    var _this;
 
     _classCallCheck(this, AdvancedSearchForm);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(AdvancedSearchForm).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(AdvancedSearchForm).call(this, props));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "state", {
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
       expand: false,
       defKeyType: null,
       placeHolder: "",
@@ -790,75 +684,49 @@ function (_React$Component2) {
       displayItem: []
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "handleSearch", function (e, values) {
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleSearch", function (e, values) {
       e.preventDefault();
-      var filterSubmitHandler = _this2.props.filterSubmitHandler;
+      var filterSubmitHandler = _this.props.filterSubmitHandler;
 
       if (values) {
-        filterSubmitHandler.call(_assertThisInitialized(_assertThisInitialized(_this2)), values);
+        filterSubmitHandler.call(_assertThisInitialized(_assertThisInitialized(_this)), values);
       } else {
-        _this2.form.validateFieldsAndScroll(function (err, values) {
+        _this.form.validateFieldsAndScroll(function (err, values) {
           // console.log(this.form.getFieldsValue())
           // console.log(values)
-          filterSubmitHandler.call(_assertThisInitialized(_assertThisInitialized(_this2)), values);
+          filterSubmitHandler.call(_assertThisInitialized(_assertThisInitialized(_this)), values);
         });
       }
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "handleReset", function () {
-      _this2.form.resetFields();
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleReset", function () {
+      _this.form.resetFields();
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "toggleExpand", function () {
-      var expand = _this2.state.expand;
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleExpand", function () {
+      var expand = _this.state.expand;
 
-      _this2.setState({
+      _this.setState({
         expand: !expand
       });
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "saveFormRef", function (form) {
-      _this2.form = form;
-    });
-
-    if (props.keysOption.length) {
-      var _props$keysOption$rev = props.keysOption.reverse().pop(),
-          label = _props$keysOption$rev.label,
-          value = _props$keysOption$rev.value;
-
-      _this2.state.defKeyType = value;
-      _this2.state.placeHolder = "\u8BF7\u8F93\u5165".concat(label);
-    }
-
-    return _this2;
+    return _this;
   }
 
   _createClass(AdvancedSearchForm, [{
     key: "componentWillMount",
-    value: function componentWillMount() {// let {showConfig}=this.props
-
-      /*
-      if(showConfig){
-        new FetchAPI().fetchGet('/search/getSearchFieldSetJson',{body:{module}}).then((json)=>{
-        var json = json.map((it)=>{ return{key:it.code,title:it.name,type:it.type,checked:it.checked,id:it.id}})
-            that.setState({
-              items:json,
-              displayItem:json.filter((it)=>it.checked==1).map((it)=>it.key)
-            })
-        })
-      }
-      */
-    }
+    value: function componentWillMount() {}
   }, {
     key: "getFields",
     // To generate mock Form.Item
     value: function getFields() {
-      var _this3 = this;
+      var _this2 = this;
 
-      var _this$props2 = this.props,
-          children = _this$props2.children,
-          layout = _this$props2.layout,
-          classNames$$1 = _this$props2.classNames;
+      var _this$props = this.props,
+          children = _this$props.children,
+          layout = _this$props.layout,
+          classNames$$1 = _this$props.classNames;
       var renderChildren;
       var formItemLayout = layout && layout !== 'inline' ? {
         labelCol: {
@@ -880,11 +748,11 @@ function (_React$Component2) {
         //高级配置后，前三固定 后四配置
         renderChildren = React.Children.toArray(children).filter(function (ch, idx) {
           //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
-          return _this3.state.displayItem.indexOf(ch.props.name) >= 0 || idx < _this3.props.showExpand;
+          return _this2.state.displayItem.indexOf(ch.props.name) >= 0 || idx < _this2.props.showExpand;
         });
       } else {
         renderChildren = React.Children.toArray(children).filter(function (ch, idx) {
-          return idx < _this3.props.showExpand + 4;
+          return idx < _this2.props.showExpand + 4;
         });
       }
 
@@ -940,62 +808,10 @@ function (_React$Component2) {
       });
     }
   }, {
-    key: "renderAdvancedConfigModal",
-    value: function renderAdvancedConfigModal() {
-      this.setState({
-        show: true
-      }); //  return (<AdvancedSearchConfig handleSure={this.handleSure.bind(this)} items={items} selectedKeys={displayItem} />)
-      //  return ()
-    } // 此处使用下标留坑
-
-  }, {
-    key: "renderKeyCatalog",
-    value: function renderKeyCatalog() {
-      var _this$state = this.state,
-          defKeyType = _this$state.defKeyType,
-          placeHolder = _this$state.placeHolder;
-      var keysOption = this.props.keysOption; //  let {label,value}=keysOption[0]
-
-      if (keysOption.length) {
-        return React.createElement(_Col, {
-          span: 6,
-          key: "fixhead"
-        }, React.createElement(_Input.Group, {
-          compact: true,
-          style: {
-            textAlign: 'right'
-          }
-        }, React.createElement(FormItem, null, React.createElement(_Select, {
-          defaultActiveFirstOption: true,
-          name: "keyType",
-          defaultValue: defKeyType,
-          onSelect: this.onTypeChange.bind(this),
-          style: {
-            width: '105px'
-          }
-        }, keysOption.map(function (it) {
-          return React.createElement(Option, {
-            value: it.value,
-            key: it.value,
-            placeholder: "请输入" + it.label
-          }, it.label);
-        }))), React.createElement(FormItem, {
-          labelCol: {
-            span: 0
-          },
-          wrapperCol: {
-            span: 24
-          },
-          style: {
-            flex: 1
-          }
-        }, React.createElement(_Input, {
-          placeholder: placeHolder,
-          name: "keyWord",
-          style: {}
-        }))));
-      } else {
-        return null;
+    key: "saveFormRef",
+    value: function saveFormRef(insta) {
+      if (insta) {
+        this.form = insta.props.form;
       }
     }
   }, {
@@ -1006,57 +822,22 @@ function (_React$Component2) {
       }, this.getFields());
     }
   }, {
-    key: "handleSure",
-    value: function handleSure(value) {// var {module} = this.props
-      // var data=this.state.items.filter(it=>value.indexOf(it.key)>=0).map(it=>{ return{searchId:it.id}})
-
-      /*
-      new FetchAPI().fetchPost('/search/saveSelJson?module='+module,{
-        body:{items:data}
-      }).then((json)=>{
-          this.setState({
-            displayItem:value,
-            show:false
-          })
-      })
-      */
-    }
-  }, {
-    key: "renderConfig",
-    value: function renderConfig() {
-      var _this$state2 = this.state,
-          items = _this$state2.items,
-          displayItem = _this$state2.displayItem,
-          show = _this$state2.show;
-      var showConfig = this.props.showConfig;
-
-      if (showConfig) {
-        return React.createElement(AdvancedSearchConfig, {
-          handleSure: this.handleSure.bind(this),
-          handleClose: this.handleClose.bind(this),
-          items: items,
-          selectedKeys: displayItem,
-          show: show
-        });
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
-      var _this$props3 = this.props,
-          showConfig = _this$props3.showConfig,
-          children = _this$props3.children,
-          className = _this$props3.className,
-          autoSubmitForm = _this$props3.autoSubmitForm,
-          layout = _this$props3.layout;
+      var _this$props2 = this.props,
+          showConfig = _this$props2.showConfig,
+          children = _this$props2.children,
+          className = _this$props2.className,
+          autoSubmitForm = _this$props2.autoSubmitForm,
+          layout = _this$props2.layout;
       return React.createElement("div", {
         className: classNames("advanced-search-panel", className)
-      }, this.renderConfig(), React.createElement(AdvancedForm, {
+      }, React.createElement(SubmitForm, {
         layout: layout,
         autoSubmitForm: autoSubmitForm,
         className: "advanced-search-form",
         onSubmit: this.handleSearch.bind(this),
-        ref: this.saveFormRef.bind(this)
+        wrappedComponentRef: this.saveFormRef.bind(this)
       }, this.renderKeyword(), React.createElement("div", {
         className: "advanced-search-toolbar"
       }, React.createElement(_Button, {
@@ -1070,21 +851,12 @@ function (_React$Component2) {
   return AdvancedSearchForm;
 }(React.Component);
 AdvancedSearchForm.propTypes = {
-  keysOption: PropTypes.array.isRequired,
-  // keysOption:PropTypes.arrayOf(PropTypes.shape([{
-  //     label: PropTypes.string.isRequired,
-  //     value: PropTypes.number.isRequired
-  // }])),
   filterSubmitHandler: PropTypes.func,
   showConfig: PropTypes.bool,
   footer: PropTypes.element,
   showExpand: PropTypes.number
 };
 AdvancedSearchForm.defaultProps = {
-  keysOption: [{
-    label: "name",
-    value: 0
-  }],
   autoSubmitForm: false,
   showConfig: false,
   module: "",
@@ -1435,4 +1207,4 @@ _defineProperty(DataTable, "defaultProps", {
   columns: []
 });
 
-export { AdvancedSearchForm as AdvancedSearch, BaseForm, FormItem, ButtonGroups, DataTable, Permission, TreeView };
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, DataTable, Permission, TreeView };

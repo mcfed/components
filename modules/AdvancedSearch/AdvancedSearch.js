@@ -11,7 +11,8 @@ import {
   Select,
 } from 'antd'
 import classNames from 'classnames'
-import {FormItem,AdvancedForm} from '../BaseForm/index'
+import SubmitForm from '../BaseForm/index'
+import FormItem from '../FormItem/index'
 import Permission from '../Permission/index'
 //import FetchAPI from 'utils/FetchAPI'
 
@@ -19,70 +20,6 @@ import Permission from '../Permission/index'
 
 const Option = Select.Option
 
-class AdvancedSearchConfig extends React.Component{
-  state = {
-   targetKeys:[],
-   selectedKeys: [],
-   show:true,
-  }
-  constructor(props) {
-      super(props)
-      this.state.targetKeys=props.selectedKeys
-  }
-
-  componentWillReceiveProps(nextProps){
-    let {selectedKeys} = nextProps
-      this.setState({
-        targetKeys:selectedKeys,
-      });
-  }
-
-  handleSelectChange (sourceSelectedKeys, targetSelectedKeys) {
-     this.setState({ selectedKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
-  }
-  handleChange(nextTargetKeys, direction, moveKeys) {
-    if(nextTargetKeys.length>=1 && nextTargetKeys.length<=4  ){
-     this.setState({ targetKeys: nextTargetKeys });
-   }else{
-     message.error("最多只能选择4项且最少选择1项")
-   }
- }
-
-
-  handleOk(){
-    let {handleSure}= this.props
-    var targetKeys=this.state.targetKeys
-    handleSure(targetKeys)
-
-  }
-  handleCancel(){
-    let {handleClose}= this.props
-    handleClose.call()
-  }
-  render(){
-    var state = this.state
-    let {items,show}= this.props
-    return (
-      <Modal
-         title="查询项配置"
-         visible={show}
-         onOk={this.handleOk.bind(this)}
-         onCancel={this.handleCancel.bind(this)}
-       >
-         <Transfer
-            dataSource={items}
-            titles={['待选查询项', '已选查询项']}
-            targetKeys={state.targetKeys}
-            selectedKeys={state.selectedKeys}
-            onChange={this.handleChange.bind(this)}
-            onSelectChange={this.handleSelectChange.bind(this)}
-            render={item => item.title}
-          />
-       </Modal>
-    )
-  }
-
-}
 
 export default class AdvancedSearchForm extends React.Component {
   state = {
@@ -96,25 +33,8 @@ export default class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
-    if(props.keysOption.length){
-      let {label,value}=props.keysOption.reverse().pop()
-      this.state.defKeyType=value
-      this.state.placeHolder=`请输入${label}`
-    }
   }
   componentWillMount(){
-    // let {showConfig}=this.props
-    /*
-    if(showConfig){
-      new FetchAPI().fetchGet('/search/getSearchFieldSetJson',{body:{module}}).then((json)=>{
-      var json = json.map((it)=>{ return{key:it.code,title:it.name,type:it.type,checked:it.checked,id:it.id}})
-          that.setState({
-            items:json,
-            displayItem:json.filter((it)=>it.checked==1).map((it)=>it.key)
-          })
-      })
-    }
-    */
   }
 
   handleSearch = (e,values) => {
@@ -211,51 +131,13 @@ export default class AdvancedSearchForm extends React.Component {
       show:false
     })
   }
-
-  renderAdvancedConfigModal(){
-
-    this.setState({
-      show: true
-    });
-  //  return (<AdvancedSearchConfig handleSure={this.handleSure.bind(this)} items={items} selectedKeys={displayItem} />)
-  //  return ()
-  }
-  // 此处使用下标留坑
-  renderKeyCatalog() {
-    let {defKeyType,placeHolder}= this.state
-    let {keysOption} = this.props
-  //  let {label,value}=keysOption[0]
-    if (keysOption.length ) {
-      return(
-        <Col span={6} key="fixhead">
-            <Input.Group compact style={{textAlign:'right'}}>
-              <FormItem>
-                <Select defaultActiveFirstOption={true} name="keyType" defaultValue={defKeyType} onSelect={this.onTypeChange.bind(this)} style={{width:'105px'}}>
-                  {
-                    keysOption.map((it) => {
-                      return (
-                        <Option value={it.value} key={it.value} placeholder={"请输入"+it.label}>{it.label}</Option>
-                      )
-                    })
-                  }
-                </Select>
-              </FormItem>
-              <FormItem  labelCol= {{span: 0}}  wrapperCol={{ span: 24 }} style={{flex:1}}>
-                <Input placeholder={placeHolder} name="keyWord" style={{}} />
-              </FormItem>
-            </Input.Group>
-        </Col>
-      )
-    }else{
-      return null
+  saveFormRef(insta) {
+    if(insta){
+      this.form = insta.props.form;
     }
-  }
-  saveFormRef = (form) => {
-    this.form = form;
   }
 
   renderKeyword(){
-
     return (
       <Row gutter={20}>
         {/* this.renderKeyCatalog() */}
@@ -263,58 +145,22 @@ export default class AdvancedSearchForm extends React.Component {
       </Row>
     )
   }
-  handleSure(value){
-    // var {module} = this.props
-    // var data=this.state.items.filter(it=>value.indexOf(it.key)>=0).map(it=>{ return{searchId:it.id}})
-    /*
-    new FetchAPI().fetchPost('/search/saveSelJson?module='+module,{
-      body:{items:data}
-    }).then((json)=>{
-        this.setState({
-          displayItem:value,
-          show:false
-        })
-    })
-    */
-  }
-  renderConfig(){
-    let {items,displayItem,show} = this.state
-    let {showConfig} = this.props
-    if(showConfig){
-      return (<AdvancedSearchConfig handleSure={this.handleSure.bind(this)} handleClose={this.handleClose.bind(this)} items={items} selectedKeys={displayItem} show={show}/>)
-    }
-  }
   render() {
     let {showConfig,children,className,autoSubmitForm,layout} = this.props
     return (
       <div className={classNames("advanced-search-panel",className)}>
-          {this.renderConfig()}
-        <AdvancedForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} ref={this.saveFormRef.bind(this)}>
+        <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
           { this.renderKeyword() }
           <div className="advanced-search-toolbar">
-            {/*
-              <Permission expression={showConfig} >
-                <Button shape="circle" icon="setting" onClick={this.renderAdvancedConfigModal.bind(this)}/>
-              </Permission>
-              <Permission expression={React.Children.count(children)>3} >
-                <Button shape="circle" icon={this.state.expand===false?'down':'up'} onClick={this.toggleExpand.bind(this)}/>
-              </Permission>
-            */}
 							{<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">查询</Button>}
-
           </div>
-        </AdvancedForm>
+        </SubmitForm>
       </div>
     );
   }
 }
 
 AdvancedSearchForm.propTypes = {
-  keysOption: PropTypes.array.isRequired,
-  // keysOption:PropTypes.arrayOf(PropTypes.shape([{
-  //     label: PropTypes.string.isRequired,
-  //     value: PropTypes.number.isRequired
-  // }])),
   filterSubmitHandler: PropTypes.func,
   showConfig:PropTypes.bool,
   footer:PropTypes.element,
@@ -322,10 +168,6 @@ AdvancedSearchForm.propTypes = {
 }
 
 AdvancedSearchForm.defaultProps = {
-  keysOption: [{
-    label:"name",
-    value:0
-  }],
   autoSubmitForm:false,
   showConfig:false,
   module:"",

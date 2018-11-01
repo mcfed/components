@@ -1,6 +1,7 @@
 
 import AdvancedSearch from './AdvancedSearch/index'
-import BaseForm,{FormItem} from './BaseForm/index'
+import BaseForm from './BaseForm/index'
+import FormItem from './FormItem/index'
 import ButtonGroups from './ButtonGroups/index'
 // import CustomTable from './CustomTable'
 import DataTable from './DataTable/index'
