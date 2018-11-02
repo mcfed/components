@@ -2,8 +2,15 @@ before_script:
   - echo "hello"
   
 stages:
- - deploy
- deploy:
-  stage: deploy
+ - test
+ - build
+ 
+ build
+  stage: build
   script:
-    - echo "hello"
+    - echo "build"
+ 
+ test:
+  stage: test
+  script:
+    - echo "test"
