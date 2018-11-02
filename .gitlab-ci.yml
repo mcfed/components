@@ -6,11 +6,11 @@ stages:
   - build
  
  build:
-  stage: build
+  stage:build
   script:
     - echo "build"
  
  test:
-  stage: test
+  stage:test
   script:
     - echo "test"
