@@ -4,6 +4,8 @@ import ReactDOM from 'react-dom'
 import {Select,Input,Form} from 'antd'
 import {TreeSelectPicker} from '../TreeView/index'
 
+const Option=Select.Option
+
 export default class FormItem extends Component{
   constructor(props) {
     super(props);
@@ -20,7 +22,7 @@ export default class FormItem extends Component{
   }
 
   static defaultProps = {
-    containerTo:true
+    containerTo:true,
   }
   static contextTypes = {
       formRef: PropTypes.object,
@@ -59,17 +61,6 @@ export default class FormItem extends Component{
    */
   fetchData(fetchUrl,params){
     // let body={}
-    if(params && /\/listJson?$/.test(fetchUrl)?'POST':'GET'){
-      // body={body:params}
-    }
-    // new FetchAPI().fetch(fetchUrl,{
-    //   ...body,
-		// 	method:/\/listJson?$/.test(fetchUrl)?'POST':'GET' //兼容listJSON 使用POST请求处理
-    // }).then((json) => {
-    //     this.setState({
-    //       childData:json.list|| json ||[]
-    //     });
-    // });
   }
   renderField(){
     let {children,containerTo} = this.props
@@ -97,10 +88,6 @@ export default class FormItem extends Component{
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
     }else if(field.props.renderItem){
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
-      // return (
-      //   <field.type {...otherProps} {...containerToProp} >
-      //     {childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx))}
-      //   </field.type>)
     }else{
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
     }
@@ -119,7 +106,6 @@ export default class FormItem extends Component{
     let {name,label} = element.props
     let {defaultValue,allowClear,...otherProps} =element.props
     let {formRef:{getFieldDecorator},formLayout}= this.context
-//    console.log(formRef)
     let styles={}
     // 类型转换
     // if(element.type.name=='CalendarPicker'){

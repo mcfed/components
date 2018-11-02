@@ -48,10 +48,9 @@ describe('BaseForm shallow render', () => {
   })
 
 
-  it('BaseForm has childContext 需要结合子组件验证 ', (done) => {
-     console.log(wrapper.props())
-      // expect(wrapper.context('formRef'))
-  //  console.log(expect().toBe.instanceOf)
+  it.skip('BaseForm has childContext 需要结合子组件验证 ', (done) => {
+     // console.dir(wrapper.context())
+    // expect(wrapper.context('formRef'))
     done()
   })
 })
