@@ -5,7 +5,6 @@
   ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "transform-class-properties",
     "@babel/plugin-external-helpers",
     [
     "@babel/plugin-transform-runtime",
