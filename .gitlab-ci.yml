@@ -6,6 +6,8 @@ test_job:
     stage: test
     script:
     - whoami
+    tags:
+    - master
 
 build_job:
     stage: build
