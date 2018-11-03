@@ -1,19 +1,11 @@
 stages:
-    - install
     - test
     - build
-
-install_job:
-    stage: install
-    script:
-    - npm install --save-dev
-
-    tags:
-    - master
 
 test_job:
     stage: test
     script:
+    - npm install --save-dev
     - npm run test
     tags:
     - master
@@ -21,6 +13,7 @@ test_job:
 build_job:
     stage: build
     script:
+    - npm install --save-dev
     - npm run build
     tags:
     - master
