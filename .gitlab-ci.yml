@@ -1,16 +1,7 @@
 stages:
     - test
     - build
-
-
-install_job:
-    stage: install
-    script:
-    - npm install
-   
-    tags:
-    - master
-
+    
 test_job:
     stage: test
     script:
