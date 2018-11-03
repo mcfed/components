@@ -7,9 +7,11 @@ test_job:
     script:
     - whoami
     tags:
-    - master
+    - shell
 
 build_job:
     stage: build
     script:
     - whoami
+    tags:
+    - shell
