@@ -5,13 +5,13 @@ stages:
 test_job:
     stage: test
     script:
-    - npm run jest
+    - sudo whoami
     tags:
     - master
 
 build_job:
     stage: build
     script:
-    - npm run build
+    - whoami
     tags:
     - master
