@@ -7,11 +7,11 @@ test_job:
     script:
     - whoami
     tags:
-    - shell
+    - master
 
 build_job:
     stage: build
     script:
     - whoami
     tags:
-    - shell
+    - master
