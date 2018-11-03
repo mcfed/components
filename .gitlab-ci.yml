@@ -3,7 +3,6 @@ stages:
     - test
     - build
 
-
 install_job:
     stage: install
     script:
