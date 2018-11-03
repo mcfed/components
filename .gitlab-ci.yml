@@ -5,9 +5,9 @@ stages:
 test_job:
     stage: test
     script:
-    - /root/.nvm/versions/node/v8.10.0/bin/npm run jest
+    - whoami
 
 build_job:
     stage: build
     script:
-    - /root/.nvm/versions/node/v8.10.0/bin/npm run build
+    - whoami
