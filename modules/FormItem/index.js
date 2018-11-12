@@ -1,6 +1,5 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import ReactDOM from 'react-dom'
 import {Select,Input,Form} from 'antd'
 import {TreeSelectPicker} from '../TreeView/index'
 
@@ -73,7 +72,7 @@ export default class FormItem extends Component{
     let treeDataProp={}
     if(containerTo && field.type===Select && !field.props.changeCalendarContainer ){
       containerToProp={
-        getPopupContainer:()=>ReactDOM.findDOMNode(this)
+        getPopupContainer:triggerNode => triggerNode.parentNode
       }
     }
 

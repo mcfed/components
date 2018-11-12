@@ -9,6 +9,7 @@ import DataTable from './DataTable/index'
 import Permission from './Permission/index'
 //import SmartLink from './SmartLink'
 import TreeView from './TreeView/index'
+import PropertyTable from './PropertyTable/index'
 
 export {
   AdvancedSearch,
@@ -17,6 +18,7 @@ export {
   ButtonGroups,
   // CustomTable,
   DataTable,
+  PropertyTable,
   // ModalAndView,
   Permission,
 //  SmartLink,
