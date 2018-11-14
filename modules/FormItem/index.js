@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import {Select,Input,Form} from 'antd'
+import {Select,Input,Form,DatePicker} from 'antd'
 import {TreeSelectPicker} from '../TreeView/index'
 
 const Option=Select.Option
@@ -105,9 +105,10 @@ export default class FormItem extends Component{
     let {defaultValue,allowClear,...otherProps} =element.props
     let {formRef:{getFieldDecorator},formLayout}= this.context
     let styles={}
-    // if(element.type.name=='CalendarPicker'){
-    //   defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
-    // }
+
+    if(element.type==DatePicker.RangePicker){
+       defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
+    }
     //  reset antd-form-item  marginBottom value
     if(element.type===Input && element.props.type==="hidden"){
       styles={

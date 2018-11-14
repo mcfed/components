@@ -15,6 +15,7 @@ import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitial
 import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
 import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
+import _DatePicker from 'antd/es/date-picker';
 import _Select from 'antd/es/select';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
@@ -569,10 +570,12 @@ function (_Component) {
       var _this$context = this.context,
           getFieldDecorator = _this$context.formRef.getFieldDecorator,
           formLayout = _this$context.formLayout;
-      var styles = {}; // if(element.type.name=='CalendarPicker'){
-      //   defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
-      // }
-      //  reset antd-form-item  marginBottom value
+      var styles = {};
+
+      if (element.type == _DatePicker.RangePicker) {
+        defaultValue = [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
+      } //  reset antd-form-item  marginBottom value
+
 
       if (element.type === _Input && element.props.type === "hidden") {
         styles = {
