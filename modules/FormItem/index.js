@@ -76,7 +76,6 @@ export default class FormItem extends Component{
       }
     }
 
-    // console.log("TreeSelectPicker",field.type.name)
     if(field.type == TreeSelectPicker){
       treeDataProp={
         treeData:this.loopTreeData(childData)
@@ -106,7 +105,6 @@ export default class FormItem extends Component{
     let {defaultValue,allowClear,...otherProps} =element.props
     let {formRef:{getFieldDecorator},formLayout}= this.context
     let styles={}
-    // 类型转换
     // if(element.type.name=='CalendarPicker'){
     //   defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
     // }
@@ -116,11 +114,7 @@ export default class FormItem extends Component{
         style:{marginBottom:0}
       }
     }
-		//console.log(otherProps)
-    /*
-      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
-    */
-    return (<Form.Item label={label} {...Object.assign({},{},this.props)} colon={false} {...styles}>
+    return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
       {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
     </Form.Item>)
   }

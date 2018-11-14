@@ -16,7 +16,6 @@ import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
 import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
 import _Select from 'antd/es/select';
-import ReactDOM from 'react-dom';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
 import classNames from 'classnames';
@@ -420,6 +419,8 @@ function (_Component3) {
   return TrewViewPanel;
 }(Component);
 
+var Option = _Select.Option;
+
 var FormItem =
 /*#__PURE__*/
 function (_Component) {
@@ -483,24 +484,11 @@ function (_Component) {
 
   }, {
     key: "fetchData",
-    value: function fetchData(fetchUrl, params) {
-      // let body={}
-      if (params && /\/listJson?$/.test(fetchUrl) ? 'POST' : 'GET') ; // body={body:params}
-      // new FetchAPI().fetch(fetchUrl,{
-      //   ...body,
-      // 	method:/\/listJson?$/.test(fetchUrl)?'POST':'GET' //兼容listJSON 使用POST请求处理
-      // }).then((json) => {
-      //     this.setState({
-      //       childData:json.list|| json ||[]
-      //     });
-      // });
-
+    value: function fetchData(fetchUrl, params) {// let body={}
     }
   }, {
     key: "renderField",
     value: function renderField() {
-      var _this2 = this;
-
       var _this$props = this.props,
           children = _this$props.children,
           containerTo = _this$props.containerTo;
@@ -519,12 +507,11 @@ function (_Component) {
 
       if (containerTo && field.type === _Select && !field.props.changeCalendarContainer) {
         containerToProp = {
-          getPopupContainer: function getPopupContainer() {
-            return ReactDOM.findDOMNode(_this2);
+          getPopupContainer: function getPopupContainer(triggerNode) {
+            return triggerNode.parentNode;
           }
         };
-      } // console.log("TreeSelectPicker",field.type.name)
-
+      }
 
       if (field.type == TreeSelectPicker) {
         treeDataProp = {
@@ -538,10 +525,7 @@ function (_Component) {
       } else if (field.props.renderItem) {
         return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
           return field.props.renderItem && field.props.renderItem(d, idx);
-        })); // return (
-        //   <field.type {...otherProps} {...containerToProp} >
-        //     {childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx))}
-        //   </field.type>)
+        }));
       } else {
         return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
       }
@@ -549,7 +533,7 @@ function (_Component) {
   }, {
     key: "loopTreeData",
     value: function loopTreeData(data) {
-      var _this3 = this;
+      var _this2 = this;
 
       return data.map(function (item) {
         if (item.children && item.children.length) {
@@ -558,7 +542,7 @@ function (_Component) {
             value: item.id,
             key: item.id
           }, {
-            children: _this3.loopTreeData(item.children)
+            children: _this2.loopTreeData(item.children)
           });
         } else {
           return Object.assign(item, {
@@ -584,10 +568,8 @@ function (_Component) {
 
       var _this$context = this.context,
           getFieldDecorator = _this$context.formRef.getFieldDecorator,
-          formLayout = _this$context.formLayout; //    console.log(formRef)
-
-      var styles = {}; // 类型转换
-      // if(element.type.name=='CalendarPicker'){
+          formLayout = _this$context.formLayout;
+      var styles = {}; // if(element.type.name=='CalendarPicker'){
       //   defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
       // }
       //  reset antd-form-item  marginBottom value
@@ -598,16 +580,11 @@ function (_Component) {
             marginBottom: 0
           }
         };
-      } //console.log(otherProps)
-
-      /*
-        {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
-      */
-
+      }
 
       return React.createElement(_Form.Item, _extends({
         label: label
-      }, Object.assign({}, {}, this.props), {
+      }, Object.assign({}, {}, formLayout, this.props), {
         colon: false
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
         initialValue: defaultValue
@@ -661,7 +638,7 @@ Permission.defaultProps = {
 
 //import styles from './AdvancedSearch.less'
 
-var Option = _Select.Option;
+var Option$1 = _Select.Option;
 
 var AdvancedSearchForm =
 /*#__PURE__*/
@@ -1207,4 +1184,42 @@ _defineProperty(DataTable, "defaultProps", {
   columns: []
 });
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, DataTable, Permission, TreeView };
+var PropertyTable =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(PropertyTable, _Component);
+
+  function PropertyTable() {
+    _classCallCheck(this, PropertyTable);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(PropertyTable).apply(this, arguments));
+  }
+
+  _createClass(PropertyTable, [{
+    key: "renderItem",
+    value: function renderItem(ds, idx) {
+      return React.createElement("div", {
+        key: idx
+      }, React.createElement("th", null, ds.label), React.createElement("td", null, ds.value));
+    }
+  }, {
+    key: "renderTableRows",
+    value: function renderTableRows() {
+      var dataSource = this.props.dataSource;
+      return React.createElement("tr", null, dataSource.map(this.renderItem));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement("table", null, React.createElement("tbody", null, this.renderTableRows()));
+    }
+  }]);
+
+  return PropertyTable;
+}(Component);
+PropertyTable.propsType = {
+  dataSource: PropTypes.array.isRequired,
+  renderItem: PropTypes.func
+};
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, DataTable, PropertyTable, Permission, TreeView };
