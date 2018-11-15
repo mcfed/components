@@ -434,9 +434,9 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FormItem).call(this, props));
 
-    if (props.fetch instanceof Array) {
+    if (props.children.props.options instanceof Array) {
       _this.state = {
-        childData: props.fetch
+        childData: props.children.props.options
       };
     } else {
       _this.state = {
@@ -451,17 +451,22 @@ function (_Component) {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       var children = nextProps.children;
-      var field = children;
+      var field = children; //  console.log(JSON.stringify(field.props.options),JSON.stringify(this.props.children.props.options))
 
-      if (field.props.fetch instanceof Array) {
+      if (JSON.stringify(field.props.options) !== JSON.stringify(this.props.children.props.options)) {
         this.setState({
-          childData: field.props.fetch
+          childData: field.props.options
         });
-      }
+      } // if(field.props.fetch instanceof Array){
+      //   this.setState({
+      //     childData:field.props.fetch
+      //   });
+      // }
+      // if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
+      // {
+      //     this.fetchData(field.props.fetch,field.props.params)
+      // }
 
-      if (field.props.fetch && typeof field.props.fetch === 'string' && field.props.fetch !== this.props.children.props.fetch) {
-        this.fetchData(field.props.fetch, field.props.params);
-      }
     }
   }, {
     key: "componentWillMount",
@@ -471,10 +476,6 @@ function (_Component) {
 
       if (typeof field.props.fetch === 'string' && field.props.fetch.length > 0) {
         this.fetchData(field.props.fetch, field.props.params);
-      } else if (field.props.fetch instanceof Array) {
-        this.setState({
-          childData: field.props.fetch
-        });
       }
     }
     /**
@@ -485,7 +486,9 @@ function (_Component) {
 
   }, {
     key: "fetchData",
-    value: function fetchData(fetchUrl, params) {// let body={}
+    value: function fetchData(fetchUrl, params) {
+      // let body={}
+      console.error("xhr还未实现!");
     }
   }, {
     key: "renderField",
@@ -516,8 +519,7 @@ function (_Component) {
 
       if (field.type == TreeSelectPicker) {
         treeDataProp = {
-          treeData: this.loopTreeData(childData) //  console.log(treeDataProp)
-
+          treeData: this.loopTreeData(childData)
         };
       }
 

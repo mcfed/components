@@ -50,7 +50,7 @@ describe('FormItem shallow render with Select', () => {
       value:"2"
     }]
   const renderItem=(item,key)=><Option key={key} value={item.value}>{item.label}</Option>
-  const { wrapper, props } = setup(<Select name="select" label="select" fetch={options} renderItem={renderItem} />);
+  const { wrapper, props } = setup(<Select name="select" label="select" options={options} renderItem={renderItem} />);
   it('FormItem render 带子组件', (done) => {
     expect(wrapper.find('[name="select"]').exists()).toBe(true)
     expect(wrapper.prop("label")).toBe("select")
@@ -60,6 +60,13 @@ describe('FormItem shallow render with Select', () => {
   it('FormItem render SELECT 带 fetch Array', (done) => {
     expect(wrapper.state('childData')).toBe(options)
     expect(wrapper.find(Option).length).toBe(2)
+    done()
+  })
+//  不能使用shallow 模式
+  it.skip('FormItem render 更新 Children Element options size 0',(done)=>{
+    wrapper.find(Select).setProps({options:[{label:1,value:1}]})
+    expect(wrapper.state('childData')).toBe([{label:1,value:1}])
+    expect(wrapper.find(Option).length).toBe(0)
     done()
   })
 

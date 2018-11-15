@@ -8,10 +8,9 @@ const Option=Select.Option
 export default class FormItem extends Component{
   constructor(props) {
     super(props);
-
-    if(props.fetch instanceof Array){
+    if(props.children.props.options instanceof Array){
       this.state={
-        childData:props.fetch
+        childData:props.children.props.options
       }
     }else{
       this.state={
@@ -31,15 +30,22 @@ export default class FormItem extends Component{
   componentWillReceiveProps(nextProps){
     let {children} = nextProps
     let field=children
-    if(field.props.fetch instanceof Array){
+  //  console.log(JSON.stringify(field.props.options),JSON.stringify(this.props.children.props.options))
+    if(JSON.stringify(field.props.options)!==JSON.stringify(this.props.children.props.options)){
       this.setState({
-        childData:field.props.fetch
+           childData:field.props.options
       });
     }
-    if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
-    {
-        this.fetchData(field.props.fetch,field.props.params)
-    }
+
+    // if(field.props.fetch instanceof Array){
+    //   this.setState({
+    //     childData:field.props.fetch
+    //   });
+    // }
+    // if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
+    // {
+    //     this.fetchData(field.props.fetch,field.props.params)
+    // }
 
   }
   componentWillMount() {
@@ -47,11 +53,7 @@ export default class FormItem extends Component{
     let field=children;
     if(typeof(field.props.fetch)=== 'string' && field.props.fetch.length>0){
         this.fetchData(field.props.fetch,field.props.params)
-    }else if(field.props.fetch instanceof Array){
-        this.setState({
-          childData:field.props.fetch
-        });
-      }
+    }
   }
   /**
    * [fetchData 获取远程接口数据]
@@ -60,6 +62,7 @@ export default class FormItem extends Component{
    */
   fetchData(fetchUrl,params){
     // let body={}
+    console.error("xhr还未实现!")
   }
   renderField(){
     let {children,containerTo} = this.props
@@ -80,12 +83,11 @@ export default class FormItem extends Component{
       treeDataProp={
         treeData:this.loopTreeData(childData)
       }
-    //  console.log(treeDataProp)
     }
     if(childData.length===0){
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
     }else if(field.props.renderItem){
-                                                        /**********有坑 ，待坑**************/  
+                                                        /**********有坑 ，待坑**************/
       return React.createElement(field.type,Object.assign({key:new Date().valueOf()},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
     }else{
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
