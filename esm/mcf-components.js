@@ -26,6 +26,7 @@ import _Icon from 'antd/es/icon';
 import _Tooltip from 'antd/es/tooltip';
 import _Modal from 'antd/es/modal';
 import _Table from 'antd/es/table';
+import _Checkbox from 'antd/es/checkbox';
 
 var FormCreate = _Form.create;
 
@@ -1051,10 +1052,106 @@ ButtonGroups.defaultProps = {
 };
 
 //import BaseForm,{FormItem} from 'components/BaseForm'
-var DataTable =
+var TableMenu =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(DataTable, _Component);
+  _inherits(TableMenu, _Component);
+
+  function TableMenu() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    _classCallCheck(this, TableMenu);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(TableMenu)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+      visible: true //请求远程数据接口
+
+    });
+
+    return _this;
+  }
+
+  _createClass(TableMenu, [{
+    key: "componentWillMount",
+    value: function componentWillMount() {
+      var actions = this.props.actions;
+    } // //处理表格提交后动作
+    // handleOk(){
+    //   console.log(this)
+    //   this.form.onSubmit()
+    //   let { onClosePopup } = this.props
+    //   onClosePopup()
+    // }
+    // saveFormRef=(form)=>this.form=form
+    // handleSubmit(values){
+    //   var {onSelectChange}=this.props
+    //   console.log(values)
+    //    // return new API().fetchTableColumns(values).then(json => {
+    //    //   onSelectChange(values.isShowArr)
+    //    //   // console.log(json,values)
+    //    // }).catch(ex => {
+    //    //   return "error"
+    //    // })
+    // }
+
+  }, {
+    key: "handleChange",
+    value: function handleChange(value) {
+      // console.log(value)
+      var onSelectChange = this.props.onSelectChange;
+      onSelectChange(value);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          form = _this$props.form,
+          initialValues = _this$props.initialValues,
+          handleSubmit = _this$props.handleSubmit,
+          children = _this$props.children,
+          defaultValue = _this$props.defaultValue,
+          columns = _this$props.columns,
+          onClosePopup = _this$props.onClosePopup;
+      var saveFormRef = this.saveFormRef;
+      return React.createElement(_Form, {
+        onSubmit: handleSubmit,
+        ref: saveFormRef,
+        layout: "inline"
+      }, React.createElement(_Checkbox.Group, {
+        name: "isShowArr",
+        style: {
+          width: '100%'
+        },
+        defaultValue: defaultValue,
+        onChange: this.handleChange.bind(this)
+      }, React.createElement(_Row, null, columns.filter(function (it) {
+        return it.title != '操作';
+      }).map(function (it, idx) {
+        return React.createElement(_Col, {
+          span: 8,
+          key: idx
+        }, React.createElement(_Checkbox, {
+          value: it.key,
+          disabled: it.isRead == 1 ? true : false
+        }, it.title));
+      }))));
+    }
+  }]);
+
+  return TableMenu;
+}(Component);
+
+var DataTable =
+/*#__PURE__*/
+function (_Component2) {
+  _inherits(DataTable, _Component2);
 
   _createClass(DataTable, [{
     key: "showPopover",
@@ -1066,20 +1163,20 @@ function (_Component) {
   }]);
 
   function DataTable(props) {
-    var _this;
+    var _this2;
 
     _classCallCheck(this, DataTable);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(DataTable).call(this, props));
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(DataTable).call(this, props));
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "state", {
       visible: false,
       newColumns: [],
       displayColumns: []
     });
 
-    _this.state.columns = props.columns;
-    return _this;
+    _this2.state.columns = props.columns;
+    return _this2;
   }
 
   _createClass(DataTable, [{
@@ -1126,25 +1223,33 @@ function (_Component) {
       // console.log("menu")
       var columns = this.state.columns;
       var defaultValue = columns.filter(function (col) {
-        return col.type != 'config' && col.visible == true;
+        return col.type != 'config' && (col.visible = true || col.visible == undefined);
       }).map(function (col) {
         return col.key;
-      }); // return (
-      //     <div className="" style={{width:400,height:200,padding:'10px',border:'1px solid #cfdae5'}}>
-      //       <TableMenu defaultValue={defaultValue} columns={columns} onSelectChange={this.onSelectChange.bind(this)} onClosePopup={this.onClosePopup.bind(this)} ></TableMenu>
-      //     </div>
-      //   )
-
-      return null;
+      });
+      return React.createElement("div", {
+        className: "",
+        style: {
+          width: 400,
+          height: 200,
+          padding: '10px',
+          border: '1px solid #cfdae5'
+        }
+      }, React.createElement(TableMenu, {
+        defaultValue: defaultValue,
+        columns: columns,
+        onSelectChange: this.onSelectChange.bind(this),
+        onClosePopup: this.onClosePopup.bind(this)
+      }));
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          pagination = _this$props.pagination,
-          showConfig = _this$props.showConfig,
-          page = _this$props.page,
-          otherProps = _objectWithoutProperties(_this$props, ["pagination", "showConfig", "page"]);
+      var _this$props2 = this.props,
+          pagination = _this$props2.pagination,
+          showConfig = _this$props2.showConfig,
+          page = _this$props2.page,
+          otherProps = _objectWithoutProperties(_this$props2, ["pagination", "showConfig", "page"]);
 
       var _this$state = this.state,
           visible = _this$state.visible,
@@ -1152,8 +1257,9 @@ function (_Component) {
       var newColumns;
 
       if (showConfig) {
+        // if(true){
         newColumns = columns.filter(function (col) {
-          return col.visible == true;
+          return col.visible == true || col.visible == undefined; // return true
         }).concat([{
           title: " ",
           filterDropdown: this.renderTableMenu(),
