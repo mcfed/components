@@ -53,7 +53,7 @@ export default class ButtonGroups extends Component {
     if(confirm){
       return React.createElement(
         Comfirm,
-        Object.assign({},{title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
+        Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
         React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props),children))
       )
     }else{
