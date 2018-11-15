@@ -524,7 +524,10 @@ function (_Component) {
       if (childData.length === 0) {
         return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
       } else if (field.props.renderItem) {
-        return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
+        /**********有坑 ，待坑**************/
+        return React.createElement(field.type, Object.assign({
+          key: new Date().valueOf()
+        }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
           return field.props.renderItem && field.props.renderItem(d, idx);
         }));
       } else {
@@ -583,7 +586,8 @@ function (_Component) {
             marginBottom: 0
           }
         };
-      }
+      } // console.log(`name:${name},value:${defaultValue}`)
+
 
       return React.createElement(_Form.Item, _extends({
         label: label
@@ -909,11 +913,15 @@ function (_Component2) {
 
       var children = this.props.children;
       var childrenArray = React.Children.toArray(children); // let {appReducer} = this.context
+      // console.log(this.context.appReducer)
 
-      return childrenArray // .filter((it)=>{
-      //   return it.props.permission==undefined?true:hasPermission(it.props.permission)
-      // })
-      .map(function (it, idx) {
+      return childrenArray.filter(function (it) {
+        if (it.props.permission == undefined) {
+          return true;
+        } else {
+          return it.props.permission && it.props.permission == true;
+        }
+      }).map(function (it, idx) {
         return _this.renderReactElement(it, idx);
       });
     }
@@ -930,6 +938,7 @@ function (_Component2) {
 
       if (confirm) {
         return React.createElement(Comfirm, Object.assign({}, {
+          key: idx,
           title: "确认框",
           content: confirm,
           placement: placement,

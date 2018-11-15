@@ -85,7 +85,8 @@ export default class FormItem extends Component{
     if(childData.length===0){
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
     }else if(field.props.renderItem){
-      return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
+                                                        /**********有坑 ，待坑**************/  
+      return React.createElement(field.type,Object.assign({key:new Date().valueOf()},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
     }else{
       return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
     }
@@ -115,6 +116,7 @@ export default class FormItem extends Component{
         style:{marginBottom:0}
       }
     }
+    // console.log(`name:${name},value:${defaultValue}`)
     return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
       {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
     </Form.Item>)

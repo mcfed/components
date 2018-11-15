@@ -38,9 +38,13 @@ export default class ButtonGroups extends Component {
     // let {appReducer} = this.context
     // console.log(this.context.appReducer)
     return childrenArray
-    // .filter((it)=>{
-    //   return it.props.permission==undefined?true:hasPermission(it.props.permission)
-    // })
+      .filter((it)=>{
+        if(it.props.permission == undefined){
+          return true
+        }else{
+          return it.props.permission && it.props.permission==true
+        }
+     })
     .map((it,idx)=>{
       return this.renderReactElement(it,idx)
     })
