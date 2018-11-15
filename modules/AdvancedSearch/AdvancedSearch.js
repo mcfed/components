@@ -11,9 +11,9 @@ import {
   Select,
 } from 'antd'
 import classNames from 'classnames'
-import SubmitForm from '../BaseForm/index'
-import FormItem from '../FormItem/index'
-import Permission from '../Permission/index'
+import SubmitForm from '../BaseForm'
+import FormItem from '../FormItem'
+import Permission from '../Permission'
 //import FetchAPI from 'utils/FetchAPI'
 
 //import styles from './AdvancedSearch.less'

@@ -1225,4 +1225,4 @@ PropertyTable.propsType = {
   renderItem: PropTypes.func
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, DataTable, PropertyTable, Permission, TreeView };
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, DataTable, Permission, TreeView, PropertyTable };

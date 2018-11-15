@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import {Select,Input,Form,DatePicker} from 'antd'
-import {TreeSelectPicker} from '../TreeView/index'
+import {TreeSelectPicker} from '../TreeView'
 
 const Option=Select.Option
 

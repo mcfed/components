@@ -1,26 +1,11 @@
 
-import AdvancedSearch from './AdvancedSearch/index'
-import BaseForm from './BaseForm/index'
-import FormItem from './FormItem/index'
-import ButtonGroups from './ButtonGroups/index'
+export AdvancedSearch from './AdvancedSearch'
+export BaseForm from './BaseForm'
+export FormItem from './FormItem'
+export ButtonGroups from './ButtonGroups'
 // import CustomTable from './CustomTable'
-import DataTable from './DataTable/index'
-// import ModalAndView from './ModalAndView'
-import Permission from './Permission/index'
+export DataTable from './DataTable'
+export Permission from './Permission'
 //import SmartLink from './SmartLink'
-import TreeView from './TreeView/index'
-import PropertyTable from './PropertyTable/index'
-
-export {
-  AdvancedSearch,
-  BaseForm,
-  FormItem,
-  ButtonGroups,
-  // CustomTable,
-  DataTable,
-  PropertyTable,
-  // ModalAndView,
-  Permission,
-//  SmartLink,
-  TreeView
-}
+export TreeView from './TreeView'
+export PropertyTable from './PropertyTable'
