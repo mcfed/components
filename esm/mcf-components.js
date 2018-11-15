@@ -1,20 +1,20 @@
-import _objectWithoutProperties from '@babel/runtime/helpers/esm/objectWithoutProperties';
-import _classCallCheck from '@babel/runtime/helpers/esm/classCallCheck';
-import _createClass from '@babel/runtime/helpers/esm/createClass';
-import _possibleConstructorReturn from '@babel/runtime/helpers/esm/possibleConstructorReturn';
-import _getPrototypeOf from '@babel/runtime/helpers/esm/getPrototypeOf';
-import _inherits from '@babel/runtime/helpers/esm/inherits';
-import _defineProperty from '@babel/runtime/helpers/esm/defineProperty';
+import _objectWithoutProperties from '@babel/runtime/helpers/objectWithoutProperties';
+import _classCallCheck from '@babel/runtime/helpers/classCallCheck';
+import _createClass from '@babel/runtime/helpers/createClass';
+import _possibleConstructorReturn from '@babel/runtime/helpers/possibleConstructorReturn';
+import _getPrototypeOf from '@babel/runtime/helpers/getPrototypeOf';
+import _inherits from '@babel/runtime/helpers/inherits';
+import _defineProperty from '@babel/runtime/helpers/defineProperty';
 import _Form from 'antd/es/form';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _Button from 'antd/es/button';
 import _TreeSelect from 'antd/es/tree-select';
-import _extends from '@babel/runtime/helpers/esm/extends';
-import _assertThisInitialized from '@babel/runtime/helpers/esm/assertThisInitialized';
+import _extends from '@babel/runtime/helpers/extends';
+import _assertThisInitialized from '@babel/runtime/helpers/assertThisInitialized';
 import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
-import _objectSpread from '@babel/runtime/helpers/esm/objectSpread';
+import _objectSpread from '@babel/runtime/helpers/objectSpread';
 import _DatePicker from 'antd/es/date-picker';
 import _Select from 'antd/es/select';
 import _Row from 'antd/es/row';
@@ -909,7 +909,6 @@ function (_Component2) {
 
       var children = this.props.children;
       var childrenArray = React.Children.toArray(children); // let {appReducer} = this.context
-      // console.log(this.context.appReducer)
 
       return childrenArray // .filter((it)=>{
       //   return it.props.permission==undefined?true:hasPermission(it.props.permission)
