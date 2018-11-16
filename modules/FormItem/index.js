@@ -118,9 +118,15 @@ export default class FormItem extends Component{
         style:{marginBottom:0}
       }
     }
+    // console.log(element.props.hidden)
+    if(element.props.hidden==true){
+      styles={
+        style:{display:"none"}
+      }
+    }
     // console.log(`name:${name},value:${defaultValue}`)
     return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
-      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
+      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false})(this.renderField())}
     </Form.Item>)
   }
 }

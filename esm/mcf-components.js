@@ -589,6 +589,15 @@ function (_Component) {
             marginBottom: 0
           }
         };
+      } // console.log(element.props.hidden)
+
+
+      if (element.props.hidden == true) {
+        styles = {
+          style: {
+            display: "none"
+          }
+        };
       } // console.log(`name:${name},value:${defaultValue}`)
 
 
@@ -597,7 +606,8 @@ function (_Component) {
       }, Object.assign({}, {}, formLayout, this.props), {
         colon: false
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
-        initialValue: defaultValue
+        initialValue: defaultValue,
+        hidden: element.props.hidden || false
       }))(this.renderField()));
     }
   }]);
