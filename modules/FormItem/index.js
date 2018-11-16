@@ -45,6 +45,7 @@ export default class FormItem extends Component{
     // if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
     // {
     //     this.fetchData(field.props.fetch,field.props.params)
+    //     11
     // }
 
   }
@@ -118,7 +119,6 @@ export default class FormItem extends Component{
         style:{marginBottom:0}
       }
     }
-    // console.log(`name:${name},value:${defaultValue}`)
     return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
       {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
     </Form.Item>)

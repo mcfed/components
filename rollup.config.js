@@ -1,6 +1,6 @@
 import babel from "rollup-plugin-babel"
 import replace from "rollup-plugin-replace"
-//import commonjs from "rollup-plugin-commonjs"
+import commonjs from "rollup-plugin-commonjs"
 import nodeResolve from "rollup-plugin-node-resolve"
 import localResolve from 'rollup-plugin-local-resolve'
 import { sizeSnapshot } from "rollup-plugin-size-snapshot"
@@ -28,18 +28,17 @@ const babelOptionsESM = {
 const commonjsOptions = {
   include: /node_modules/
 };
-const external = id => !id.startsWith(".") && !id.startsWith("/");
+const external = ['moment']
 
 export default [{
   input,
   output: { file: `esm/${pkg.name}.js`, format: "esm" },
-  external:Object.keys(globals),
+  external:['moment'],
   plugins: [
     localResolve(),
     babel(babelOptionsESM),
     sizeSnapshot()
   ]
-  /*
 },{
    input,
    output: { file: `umd/${pkg.name}.js`, format: "umd", name, globals },
@@ -51,5 +50,4 @@ export default [{
      replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
      sizeSnapshot()
    ]
-   */
 }]
