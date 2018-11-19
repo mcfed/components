@@ -2,7 +2,7 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import toJson from 'enzyme-to-json'
 import {Table} from 'antd'
-import DataTable from '../DataTable'
+import DataTable from '../index'
 
 const setup = () => {
   // 模拟 props
