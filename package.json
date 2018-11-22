@@ -2,7 +2,7 @@
   "name": "mcf-components",
   "version": "1.0.0",
   "description": "@mcf for crud",
-  "main":"umd/mcf-components.js",
+  "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",
   "scripts": {
     "test": "jest",

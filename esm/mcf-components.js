@@ -739,12 +739,21 @@ function (_Component) {
         };
       }
 
+      if (element.props.hidden == true) {
+        styles = {
+          style: {
+            display: "none"
+          }
+        };
+      }
+
       return React.createElement(_Form.Item, _extends({
         label: label
       }, Object.assign({}, {}, formLayout, this.props), {
         colon: false
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
-        initialValue: defaultValue
+        initialValue: defaultValue,
+        hidden: element.props.hidden || false
       }))(this.renderField()));
     }
   }]);
@@ -1218,8 +1227,13 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(TableMenu)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-      visible: true //请求远程数据接口
+      visible: true,
+      columns: [] //请求远程数据接口
 
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "saveFormRef", function (form) {
+      return _this.form = form;
     });
 
     return _this;
@@ -1230,42 +1244,55 @@ function (_Component) {
     value: function componentWillMount() {
       var actions = this.props.actions;
     } // //处理表格提交后动作
-    // handleOk(){
-    //   console.log(this)
-    //   this.form.onSubmit()
-    //   let { onClosePopup } = this.props
-    //   onClosePopup()
-    // }
-    // saveFormRef=(form)=>this.form=form
-    // handleSubmit(values){
-    //   var {onSelectChange}=this.props
-    //   console.log(values)
-    //    // return new API().fetchTableColumns(values).then(json => {
-    //    //   onSelectChange(values.isShowArr)
-    //    //   // console.log(json,values)
-    //    // }).catch(ex => {
-    //    //   return "error"
-    //    // })
-    // }
 
   }, {
-    key: "handleChange",
-    value: function handleChange(value) {
-      // console.log(value)
+    key: "handleOk",
+    value: function handleOk() {
+      var columns = this.state.columns;
+      var _this$props = this.props,
+          onSelectChange = _this$props.onSelectChange,
+          onClosePopup = _this$props.onClosePopup; //  console.log(columns)
+
+      onSelectChange(columns); //  this.form.onSubmit()
+
+      onClosePopup();
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(values) {
       var onSelectChange = this.props.onSelectChange;
-      onSelectChange(value);
+      this.setState({
+        columns: values
+      }); //  console.log(values)
+      // return new API().fetchTableColumns(values).then(json => {
+      //   onSelectChange(values.isShowArr)
+      //   // console.log(json,values)
+      // }).catch(ex => {
+      //   return "error"
+      // })
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(values) {
+      var onSelectChange = this.props.onSelectChange;
+      console.log(values);
+      this.setState({
+        columns: values
+      }); // console.log(value)
+      // const { onSelectChange } =this.props
+      // onSelectChange(value)
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          form = _this$props.form,
-          initialValues = _this$props.initialValues,
-          handleSubmit = _this$props.handleSubmit,
-          children = _this$props.children,
-          defaultValue = _this$props.defaultValue,
-          columns = _this$props.columns,
-          onClosePopup = _this$props.onClosePopup;
+      var _this$props2 = this.props,
+          form = _this$props2.form,
+          initialValues = _this$props2.initialValues,
+          handleSubmit = _this$props2.handleSubmit,
+          children = _this$props2.children,
+          defaultValue = _this$props2.defaultValue,
+          columns = _this$props2.columns,
+          onClosePopup = _this$props2.onClosePopup;
       var saveFormRef = this.saveFormRef;
       return React.createElement(_Form, {
         onSubmit: handleSubmit,
@@ -1288,7 +1315,21 @@ function (_Component) {
           value: it.key,
           disabled: it.isRead == 1 ? true : false
         }, it.title));
-      }))));
+      }))), React.createElement("div", {
+        style: {
+          textAlign: 'right'
+        }
+      }, React.createElement(_Button, {
+        size: "small",
+        onClick: onClosePopup
+      }, "\u53D6\u6D88"), React.createElement(_Button, {
+        size: "small",
+        type: "primary",
+        onClick: this.handleOk.bind(this),
+        style: {
+          marginLeft: '10px'
+        }
+      }, "\u786E\u5B9A")));
     }
   }]);
 
@@ -1337,6 +1378,7 @@ function (_Component2) {
   }, {
     key: "onSelectChange",
     value: function onSelectChange(checkedValues) {
+      //console.log(checkedValues)
       this.setState({
         columns: this.state.columns.map(function (col) {
           if (checkedValues.indexOf(col.key) >= 0) {
@@ -1370,10 +1412,11 @@ function (_Component2) {
       // console.log("menu")
       var columns = this.state.columns;
       var defaultValue = columns.filter(function (col) {
-        return col.type != 'config' && (col.visible = true || col.visible == undefined);
+        return col.type != 'config' && (col.visible === true || col.visible === undefined);
       }).map(function (col) {
         return col.key;
-      });
+      }); //console.log(defaultValue)
+
       return React.createElement("div", {
         className: "",
         style: {
@@ -1392,11 +1435,11 @@ function (_Component2) {
   }, {
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          pagination = _this$props2.pagination,
-          showConfig = _this$props2.showConfig,
-          page = _this$props2.page,
-          otherProps = _objectWithoutProperties(_this$props2, ["pagination", "showConfig", "page"]);
+      var _this$props3 = this.props,
+          pagination = _this$props3.pagination,
+          showConfig = _this$props3.showConfig,
+          page = _this$props3.page,
+          otherProps = _objectWithoutProperties(_this$props3, ["pagination", "showConfig", "page"]);
 
       var _this$state = this.state,
           visible = _this$state.visible,
@@ -1418,7 +1461,8 @@ function (_Component2) {
         }]);
       } else {
         newColumns = columns;
-      }
+      } //console.log(newColumns,columns)
+
 
       return React.createElement(_Table, _extends({}, otherProps, {
         columns: newColumns,
