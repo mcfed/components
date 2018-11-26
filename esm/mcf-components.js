@@ -1015,18 +1015,18 @@ AdvancedSearchForm.defaultProps = {
 *children 1个 多个数据格式处理
 *
 */
-var Comfirm =
+var Confirm =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(Comfirm, _Component);
+  _inherits(Confirm, _Component);
 
-  function Comfirm() {
-    _classCallCheck(this, Comfirm);
+  function Confirm() {
+    _classCallCheck(this, Confirm);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Comfirm).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Confirm).apply(this, arguments));
   }
 
-  _createClass(Comfirm, [{
+  _createClass(Confirm, [{
     key: "onConfirmClick",
     value: function onConfirmClick() {
       var _this$props = this.props,
@@ -1051,7 +1051,7 @@ function (_Component) {
     }
   }]);
 
-  return Comfirm;
+  return Confirm;
 }(Component);
 
 var ButtonGroups =
@@ -1096,7 +1096,7 @@ function (_Component2) {
           actionkey = _it$props.actionkey;
 
       if (confirm) {
-        return React.createElement(Comfirm, Object.assign({}, {
+        return React.createElement(Confirm, Object.assign({}, {
           key: idx,
           title: "确认框",
           content: confirm,
@@ -1201,7 +1201,7 @@ _defineProperty(ButtonGroups, "contextTypes", {
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick: PropTypes.func,
-  children: PropTypes.array
+  children: PropTypes.object
 };
 ButtonGroups.defaultProps = {
   showSize: 5

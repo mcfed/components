@@ -8,7 +8,7 @@ import {Button,Icon,Tooltip,Menu,Dropdown,Modal} from 'antd'
 *
 */
 
-export class Comfirm extends Component{
+export class Confirm extends Component{
   onConfirmClick(){
     const {onConfirm,title,content}=this.props
     return Modal.confirm({
@@ -56,7 +56,7 @@ export default class ButtonGroups extends Component {
 
     if(confirm){
       return React.createElement(
-        Comfirm,
+        Confirm,
         Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
         React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props),children))
       )
@@ -140,7 +140,7 @@ export default class ButtonGroups extends Component {
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
-  children:PropTypes.array,
+  children:PropTypes.object,
 }
 ButtonGroups.defaultProps = {
   showSize:5,

@@ -47518,18 +47518,18 @@
 	*children 1个 多个数据格式处理
 	*
 	*/
-	var Comfirm =
+	var Confirm =
 	/*#__PURE__*/
 	function (_Component) {
-	  _inherits$1(Comfirm, _Component);
+	  _inherits$1(Confirm, _Component);
 
-	  function Comfirm() {
-	    _classCallCheck$1(this, Comfirm);
+	  function Confirm() {
+	    _classCallCheck$1(this, Confirm);
 
-	    return _possibleConstructorReturn$1(this, _getPrototypeOf(Comfirm).apply(this, arguments));
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(Confirm).apply(this, arguments));
 	  }
 
-	  _createClass$1(Comfirm, [{
+	  _createClass$1(Confirm, [{
 	    key: "onConfirmClick",
 	    value: function onConfirmClick() {
 	      var _this$props = this.props,
@@ -47554,7 +47554,7 @@
 	    }
 	  }]);
 
-	  return Comfirm;
+	  return Confirm;
 	}(React.Component);
 
 	var ButtonGroups =
@@ -47599,7 +47599,7 @@
 	          actionkey = _it$props.actionkey;
 
 	      if (confirm) {
-	        return React__default.createElement(Comfirm, Object.assign({}, {
+	        return React__default.createElement(Confirm, Object.assign({}, {
 	          key: idx,
 	          title: "确认框",
 	          content: confirm,
@@ -47704,7 +47704,7 @@
 	ButtonGroups.propTypes = {
 	  showSize: PropTypes__default.number,
 	  handleClick: PropTypes__default.func,
-	  children: PropTypes__default.array
+	  children: PropTypes__default.object
 	};
 	ButtonGroups.defaultProps = {
 	  showSize: 5
