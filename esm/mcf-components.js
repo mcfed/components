@@ -1093,9 +1093,10 @@ function (_Component2) {
           confirm = _it$props.confirm,
           placement = _it$props.placement,
           children = _it$props.children,
-          actionkey = _it$props.actionkey;
+          actionkey = _it$props.actionkey,
+          disabled = _it$props.disabled;
 
-      if (confirm) {
+      if (confirm && !disabled) {
         return React.createElement(Confirm, Object.assign({}, {
           key: idx,
           title: "确认框",

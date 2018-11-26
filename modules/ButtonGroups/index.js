@@ -52,9 +52,9 @@ export default class ButtonGroups extends Component {
 
   renderReactElement(it,idx){
     let {handleClick} = this.props
-    let {tip,confirm,placement,children,actionkey} = it.props
+    let {tip,confirm,placement,children,actionkey,disabled} = it.props
 
-    if(confirm){
+    if(confirm && !disabled){
       return React.createElement(
         Confirm,
         Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
