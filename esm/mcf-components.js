@@ -1093,9 +1093,10 @@ function (_Component2) {
           confirm = _it$props.confirm,
           placement = _it$props.placement,
           children = _it$props.children,
-          actionkey = _it$props.actionkey;
+          actionkey = _it$props.actionkey,
+          disabled = _it$props.disabled;
 
-      if (confirm) {
+      if (confirm && !disabled) {
         return React.createElement(Comfirm, Object.assign({}, {
           key: idx,
           title: "确认框",
@@ -1294,7 +1295,16 @@ function (_Component) {
           columns = _this$props2.columns,
           onClosePopup = _this$props2.onClosePopup;
       var saveFormRef = this.saveFormRef;
-      return React.createElement(_Form, {
+      return React.createElement("div", {
+        className: "",
+        style: {
+          width: 400,
+          height: 200,
+          padding: '10px',
+          border: '1px solid #cfdae5',
+          background: '#fff'
+        }
+      }, React.createElement(_Form, {
         onSubmit: handleSubmit,
         ref: saveFormRef,
         layout: "inline"
@@ -1329,7 +1339,7 @@ function (_Component) {
         style: {
           marginLeft: '10px'
         }
-      }, "\u786E\u5B9A")));
+      }, "\u786E\u5B9A"))));
     }
   }]);
 
@@ -1409,28 +1419,18 @@ function (_Component2) {
   }, {
     key: "renderTableMenu",
     value: function renderTableMenu() {
-      // console.log("menu")
       var columns = this.state.columns;
       var defaultValue = columns.filter(function (col) {
         return col.type != 'config' && (col.visible === true || col.visible === undefined);
       }).map(function (col) {
         return col.key;
-      }); //console.log(defaultValue)
-
-      return React.createElement("div", {
-        className: "",
-        style: {
-          width: 400,
-          height: 200,
-          padding: '10px',
-          border: '1px solid #cfdae5'
-        }
-      }, React.createElement(TableMenu, {
+      });
+      return React.createElement(TableMenu, {
         defaultValue: defaultValue,
         columns: columns,
         onSelectChange: this.onSelectChange.bind(this),
         onClosePopup: this.onClosePopup.bind(this)
-      }));
+      });
     }
   }, {
     key: "render",

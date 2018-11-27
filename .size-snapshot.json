@@ -1,21 +1,21 @@
 {
   "esm/mcf-components.js": {
-    "bundled": 42987,
-    "minified": 21911,
-    "gzipped": 5473,
+    "bundled": 43013,
+    "minified": 21946,
+    "gzipped": 5503,
     "treeshaked": {
       "rollup": {
-        "code": 15632,
+        "code": 15667,
         "import_statements": 567
       },
       "webpack": {
-        "code": 17647
+        "code": 17682
       }
     }
   },
   "umd/mcf-components.js": {
-    "bundled": 2270143,
-    "minified": 1147623,
-    "gzipped": 332177
+    "bundled": 2270170,
+    "minified": 1147658,
+    "gzipped": 332203
   }
 }

@@ -47596,9 +47596,10 @@
 	          confirm = _it$props.confirm,
 	          placement = _it$props.placement,
 	          children = _it$props.children,
-	          actionkey = _it$props.actionkey;
+	          actionkey = _it$props.actionkey,
+	          disabled = _it$props.disabled;
 
-	      if (confirm) {
+	      if (confirm && !disabled) {
 	        return React__default.createElement(Comfirm, Object.assign({}, {
 	          key: idx,
 	          title: "确认框",
@@ -56025,7 +56026,16 @@
 	          columns = _this$props2.columns,
 	          onClosePopup = _this$props2.onClosePopup;
 	      var saveFormRef = this.saveFormRef;
-	      return React__default.createElement(Form, {
+	      return React__default.createElement("div", {
+	        className: "",
+	        style: {
+	          width: 400,
+	          height: 200,
+	          padding: '10px',
+	          border: '1px solid #cfdae5',
+	          background: '#fff'
+	        }
+	      }, React__default.createElement(Form, {
 	        onSubmit: handleSubmit,
 	        ref: saveFormRef,
 	        layout: "inline"
@@ -56060,7 +56070,7 @@
 	        style: {
 	          marginLeft: '10px'
 	        }
-	      }, "\u786E\u5B9A")));
+	      }, "\u786E\u5B9A"))));
 	    }
 	  }]);
 
@@ -56140,28 +56150,18 @@
 	  }, {
 	    key: "renderTableMenu",
 	    value: function renderTableMenu() {
-	      // console.log("menu")
 	      var columns = this.state.columns;
 	      var defaultValue = columns.filter(function (col) {
 	        return col.type != 'config' && (col.visible === true || col.visible === undefined);
 	      }).map(function (col) {
 	        return col.key;
-	      }); //console.log(defaultValue)
-
-	      return React__default.createElement("div", {
-	        className: "",
-	        style: {
-	          width: 400,
-	          height: 200,
-	          padding: '10px',
-	          border: '1px solid #cfdae5'
-	        }
-	      }, React__default.createElement(TableMenu, {
+	      });
+	      return React__default.createElement(TableMenu, {
 	        defaultValue: defaultValue,
 	        columns: columns,
 	        onSelectChange: this.onSelectChange.bind(this),
 	        onClosePopup: this.onClosePopup.bind(this)
-	      }));
+	      });
 	    }
 	  }, {
 	    key: "render",
