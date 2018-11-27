@@ -28,7 +28,7 @@ export class Confirm extends Component{
 export default class ButtonGroups extends Component {
 
   static contextTypes = {
-    appReducer:PropTypes.object
+    // appReducer:PropTypes.object
   }
 
 
@@ -61,7 +61,15 @@ export default class ButtonGroups extends Component {
         React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props),children))
       )
     }else{
-      return React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props,{onClick:()=>{handleClick(actionkey)}}),children))
+      return React.createElement(
+        Tooltip,
+        Object.assign({},{key:idx,title:tip}),
+        React.cloneElement(
+          it,
+          Object.assign({},it.props,!disabled?{onClick:()=>{handleClick(actionkey)}}:{}),
+          children
+        )
+      )
     }
   }
     // return

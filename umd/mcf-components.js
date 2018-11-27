@@ -47518,18 +47518,18 @@
 	*children 1个 多个数据格式处理
 	*
 	*/
-	var Confirm =
+	var Comfirm =
 	/*#__PURE__*/
 	function (_Component) {
-	  _inherits$1(Confirm, _Component);
+	  _inherits$1(Comfirm, _Component);
 
-	  function Confirm() {
-	    _classCallCheck$1(this, Confirm);
+	  function Comfirm() {
+	    _classCallCheck$1(this, Comfirm);
 
-	    return _possibleConstructorReturn$1(this, _getPrototypeOf(Confirm).apply(this, arguments));
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(Comfirm).apply(this, arguments));
 	  }
 
-	  _createClass$1(Confirm, [{
+	  _createClass$1(Comfirm, [{
 	    key: "onConfirmClick",
 	    value: function onConfirmClick() {
 	      var _this$props = this.props,
@@ -47554,7 +47554,7 @@
 	    }
 	  }]);
 
-	  return Confirm;
+	  return Comfirm;
 	}(React.Component);
 
 	var ButtonGroups =
@@ -47600,7 +47600,7 @@
 	          disabled = _it$props.disabled;
 
 	      if (confirm && !disabled) {
-	        return React__default.createElement(Confirm, Object.assign({}, {
+	        return React__default.createElement(Comfirm, Object.assign({}, {
 	          key: idx,
 	          title: "确认框",
 	          content: confirm,
@@ -47705,7 +47705,7 @@
 	ButtonGroups.propTypes = {
 	  showSize: PropTypes__default.number,
 	  handleClick: PropTypes__default.func,
-	  children: PropTypes__default.object
+	  children: PropTypes__default.array
 	};
 	ButtonGroups.defaultProps = {
 	  showSize: 5
@@ -56026,7 +56026,16 @@
 	          columns = _this$props2.columns,
 	          onClosePopup = _this$props2.onClosePopup;
 	      var saveFormRef = this.saveFormRef;
-	      return React__default.createElement(Form, {
+	      return React__default.createElement("div", {
+	        className: "",
+	        style: {
+	          width: 400,
+	          height: 200,
+	          padding: '10px',
+	          border: '1px solid #cfdae5',
+	          background: '#fff'
+	        }
+	      }, React__default.createElement(Form, {
 	        onSubmit: handleSubmit,
 	        ref: saveFormRef,
 	        layout: "inline"
@@ -56061,7 +56070,7 @@
 	        style: {
 	          marginLeft: '10px'
 	        }
-	      }, "\u786E\u5B9A")));
+	      }, "\u786E\u5B9A"))));
 	    }
 	  }]);
 
@@ -56141,28 +56150,18 @@
 	  }, {
 	    key: "renderTableMenu",
 	    value: function renderTableMenu() {
-	      // console.log("menu")
 	      var columns = this.state.columns;
 	      var defaultValue = columns.filter(function (col) {
 	        return col.type != 'config' && (col.visible === true || col.visible === undefined);
 	      }).map(function (col) {
 	        return col.key;
-	      }); //console.log(defaultValue)
-
-	      return React__default.createElement("div", {
-	        className: "",
-	        style: {
-	          width: 400,
-	          height: 200,
-	          padding: '10px',
-	          border: '1px solid #cfdae5'
-	        }
-	      }, React__default.createElement(TableMenu, {
+	      });
+	      return React__default.createElement(TableMenu, {
 	        defaultValue: defaultValue,
 	        columns: columns,
 	        onSelectChange: this.onSelectChange.bind(this),
 	        onClosePopup: this.onClosePopup.bind(this)
-	      }));
+	      });
 	    }
 	  }, {
 	    key: "render",
