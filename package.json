@@ -2,7 +2,7 @@
   "name": "mcf-components",
   "version": "1.0.0",
   "description": "@mcf for crud",
-  "main":"umd/mcf-components.js",
+  "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",
   "scripts": {
     "test": "jest",
@@ -37,6 +37,7 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-local-resolve": "^1.0.7",
     "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-notify": "^1.0.6",
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-size-snapshot": "^0.7.0"
   },

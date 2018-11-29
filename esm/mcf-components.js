@@ -7,6 +7,7 @@ import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
 import _DatePicker from 'antd/es/date-picker';
 import _Select from 'antd/es/select';
+import moment from 'moment';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
 import classNames from 'classnames';
@@ -569,6 +570,9 @@ function (_Component3) {
 }(Component);
 
 var Option = _Select.Option;
+var MonthPicker = _DatePicker.MonthPicker,
+    RangePicker = _DatePicker.RangePicker,
+    WeekPicker = _DatePicker.WeekPicker;
 
 var FormItem =
 /*#__PURE__*/
@@ -714,7 +718,8 @@ function (_Component) {
       var element = this.props.children;
       var _element$props = element.props,
           name = _element$props.name,
-          label = _element$props.label;
+          label = _element$props.label,
+          format = _element$props.format;
 
       var _element$props2 = element.props,
           defaultValue = _element$props2.defaultValue,
@@ -725,10 +730,28 @@ function (_Component) {
           getFieldDecorator = _this$context.formRef.getFieldDecorator,
           formLayout = _this$context.formLayout;
       var styles = {};
+      var normalizeDefault = {};
 
-      if (element.type == _DatePicker.RangePicker) {
-        defaultValue = [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
-      } //  reset antd-form-item  marginBottom value
+      if (element.type.name == RangePicker.name) {
+        if (defaultValue == Array) {
+          defaultValue = defaultValue && [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
+        } else {
+          defaultValue = defaultValue == "" || !defaultValue ? null : moment(defaultValue);
+        } // normalizeDefault={
+        //   normalize:function(values){
+        //     console.log("normalize",values && [values[0].format(format),values[1].format(format)])
+        //     return values && [values[0].format(format),values[1].format(format)]
+        //   }
+        // }
+
+      } // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
+      //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
+      //    normalizeDefault={
+      //      normalize:function(values){
+      //        return values && values.format(format)
+      //      }
+      //    }
+      // }
 
 
       if (element.type === _Input && element.props.type === "hidden") {
@@ -745,7 +768,7 @@ function (_Component) {
         colon: false
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
         initialValue: defaultValue
-      }))(this.renderField()));
+      }, normalizeDefault))(this.renderField()));
     }
   }]);
 

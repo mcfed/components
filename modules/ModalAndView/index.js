@@ -1,7 +1,5 @@
 import React, {Component, PropTypes,Children} from 'react'
 import {Modal} from 'antd'
-//import {withRouter} from  'react-router'
-// import ErrorBoundary from 'components/ErrorBoundary'
 
 class ModalAndView extends Component {
 
@@ -11,7 +9,6 @@ class ModalAndView extends Component {
   }
   handleSaveRoute(){
     let { formView } =this.refs
-    //console.log(formView)
     formView.onSubmit()
   }
 

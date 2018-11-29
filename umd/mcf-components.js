@@ -10,16 +10,16 @@
 
 	var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
+	function commonjsRequire () {
+		throw new Error('Dynamic requires are not currently supported by rollup-plugin-commonjs');
+	}
+
 	function unwrapExports (x) {
 		return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x.default : x;
 	}
 
 	function createCommonjsModule(fn, module) {
 		return module = { exports: {} }, fn(module, module.exports), module.exports;
-	}
-
-	function getCjsExportFromNamespace (n) {
-		return n && n.default || n;
 	}
 
 	var _global = createCommonjsModule(function (module) {
@@ -287,7 +287,7 @@
 	  return store[key] || (store[key] = value !== undefined ? value : {});
 	})('versions', []).push({
 	  version: _core.version,
-	  mode: 'pure',
+	  mode: _library ? 'pure' : 'global',
 	  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 	});
 	});
@@ -1143,17 +1143,9 @@
 	// 24.3.3 JSON[@@toStringTag]
 	_setToStringTag(_global.JSON, 'JSON', true);
 
-
-
-	var es6_object_toString = /*#__PURE__*/Object.freeze({
-
-	});
-
 	_wksDefine('asyncIterator');
 
 	_wksDefine('observable');
-
-	getCjsExportFromNamespace(es6_object_toString);
 
 	var symbol = _core.Symbol;
 
@@ -7973,542 +7965,45 @@
 	    xxl: objectOrNumber
 	};
 
-	function omit(obj, fields) {
-	  var shallowCopy = _extends$1({}, obj);
-	  for (var i = 0; i < fields.length; i++) {
-	    var key = fields[i];
-	    delete shallowCopy[key];
+	function _classCallCheck$1(instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
 	  }
-	  return shallowCopy;
 	}
 
-	function fixControlledValue(value) {
-	    if (typeof value === 'undefined' || value === null) {
-	        return '';
-	    }
-	    return value;
+	function _defineProperties(target, props) {
+	  for (var i = 0; i < props.length; i++) {
+	    var descriptor = props[i];
+	    descriptor.enumerable = descriptor.enumerable || false;
+	    descriptor.configurable = true;
+	    if ("value" in descriptor) descriptor.writable = true;
+	    Object.defineProperty(target, descriptor.key, descriptor);
+	  }
 	}
 
-	var Input = function (_React$Component) {
-	    _inherits(Input, _React$Component);
-
-	    function Input() {
-	        _classCallCheck(this, Input);
-
-	        var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).apply(this, arguments));
-
-	        _this.handleKeyDown = function (e) {
-	            var _this$props = _this.props,
-	                onPressEnter = _this$props.onPressEnter,
-	                onKeyDown = _this$props.onKeyDown;
-
-	            if (e.keyCode === 13 && onPressEnter) {
-	                onPressEnter(e);
-	            }
-	            if (onKeyDown) {
-	                onKeyDown(e);
-	            }
-	        };
-	        _this.saveInput = function (node) {
-	            _this.input = node;
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Input, [{
-	        key: 'focus',
-	        value: function focus() {
-	            this.input.focus();
-	        }
-	    }, {
-	        key: 'blur',
-	        value: function blur() {
-	            this.input.blur();
-	        }
-	    }, {
-	        key: 'select',
-	        value: function select() {
-	            this.input.select();
-	        }
-	    }, {
-	        key: 'getInputClassName',
-	        value: function getInputClassName() {
-	            var _classNames;
-
-	            var _props = this.props,
-	                prefixCls = _props.prefixCls,
-	                size = _props.size,
-	                disabled = _props.disabled;
-
-	            return classnames(prefixCls, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-sm', size === 'small'), _defineProperty(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
-	        }
-	    }, {
-	        key: 'renderLabeledInput',
-	        value: function renderLabeledInput(children) {
-	            var _classNames3;
-
-	            var props = this.props;
-	            // Not wrap when there is not addons
-	            if (!props.addonBefore && !props.addonAfter) {
-	                return children;
-	            }
-	            var wrapperClassName = props.prefixCls + '-group';
-	            var addonClassName = wrapperClassName + '-addon';
-	            var addonBefore = props.addonBefore ? React.createElement(
-	                'span',
-	                { className: addonClassName },
-	                props.addonBefore
-	            ) : null;
-	            var addonAfter = props.addonAfter ? React.createElement(
-	                'span',
-	                { className: addonClassName },
-	                props.addonAfter
-	            ) : null;
-	            var className = classnames(props.prefixCls + '-wrapper', _defineProperty({}, wrapperClassName, addonBefore || addonAfter));
-	            var groupClassName = classnames(props.prefixCls + '-group-wrapper', (_classNames3 = {}, _defineProperty(_classNames3, props.prefixCls + '-group-wrapper-sm', props.size === 'small'), _defineProperty(_classNames3, props.prefixCls + '-group-wrapper-lg', props.size === 'large'), _classNames3));
-	            // Need another wrapper for changing display:table to display:inline-block
-	            // and put style prop in wrapper
-	            return React.createElement(
-	                'span',
-	                { className: groupClassName, style: props.style },
-	                React.createElement(
-	                    'span',
-	                    { className: className },
-	                    addonBefore,
-	                    React.cloneElement(children, { style: null }),
-	                    addonAfter
-	                )
-	            );
-	        }
-	    }, {
-	        key: 'renderLabeledIcon',
-	        value: function renderLabeledIcon(children) {
-	            var _classNames4;
-
-	            var props = this.props;
-
-	            if (!('prefix' in props || 'suffix' in props)) {
-	                return children;
-	            }
-	            var prefix = props.prefix ? React.createElement(
-	                'span',
-	                { className: props.prefixCls + '-prefix' },
-	                props.prefix
-	            ) : null;
-	            var suffix = props.suffix ? React.createElement(
-	                'span',
-	                { className: props.prefixCls + '-suffix' },
-	                props.suffix
-	            ) : null;
-	            var affixWrapperCls = classnames(props.className, props.prefixCls + '-affix-wrapper', (_classNames4 = {}, _defineProperty(_classNames4, props.prefixCls + '-affix-wrapper-sm', props.size === 'small'), _defineProperty(_classNames4, props.prefixCls + '-affix-wrapper-lg', props.size === 'large'), _classNames4));
-	            return React.createElement(
-	                'span',
-	                { className: affixWrapperCls, style: props.style },
-	                prefix,
-	                React.cloneElement(children, { style: null, className: this.getInputClassName() }),
-	                suffix
-	            );
-	        }
-	    }, {
-	        key: 'renderInput',
-	        value: function renderInput() {
-	            var _props2 = this.props,
-	                value = _props2.value,
-	                className = _props2.className;
-	            // Fix https://fb.me/react-unknown-prop
-
-	            var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'addonBefore', 'addonAfter', 'prefix', 'suffix']);
-	            if ('value' in this.props) {
-	                otherProps.value = fixControlledValue(value);
-	                // Input elements must be either controlled or uncontrolled,
-	                // specify either the value prop, or the defaultValue prop, but not both.
-	                delete otherProps.defaultValue;
-	            }
-	            return this.renderLabeledIcon(React.createElement('input', _extends$1({}, otherProps, { className: classnames(this.getInputClassName(), className), onKeyDown: this.handleKeyDown, ref: this.saveInput })));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return this.renderLabeledInput(this.renderInput());
-	        }
-	    }]);
-
-	    return Input;
-	}(React.Component);
-
-	Input.defaultProps = {
-	    prefixCls: 'ant-input',
-	    type: 'text',
-	    disabled: false
-	};
-	Input.propTypes = {
-	    type: PropTypes.string,
-	    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	    size: PropTypes.oneOf(['small', 'default', 'large']),
-	    maxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	    disabled: PropTypes.bool,
-	    value: PropTypes.any,
-	    defaultValue: PropTypes.any,
-	    className: PropTypes.string,
-	    addonBefore: PropTypes.node,
-	    addonAfter: PropTypes.node,
-	    prefixCls: PropTypes.string,
-	    onPressEnter: PropTypes.func,
-	    onKeyDown: PropTypes.func,
-	    onKeyUp: PropTypes.func,
-	    onFocus: PropTypes.func,
-	    onBlur: PropTypes.func,
-	    prefix: PropTypes.node,
-	    suffix: PropTypes.node
-	};
-
-	var Group = function Group(props) {
-	    var _classNames;
-
-	    var _props$prefixCls = props.prefixCls,
-	        prefixCls = _props$prefixCls === undefined ? 'ant-input-group' : _props$prefixCls,
-	        _props$className = props.className,
-	        className = _props$className === undefined ? '' : _props$className;
-
-	    var cls = classnames(prefixCls, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), _defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), _defineProperty(_classNames, prefixCls + '-compact', props.compact), _classNames), className);
-	    return React.createElement(
-	        'span',
-	        { className: cls, style: props.style, onMouseEnter: props.onMouseEnter, onMouseLeave: props.onMouseLeave, onFocus: props.onFocus, onBlur: props.onBlur },
-	        props.children
-	    );
-	};
-
-	var __rest$6 = undefined && undefined.__rest || function (s, e) {
-	    var t = {};
-	    for (var p in s) {
-	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
-	    }return t;
-	};
-
-	var Search = function (_React$Component) {
-	    _inherits(Search, _React$Component);
-
-	    function Search() {
-	        _classCallCheck(this, Search);
-
-	        var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
-
-	        _this.onSearch = function (e) {
-	            var onSearch = _this.props.onSearch;
-
-	            if (onSearch) {
-	                onSearch(_this.input.input.value, e);
-	            }
-	            _this.input.focus();
-	        };
-	        _this.saveInput = function (node) {
-	            _this.input = node;
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Search, [{
-	        key: 'focus',
-	        value: function focus() {
-	            this.input.focus();
-	        }
-	    }, {
-	        key: 'blur',
-	        value: function blur() {
-	            this.input.blur();
-	        }
-	    }, {
-	        key: 'getButtonOrIcon',
-	        value: function getButtonOrIcon() {
-	            var _props = this.props,
-	                enterButton = _props.enterButton,
-	                prefixCls = _props.prefixCls,
-	                size = _props.size,
-	                disabled = _props.disabled;
-
-	            var enterButtonAsElement = enterButton;
-	            var node = void 0;
-	            if (!enterButton) {
-	                node = React.createElement(Icon$1, { className: prefixCls + '-icon', type: 'search', key: 'searchIcon' });
-	            } else if (enterButtonAsElement.type === Button || enterButtonAsElement.type === 'button') {
-	                node = React.cloneElement(enterButtonAsElement, enterButtonAsElement.type === Button ? {
-	                    className: prefixCls + '-button',
-	                    size: size
-	                } : {});
-	            } else {
-	                node = React.createElement(
-	                    Button,
-	                    { className: prefixCls + '-button', type: 'primary', size: size, disabled: disabled, key: 'enterButton' },
-	                    enterButton === true ? React.createElement(Icon$1, { type: 'search' }) : enterButton
-	                );
-	            }
-	            return React.cloneElement(node, {
-	                onClick: this.onSearch
-	            });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _classNames;
-
-	            var _a = this.props,
-	                className = _a.className,
-	                prefixCls = _a.prefixCls,
-	                inputPrefixCls = _a.inputPrefixCls,
-	                size = _a.size,
-	                suffix = _a.suffix,
-	                enterButton = _a.enterButton,
-	                others = __rest$6(_a, ["className", "prefixCls", "inputPrefixCls", "size", "suffix", "enterButton"]);
-	            delete others.onSearch;
-	            var buttonOrIcon = this.getButtonOrIcon();
-	            var searchSuffix = suffix ? [suffix, buttonOrIcon] : buttonOrIcon;
-	            var inputClassName = classnames(prefixCls, className, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-enter-button', !!enterButton), _defineProperty(_classNames, prefixCls + '-' + size, !!size), _classNames));
-	            return React.createElement(Input, _extends$1({ onPressEnter: this.onSearch }, others, { size: size, className: inputClassName, prefixCls: inputPrefixCls, suffix: searchSuffix, ref: this.saveInput }));
-	        }
-	    }]);
-
-	    return Search;
-	}(React.Component);
-
-	Search.defaultProps = {
-	    inputPrefixCls: 'ant-input',
-	    prefixCls: 'ant-input-search',
-	    enterButton: false
-	};
-
-	// Thanks to https://github.com/andreypopp/react-textarea-autosize/
-	/**
-	 * calculateNodeHeight(uiTextNode, useCache = false)
-	 */
-	var HIDDEN_TEXTAREA_STYLE = '\n  min-height:0 !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n';
-	var SIZING_STYLE = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'text-rendering', 'text-transform', 'width', 'text-indent', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
-	var computedStyleCache = {};
-	var hiddenTextarea = void 0;
-	function calculateNodeStyling(node) {
-	    var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-	    var nodeRef = node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
-	    if (useCache && computedStyleCache[nodeRef]) {
-	        return computedStyleCache[nodeRef];
-	    }
-	    var style = window.getComputedStyle(node);
-	    var boxSizing = style.getPropertyValue('box-sizing') || style.getPropertyValue('-moz-box-sizing') || style.getPropertyValue('-webkit-box-sizing');
-	    var paddingSize = parseFloat(style.getPropertyValue('padding-bottom')) + parseFloat(style.getPropertyValue('padding-top'));
-	    var borderSize = parseFloat(style.getPropertyValue('border-bottom-width')) + parseFloat(style.getPropertyValue('border-top-width'));
-	    var sizingStyle = SIZING_STYLE.map(function (name) {
-	        return name + ':' + style.getPropertyValue(name);
-	    }).join(';');
-	    var nodeInfo = {
-	        sizingStyle: sizingStyle,
-	        paddingSize: paddingSize,
-	        borderSize: borderSize,
-	        boxSizing: boxSizing
-	    };
-	    if (useCache && nodeRef) {
-	        computedStyleCache[nodeRef] = nodeInfo;
-	    }
-	    return nodeInfo;
-	}
-	function calculateNodeHeight(uiTextNode) {
-	    var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-	    var minRows = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-	    var maxRows = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-
-	    if (!hiddenTextarea) {
-	        hiddenTextarea = document.createElement('textarea');
-	        document.body.appendChild(hiddenTextarea);
-	    }
-	    // Fix wrap="off" issue
-	    // https://github.com/ant-design/ant-design/issues/6577
-	    if (uiTextNode.getAttribute('wrap')) {
-	        hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap'));
-	    } else {
-	        hiddenTextarea.removeAttribute('wrap');
-	    }
-	    // Copy all CSS properties that have an impact on the height of the content in
-	    // the textbox
-
-	    var _calculateNodeStyling = calculateNodeStyling(uiTextNode, useCache),
-	        paddingSize = _calculateNodeStyling.paddingSize,
-	        borderSize = _calculateNodeStyling.borderSize,
-	        boxSizing = _calculateNodeStyling.boxSizing,
-	        sizingStyle = _calculateNodeStyling.sizingStyle;
-	    // Need to have the overflow attribute to hide the scrollbar otherwise
-	    // text-lines will not calculated properly as the shadow will technically be
-	    // narrower for content
-
-
-	    hiddenTextarea.setAttribute('style', sizingStyle + ';' + HIDDEN_TEXTAREA_STYLE);
-	    hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
-	    var minHeight = Number.MIN_SAFE_INTEGER;
-	    var maxHeight = Number.MAX_SAFE_INTEGER;
-	    var height = hiddenTextarea.scrollHeight;
-	    var overflowY = void 0;
-	    if (boxSizing === 'border-box') {
-	        // border-box: add border, since height = content + padding + border
-	        height = height + borderSize;
-	    } else if (boxSizing === 'content-box') {
-	        // remove padding, since height = content
-	        height = height - paddingSize;
-	    }
-	    if (minRows !== null || maxRows !== null) {
-	        // measure height of a textarea with a single row
-	        hiddenTextarea.value = ' ';
-	        var singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
-	        if (minRows !== null) {
-	            minHeight = singleRowHeight * minRows;
-	            if (boxSizing === 'border-box') {
-	                minHeight = minHeight + paddingSize + borderSize;
-	            }
-	            height = Math.max(minHeight, height);
-	        }
-	        if (maxRows !== null) {
-	            maxHeight = singleRowHeight * maxRows;
-	            if (boxSizing === 'border-box') {
-	                maxHeight = maxHeight + paddingSize + borderSize;
-	            }
-	            overflowY = height > maxHeight ? '' : 'hidden';
-	            height = Math.min(maxHeight, height);
-	        }
-	    }
-	    // Remove scroll bar flash when autosize without maxRows
-	    if (!maxRows) {
-	        overflowY = 'hidden';
-	    }
-	    return { height: height, minHeight: minHeight, maxHeight: maxHeight, overflowY: overflowY };
+	function _createClass$1(Constructor, protoProps, staticProps) {
+	  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+	  if (staticProps) _defineProperties(Constructor, staticProps);
+	  return Constructor;
 	}
 
-	function onNextFrame(cb) {
-	    if (window.requestAnimationFrame) {
-	        return window.requestAnimationFrame(cb);
-	    }
-	    return window.setTimeout(cb, 1);
+	function _defineProperty$1(obj, key, value) {
+	  if (key in obj) {
+	    Object.defineProperty(obj, key, {
+	      value: value,
+	      enumerable: true,
+	      configurable: true,
+	      writable: true
+	    });
+	  } else {
+	    obj[key] = value;
+	  }
+
+	  return obj;
 	}
-	function clearNextFrameAction(nextFrameId) {
-	    if (window.cancelAnimationFrame) {
-	        window.cancelAnimationFrame(nextFrameId);
-	    } else {
-	        window.clearTimeout(nextFrameId);
-	    }
-	}
 
-	var TextArea = function (_React$Component) {
-	    _inherits(TextArea, _React$Component);
-
-	    function TextArea() {
-	        _classCallCheck(this, TextArea);
-
-	        var _this = _possibleConstructorReturn(this, (TextArea.__proto__ || Object.getPrototypeOf(TextArea)).apply(this, arguments));
-
-	        _this.state = {
-	            textareaStyles: {}
-	        };
-	        _this.resizeTextarea = function () {
-	            var autosize = _this.props.autosize;
-
-	            if (!autosize || !_this.textAreaRef) {
-	                return;
-	            }
-	            var minRows = autosize ? autosize.minRows : null;
-	            var maxRows = autosize ? autosize.maxRows : null;
-	            var textareaStyles = calculateNodeHeight(_this.textAreaRef, false, minRows, maxRows);
-	            _this.setState({ textareaStyles: textareaStyles });
-	        };
-	        _this.handleTextareaChange = function (e) {
-	            if (!('value' in _this.props)) {
-	                _this.resizeTextarea();
-	            }
-	            var onChange = _this.props.onChange;
-
-	            if (onChange) {
-	                onChange(e);
-	            }
-	        };
-	        _this.handleKeyDown = function (e) {
-	            var _this$props = _this.props,
-	                onPressEnter = _this$props.onPressEnter,
-	                onKeyDown = _this$props.onKeyDown;
-
-	            if (e.keyCode === 13 && onPressEnter) {
-	                onPressEnter(e);
-	            }
-	            if (onKeyDown) {
-	                onKeyDown(e);
-	            }
-	        };
-	        _this.saveTextAreaRef = function (textArea) {
-	            _this.textAreaRef = textArea;
-	        };
-	        return _this;
-	    }
-
-	    _createClass(TextArea, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.resizeTextarea();
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            // Re-render with the new content then recalculate the height as required.
-	            if (this.props.value !== nextProps.value) {
-	                if (this.nextFrameActionId) {
-	                    clearNextFrameAction(this.nextFrameActionId);
-	                }
-	                this.nextFrameActionId = onNextFrame(this.resizeTextarea);
-	            }
-	        }
-	    }, {
-	        key: 'focus',
-	        value: function focus() {
-	            this.textAreaRef.focus();
-	        }
-	    }, {
-	        key: 'blur',
-	        value: function blur() {
-	            this.textAreaRef.blur();
-	        }
-	    }, {
-	        key: 'getTextAreaClassName',
-	        value: function getTextAreaClassName() {
-	            var _props = this.props,
-	                prefixCls = _props.prefixCls,
-	                className = _props.className,
-	                disabled = _props.disabled;
-
-	            return classnames(prefixCls, className, _defineProperty({}, prefixCls + '-disabled', disabled));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var props = this.props;
-	            var otherProps = omit(props, ['prefixCls', 'onPressEnter', 'autosize']);
-	            var style = _extends$1({}, props.style, this.state.textareaStyles);
-	            // Fix https://github.com/ant-design/ant-design/issues/6776
-	            // Make sure it could be reset when using form.getFieldDecorator
-	            if ('value' in otherProps) {
-	                otherProps.value = otherProps.value || '';
-	            }
-	            return React.createElement('textarea', _extends$1({}, otherProps, { className: this.getTextAreaClassName(), style: style, onKeyDown: this.handleKeyDown, onChange: this.handleTextareaChange, ref: this.saveTextAreaRef }));
-	        }
-	    }]);
-
-	    return TextArea;
-	}(React.Component);
-
-	TextArea.defaultProps = {
-	    prefixCls: 'ant-input'
-	};
-
-	Input.Group = Group;
-	Input.Search = Search;
-	Input.TextArea = TextArea;
-
-	var _extends_1 = createCommonjsModule(function (module) {
-	function _extends() {
-	  module.exports = _extends = Object.assign || function (target) {
+	function _extends$2() {
+	  _extends$2 = Object.assign || function (target) {
 	    for (var i = 1; i < arguments.length; i++) {
 	      var source = arguments[i];
 
@@ -8522,10 +8017,270 @@
 	    return target;
 	  };
 
-	  return _extends.apply(this, arguments);
+	  return _extends$2.apply(this, arguments);
 	}
 
-	module.exports = _extends;
+	function _objectSpread(target) {
+	  for (var i = 1; i < arguments.length; i++) {
+	    var source = arguments[i] != null ? arguments[i] : {};
+	    var ownKeys = Object.keys(source);
+
+	    if (typeof Object.getOwnPropertySymbols === 'function') {
+	      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
+	        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+	      }));
+	    }
+
+	    ownKeys.forEach(function (key) {
+	      _defineProperty$1(target, key, source[key]);
+	    });
+	  }
+
+	  return target;
+	}
+
+	function _inherits$1(subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function");
+	  }
+
+	  subClass.prototype = Object.create(superClass && superClass.prototype, {
+	    constructor: {
+	      value: subClass,
+	      writable: true,
+	      configurable: true
+	    }
+	  });
+	  if (superClass) _setPrototypeOf(subClass, superClass);
+	}
+
+	function _getPrototypeOf(o) {
+	  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+	    return o.__proto__ || Object.getPrototypeOf(o);
+	  };
+	  return _getPrototypeOf(o);
+	}
+
+	function _setPrototypeOf(o, p) {
+	  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+	    o.__proto__ = p;
+	    return o;
+	  };
+
+	  return _setPrototypeOf(o, p);
+	}
+
+	function _objectWithoutPropertiesLoose(source, excluded) {
+	  if (source == null) return {};
+	  var target = {};
+	  var sourceKeys = Object.keys(source);
+	  var key, i;
+
+	  for (i = 0; i < sourceKeys.length; i++) {
+	    key = sourceKeys[i];
+	    if (excluded.indexOf(key) >= 0) continue;
+	    target[key] = source[key];
+	  }
+
+	  return target;
+	}
+
+	function _objectWithoutProperties$1(source, excluded) {
+	  if (source == null) return {};
+
+	  var target = _objectWithoutPropertiesLoose(source, excluded);
+
+	  var key, i;
+
+	  if (Object.getOwnPropertySymbols) {
+	    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+	    for (i = 0; i < sourceSymbolKeys.length; i++) {
+	      key = sourceSymbolKeys[i];
+	      if (excluded.indexOf(key) >= 0) continue;
+	      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+	      target[key] = source[key];
+	    }
+	  }
+
+	  return target;
+	}
+
+	function _assertThisInitialized(self) {
+	  if (self === void 0) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }
+
+	  return self;
+	}
+
+	function _possibleConstructorReturn$1(self, call) {
+	  if (call && (typeof call === "object" || typeof call === "function")) {
+	    return call;
+	  }
+
+	  return _assertThisInitialized(self);
+	}
+
+	/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 */
+
+	function componentWillMount() {
+	  // Call this.constructor.gDSFP to support sub-classes.
+	  var state = this.constructor.getDerivedStateFromProps(this.props, this.state);
+	  if (state !== null && state !== undefined) {
+	    this.setState(state);
+	  }
+	}
+
+	function componentWillReceiveProps(nextProps) {
+	  // Call this.constructor.gDSFP to support sub-classes.
+	  // Use the setState() updater to ensure state isn't stale in certain edge cases.
+	  function updater(prevState) {
+	    var state = this.constructor.getDerivedStateFromProps(nextProps, prevState);
+	    return state !== null && state !== undefined ? state : null;
+	  }
+	  // Binding "this" is important for shallow renderer support.
+	  this.setState(updater.bind(this));
+	}
+
+	function componentWillUpdate(nextProps, nextState) {
+	  try {
+	    var prevProps = this.props;
+	    var prevState = this.state;
+	    this.props = nextProps;
+	    this.state = nextState;
+	    this.__reactInternalSnapshotFlag = true;
+	    this.__reactInternalSnapshot = this.getSnapshotBeforeUpdate(
+	      prevProps,
+	      prevState
+	    );
+	  } finally {
+	    this.props = prevProps;
+	    this.state = prevState;
+	  }
+	}
+
+	// React may warn about cWM/cWRP/cWU methods being deprecated.
+	// Add a flag to suppress these warnings for this special case.
+	componentWillMount.__suppressDeprecationWarning = true;
+	componentWillReceiveProps.__suppressDeprecationWarning = true;
+	componentWillUpdate.__suppressDeprecationWarning = true;
+
+	function polyfill(Component) {
+	  var prototype = Component.prototype;
+
+	  if (!prototype || !prototype.isReactComponent) {
+	    throw new Error('Can only polyfill class components');
+	  }
+
+	  if (
+	    typeof Component.getDerivedStateFromProps !== 'function' &&
+	    typeof prototype.getSnapshotBeforeUpdate !== 'function'
+	  ) {
+	    return Component;
+	  }
+
+	  // If new component APIs are defined, "unsafe" lifecycles won't be called.
+	  // Error if any of these lifecycles are present,
+	  // Because they would work differently between older and newer (16.3+) versions of React.
+	  var foundWillMountName = null;
+	  var foundWillReceivePropsName = null;
+	  var foundWillUpdateName = null;
+	  if (typeof prototype.componentWillMount === 'function') {
+	    foundWillMountName = 'componentWillMount';
+	  } else if (typeof prototype.UNSAFE_componentWillMount === 'function') {
+	    foundWillMountName = 'UNSAFE_componentWillMount';
+	  }
+	  if (typeof prototype.componentWillReceiveProps === 'function') {
+	    foundWillReceivePropsName = 'componentWillReceiveProps';
+	  } else if (typeof prototype.UNSAFE_componentWillReceiveProps === 'function') {
+	    foundWillReceivePropsName = 'UNSAFE_componentWillReceiveProps';
+	  }
+	  if (typeof prototype.componentWillUpdate === 'function') {
+	    foundWillUpdateName = 'componentWillUpdate';
+	  } else if (typeof prototype.UNSAFE_componentWillUpdate === 'function') {
+	    foundWillUpdateName = 'UNSAFE_componentWillUpdate';
+	  }
+	  if (
+	    foundWillMountName !== null ||
+	    foundWillReceivePropsName !== null ||
+	    foundWillUpdateName !== null
+	  ) {
+	    var componentName = Component.displayName || Component.name;
+	    var newApiName =
+	      typeof Component.getDerivedStateFromProps === 'function'
+	        ? 'getDerivedStateFromProps()'
+	        : 'getSnapshotBeforeUpdate()';
+
+	    throw Error(
+	      'Unsafe legacy lifecycles will not be called for components using new component APIs.\n\n' +
+	        componentName +
+	        ' uses ' +
+	        newApiName +
+	        ' but also contains the following legacy lifecycles:' +
+	        (foundWillMountName !== null ? '\n  ' + foundWillMountName : '') +
+	        (foundWillReceivePropsName !== null
+	          ? '\n  ' + foundWillReceivePropsName
+	          : '') +
+	        (foundWillUpdateName !== null ? '\n  ' + foundWillUpdateName : '') +
+	        '\n\nThe above lifecycles should be removed. Learn more about this warning here:\n' +
+	        'https://fb.me/react-async-component-lifecycle-hooks'
+	    );
+	  }
+
+	  // React <= 16.2 does not support static getDerivedStateFromProps.
+	  // As a workaround, use cWM and cWRP to invoke the new static lifecycle.
+	  // Newer versions of React will ignore these lifecycles if gDSFP exists.
+	  if (typeof Component.getDerivedStateFromProps === 'function') {
+	    prototype.componentWillMount = componentWillMount;
+	    prototype.componentWillReceiveProps = componentWillReceiveProps;
+	  }
+
+	  // React <= 16.2 does not support getSnapshotBeforeUpdate.
+	  // As a workaround, use cWU to invoke the new lifecycle.
+	  // Newer versions of React will ignore that lifecycle if gSBU exists.
+	  if (typeof prototype.getSnapshotBeforeUpdate === 'function') {
+	    if (typeof prototype.componentDidUpdate !== 'function') {
+	      throw new Error(
+	        'Cannot polyfill getSnapshotBeforeUpdate() for components that do not define componentDidUpdate() on the prototype'
+	      );
+	    }
+
+	    prototype.componentWillUpdate = componentWillUpdate;
+
+	    var componentDidUpdate = prototype.componentDidUpdate;
+
+	    prototype.componentDidUpdate = function componentDidUpdatePolyfill(
+	      prevProps,
+	      prevState,
+	      maybeSnapshot
+	    ) {
+	      // 16.3+ will not execute our will-update method;
+	      // It will pass a snapshot value to did-update though.
+	      // Older versions will require our polyfilled will-update value.
+	      // We need to handle both cases, but can't just check for the presence of "maybeSnapshot",
+	      // Because for <= 15.x versions this might be a "prevContext" object.
+	      // We also can't just check "__reactInternalSnapshot",
+	      // Because get-snapshot might return a falsy value.
+	      // So check for the explicit __reactInternalSnapshotFlag flag to determine behavior.
+	      var snapshot = this.__reactInternalSnapshotFlag
+	        ? this.__reactInternalSnapshot
+	        : maybeSnapshot;
+
+	      componentDidUpdate.call(this, prevProps, prevState, snapshot);
+	    };
+	  }
+
+	  return Component;
+	}
+
+	var reactLifecyclesCompat_es = /*#__PURE__*/Object.freeze({
+		polyfill: polyfill
 	});
 
 	/**
@@ -9045,16 +8800,12 @@
 	  }
 	};
 
-	function contains(root, n) {
-	  var node = n;
-	  while (node) {
-	    if (node === root) {
-	      return true;
-	    }
-	    node = node.parentNode;
-	  }
-
-	  return false;
+	function toArray(children) {
+	  var ret = [];
+	  React__default.Children.forEach(children, function (c) {
+	    ret.push(c);
+	  });
+	  return ret;
 	}
 
 	function toArrayChildren(children) {
@@ -9644,167 +9395,6 @@
 	  children: PropTypes__default.any
 	};
 
-	/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 */
-
-	function componentWillMount() {
-	  // Call this.constructor.gDSFP to support sub-classes.
-	  var state = this.constructor.getDerivedStateFromProps(this.props, this.state);
-	  if (state !== null && state !== undefined) {
-	    this.setState(state);
-	  }
-	}
-
-	function componentWillReceiveProps(nextProps) {
-	  // Call this.constructor.gDSFP to support sub-classes.
-	  // Use the setState() updater to ensure state isn't stale in certain edge cases.
-	  function updater(prevState) {
-	    var state = this.constructor.getDerivedStateFromProps(nextProps, prevState);
-	    return state !== null && state !== undefined ? state : null;
-	  }
-	  // Binding "this" is important for shallow renderer support.
-	  this.setState(updater.bind(this));
-	}
-
-	function componentWillUpdate(nextProps, nextState) {
-	  try {
-	    var prevProps = this.props;
-	    var prevState = this.state;
-	    this.props = nextProps;
-	    this.state = nextState;
-	    this.__reactInternalSnapshotFlag = true;
-	    this.__reactInternalSnapshot = this.getSnapshotBeforeUpdate(
-	      prevProps,
-	      prevState
-	    );
-	  } finally {
-	    this.props = prevProps;
-	    this.state = prevState;
-	  }
-	}
-
-	// React may warn about cWM/cWRP/cWU methods being deprecated.
-	// Add a flag to suppress these warnings for this special case.
-	componentWillMount.__suppressDeprecationWarning = true;
-	componentWillReceiveProps.__suppressDeprecationWarning = true;
-	componentWillUpdate.__suppressDeprecationWarning = true;
-
-	function polyfill(Component) {
-	  var prototype = Component.prototype;
-
-	  if (!prototype || !prototype.isReactComponent) {
-	    throw new Error('Can only polyfill class components');
-	  }
-
-	  if (
-	    typeof Component.getDerivedStateFromProps !== 'function' &&
-	    typeof prototype.getSnapshotBeforeUpdate !== 'function'
-	  ) {
-	    return Component;
-	  }
-
-	  // If new component APIs are defined, "unsafe" lifecycles won't be called.
-	  // Error if any of these lifecycles are present,
-	  // Because they would work differently between older and newer (16.3+) versions of React.
-	  var foundWillMountName = null;
-	  var foundWillReceivePropsName = null;
-	  var foundWillUpdateName = null;
-	  if (typeof prototype.componentWillMount === 'function') {
-	    foundWillMountName = 'componentWillMount';
-	  } else if (typeof prototype.UNSAFE_componentWillMount === 'function') {
-	    foundWillMountName = 'UNSAFE_componentWillMount';
-	  }
-	  if (typeof prototype.componentWillReceiveProps === 'function') {
-	    foundWillReceivePropsName = 'componentWillReceiveProps';
-	  } else if (typeof prototype.UNSAFE_componentWillReceiveProps === 'function') {
-	    foundWillReceivePropsName = 'UNSAFE_componentWillReceiveProps';
-	  }
-	  if (typeof prototype.componentWillUpdate === 'function') {
-	    foundWillUpdateName = 'componentWillUpdate';
-	  } else if (typeof prototype.UNSAFE_componentWillUpdate === 'function') {
-	    foundWillUpdateName = 'UNSAFE_componentWillUpdate';
-	  }
-	  if (
-	    foundWillMountName !== null ||
-	    foundWillReceivePropsName !== null ||
-	    foundWillUpdateName !== null
-	  ) {
-	    var componentName = Component.displayName || Component.name;
-	    var newApiName =
-	      typeof Component.getDerivedStateFromProps === 'function'
-	        ? 'getDerivedStateFromProps()'
-	        : 'getSnapshotBeforeUpdate()';
-
-	    throw Error(
-	      'Unsafe legacy lifecycles will not be called for components using new component APIs.\n\n' +
-	        componentName +
-	        ' uses ' +
-	        newApiName +
-	        ' but also contains the following legacy lifecycles:' +
-	        (foundWillMountName !== null ? '\n  ' + foundWillMountName : '') +
-	        (foundWillReceivePropsName !== null
-	          ? '\n  ' + foundWillReceivePropsName
-	          : '') +
-	        (foundWillUpdateName !== null ? '\n  ' + foundWillUpdateName : '') +
-	        '\n\nThe above lifecycles should be removed. Learn more about this warning here:\n' +
-	        'https://fb.me/react-async-component-lifecycle-hooks'
-	    );
-	  }
-
-	  // React <= 16.2 does not support static getDerivedStateFromProps.
-	  // As a workaround, use cWM and cWRP to invoke the new static lifecycle.
-	  // Newer versions of React will ignore these lifecycles if gDSFP exists.
-	  if (typeof Component.getDerivedStateFromProps === 'function') {
-	    prototype.componentWillMount = componentWillMount;
-	    prototype.componentWillReceiveProps = componentWillReceiveProps;
-	  }
-
-	  // React <= 16.2 does not support getSnapshotBeforeUpdate.
-	  // As a workaround, use cWU to invoke the new lifecycle.
-	  // Newer versions of React will ignore that lifecycle if gSBU exists.
-	  if (typeof prototype.getSnapshotBeforeUpdate === 'function') {
-	    if (typeof prototype.componentDidUpdate !== 'function') {
-	      throw new Error(
-	        'Cannot polyfill getSnapshotBeforeUpdate() for components that do not define componentDidUpdate() on the prototype'
-	      );
-	    }
-
-	    prototype.componentWillUpdate = componentWillUpdate;
-
-	    var componentDidUpdate = prototype.componentDidUpdate;
-
-	    prototype.componentDidUpdate = function componentDidUpdatePolyfill(
-	      prevProps,
-	      prevState,
-	      maybeSnapshot
-	    ) {
-	      // 16.3+ will not execute our will-update method;
-	      // It will pass a snapshot value to did-update though.
-	      // Older versions will require our polyfilled will-update value.
-	      // We need to handle both cases, but can't just check for the presence of "maybeSnapshot",
-	      // Because for <= 15.x versions this might be a "prevContext" object.
-	      // We also can't just check "__reactInternalSnapshot",
-	      // Because get-snapshot might return a falsy value.
-	      // So check for the explicit __reactInternalSnapshotFlag flag to determine behavior.
-	      var snapshot = this.__reactInternalSnapshotFlag
-	        ? this.__reactInternalSnapshot
-	        : maybeSnapshot;
-
-	      componentDidUpdate.call(this, prevProps, prevState, snapshot);
-	    };
-	  }
-
-	  return Component;
-	}
-
-	var reactLifecyclesCompat_es = /*#__PURE__*/Object.freeze({
-		polyfill: polyfill
-	});
-
 	var performanceNow = createCommonjsModule(function (module) {
 	// Generated by CoffeeScript 1.12.2
 	(function() {
@@ -9859,7 +9449,7 @@
 	// Some versions of FF have rAF but not cAF
 	if(!raf || !caf) {
 	  var last = 0
-	    , id$1 = 0
+	    , id$2 = 0
 	    , queue = []
 	    , frameDuration = 1000 / 60;
 
@@ -9886,11 +9476,11 @@
 	      }, Math.round(next));
 	    }
 	    queue.push({
-	      handle: ++id$1,
+	      handle: ++id$2,
 	      callback: callback,
 	      cancelled: false
 	    });
-	    return id$1
+	    return id$2
 	  };
 
 	  caf = function(handle) {
@@ -10617,5463 +10207,6 @@
 	  };
 	};
 
-	var LazyRenderBox = function (_React$Component) {
-	    _inherits(LazyRenderBox, _React$Component);
-
-	    function LazyRenderBox() {
-	        _classCallCheck(this, LazyRenderBox);
-
-	        return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
-	    }
-
-	    LazyRenderBox.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-	        return !!nextProps.hiddenClassName || !!nextProps.visible;
-	    };
-
-	    LazyRenderBox.prototype.render = function render() {
-	        var className = this.props.className;
-	        if (!!this.props.hiddenClassName && !this.props.visible) {
-	            className += " " + this.props.hiddenClassName;
-	        }
-	        var props = _extends$1({}, this.props);
-	        delete props.hiddenClassName;
-	        delete props.visible;
-	        props.className = className;
-	        return React.createElement("div", _extends$1({}, props));
-	    };
-
-	    return LazyRenderBox;
-	}(React.Component);
-
-	var cached = void 0;
-
-	function getScrollBarSize(fresh) {
-	  if (fresh || cached === undefined) {
-	    var inner = document.createElement('div');
-	    inner.style.width = '100%';
-	    inner.style.height = '200px';
-
-	    var outer = document.createElement('div');
-	    var outerStyle = outer.style;
-
-	    outerStyle.position = 'absolute';
-	    outerStyle.top = 0;
-	    outerStyle.left = 0;
-	    outerStyle.pointerEvents = 'none';
-	    outerStyle.visibility = 'hidden';
-	    outerStyle.width = '200px';
-	    outerStyle.height = '150px';
-	    outerStyle.overflow = 'hidden';
-
-	    outer.appendChild(inner);
-
-	    document.body.appendChild(outer);
-
-	    var widthContained = inner.offsetWidth;
-	    outer.style.overflow = 'scroll';
-	    var widthScroll = inner.offsetWidth;
-
-	    if (widthContained === widthScroll) {
-	      widthScroll = outer.clientWidth;
-	    }
-
-	    document.body.removeChild(outer);
-
-	    cached = widthContained - widthScroll;
-	  }
-	  return cached;
-	}
-
-	var uuid = 0;
-	var openCount = 0;
-	/* eslint react/no-is-mounted:0 */
-	function getScroll(w, top) {
-	    var ret = w['page' + (top ? 'Y' : 'X') + 'Offset'];
-	    var method = 'scroll' + (top ? 'Top' : 'Left');
-	    if (typeof ret !== 'number') {
-	        var d = w.document;
-	        ret = d.documentElement[method];
-	        if (typeof ret !== 'number') {
-	            ret = d.body[method];
-	        }
-	    }
-	    return ret;
-	}
-	function setTransformOrigin(node, value) {
-	    var style = node.style;
-	    ['Webkit', 'Moz', 'Ms', 'ms'].forEach(function (prefix) {
-	        style[prefix + 'TransformOrigin'] = value;
-	    });
-	    style['transformOrigin'] = value;
-	}
-	function offset(el) {
-	    var rect = el.getBoundingClientRect();
-	    var pos = {
-	        left: rect.left,
-	        top: rect.top
-	    };
-	    var doc = el.ownerDocument;
-	    var w = doc.defaultView || doc.parentWindow;
-	    pos.left += getScroll(w);
-	    pos.top += getScroll(w, true);
-	    return pos;
-	}
-
-	var Dialog = function (_React$Component) {
-	    _inherits(Dialog, _React$Component);
-
-	    function Dialog() {
-	        _classCallCheck(this, Dialog);
-
-	        var _this = _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
-
-	        _this.onAnimateLeave = function () {
-	            var afterClose = _this.props.afterClose;
-	            // need demo?
-	            // https://github.com/react-component/dialog/pull/28
-
-	            if (_this.wrap) {
-	                _this.wrap.style.display = 'none';
-	            }
-	            _this.inTransition = false;
-	            _this.removeScrollingEffect();
-	            if (afterClose) {
-	                afterClose();
-	            }
-	        };
-	        _this.onMaskClick = function (e) {
-	            // android trigger click on open (fastclick??)
-	            if (Date.now() - _this.openTime < 300) {
-	                return;
-	            }
-	            if (e.target === e.currentTarget) {
-	                _this.close(e);
-	            }
-	        };
-	        _this.onKeyDown = function (e) {
-	            var props = _this.props;
-	            if (props.keyboard && e.keyCode === KeyCode.ESC) {
-	                e.stopPropagation();
-	                _this.close(e);
-	                return;
-	            }
-	            // keep focus inside dialog
-	            if (props.visible) {
-	                if (e.keyCode === KeyCode.TAB) {
-	                    var activeElement = document.activeElement;
-	                    var sentinelStart = _this.sentinelStart;
-	                    if (e.shiftKey) {
-	                        if (activeElement === sentinelStart) {
-	                            _this.sentinelEnd.focus();
-	                        }
-	                    } else if (activeElement === _this.sentinelEnd) {
-	                        sentinelStart.focus();
-	                    }
-	                }
-	            }
-	        };
-	        _this.getDialogElement = function () {
-	            var props = _this.props;
-	            var closable = props.closable;
-	            var prefixCls = props.prefixCls;
-	            var dest = {};
-	            if (props.width !== undefined) {
-	                dest.width = props.width;
-	            }
-	            if (props.height !== undefined) {
-	                dest.height = props.height;
-	            }
-	            var footer = void 0;
-	            if (props.footer) {
-	                footer = React.createElement("div", { className: prefixCls + '-footer', ref: _this.saveRef('footer') }, props.footer);
-	            }
-	            var header = void 0;
-	            if (props.title) {
-	                header = React.createElement("div", { className: prefixCls + '-header', ref: _this.saveRef('header') }, React.createElement("div", { className: prefixCls + '-title', id: _this.titleId }, props.title));
-	            }
-	            var closer = void 0;
-	            if (closable) {
-	                closer = React.createElement("button", { onClick: _this.close, "aria-label": "Close", className: prefixCls + '-close' }, props.closeIcon || React.createElement("span", { className: prefixCls + '-close-x' }));
-	            }
-	            var style = _extends$1({}, props.style, dest);
-	            var sentinelStyle = { width: 0, height: 0, overflow: 'hidden' };
-	            var transitionName = _this.getTransitionName();
-	            var dialogElement = React.createElement(LazyRenderBox, { key: "dialog-element", role: "document", ref: _this.saveRef('dialog'), style: style, className: prefixCls + ' ' + (props.className || ''), visible: props.visible }, React.createElement("div", { tabIndex: 0, ref: _this.saveRef('sentinelStart'), style: sentinelStyle }, "sentinelStart"), React.createElement("div", { className: prefixCls + '-content' }, closer, header, React.createElement("div", _extends$1({ className: prefixCls + '-body', style: props.bodyStyle, ref: _this.saveRef('body') }, props.bodyProps), props.children), footer), React.createElement("div", { tabIndex: 0, ref: _this.saveRef('sentinelEnd'), style: sentinelStyle }, "sentinelEnd"));
-	            return React.createElement(Animate, { key: "dialog", showProp: "visible", onLeave: _this.onAnimateLeave, transitionName: transitionName, component: "", transitionAppear: true }, props.visible || !props.destroyOnClose ? dialogElement : null);
-	        };
-	        _this.getZIndexStyle = function () {
-	            var style = {};
-	            var props = _this.props;
-	            if (props.zIndex !== undefined) {
-	                style.zIndex = props.zIndex;
-	            }
-	            return style;
-	        };
-	        _this.getWrapStyle = function () {
-	            return _extends$1({}, _this.getZIndexStyle(), _this.props.wrapStyle);
-	        };
-	        _this.getMaskStyle = function () {
-	            return _extends$1({}, _this.getZIndexStyle(), _this.props.maskStyle);
-	        };
-	        _this.getMaskElement = function () {
-	            var props = _this.props;
-	            var maskElement = void 0;
-	            if (props.mask) {
-	                var maskTransition = _this.getMaskTransitionName();
-	                maskElement = React.createElement(LazyRenderBox, _extends$1({ style: _this.getMaskStyle(), key: "mask", className: props.prefixCls + '-mask', hiddenClassName: props.prefixCls + '-mask-hidden', visible: props.visible }, props.maskProps));
-	                if (maskTransition) {
-	                    maskElement = React.createElement(Animate, { key: "mask", showProp: "visible", transitionAppear: true, component: "", transitionName: maskTransition }, maskElement);
-	                }
-	            }
-	            return maskElement;
-	        };
-	        _this.getMaskTransitionName = function () {
-	            var props = _this.props;
-	            var transitionName = props.maskTransitionName;
-	            var animation = props.maskAnimation;
-	            if (!transitionName && animation) {
-	                transitionName = props.prefixCls + '-' + animation;
-	            }
-	            return transitionName;
-	        };
-	        _this.getTransitionName = function () {
-	            var props = _this.props;
-	            var transitionName = props.transitionName;
-	            var animation = props.animation;
-	            if (!transitionName && animation) {
-	                transitionName = props.prefixCls + '-' + animation;
-	            }
-	            return transitionName;
-	        };
-	        _this.setScrollbar = function () {
-	            if (_this.bodyIsOverflowing && _this.scrollbarWidth !== undefined) {
-	                document.body.style.paddingRight = _this.scrollbarWidth + 'px';
-	            }
-	        };
-	        _this.addScrollingEffect = function () {
-	            openCount++;
-	            if (openCount !== 1) {
-	                return;
-	            }
-	            _this.checkScrollbar();
-	            _this.setScrollbar();
-	            document.body.style.overflow = 'hidden';
-	            // this.adjustDialog();
-	        };
-	        _this.removeScrollingEffect = function () {
-	            openCount--;
-	            if (openCount !== 0) {
-	                return;
-	            }
-	            document.body.style.overflow = '';
-	            _this.resetScrollbar();
-	            // this.resetAdjustments();
-	        };
-	        _this.close = function (e) {
-	            var onClose = _this.props.onClose;
-
-	            if (onClose) {
-	                onClose(e);
-	            }
-	        };
-	        _this.checkScrollbar = function () {
-	            var fullWindowWidth = window.innerWidth;
-	            if (!fullWindowWidth) {
-	                // workaround for missing window.innerWidth in IE8
-	                var documentElementRect = document.documentElement.getBoundingClientRect();
-	                fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left);
-	            }
-	            _this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth;
-	            if (_this.bodyIsOverflowing) {
-	                _this.scrollbarWidth = getScrollBarSize();
-	            }
-	        };
-	        _this.resetScrollbar = function () {
-	            document.body.style.paddingRight = '';
-	        };
-	        _this.adjustDialog = function () {
-	            if (_this.wrap && _this.scrollbarWidth !== undefined) {
-	                var modalIsOverflowing = _this.wrap.scrollHeight > document.documentElement.clientHeight;
-	                _this.wrap.style.paddingLeft = (!_this.bodyIsOverflowing && modalIsOverflowing ? _this.scrollbarWidth : '') + 'px';
-	                _this.wrap.style.paddingRight = (_this.bodyIsOverflowing && !modalIsOverflowing ? _this.scrollbarWidth : '') + 'px';
-	            }
-	        };
-	        _this.resetAdjustments = function () {
-	            if (_this.wrap) {
-	                _this.wrap.style.paddingLeft = _this.wrap.style.paddingLeft = '';
-	            }
-	        };
-	        _this.saveRef = function (name) {
-	            return function (node) {
-	                _this[name] = node;
-	            };
-	        };
-	        return _this;
-	    }
-
-	    Dialog.prototype.componentWillMount = function componentWillMount() {
-	        this.inTransition = false;
-	        this.titleId = 'rcDialogTitle' + uuid++;
-	    };
-
-	    Dialog.prototype.componentDidMount = function componentDidMount() {
-	        this.componentDidUpdate({});
-	    };
-
-	    Dialog.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
-	        var props = this.props;
-	        var mousePosition = this.props.mousePosition;
-	        if (props.visible) {
-	            // first show
-	            if (!prevProps.visible) {
-	                this.openTime = Date.now();
-	                this.addScrollingEffect();
-	                this.tryFocus();
-	                var dialogNode = ReactDOM.findDOMNode(this.dialog);
-	                if (mousePosition) {
-	                    var elOffset = offset(dialogNode);
-	                    setTransformOrigin(dialogNode, mousePosition.x - elOffset.left + 'px ' + (mousePosition.y - elOffset.top) + 'px');
-	                } else {
-	                    setTransformOrigin(dialogNode, '');
-	                }
-	            }
-	        } else if (prevProps.visible) {
-	            this.inTransition = true;
-	            if (props.mask && this.lastOutSideFocusNode) {
-	                try {
-	                    this.lastOutSideFocusNode.focus();
-	                } catch (e) {
-	                    this.lastOutSideFocusNode = null;
-	                }
-	                this.lastOutSideFocusNode = null;
-	            }
-	        }
-	    };
-
-	    Dialog.prototype.componentWillUnmount = function componentWillUnmount() {
-	        if (this.props.visible || this.inTransition) {
-	            this.removeScrollingEffect();
-	        }
-	    };
-
-	    Dialog.prototype.tryFocus = function tryFocus() {
-	        if (!contains(this.wrap, document.activeElement)) {
-	            this.lastOutSideFocusNode = document.activeElement;
-	            this.sentinelStart.focus();
-	        }
-	    };
-
-	    Dialog.prototype.render = function render() {
-	        var props = this.props;
-	        var prefixCls = props.prefixCls,
-	            maskClosable = props.maskClosable;
-
-	        var style = this.getWrapStyle();
-	        // clear hide display
-	        // and only set display after async anim, not here for hide
-	        if (props.visible) {
-	            style.display = null;
-	        }
-	        return React.createElement("div", null, this.getMaskElement(), React.createElement("div", _extends$1({ tabIndex: -1, onKeyDown: this.onKeyDown, className: prefixCls + '-wrap ' + (props.wrapClassName || ''), ref: this.saveRef('wrap'), onClick: maskClosable ? this.onMaskClick : undefined, role: "dialog", "aria-labelledby": props.title ? this.titleId : null, style: style }, props.wrapProps), this.getDialogElement()));
-	    };
-
-	    return Dialog;
-	}(React.Component);
-
-	Dialog.defaultProps = {
-	    className: '',
-	    mask: true,
-	    visible: false,
-	    keyboard: true,
-	    closable: true,
-	    maskClosable: true,
-	    destroyOnClose: false,
-	    prefixCls: 'rc-dialog'
-	};
-
-	var ContainerRender = function (_React$Component) {
-	  _inherits(ContainerRender, _React$Component);
-
-	  function ContainerRender() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
-	    _classCallCheck(this, ContainerRender);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ContainerRender.__proto__ || Object.getPrototypeOf(ContainerRender)).call.apply(_ref, [this].concat(args))), _this), _this.removeContainer = function () {
-	      if (_this.container) {
-	        ReactDOM__default.unmountComponentAtNode(_this.container);
-	        _this.container.parentNode.removeChild(_this.container);
-	        _this.container = null;
-	      }
-	    }, _this.renderComponent = function (props, ready) {
-	      var _this$props = _this.props,
-	          visible = _this$props.visible,
-	          getComponent = _this$props.getComponent,
-	          forceRender = _this$props.forceRender,
-	          getContainer = _this$props.getContainer,
-	          parent = _this$props.parent;
-
-	      if (visible || parent._component || forceRender) {
-	        if (!_this.container) {
-	          _this.container = getContainer();
-	        }
-	        ReactDOM__default.unstable_renderSubtreeIntoContainer(parent, getComponent(props), _this.container, function callback() {
-	          if (ready) {
-	            ready.call(this);
-	          }
-	        });
-	      }
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
-	  }
-
-	  _createClass(ContainerRender, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      if (this.props.autoMount) {
-	        this.renderComponent();
-	      }
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate() {
-	      if (this.props.autoMount) {
-	        this.renderComponent();
-	      }
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      if (this.props.autoDestroy) {
-	        this.removeContainer();
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return this.props.children({
-	        renderComponent: this.renderComponent,
-	        removeContainer: this.removeContainer
-	      });
-	    }
-	  }]);
-
-	  return ContainerRender;
-	}(React__default.Component);
-
-	ContainerRender.propTypes = {
-	  autoMount: PropTypes__default.bool,
-	  autoDestroy: PropTypes__default.bool,
-	  visible: PropTypes__default.bool,
-	  forceRender: PropTypes__default.bool,
-	  parent: PropTypes__default.any,
-	  getComponent: PropTypes__default.func.isRequired,
-	  getContainer: PropTypes__default.func.isRequired,
-	  children: PropTypes__default.func.isRequired
-	};
-	ContainerRender.defaultProps = {
-	  autoMount: true,
-	  autoDestroy: true,
-	  forceRender: false
-	};
-
-	var Portal = function (_React$Component) {
-	  _inherits(Portal, _React$Component);
-
-	  function Portal() {
-	    _classCallCheck(this, Portal);
-
-	    return _possibleConstructorReturn(this, (Portal.__proto__ || Object.getPrototypeOf(Portal)).apply(this, arguments));
-	  }
-
-	  _createClass(Portal, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.createContainer();
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate(prevProps) {
-	      var didUpdate = this.props.didUpdate;
-
-	      if (didUpdate) {
-	        didUpdate(prevProps);
-	      }
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this.removeContainer();
-	    }
-	  }, {
-	    key: 'createContainer',
-	    value: function createContainer() {
-	      this._container = this.props.getContainer();
-	      this.forceUpdate();
-	    }
-	  }, {
-	    key: 'removeContainer',
-	    value: function removeContainer() {
-	      if (this._container) {
-	        this._container.parentNode.removeChild(this._container);
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      if (this._container) {
-	        return ReactDOM__default.createPortal(this.props.children, this._container);
-	      }
-	      return null;
-	    }
-	  }]);
-
-	  return Portal;
-	}(React__default.Component);
-
-	Portal.propTypes = {
-	  getContainer: PropTypes__default.func.isRequired,
-	  children: PropTypes__default.node.isRequired,
-	  didUpdate: PropTypes__default.func
-	};
-
-	var IS_REACT_16 = 'createPortal' in ReactDOM;
-
-	var DialogWrap = function (_React$Component) {
-	    _inherits(DialogWrap, _React$Component);
-
-	    function DialogWrap() {
-	        _classCallCheck(this, DialogWrap);
-
-	        var _this = _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
-
-	        _this.saveDialog = function (node) {
-	            _this._component = node;
-	        };
-	        _this.getComponent = function () {
-	            var extra = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	            return React.createElement(Dialog, _extends$1({ ref: _this.saveDialog }, _this.props, extra, { key: "dialog" }));
-	        };
-	        // fix issue #10656
-	        /*
-	        * Custom container should not be return, because in the Portal component, it will remove the
-	        * return container element here, if the custom container is the only child of it's component,
-	        * like issue #10656, It will has a conflict with removeChild method in react-dom.
-	        * So here should add a child (div element) to custom container.
-	        * */
-	        _this.getContainer = function () {
-	            var container = document.createElement('div');
-	            if (_this.props.getContainer) {
-	                _this.props.getContainer().appendChild(container);
-	            } else {
-	                document.body.appendChild(container);
-	            }
-	            return container;
-	        };
-	        return _this;
-	    }
-
-	    DialogWrap.prototype.shouldComponentUpdate = function shouldComponentUpdate(_ref) {
-	        var visible = _ref.visible;
-
-	        return !!(this.props.visible || visible);
-	    };
-
-	    DialogWrap.prototype.componentWillUnmount = function componentWillUnmount() {
-	        if (IS_REACT_16) {
-	            return;
-	        }
-	        if (this.props.visible) {
-	            this.renderComponent({
-	                afterClose: this.removeContainer,
-	                onClose: function onClose() {},
-
-	                visible: false
-	            });
-	        } else {
-	            this.removeContainer();
-	        }
-	    };
-
-	    DialogWrap.prototype.render = function render() {
-	        var _this2 = this;
-
-	        var visible = this.props.visible;
-
-	        var portal = null;
-	        if (!IS_REACT_16) {
-	            return React.createElement(ContainerRender, { parent: this, visible: visible, autoDestroy: false, getComponent: this.getComponent, getContainer: this.getContainer }, function (_ref2) {
-	                var renderComponent = _ref2.renderComponent,
-	                    removeContainer = _ref2.removeContainer;
-
-	                _this2.renderComponent = renderComponent;
-	                _this2.removeContainer = removeContainer;
-	                return null;
-	            });
-	        }
-	        if (visible || this._component) {
-	            portal = React.createElement(Portal, { getContainer: this.getContainer }, this.getComponent());
-	        }
-	        return portal;
-	    };
-
-	    return DialogWrap;
-	}(React.Component);
-
-	DialogWrap.defaultProps = {
-	    visible: false
-	};
-
-	var EventBaseObject_1 = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function returnFalse() {
-	  return false;
-	}
-
-	function returnTrue() {
-	  return true;
-	}
-
-	function EventBaseObject() {
-	  this.timeStamp = Date.now();
-	  this.target = undefined;
-	  this.currentTarget = undefined;
-	}
-
-	EventBaseObject.prototype = {
-	  isEventObject: 1,
-
-	  constructor: EventBaseObject,
-
-	  isDefaultPrevented: returnFalse,
-
-	  isPropagationStopped: returnFalse,
-
-	  isImmediatePropagationStopped: returnFalse,
-
-	  preventDefault: function preventDefault() {
-	    this.isDefaultPrevented = returnTrue;
-	  },
-
-	  stopPropagation: function stopPropagation() {
-	    this.isPropagationStopped = returnTrue;
-	  },
-
-	  stopImmediatePropagation: function stopImmediatePropagation() {
-	    this.isImmediatePropagationStopped = returnTrue;
-	    // fixed 1.2
-	    // call stopPropagation implicitly
-	    this.stopPropagation();
-	  },
-
-	  halt: function halt(immediate) {
-	    if (immediate) {
-	      this.stopImmediatePropagation();
-	    } else {
-	      this.stopPropagation();
-	    }
-	    this.preventDefault();
-	  }
-	};
-
-	exports["default"] = EventBaseObject;
-	module.exports = exports["default"];
-	});
-
-	unwrapExports(EventBaseObject_1);
-
-	/*
-	object-assign
-	(c) Sindre Sorhus
-	@license MIT
-	*/
-	/* eslint-disable no-unused-vars */
-	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-	var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function shouldUseNative() {
-		try {
-			if (!Object.assign) {
-				return false;
-			}
-
-			// Detect buggy property enumeration order in older V8 versions.
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-			test1[5] = 'de';
-			if (Object.getOwnPropertyNames(test1)[0] === '5') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test2 = {};
-			for (var i = 0; i < 10; i++) {
-				test2['_' + String.fromCharCode(i)] = i;
-			}
-			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-				return test2[n];
-			});
-			if (order2.join('') !== '0123456789') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test3 = {};
-			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-				test3[letter] = letter;
-			});
-			if (Object.keys(Object.assign({}, test3)).join('') !==
-					'abcdefghijklmnopqrst') {
-				return false;
-			}
-
-			return true;
-		} catch (err) {
-			// We don't expect any of the above to throw, but better to be safe.
-			return false;
-		}
-	}
-
-	var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-
-			for (var key in from) {
-				if (hasOwnProperty$1.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-
-			if (getOwnPropertySymbols) {
-				symbols = getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-
-		return to;
-	};
-
-	var EventObject = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-
-
-	var _EventBaseObject2 = _interopRequireDefault(EventBaseObject_1);
-
-
-
-	var _objectAssign2 = _interopRequireDefault(objectAssign);
-
-	var TRUE = true;
-	var FALSE = false;
-	var commonProps = ['altKey', 'bubbles', 'cancelable', 'ctrlKey', 'currentTarget', 'eventPhase', 'metaKey', 'shiftKey', 'target', 'timeStamp', 'view', 'type'];
-
-	function isNullOrUndefined(w) {
-	  return w === null || w === undefined;
-	}
-
-	var eventNormalizers = [{
-	  reg: /^key/,
-	  props: ['char', 'charCode', 'key', 'keyCode', 'which'],
-	  fix: function fix(event, nativeEvent) {
-	    if (isNullOrUndefined(event.which)) {
-	      event.which = !isNullOrUndefined(nativeEvent.charCode) ? nativeEvent.charCode : nativeEvent.keyCode;
-	    }
-
-	    // add metaKey to non-Mac browsers (use ctrl for PC 's and Meta for Macs)
-	    if (event.metaKey === undefined) {
-	      event.metaKey = event.ctrlKey;
-	    }
-	  }
-	}, {
-	  reg: /^touch/,
-	  props: ['touches', 'changedTouches', 'targetTouches']
-	}, {
-	  reg: /^hashchange$/,
-	  props: ['newURL', 'oldURL']
-	}, {
-	  reg: /^gesturechange$/i,
-	  props: ['rotation', 'scale']
-	}, {
-	  reg: /^(mousewheel|DOMMouseScroll)$/,
-	  props: [],
-	  fix: function fix(event, nativeEvent) {
-	    var deltaX = undefined;
-	    var deltaY = undefined;
-	    var delta = undefined;
-	    var wheelDelta = nativeEvent.wheelDelta;
-	    var axis = nativeEvent.axis;
-	    var wheelDeltaY = nativeEvent.wheelDeltaY;
-	    var wheelDeltaX = nativeEvent.wheelDeltaX;
-	    var detail = nativeEvent.detail;
-
-	    // ie/webkit
-	    if (wheelDelta) {
-	      delta = wheelDelta / 120;
-	    }
-
-	    // gecko
-	    if (detail) {
-	      // press control e.detail == 1 else e.detail == 3
-	      delta = 0 - (detail % 3 === 0 ? detail / 3 : detail);
-	    }
-
-	    // Gecko
-	    if (axis !== undefined) {
-	      if (axis === event.HORIZONTAL_AXIS) {
-	        deltaY = 0;
-	        deltaX = 0 - delta;
-	      } else if (axis === event.VERTICAL_AXIS) {
-	        deltaX = 0;
-	        deltaY = delta;
-	      }
-	    }
-
-	    // Webkit
-	    if (wheelDeltaY !== undefined) {
-	      deltaY = wheelDeltaY / 120;
-	    }
-	    if (wheelDeltaX !== undefined) {
-	      deltaX = -1 * wheelDeltaX / 120;
-	    }
-
-	    // 默认 deltaY (ie)
-	    if (!deltaX && !deltaY) {
-	      deltaY = delta;
-	    }
-
-	    if (deltaX !== undefined) {
-	      /**
-	       * deltaX of mousewheel event
-	       * @property deltaX
-	       * @member Event.DomEvent.Object
-	       */
-	      event.deltaX = deltaX;
-	    }
-
-	    if (deltaY !== undefined) {
-	      /**
-	       * deltaY of mousewheel event
-	       * @property deltaY
-	       * @member Event.DomEvent.Object
-	       */
-	      event.deltaY = deltaY;
-	    }
-
-	    if (delta !== undefined) {
-	      /**
-	       * delta of mousewheel event
-	       * @property delta
-	       * @member Event.DomEvent.Object
-	       */
-	      event.delta = delta;
-	    }
-	  }
-	}, {
-	  reg: /^mouse|contextmenu|click|mspointer|(^DOMMouseScroll$)/i,
-	  props: ['buttons', 'clientX', 'clientY', 'button', 'offsetX', 'relatedTarget', 'which', 'fromElement', 'toElement', 'offsetY', 'pageX', 'pageY', 'screenX', 'screenY'],
-	  fix: function fix(event, nativeEvent) {
-	    var eventDoc = undefined;
-	    var doc = undefined;
-	    var body = undefined;
-	    var target = event.target;
-	    var button = nativeEvent.button;
-
-	    // Calculate pageX/Y if missing and clientX/Y available
-	    if (target && isNullOrUndefined(event.pageX) && !isNullOrUndefined(nativeEvent.clientX)) {
-	      eventDoc = target.ownerDocument || document;
-	      doc = eventDoc.documentElement;
-	      body = eventDoc.body;
-	      event.pageX = nativeEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
-	      event.pageY = nativeEvent.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
-	    }
-
-	    // which for click: 1 === left; 2 === middle; 3 === right
-	    // do not use button
-	    if (!event.which && button !== undefined) {
-	      if (button & 1) {
-	        event.which = 1;
-	      } else if (button & 2) {
-	        event.which = 3;
-	      } else if (button & 4) {
-	        event.which = 2;
-	      } else {
-	        event.which = 0;
-	      }
-	    }
-
-	    // add relatedTarget, if necessary
-	    if (!event.relatedTarget && event.fromElement) {
-	      event.relatedTarget = event.fromElement === target ? event.toElement : event.fromElement;
-	    }
-
-	    return event;
-	  }
-	}];
-
-	function retTrue() {
-	  return TRUE;
-	}
-
-	function retFalse() {
-	  return FALSE;
-	}
-
-	function DomEventObject(nativeEvent) {
-	  var type = nativeEvent.type;
-
-	  var isNative = typeof nativeEvent.stopPropagation === 'function' || typeof nativeEvent.cancelBubble === 'boolean';
-
-	  _EventBaseObject2['default'].call(this);
-
-	  this.nativeEvent = nativeEvent;
-
-	  // in case dom event has been mark as default prevented by lower dom node
-	  var isDefaultPrevented = retFalse;
-	  if ('defaultPrevented' in nativeEvent) {
-	    isDefaultPrevented = nativeEvent.defaultPrevented ? retTrue : retFalse;
-	  } else if ('getPreventDefault' in nativeEvent) {
-	    // https://bugzilla.mozilla.org/show_bug.cgi?id=691151
-	    isDefaultPrevented = nativeEvent.getPreventDefault() ? retTrue : retFalse;
-	  } else if ('returnValue' in nativeEvent) {
-	    isDefaultPrevented = nativeEvent.returnValue === FALSE ? retTrue : retFalse;
-	  }
-
-	  this.isDefaultPrevented = isDefaultPrevented;
-
-	  var fixFns = [];
-	  var fixFn = undefined;
-	  var l = undefined;
-	  var prop = undefined;
-	  var props = commonProps.concat();
-
-	  eventNormalizers.forEach(function (normalizer) {
-	    if (type.match(normalizer.reg)) {
-	      props = props.concat(normalizer.props);
-	      if (normalizer.fix) {
-	        fixFns.push(normalizer.fix);
-	      }
-	    }
-	  });
-
-	  l = props.length;
-
-	  // clone properties of the original event object
-	  while (l) {
-	    prop = props[--l];
-	    this[prop] = nativeEvent[prop];
-	  }
-
-	  // fix target property, if necessary
-	  if (!this.target && isNative) {
-	    this.target = nativeEvent.srcElement || document; // srcElement might not be defined either
-	  }
-
-	  // check if target is a text node (safari)
-	  if (this.target && this.target.nodeType === 3) {
-	    this.target = this.target.parentNode;
-	  }
-
-	  l = fixFns.length;
-
-	  while (l) {
-	    fixFn = fixFns[--l];
-	    fixFn(this, nativeEvent);
-	  }
-
-	  this.timeStamp = nativeEvent.timeStamp || Date.now();
-	}
-
-	var EventBaseObjectProto = _EventBaseObject2['default'].prototype;
-
-	(0, _objectAssign2['default'])(DomEventObject.prototype, EventBaseObjectProto, {
-	  constructor: DomEventObject,
-
-	  preventDefault: function preventDefault() {
-	    var e = this.nativeEvent;
-
-	    // if preventDefault exists run it on the original event
-	    if (e.preventDefault) {
-	      e.preventDefault();
-	    } else {
-	      // otherwise set the returnValue property of the original event to FALSE (IE)
-	      e.returnValue = FALSE;
-	    }
-
-	    EventBaseObjectProto.preventDefault.call(this);
-	  },
-
-	  stopPropagation: function stopPropagation() {
-	    var e = this.nativeEvent;
-
-	    // if stopPropagation exists run it on the original event
-	    if (e.stopPropagation) {
-	      e.stopPropagation();
-	    } else {
-	      // otherwise set the cancelBubble property of the original event to TRUE (IE)
-	      e.cancelBubble = TRUE;
-	    }
-
-	    EventBaseObjectProto.stopPropagation.call(this);
-	  }
-	});
-
-	exports['default'] = DomEventObject;
-	module.exports = exports['default'];
-	});
-
-	unwrapExports(EventObject);
-
-	var lib$2 = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	exports['default'] = addEventListener;
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-
-
-	var _EventObject2 = _interopRequireDefault(EventObject);
-
-	function addEventListener(target, eventType, callback, option) {
-	  function wrapCallback(e) {
-	    var ne = new _EventObject2['default'](e);
-	    callback.call(target, ne);
-	  }
-
-	  if (target.addEventListener) {
-	    var _ret = (function () {
-	      var useCapture = false;
-	      if (typeof option === 'object') {
-	        useCapture = option.capture || false;
-	      } else if (typeof option === 'boolean') {
-	        useCapture = option;
-	      }
-
-	      target.addEventListener(eventType, wrapCallback, option || false);
-
-	      return {
-	        v: {
-	          remove: function remove() {
-	            target.removeEventListener(eventType, wrapCallback, useCapture);
-	          }
-	        }
-	      };
-	    })();
-
-	    if (typeof _ret === 'object') return _ret.v;
-	  } else if (target.attachEvent) {
-	    target.attachEvent('on' + eventType, wrapCallback);
-	    return {
-	      remove: function remove() {
-	        target.detachEvent('on' + eventType, wrapCallback);
-	      }
-	    };
-	  }
-	}
-
-	module.exports = exports['default'];
-	});
-
-	var addDOMEventListener = unwrapExports(lib$2);
-
-	function addEventListenerWrap(target, eventType, cb, option) {
-	  /* eslint camelcase: 2 */
-	  var callback = ReactDOM__default.unstable_batchedUpdates ? function run(e) {
-	    ReactDOM__default.unstable_batchedUpdates(cb, e);
-	  } : cb;
-	  return addDOMEventListener(target, eventType, callback, option);
-	}
-
-	var LocaleReceiver = function (_React$Component) {
-	    _inherits(LocaleReceiver, _React$Component);
-
-	    function LocaleReceiver() {
-	        _classCallCheck(this, LocaleReceiver);
-
-	        return _possibleConstructorReturn(this, (LocaleReceiver.__proto__ || Object.getPrototypeOf(LocaleReceiver)).apply(this, arguments));
-	    }
-
-	    _createClass(LocaleReceiver, [{
-	        key: 'getLocale',
-	        value: function getLocale() {
-	            var _props = this.props,
-	                componentName = _props.componentName,
-	                defaultLocale = _props.defaultLocale;
-	            var antLocale = this.context.antLocale;
-
-	            var localeFromContext = antLocale && antLocale[componentName];
-	            return _extends$1({}, typeof defaultLocale === 'function' ? defaultLocale() : defaultLocale, localeFromContext || {});
-	        }
-	    }, {
-	        key: 'getLocaleCode',
-	        value: function getLocaleCode() {
-	            var antLocale = this.context.antLocale;
-
-	            var localeCode = antLocale && antLocale.locale;
-	            // Had use LocaleProvide but didn't set locale
-	            if (antLocale && antLocale.exist && !localeCode) {
-	                return 'en-us';
-	            }
-	            return localeCode;
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return this.props.children(this.getLocale(), this.getLocaleCode());
-	        }
-	    }]);
-
-	    return LocaleReceiver;
-	}(React.Component);
-
-	LocaleReceiver.contextTypes = {
-	    antLocale: PropTypes.object
-	};
-
-	var enUS = {
-	  // Options.jsx
-	  items_per_page: '/ page',
-	  jump_to: 'Goto',
-	  jump_to_confirm: 'confirm',
-	  page: '',
-
-	  // Pagination.jsx
-	  prev_page: 'Previous Page',
-	  next_page: 'Next Page',
-	  prev_5: 'Previous 5 Pages',
-	  next_5: 'Next 5 Pages',
-	  prev_3: 'Previous 3 Pages',
-	  next_3: 'Next 3 Pages'
-	};
-
-	var CalendarLocale = {
-	  today: 'Today',
-	  now: 'Now',
-	  backToToday: 'Back to today',
-	  ok: 'Ok',
-	  clear: 'Clear',
-	  month: 'Month',
-	  year: 'Year',
-	  timeSelect: 'select time',
-	  dateSelect: 'select date',
-	  weekSelect: 'Choose a week',
-	  monthSelect: 'Choose a month',
-	  yearSelect: 'Choose a year',
-	  decadeSelect: 'Choose a decade',
-	  yearFormat: 'YYYY',
-	  dateFormat: 'M/D/YYYY',
-	  dayFormat: 'D',
-	  dateTimeFormat: 'M/D/YYYY HH:mm:ss',
-	  monthBeforeYear: true,
-	  previousMonth: 'Previous month (PageUp)',
-	  nextMonth: 'Next month (PageDown)',
-	  previousYear: 'Last year (Control + left)',
-	  nextYear: 'Next year (Control + right)',
-	  previousDecade: 'Last decade',
-	  nextDecade: 'Next decade',
-	  previousCentury: 'Last century',
-	  nextCentury: 'Next century'
-	};
-
-	var locale = {
-	    placeholder: 'Select time'
-	};
-
-	// Merge into a locale object
-	var locale$1 = {
-	    lang: _extends$1({ placeholder: 'Select date', rangePlaceholder: ['Start date', 'End date'] }, CalendarLocale),
-	    timePickerLocale: _extends$1({}, locale)
-	};
-
-	var defaultLocale = {
-	    locale: 'en',
-	    Pagination: enUS,
-	    DatePicker: locale$1,
-	    TimePicker: locale,
-	    Calendar: locale$1,
-	    Table: {
-	        filterTitle: 'Filter menu',
-	        filterConfirm: 'OK',
-	        filterReset: 'Reset',
-	        emptyText: 'No data',
-	        selectAll: 'Select current page',
-	        selectInvert: 'Invert current page',
-	        sortTitle: 'Sort'
-	    },
-	    Modal: {
-	        okText: 'OK',
-	        cancelText: 'Cancel',
-	        justOkText: 'OK'
-	    },
-	    Popconfirm: {
-	        okText: 'OK',
-	        cancelText: 'Cancel'
-	    },
-	    Transfer: {
-	        titles: ['', ''],
-	        notFoundContent: 'Not Found',
-	        searchPlaceholder: 'Search here',
-	        itemUnit: 'item',
-	        itemsUnit: 'items'
-	    },
-	    Select: {
-	        notFoundContent: 'Not Found'
-	    },
-	    Upload: {
-	        uploading: 'Uploading...',
-	        removeFile: 'Remove file',
-	        uploadError: 'Upload error',
-	        previewFile: 'Preview file'
-	    }
-	};
-
-	var runtimeLocale = _extends$1({}, defaultLocale.Modal);
-	function getConfirmLocale() {
-	    return runtimeLocale;
-	}
-
-	var __rest$7 = undefined && undefined.__rest || function (s, e) {
-	    var t = {};
-	    for (var p in s) {
-	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
-	    }return t;
-	};
-	var mousePosition = void 0;
-	var mousePositionEventBinded = void 0;
-
-	var Modal = function (_React$Component) {
-	    _inherits(Modal, _React$Component);
-
-	    function Modal() {
-	        _classCallCheck(this, Modal);
-
-	        var _this = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).apply(this, arguments));
-
-	        _this.handleCancel = function (e) {
-	            var onCancel = _this.props.onCancel;
-	            if (onCancel) {
-	                onCancel(e);
-	            }
-	        };
-	        _this.handleOk = function (e) {
-	            var onOk = _this.props.onOk;
-	            if (onOk) {
-	                onOk(e);
-	            }
-	        };
-	        _this.renderFooter = function (locale) {
-	            var _this$props = _this.props,
-	                okText = _this$props.okText,
-	                okType = _this$props.okType,
-	                cancelText = _this$props.cancelText,
-	                confirmLoading = _this$props.confirmLoading;
-
-	            return React.createElement(
-	                'div',
-	                null,
-	                React.createElement(
-	                    Button,
-	                    _extends$1({ onClick: _this.handleCancel }, _this.props.cancelButtonProps),
-	                    cancelText || locale.cancelText
-	                ),
-	                React.createElement(
-	                    Button,
-	                    _extends$1({ type: okType, loading: confirmLoading, onClick: _this.handleOk }, _this.props.okButtonProps),
-	                    okText || locale.okText
-	                )
-	            );
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Modal, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            if (mousePositionEventBinded) {
-	                return;
-	            }
-	            // 只有点击事件支持从鼠标位置动画展开
-	            addEventListenerWrap(document.documentElement, 'click', function (e) {
-	                mousePosition = {
-	                    x: e.pageX,
-	                    y: e.pageY
-	                };
-	                // 100ms 内发生过点击事件，则从点击位置动画展示
-	                // 否则直接 zoom 展示
-	                // 这样可以兼容非点击方式展开
-	                setTimeout(function () {
-	                    return mousePosition = null;
-	                }, 100);
-	            });
-	            mousePositionEventBinded = true;
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _a = this.props,
-	                footer = _a.footer,
-	                visible = _a.visible,
-	                wrapClassName = _a.wrapClassName,
-	                centered = _a.centered,
-	                prefixCls = _a.prefixCls,
-	                restProps = __rest$7(_a, ["footer", "visible", "wrapClassName", "centered", "prefixCls"]);
-	            var defaultFooter = React.createElement(
-	                LocaleReceiver,
-	                { componentName: 'Modal', defaultLocale: getConfirmLocale() },
-	                this.renderFooter
-	            );
-	            var closeIcon = React.createElement(
-	                'span',
-	                { className: prefixCls + '-close-x' },
-	                React.createElement(Icon$1, { className: prefixCls + '-close-icon', type: 'close' })
-	            );
-	            return React.createElement(DialogWrap, _extends$1({}, restProps, { prefixCls: prefixCls, wrapClassName: classnames(_defineProperty({}, prefixCls + '-centered', !!centered), wrapClassName), footer: footer === undefined ? defaultFooter : footer, visible: visible, mousePosition: mousePosition, onClose: this.handleCancel, closeIcon: closeIcon }));
-	        }
-	    }]);
-
-	    return Modal;
-	}(React.Component);
-
-	Modal.defaultProps = {
-	    prefixCls: 'ant-modal',
-	    width: 520,
-	    transitionName: 'zoom',
-	    maskTransitionName: 'fade',
-	    confirmLoading: false,
-	    visible: false,
-	    okType: 'primary',
-	    okButtonDisabled: false,
-	    cancelButtonDisabled: false
-	};
-	Modal.propTypes = {
-	    prefixCls: PropTypes.string,
-	    onOk: PropTypes.func,
-	    onCancel: PropTypes.func,
-	    okText: PropTypes.node,
-	    cancelText: PropTypes.node,
-	    centered: PropTypes.bool,
-	    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-	    confirmLoading: PropTypes.bool,
-	    visible: PropTypes.bool,
-	    align: PropTypes.object,
-	    footer: PropTypes.node,
-	    title: PropTypes.node,
-	    closable: PropTypes.bool
-	};
-
-	var ActionButton = function (_React$Component) {
-	    _inherits(ActionButton, _React$Component);
-
-	    function ActionButton(props) {
-	        _classCallCheck(this, ActionButton);
-
-	        var _this = _possibleConstructorReturn(this, (ActionButton.__proto__ || Object.getPrototypeOf(ActionButton)).call(this, props));
-
-	        _this.onClick = function () {
-	            var _this$props = _this.props,
-	                actionFn = _this$props.actionFn,
-	                closeModal = _this$props.closeModal;
-
-	            if (actionFn) {
-	                var ret = void 0;
-	                if (actionFn.length) {
-	                    ret = actionFn(closeModal);
-	                } else {
-	                    ret = actionFn();
-	                    if (!ret) {
-	                        closeModal();
-	                    }
-	                }
-	                if (ret && ret.then) {
-	                    _this.setState({ loading: true });
-	                    ret.then(function () {
-	                        // It's unnecessary to set loading=false, for the Modal will be unmounted after close.
-	                        // this.setState({ loading: false });
-	                        closeModal.apply(undefined, arguments);
-	                    }, function () {
-	                        // See: https://github.com/ant-design/ant-design/issues/6183
-	                        _this.setState({ loading: false });
-	                    });
-	                }
-	            } else {
-	                closeModal();
-	            }
-	        };
-	        _this.state = {
-	            loading: false
-	        };
-	        return _this;
-	    }
-
-	    _createClass(ActionButton, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            if (this.props.autoFocus) {
-	                var $this = ReactDOM.findDOMNode(this);
-	                this.timeoutId = setTimeout(function () {
-	                    return $this.focus();
-	                });
-	            }
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            clearTimeout(this.timeoutId);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props = this.props,
-	                type = _props.type,
-	                children = _props.children,
-	                buttonProps = _props.buttonProps;
-
-	            var loading = this.state.loading;
-	            return React.createElement(
-	                Button,
-	                _extends$1({ type: type, onClick: this.onClick, loading: loading }, buttonProps),
-	                children
-	            );
-	        }
-	    }]);
-
-	    return ActionButton;
-	}(React.Component);
-
-	var _this = undefined;
-	var IS_REACT_16$1 = !!ReactDOM.createPortal;
-	var ConfirmDialog = function ConfirmDialog(props) {
-	    var onCancel = props.onCancel,
-	        onOk = props.onOk,
-	        close = props.close,
-	        zIndex = props.zIndex,
-	        afterClose = props.afterClose,
-	        visible = props.visible,
-	        keyboard = props.keyboard,
-	        centered = props.centered,
-	        getContainer = props.getContainer,
-	        okButtonProps = props.okButtonProps,
-	        cancelButtonProps = props.cancelButtonProps;
-
-	    var iconType = props.iconType || 'question-circle';
-	    var okType = props.okType || 'primary';
-	    var prefixCls = props.prefixCls || 'ant-modal';
-	    var contentPrefixCls = prefixCls + '-confirm';
-	    // 默认为 true，保持向下兼容
-	    var okCancel = 'okCancel' in props ? props.okCancel : true;
-	    var width = props.width || 416;
-	    var style = props.style || {};
-	    // 默认为 false，保持旧版默认行为
-	    var maskClosable = props.maskClosable === undefined ? false : props.maskClosable;
-	    var runtimeLocale = getConfirmLocale();
-	    var okText = props.okText || (okCancel ? runtimeLocale.okText : runtimeLocale.justOkText);
-	    var cancelText = props.cancelText || runtimeLocale.cancelText;
-	    var autoFocusButton = props.autoFocusButton === null ? false : props.autoFocusButton || 'ok';
-	    var classString = classnames(contentPrefixCls, contentPrefixCls + '-' + props.type, props.className);
-	    var cancelButton = okCancel && React.createElement(
-	        ActionButton,
-	        { actionFn: onCancel, closeModal: close, autoFocus: autoFocusButton === 'cancel', buttonProps: cancelButtonProps },
-	        cancelText
-	    );
-	    return React.createElement(
-	        Modal,
-	        { prefixCls: prefixCls, className: classString, wrapClassName: classnames(_defineProperty({}, contentPrefixCls + '-centered', !!props.centered)), onCancel: close.bind(_this, { triggerCancel: true }), visible: visible, title: '', transitionName: 'zoom', footer: '', maskTransitionName: 'fade', maskClosable: maskClosable, style: style, width: width, zIndex: zIndex, afterClose: afterClose, keyboard: keyboard, centered: centered, getContainer: getContainer },
-	        React.createElement(
-	            'div',
-	            { className: contentPrefixCls + '-body-wrapper' },
-	            React.createElement(
-	                'div',
-	                { className: contentPrefixCls + '-body' },
-	                React.createElement(Icon$1, { type: iconType }),
-	                React.createElement(
-	                    'span',
-	                    { className: contentPrefixCls + '-title' },
-	                    props.title
-	                ),
-	                React.createElement(
-	                    'div',
-	                    { className: contentPrefixCls + '-content' },
-	                    props.content
-	                )
-	            ),
-	            React.createElement(
-	                'div',
-	                { className: contentPrefixCls + '-btns' },
-	                cancelButton,
-	                React.createElement(
-	                    ActionButton,
-	                    { type: okType, actionFn: onOk, closeModal: close, autoFocus: autoFocusButton === 'ok', buttonProps: okButtonProps },
-	                    okText
-	                )
-	            )
-	        )
-	    );
-	};
-	function confirm(config) {
-	    var div = document.createElement('div');
-	    document.body.appendChild(div);
-	    var currentConfig = _extends$1({}, config, { close: close, visible: true });
-	    function close() {
-	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	            args[_key] = arguments[_key];
-	        }
-
-	        currentConfig = _extends$1({}, currentConfig, { visible: false, afterClose: destroy.bind.apply(destroy, [this].concat(args)) });
-	        if (IS_REACT_16$1) {
-	            render(currentConfig);
-	        } else {
-	            destroy.apply(undefined, args);
-	        }
-	    }
-	    function update(newConfig) {
-	        currentConfig = _extends$1({}, currentConfig, newConfig);
-	        render(currentConfig);
-	    }
-	    function destroy() {
-	        var unmountResult = ReactDOM.unmountComponentAtNode(div);
-	        if (unmountResult && div.parentNode) {
-	            div.parentNode.removeChild(div);
-	        }
-
-	        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	            args[_key2] = arguments[_key2];
-	        }
-
-	        var triggerCancel = args && args.length && args.some(function (param) {
-	            return param && param.triggerCancel;
-	        });
-	        if (config.onCancel && triggerCancel) {
-	            config.onCancel.apply(config, args);
-	        }
-	    }
-	    function render(props) {
-	        ReactDOM.render(React.createElement(ConfirmDialog, props), div);
-	    }
-	    render(currentConfig);
-	    return {
-	        destroy: close,
-	        update: update
-	    };
-	}
-
-	Modal.info = function (props) {
-	    var config = _extends$1({ type: 'info', iconType: 'info-circle', okCancel: false }, props);
-	    return confirm(config);
-	};
-	Modal.success = function (props) {
-	    var config = _extends$1({ type: 'success', iconType: 'check-circle', okCancel: false }, props);
-	    return confirm(config);
-	};
-	Modal.error = function (props) {
-	    var config = _extends$1({ type: 'error', iconType: 'close-circle', okCancel: false }, props);
-	    return confirm(config);
-	};
-	Modal.warning = Modal.warn = function (props) {
-	    var config = _extends$1({ type: 'warning', iconType: 'exclamation-circle', okCancel: false }, props);
-	    return confirm(config);
-	};
-	Modal.confirm = function (props) {
-	    var config = _extends$1({ type: 'confirm', okCancel: true }, props);
-	    return confirm(config);
-	};
-
-	/**
-	 * lodash 3.9.1 (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modern modularize exports="npm" -o ./`
-	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <https://lodash.com/license>
-	 */
-
-	/** `Object#toString` result references. */
-	var funcTag = '[object Function]';
-
-	/** Used to detect host constructors (Safari > 5). */
-	var reIsHostCtor = /^\[object .+?Constructor\]$/;
-
-	/**
-	 * Checks if `value` is object-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 */
-	function isObjectLike(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-
-	/** Used to resolve the decompiled source of functions. */
-	var fnToString = Function.prototype.toString;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty$2 = objectProto.hasOwnProperty;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-
-	/** Used to detect if a method is native. */
-	var reIsNative = RegExp('^' +
-	  fnToString.call(hasOwnProperty$2).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-	);
-
-	/**
-	 * Gets the native function at `key` of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {string} key The key of the method to get.
-	 * @returns {*} Returns the function if it's native, else `undefined`.
-	 */
-	function getNative(object, key) {
-	  var value = object == null ? undefined : object[key];
-	  return isNative(value) ? value : undefined;
-	}
-
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in older versions of Chrome and Safari which return 'function' for regexes
-	  // and Safari 8 equivalents which return 'object' for typed array constructors.
-	  return isObject(value) && objToString.call(value) == funcTag;
-	}
-
-	/**
-	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(1);
-	 * // => false
-	 */
-	function isObject(value) {
-	  // Avoid a V8 JIT bug in Chrome 19-20.
-	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	/**
-	 * Checks if `value` is a native function.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
-	 * @example
-	 *
-	 * _.isNative(Array.prototype.push);
-	 * // => true
-	 *
-	 * _.isNative(_);
-	 * // => false
-	 */
-	function isNative(value) {
-	  if (value == null) {
-	    return false;
-	  }
-	  if (isFunction(value)) {
-	    return reIsNative.test(fnToString.call(value));
-	  }
-	  return isObjectLike(value) && reIsHostCtor.test(value);
-	}
-
-	var lodash__getnative = getNative;
-
-	/**
-	 * lodash (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modularize exports="npm" -o ./`
-	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
-	 * Released under MIT license <https://lodash.com/license>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 */
-
-	/** Used as references for various `Number` constants. */
-	var MAX_SAFE_INTEGER = 9007199254740991;
-
-	/** `Object#toString` result references. */
-	var argsTag = '[object Arguments]',
-	    funcTag$1 = '[object Function]',
-	    genTag = '[object GeneratorFunction]';
-
-	/** Used for built-in method references. */
-	var objectProto$1 = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty$3 = objectProto$1.hasOwnProperty;
-
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto$1.toString;
-
-	/** Built-in value references. */
-	var propertyIsEnumerable = objectProto$1.propertyIsEnumerable;
-
-	/**
-	 * Checks if `value` is likely an `arguments` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
-	 *  else `false`.
-	 * @example
-	 *
-	 * _.isArguments(function() { return arguments; }());
-	 * // => true
-	 *
-	 * _.isArguments([1, 2, 3]);
-	 * // => false
-	 */
-	function isArguments(value) {
-	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
-	  return isArrayLikeObject(value) && hasOwnProperty$3.call(value, 'callee') &&
-	    (!propertyIsEnumerable.call(value, 'callee') || objectToString.call(value) == argsTag);
-	}
-
-	/**
-	 * Checks if `value` is array-like. A value is considered array-like if it's
-	 * not a function and has a `value.length` that's an integer greater than or
-	 * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-	 * @example
-	 *
-	 * _.isArrayLike([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isArrayLike(document.body.children);
-	 * // => true
-	 *
-	 * _.isArrayLike('abc');
-	 * // => true
-	 *
-	 * _.isArrayLike(_.noop);
-	 * // => false
-	 */
-	function isArrayLike(value) {
-	  return value != null && isLength(value.length) && !isFunction$1(value);
-	}
-
-	/**
-	 * This method is like `_.isArrayLike` except that it also checks if `value`
-	 * is an object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an array-like object,
-	 *  else `false`.
-	 * @example
-	 *
-	 * _.isArrayLikeObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isArrayLikeObject(document.body.children);
-	 * // => true
-	 *
-	 * _.isArrayLikeObject('abc');
-	 * // => false
-	 *
-	 * _.isArrayLikeObject(_.noop);
-	 * // => false
-	 */
-	function isArrayLikeObject(value) {
-	  return isObjectLike$1(value) && isArrayLike(value);
-	}
-
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction$1(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
-	  var tag = isObject$1(value) ? objectToString.call(value) : '';
-	  return tag == funcTag$1 || tag == genTag;
-	}
-
-	/**
-	 * Checks if `value` is a valid array-like length.
-	 *
-	 * **Note:** This method is loosely based on
-	 * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-	 * @example
-	 *
-	 * _.isLength(3);
-	 * // => true
-	 *
-	 * _.isLength(Number.MIN_VALUE);
-	 * // => false
-	 *
-	 * _.isLength(Infinity);
-	 * // => false
-	 *
-	 * _.isLength('3');
-	 * // => false
-	 */
-	function isLength(value) {
-	  return typeof value == 'number' &&
-	    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-	}
-
-	/**
-	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(_.noop);
-	 * // => true
-	 *
-	 * _.isObject(null);
-	 * // => false
-	 */
-	function isObject$1(value) {
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	/**
-	 * Checks if `value` is object-like. A value is object-like if it's not `null`
-	 * and has a `typeof` result of "object".
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 * @example
-	 *
-	 * _.isObjectLike({});
-	 * // => true
-	 *
-	 * _.isObjectLike([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObjectLike(_.noop);
-	 * // => false
-	 *
-	 * _.isObjectLike(null);
-	 * // => false
-	 */
-	function isObjectLike$1(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	var lodash_isarguments = isArguments;
-
-	/**
-	 * lodash 3.0.4 (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modern modularize exports="npm" -o ./`
-	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <https://lodash.com/license>
-	 */
-
-	/** `Object#toString` result references. */
-	var arrayTag = '[object Array]',
-	    funcTag$2 = '[object Function]';
-
-	/** Used to detect host constructors (Safari > 5). */
-	var reIsHostCtor$1 = /^\[object .+?Constructor\]$/;
-
-	/**
-	 * Checks if `value` is object-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 */
-	function isObjectLike$2(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	/** Used for native method references. */
-	var objectProto$2 = Object.prototype;
-
-	/** Used to resolve the decompiled source of functions. */
-	var fnToString$1 = Function.prototype.toString;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty$4 = objectProto$2.hasOwnProperty;
-
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString$1 = objectProto$2.toString;
-
-	/** Used to detect if a method is native. */
-	var reIsNative$1 = RegExp('^' +
-	  fnToString$1.call(hasOwnProperty$4).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-	);
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeIsArray = getNative$1(Array, 'isArray');
-
-	/**
-	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
-	 * of an array-like value.
-	 */
-	var MAX_SAFE_INTEGER$1 = 9007199254740991;
-
-	/**
-	 * Gets the native function at `key` of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @param {string} key The key of the method to get.
-	 * @returns {*} Returns the function if it's native, else `undefined`.
-	 */
-	function getNative$1(object, key) {
-	  var value = object == null ? undefined : object[key];
-	  return isNative$1(value) ? value : undefined;
-	}
-
-	/**
-	 * Checks if `value` is a valid array-like length.
-	 *
-	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-	 */
-	function isLength$1(value) {
-	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$1;
-	}
-
-	/**
-	 * Checks if `value` is classified as an `Array` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isArray([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isArray(function() { return arguments; }());
-	 * // => false
-	 */
-	var isArray = nativeIsArray || function(value) {
-	  return isObjectLike$2(value) && isLength$1(value.length) && objToString$1.call(value) == arrayTag;
-	};
-
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction$2(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in older versions of Chrome and Safari which return 'function' for regexes
-	  // and Safari 8 equivalents which return 'object' for typed array constructors.
-	  return isObject$2(value) && objToString$1.call(value) == funcTag$2;
-	}
-
-	/**
-	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(1);
-	 * // => false
-	 */
-	function isObject$2(value) {
-	  // Avoid a V8 JIT bug in Chrome 19-20.
-	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	/**
-	 * Checks if `value` is a native function.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
-	 * @example
-	 *
-	 * _.isNative(Array.prototype.push);
-	 * // => true
-	 *
-	 * _.isNative(_);
-	 * // => false
-	 */
-	function isNative$1(value) {
-	  if (value == null) {
-	    return false;
-	  }
-	  if (isFunction$2(value)) {
-	    return reIsNative$1.test(fnToString$1.call(value));
-	  }
-	  return isObjectLike$2(value) && reIsHostCtor$1.test(value);
-	}
-
-	var lodash_isarray = isArray;
-
-	/**
-	 * lodash 3.1.2 (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modern modularize exports="npm" -o ./`
-	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 * Available under MIT license <https://lodash.com/license>
-	 */
-
-
-	/** Used to detect unsigned integer values. */
-	var reIsUint = /^\d+$/;
-
-	/** Used for native method references. */
-	var objectProto$3 = Object.prototype;
-
-	/** Used to check objects for own properties. */
-	var hasOwnProperty$5 = objectProto$3.hasOwnProperty;
-
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeKeys = lodash__getnative(Object, 'keys');
-
-	/**
-	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
-	 * of an array-like value.
-	 */
-	var MAX_SAFE_INTEGER$2 = 9007199254740991;
-
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-
-	/**
-	 * Gets the "length" property value of `object`.
-	 *
-	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
-	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {*} Returns the "length" value.
-	 */
-	var getLength = baseProperty('length');
-
-	/**
-	 * Checks if `value` is array-like.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
-	 */
-	function isArrayLike$1(value) {
-	  return value != null && isLength$2(getLength(value));
-	}
-
-	/**
-	 * Checks if `value` is a valid array-like index.
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
-	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
-	 */
-	function isIndex(value, length) {
-	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
-	  length = length == null ? MAX_SAFE_INTEGER$2 : length;
-	  return value > -1 && value % 1 == 0 && value < length;
-	}
-
-	/**
-	 * Checks if `value` is a valid array-like length.
-	 *
-	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
-	 *
-	 * @private
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
-	 */
-	function isLength$2(value) {
-	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$2;
-	}
-
-	/**
-	 * A fallback implementation of `Object.keys` which creates an array of the
-	 * own enumerable property names of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 */
-	function shimKeys(object) {
-	  var props = keysIn(object),
-	      propsLength = props.length,
-	      length = propsLength && object.length;
-
-	  var allowIndexes = !!length && isLength$2(length) &&
-	    (lodash_isarray(object) || lodash_isarguments(object));
-
-	  var index = -1,
-	      result = [];
-
-	  while (++index < propsLength) {
-	    var key = props[index];
-	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty$5.call(object, key)) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-
-	/**
-	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
-	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(1);
-	 * // => false
-	 */
-	function isObject$3(value) {
-	  // Avoid a V8 JIT bug in Chrome 19-20.
-	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	/**
-	 * Creates an array of the own enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects. See the
-	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
-	 * for more details.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keys(new Foo);
-	 * // => ['a', 'b'] (iteration order is not guaranteed)
-	 *
-	 * _.keys('hi');
-	 * // => ['0', '1']
-	 */
-	var keys = !nativeKeys ? shimKeys : function(object) {
-	  var Ctor = object == null ? undefined : object.constructor;
-	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
-	      (typeof object != 'function' && isArrayLike$1(object))) {
-	    return shimKeys(object);
-	  }
-	  return isObject$3(object) ? nativeKeys(object) : [];
-	};
-
-	/**
-	 * Creates an array of the own and inherited enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keysIn(new Foo);
-	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
-	 */
-	function keysIn(object) {
-	  if (object == null) {
-	    return [];
-	  }
-	  if (!isObject$3(object)) {
-	    object = Object(object);
-	  }
-	  var length = object.length;
-	  length = (length && isLength$2(length) &&
-	    (lodash_isarray(object) || lodash_isarguments(object)) && length) || 0;
-
-	  var Ctor = object.constructor,
-	      index = -1,
-	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
-	      result = Array(length),
-	      skipIndexes = length > 0;
-
-	  while (++index < length) {
-	    result[index] = (index + '');
-	  }
-	  for (var key in object) {
-	    if (!(skipIndexes && isIndex(key, length)) &&
-	        !(key == 'constructor' && (isProto || !hasOwnProperty$5.call(object, key)))) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-
-	var lodash_keys = keys;
-
-	var modules = function shallowEqual(objA, objB, compare, compareContext) {
-
-	    var ret = compare ? compare.call(compareContext, objA, objB) : void 0;
-
-	    if (ret !== void 0) {
-	        return !!ret;
-	    }
-
-	    if (objA === objB) {
-	        return true;
-	    }
-
-	    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
-	        return false;
-	    }
-
-	    var keysA = lodash_keys(objA);
-	    var keysB = lodash_keys(objB);
-
-	    var len = keysA.length;
-	    if (len !== keysB.length) {
-	        return false;
-	    }
-
-	    compareContext = compareContext || null;
-
-	    // Test for A's keys different from B.
-	    var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
-	    for (var i = 0; i < len; i++) {
-	        var key = keysA[i];
-	        if (!bHasOwnProperty(key)) {
-	            return false;
-	        }
-	        var valueA = objA[key];
-	        var valueB = objB[key];
-
-	        var _ret = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
-	        if (_ret === false || _ret === void 0 && valueA !== valueB) {
-	            return false;
-	        }
-	    }
-
-	    return true;
-	};
-
-	/**
-	 * Copyright 2013-present, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactComponentWithPureRenderMixin
-	 */
-
-
-
-	function shallowCompare(instance, nextProps, nextState) {
-	  return !modules(instance.props, nextProps) || !modules(instance.state, nextState);
-	}
-
-	/**
-	 * If your React component's render function is "pure", e.g. it will render the
-	 * same result given the same props and state, provide this mixin for a
-	 * considerable performance boost.
-	 *
-	 * Most React components have pure render functions.
-	 *
-	 * Example:
-	 *
-	 *   var ReactComponentWithPureRenderMixin =
-	 *     require('ReactComponentWithPureRenderMixin');
-	 *   React.createClass({
-	 *     mixins: [ReactComponentWithPureRenderMixin],
-	 *
-	 *     render: function() {
-	 *       return <div className={this.props.className}>foo</div>;
-	 *     }
-	 *   });
-	 *
-	 * Note: This only checks shallow equality for props and state. If these contain
-	 * complex data structures this mixin may have false-negatives for deeper
-	 * differences. Only mixin to components which have simple props and state, or
-	 * use `forceUpdate()` when you know deep data structures have changed.
-	 *
-	 * See https://facebook.github.io/react/docs/pure-render-mixin.html
-	 */
-	var ReactComponentWithPureRenderMixin = {
-	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	    return shallowCompare(this, nextProps, nextState);
-	  }
-	};
-
-	var PureRenderMixin = ReactComponentWithPureRenderMixin;
-
-	var Checkbox = function (_React$Component) {
-	  _inherits(Checkbox, _React$Component);
-
-	  function Checkbox(props) {
-	    _classCallCheck(this, Checkbox);
-
-	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
-
-	    _initialiseProps$1.call(_this);
-
-	    var checked = 'checked' in props ? props.checked : props.defaultChecked;
-
-	    _this.state = {
-	      checked: checked
-	    };
-	    return _this;
-	  }
-
-	  Checkbox.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-	    if ('checked' in nextProps) {
-	      this.setState({
-	        checked: nextProps.checked
-	      });
-	    }
-	  };
-
-	  Checkbox.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return PureRenderMixin.shouldComponentUpdate.apply(this, args);
-	  };
-
-	  Checkbox.prototype.focus = function focus() {
-	    this.input.focus();
-	  };
-
-	  Checkbox.prototype.blur = function blur() {
-	    this.input.blur();
-	  };
-
-	  Checkbox.prototype.render = function render() {
-	    var _classNames;
-
-	    var _props = this.props,
-	        prefixCls = _props.prefixCls,
-	        className = _props.className,
-	        style = _props.style,
-	        name = _props.name,
-	        id = _props.id,
-	        type = _props.type,
-	        disabled = _props.disabled,
-	        readOnly = _props.readOnly,
-	        tabIndex = _props.tabIndex,
-	        onClick = _props.onClick,
-	        onFocus = _props.onFocus,
-	        onBlur = _props.onBlur,
-	        autoFocus = _props.autoFocus,
-	        value = _props.value,
-	        others = _objectWithoutProperties(_props, ['prefixCls', 'className', 'style', 'name', 'id', 'type', 'disabled', 'readOnly', 'tabIndex', 'onClick', 'onFocus', 'onBlur', 'autoFocus', 'value']);
-
-	    var globalProps = Object.keys(others).reduce(function (prev, key) {
-	      if (key.substr(0, 5) === 'aria-' || key.substr(0, 5) === 'data-' || key === 'role') {
-	        prev[key] = others[key];
-	      }
-	      return prev;
-	    }, {});
-
-	    var checked = this.state.checked;
-
-	    var classString = classnames(prefixCls, className, (_classNames = {}, _classNames[prefixCls + '-checked'] = checked, _classNames[prefixCls + '-disabled'] = disabled, _classNames));
-
-	    return React__default.createElement(
-	      'span',
-	      { className: classString, style: style },
-	      React__default.createElement('input', _extends$1({
-	        name: name,
-	        id: id,
-	        type: type,
-	        readOnly: readOnly,
-	        disabled: disabled,
-	        tabIndex: tabIndex,
-	        className: prefixCls + '-input',
-	        checked: !!checked,
-	        onClick: onClick,
-	        onFocus: onFocus,
-	        onBlur: onBlur,
-	        onChange: this.handleChange,
-	        autoFocus: autoFocus,
-	        ref: this.saveInput,
-	        value: value
-	      }, globalProps)),
-	      React__default.createElement('span', { className: prefixCls + '-inner' })
-	    );
-	  };
-
-	  return Checkbox;
-	}(React__default.Component);
-
-	Checkbox.propTypes = {
-	  prefixCls: PropTypes__default.string,
-	  className: PropTypes__default.string,
-	  style: PropTypes__default.object,
-	  name: PropTypes__default.string,
-	  id: PropTypes__default.string,
-	  type: PropTypes__default.string,
-	  defaultChecked: PropTypes__default.oneOfType([PropTypes__default.number, PropTypes__default.bool]),
-	  checked: PropTypes__default.oneOfType([PropTypes__default.number, PropTypes__default.bool]),
-	  disabled: PropTypes__default.bool,
-	  onFocus: PropTypes__default.func,
-	  onBlur: PropTypes__default.func,
-	  onChange: PropTypes__default.func,
-	  onClick: PropTypes__default.func,
-	  tabIndex: PropTypes__default.string,
-	  readOnly: PropTypes__default.bool,
-	  autoFocus: PropTypes__default.bool,
-	  value: PropTypes__default.any
-	};
-	Checkbox.defaultProps = {
-	  prefixCls: 'rc-checkbox',
-	  className: '',
-	  style: {},
-	  type: 'checkbox',
-	  defaultChecked: false,
-	  onFocus: function onFocus() {},
-	  onBlur: function onBlur() {},
-	  onChange: function onChange() {}
-	};
-
-	var _initialiseProps$1 = function _initialiseProps() {
-	  var _this2 = this;
-
-	  this.handleChange = function (e) {
-	    var props = _this2.props;
-
-	    if (props.disabled) {
-	      return;
-	    }
-	    if (!('checked' in props)) {
-	      _this2.setState({
-	        checked: e.target.checked
-	      });
-	    }
-	    props.onChange({
-	      target: _extends$1({}, props, {
-	        checked: e.target.checked
-	      }),
-	      stopPropagation: function stopPropagation() {
-	        e.stopPropagation();
-	      },
-	      preventDefault: function preventDefault() {
-	        e.preventDefault();
-	      },
-
-	      nativeEvent: e.nativeEvent
-	    });
-	  };
-
-	  this.saveInput = function (node) {
-	    _this2.input = node;
-	  };
-	};
-
-	//
-
-	var shallowequal = function shallowEqual(objA, objB, compare, compareContext) {
-	  var ret = compare ? compare.call(compareContext, objA, objB) : void 0;
-
-	  if (ret !== void 0) {
-	    return !!ret;
-	  }
-
-	  if (objA === objB) {
-	    return true;
-	  }
-
-	  if (typeof objA !== "object" || !objA || typeof objB !== "object" || !objB) {
-	    return false;
-	  }
-
-	  var keysA = Object.keys(objA);
-	  var keysB = Object.keys(objB);
-
-	  if (keysA.length !== keysB.length) {
-	    return false;
-	  }
-
-	  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
-
-	  // Test for A's keys different from B.
-	  for (var idx = 0; idx < keysA.length; idx++) {
-	    var key = keysA[idx];
-
-	    if (!bHasOwnProperty(key)) {
-	      return false;
-	    }
-
-	    var valueA = objA[key];
-	    var valueB = objB[key];
-
-	    ret = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
-
-	    if (ret === false || (ret === void 0 && valueA !== valueB)) {
-	      return false;
-	    }
-	  }
-
-	  return true;
-	};
-
-	var __rest$8 = undefined && undefined.__rest || function (s, e) {
-	    var t = {};
-	    for (var p in s) {
-	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
-	    }return t;
-	};
-
-	var Checkbox$1 = function (_React$Component) {
-	    _inherits(Checkbox$$1, _React$Component);
-
-	    function Checkbox$$1() {
-	        _classCallCheck(this, Checkbox$$1);
-
-	        var _this = _possibleConstructorReturn(this, (Checkbox$$1.__proto__ || Object.getPrototypeOf(Checkbox$$1)).apply(this, arguments));
-
-	        _this.saveCheckbox = function (node) {
-	            _this.rcCheckbox = node;
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Checkbox$$1, [{
-	        key: 'shouldComponentUpdate',
-	        value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
-	            return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState) || !shallowequal(this.context.checkboxGroup, nextContext.checkboxGroup);
-	        }
-	    }, {
-	        key: 'focus',
-	        value: function focus() {
-	            this.rcCheckbox.focus();
-	        }
-	    }, {
-	        key: 'blur',
-	        value: function blur() {
-	            this.rcCheckbox.blur();
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var props = this.props,
-	                context = this.context;
-
-	            var prefixCls = props.prefixCls,
-	                className = props.className,
-	                children = props.children,
-	                indeterminate = props.indeterminate,
-	                style = props.style,
-	                onMouseEnter = props.onMouseEnter,
-	                onMouseLeave = props.onMouseLeave,
-	                restProps = __rest$8(props, ["prefixCls", "className", "children", "indeterminate", "style", "onMouseEnter", "onMouseLeave"]);
-
-	            var checkboxGroup = context.checkboxGroup;
-
-	            var checkboxProps = _extends$1({}, restProps);
-	            if (checkboxGroup) {
-	                checkboxProps.onChange = function () {
-	                    if (restProps.onChange) {
-	                        restProps.onChange.apply(restProps, arguments);
-	                    }
-	                    checkboxGroup.toggleOption({ label: children, value: props.value });
-	                };
-	                checkboxProps.checked = checkboxGroup.value.indexOf(props.value) !== -1;
-	                checkboxProps.disabled = props.disabled || checkboxGroup.disabled;
-	            }
-	            var classString = classnames(className, _defineProperty({}, prefixCls + '-wrapper', true));
-	            var checkboxClass = classnames(_defineProperty({}, prefixCls + '-indeterminate', indeterminate));
-	            return React.createElement(
-	                'label',
-	                { className: classString, style: style, onMouseEnter: onMouseEnter, onMouseLeave: onMouseLeave },
-	                React.createElement(Checkbox, _extends$1({}, checkboxProps, { prefixCls: prefixCls, className: checkboxClass, ref: this.saveCheckbox })),
-	                children !== undefined ? React.createElement(
-	                    'span',
-	                    null,
-	                    children
-	                ) : null
-	            );
-	        }
-	    }]);
-
-	    return Checkbox$$1;
-	}(React.Component);
-
-	Checkbox$1.defaultProps = {
-	    prefixCls: 'ant-checkbox',
-	    indeterminate: false
-	};
-	Checkbox$1.contextTypes = {
-	    checkboxGroup: PropTypes.any
-	};
-
-	var __rest$9 = undefined && undefined.__rest || function (s, e) {
-	    var t = {};
-	    for (var p in s) {
-	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
-	    }return t;
-	};
-
-	var CheckboxGroup = function (_React$Component) {
-	    _inherits(CheckboxGroup, _React$Component);
-
-	    function CheckboxGroup(props) {
-	        _classCallCheck(this, CheckboxGroup);
-
-	        var _this = _possibleConstructorReturn(this, (CheckboxGroup.__proto__ || Object.getPrototypeOf(CheckboxGroup)).call(this, props));
-
-	        _this.toggleOption = function (option) {
-	            var optionIndex = _this.state.value.indexOf(option.value);
-	            var value = [].concat(_toConsumableArray(_this.state.value));
-	            if (optionIndex === -1) {
-	                value.push(option.value);
-	            } else {
-	                value.splice(optionIndex, 1);
-	            }
-	            if (!('value' in _this.props)) {
-	                _this.setState({ value: value });
-	            }
-	            var onChange = _this.props.onChange;
-	            if (onChange) {
-	                onChange(value);
-	            }
-	        };
-	        _this.state = {
-	            value: props.value || props.defaultValue || []
-	        };
-	        return _this;
-	    }
-
-	    _createClass(CheckboxGroup, [{
-	        key: 'getChildContext',
-	        value: function getChildContext() {
-	            return {
-	                checkboxGroup: {
-	                    toggleOption: this.toggleOption,
-	                    value: this.state.value,
-	                    disabled: this.props.disabled
-	                }
-	            };
-	        }
-	    }, {
-	        key: 'shouldComponentUpdate',
-	        value: function shouldComponentUpdate(nextProps, nextState) {
-	            return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState);
-	        }
-	    }, {
-	        key: 'getOptions',
-	        value: function getOptions() {
-	            var options = this.props.options;
-	            // https://github.com/Microsoft/TypeScript/issues/7960
-
-	            return options.map(function (option) {
-	                if (typeof option === 'string') {
-	                    return {
-	                        label: option,
-	                        value: option
-	                    };
-	                }
-	                return option;
-	            });
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var props = this.props,
-	                state = this.state;
-
-	            var prefixCls = props.prefixCls,
-	                className = props.className,
-	                style = props.style,
-	                options = props.options,
-	                restProps = __rest$9(props, ["prefixCls", "className", "style", "options"]);
-
-	            var groupPrefixCls = prefixCls + '-group';
-	            var domProps = omit(restProps, ['children', 'defaultValue', 'value', 'onChange', 'disabled']);
-	            var children = props.children;
-	            if (options && options.length > 0) {
-	                children = this.getOptions().map(function (option) {
-	                    return React.createElement(
-	                        Checkbox$1,
-	                        { prefixCls: prefixCls, key: option.value.toString(), disabled: 'disabled' in option ? option.disabled : props.disabled, value: option.value, checked: state.value.indexOf(option.value) !== -1, onChange: option.onChange, className: groupPrefixCls + '-item' },
-	                        option.label
-	                    );
-	                });
-	            }
-	            var classString = classnames(groupPrefixCls, className);
-	            return React.createElement(
-	                'div',
-	                _extends$1({ className: classString, style: style }, domProps),
-	                children
-	            );
-	        }
-	    }], [{
-	        key: 'getDerivedStateFromProps',
-	        value: function getDerivedStateFromProps(nextProps) {
-	            if ('value' in nextProps) {
-	                return {
-	                    value: nextProps.value || []
-	                };
-	            }
-	            return null;
-	        }
-	    }]);
-
-	    return CheckboxGroup;
-	}(React.Component);
-
-	CheckboxGroup.defaultProps = {
-	    options: [],
-	    prefixCls: 'ant-checkbox'
-	};
-	CheckboxGroup.propTypes = {
-	    defaultValue: PropTypes.array,
-	    value: PropTypes.array,
-	    options: PropTypes.array.isRequired,
-	    onChange: PropTypes.func
-	};
-	CheckboxGroup.childContextTypes = {
-	    checkboxGroup: PropTypes.any
-	};
-	polyfill(CheckboxGroup);
-
-	Checkbox$1.Group = CheckboxGroup;
-
-	var Search$1 = function (_React$Component) {
-	    _inherits(Search, _React$Component);
-
-	    function Search() {
-	        _classCallCheck(this, Search);
-
-	        var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
-
-	        _this.handleChange = function (e) {
-	            var onChange = _this.props.onChange;
-
-	            if (onChange) {
-	                onChange(e);
-	            }
-	        };
-	        _this.handleClear = function (e) {
-	            e.preventDefault();
-	            var handleClear = _this.props.handleClear;
-
-	            if (handleClear) {
-	                handleClear(e);
-	            }
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Search, [{
-	        key: 'render',
-	        value: function render() {
-	            var _props = this.props,
-	                placeholder = _props.placeholder,
-	                value = _props.value,
-	                prefixCls = _props.prefixCls;
-
-	            var icon = value && value.length > 0 ? React.createElement(
-	                'a',
-	                { href: '#', className: prefixCls + '-action', onClick: this.handleClear },
-	                React.createElement(Icon$1, { type: 'close-circle' })
-	            ) : React.createElement(
-	                'span',
-	                { className: prefixCls + '-action' },
-	                React.createElement(Icon$1, { type: 'search' })
-	            );
-	            return React.createElement(
-	                'div',
-	                null,
-	                React.createElement(Input, { placeholder: placeholder, className: prefixCls, value: value, ref: 'input', onChange: this.handleChange }),
-	                icon
-	            );
-	        }
-	    }]);
-
-	    return Search;
-	}(React.Component);
-
-	Search$1.defaultProps = {
-	    placeholder: ''
-	};
-
-	var eventlistener = createCommonjsModule(function (module, exports) {
-	(function(root,factory){
-	    {
-	        module.exports = factory();
-	    }
-	}(commonjsGlobal, function () {
-		function wrap(standard, fallback) {
-			return function (el, evtName, listener, useCapture) {
-				if (el[standard]) {
-					el[standard](evtName, listener, useCapture);
-				} else if (el[fallback]) {
-					el[fallback]('on' + evtName, listener);
-				}
-			}
-		}
-
-	    return {
-			add: wrap('addEventListener', 'attachEvent'),
-			remove: wrap('removeEventListener', 'detachEvent')
-		};
-	}));
-	});
-
-	/**
-	 * lodash (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modularize exports="npm" -o ./`
-	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
-	 * Released under MIT license <https://lodash.com/license>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 */
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT = 'Expected a function';
-
-	/** Used as references for various `Number` constants. */
-	var NAN = 0 / 0;
-
-	/** `Object#toString` result references. */
-	var symbolTag = '[object Symbol]';
-
-	/** Used to match leading and trailing whitespace. */
-	var reTrim = /^\s+|\s+$/g;
-
-	/** Used to detect bad signed hexadecimal string values. */
-	var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
-
-	/** Used to detect binary string values. */
-	var reIsBinary = /^0b[01]+$/i;
-
-	/** Used to detect octal string values. */
-	var reIsOctal = /^0o[0-7]+$/i;
-
-	/** Built-in method references without a dependency on `root`. */
-	var freeParseInt = parseInt;
-
-	/** Detect free variable `global` from Node.js. */
-	var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
-
-	/** Detect free variable `self`. */
-	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
-
-	/** Used as a reference to the global object. */
-	var root$1 = freeGlobal || freeSelf || Function('return this')();
-
-	/** Used for built-in method references. */
-	var objectProto$4 = Object.prototype;
-
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString$1 = objectProto$4.toString;
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax = Math.max,
-	    nativeMin = Math.min;
-
-	/**
-	 * Gets the timestamp of the number of milliseconds that have elapsed since
-	 * the Unix epoch (1 January 1970 00:00:00 UTC).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 2.4.0
-	 * @category Date
-	 * @returns {number} Returns the timestamp.
-	 * @example
-	 *
-	 * _.defer(function(stamp) {
-	 *   console.log(_.now() - stamp);
-	 * }, _.now());
-	 * // => Logs the number of milliseconds it took for the deferred invocation.
-	 */
-	var now = function() {
-	  return root$1.Date.now();
-	};
-
-	/**
-	 * Creates a debounced function that delays invoking `func` until after `wait`
-	 * milliseconds have elapsed since the last time the debounced function was
-	 * invoked. The debounced function comes with a `cancel` method to cancel
-	 * delayed `func` invocations and a `flush` method to immediately invoke them.
-	 * Provide `options` to indicate whether `func` should be invoked on the
-	 * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
-	 * with the last arguments provided to the debounced function. Subsequent
-	 * calls to the debounced function return the result of the last `func`
-	 * invocation.
-	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
-	 * invoked on the trailing edge of the timeout only if the debounced function
-	 * is invoked more than once during the `wait` timeout.
-	 *
-	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
-	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
-	 *
-	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
-	 * for details over the differences between `_.debounce` and `_.throttle`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Function
-	 * @param {Function} func The function to debounce.
-	 * @param {number} [wait=0] The number of milliseconds to delay.
-	 * @param {Object} [options={}] The options object.
-	 * @param {boolean} [options.leading=false]
-	 *  Specify invoking on the leading edge of the timeout.
-	 * @param {number} [options.maxWait]
-	 *  The maximum time `func` is allowed to be delayed before it's invoked.
-	 * @param {boolean} [options.trailing=true]
-	 *  Specify invoking on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new debounced function.
-	 * @example
-	 *
-	 * // Avoid costly calculations while the window size is in flux.
-	 * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
-	 *
-	 * // Invoke `sendMail` when clicked, debouncing subsequent calls.
-	 * jQuery(element).on('click', _.debounce(sendMail, 300, {
-	 *   'leading': true,
-	 *   'trailing': false
-	 * }));
-	 *
-	 * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
-	 * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
-	 * var source = new EventSource('/stream');
-	 * jQuery(source).on('message', debounced);
-	 *
-	 * // Cancel the trailing debounced invocation.
-	 * jQuery(window).on('popstate', debounced.cancel);
-	 */
-	function debounce(func, wait, options) {
-	  var lastArgs,
-	      lastThis,
-	      maxWait,
-	      result,
-	      timerId,
-	      lastCallTime,
-	      lastInvokeTime = 0,
-	      leading = false,
-	      maxing = false,
-	      trailing = true;
-
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT);
-	  }
-	  wait = toNumber(wait) || 0;
-	  if (isObject$4(options)) {
-	    leading = !!options.leading;
-	    maxing = 'maxWait' in options;
-	    maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
-
-	  function invokeFunc(time) {
-	    var args = lastArgs,
-	        thisArg = lastThis;
-
-	    lastArgs = lastThis = undefined;
-	    lastInvokeTime = time;
-	    result = func.apply(thisArg, args);
-	    return result;
-	  }
-
-	  function leadingEdge(time) {
-	    // Reset any `maxWait` timer.
-	    lastInvokeTime = time;
-	    // Start the timer for the trailing edge.
-	    timerId = setTimeout(timerExpired, wait);
-	    // Invoke the leading edge.
-	    return leading ? invokeFunc(time) : result;
-	  }
-
-	  function remainingWait(time) {
-	    var timeSinceLastCall = time - lastCallTime,
-	        timeSinceLastInvoke = time - lastInvokeTime,
-	        result = wait - timeSinceLastCall;
-
-	    return maxing ? nativeMin(result, maxWait - timeSinceLastInvoke) : result;
-	  }
-
-	  function shouldInvoke(time) {
-	    var timeSinceLastCall = time - lastCallTime,
-	        timeSinceLastInvoke = time - lastInvokeTime;
-
-	    // Either this is the first call, activity has stopped and we're at the
-	    // trailing edge, the system time has gone backwards and we're treating
-	    // it as the trailing edge, or we've hit the `maxWait` limit.
-	    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-	      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
-	  }
-
-	  function timerExpired() {
-	    var time = now();
-	    if (shouldInvoke(time)) {
-	      return trailingEdge(time);
-	    }
-	    // Restart the timer.
-	    timerId = setTimeout(timerExpired, remainingWait(time));
-	  }
-
-	  function trailingEdge(time) {
-	    timerId = undefined;
-
-	    // Only invoke if we have `lastArgs` which means `func` has been
-	    // debounced at least once.
-	    if (trailing && lastArgs) {
-	      return invokeFunc(time);
-	    }
-	    lastArgs = lastThis = undefined;
-	    return result;
-	  }
-
-	  function cancel() {
-	    if (timerId !== undefined) {
-	      clearTimeout(timerId);
-	    }
-	    lastInvokeTime = 0;
-	    lastArgs = lastCallTime = lastThis = timerId = undefined;
-	  }
-
-	  function flush() {
-	    return timerId === undefined ? result : trailingEdge(now());
-	  }
-
-	  function debounced() {
-	    var time = now(),
-	        isInvoking = shouldInvoke(time);
-
-	    lastArgs = arguments;
-	    lastThis = this;
-	    lastCallTime = time;
-
-	    if (isInvoking) {
-	      if (timerId === undefined) {
-	        return leadingEdge(lastCallTime);
-	      }
-	      if (maxing) {
-	        // Handle invocations in a tight loop.
-	        timerId = setTimeout(timerExpired, wait);
-	        return invokeFunc(lastCallTime);
-	      }
-	    }
-	    if (timerId === undefined) {
-	      timerId = setTimeout(timerExpired, wait);
-	    }
-	    return result;
-	  }
-	  debounced.cancel = cancel;
-	  debounced.flush = flush;
-	  return debounced;
-	}
-
-	/**
-	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(_.noop);
-	 * // => true
-	 *
-	 * _.isObject(null);
-	 * // => false
-	 */
-	function isObject$4(value) {
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	/**
-	 * Checks if `value` is object-like. A value is object-like if it's not `null`
-	 * and has a `typeof` result of "object".
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 * @example
-	 *
-	 * _.isObjectLike({});
-	 * // => true
-	 *
-	 * _.isObjectLike([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObjectLike(_.noop);
-	 * // => false
-	 *
-	 * _.isObjectLike(null);
-	 * // => false
-	 */
-	function isObjectLike$3(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	/**
-	 * Checks if `value` is classified as a `Symbol` primitive or object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-	 * @example
-	 *
-	 * _.isSymbol(Symbol.iterator);
-	 * // => true
-	 *
-	 * _.isSymbol('abc');
-	 * // => false
-	 */
-	function isSymbol$1(value) {
-	  return typeof value == 'symbol' ||
-	    (isObjectLike$3(value) && objectToString$1.call(value) == symbolTag);
-	}
-
-	/**
-	 * Converts `value` to a number.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to process.
-	 * @returns {number} Returns the number.
-	 * @example
-	 *
-	 * _.toNumber(3.2);
-	 * // => 3.2
-	 *
-	 * _.toNumber(Number.MIN_VALUE);
-	 * // => 5e-324
-	 *
-	 * _.toNumber(Infinity);
-	 * // => Infinity
-	 *
-	 * _.toNumber('3.2');
-	 * // => 3.2
-	 */
-	function toNumber(value) {
-	  if (typeof value == 'number') {
-	    return value;
-	  }
-	  if (isSymbol$1(value)) {
-	    return NAN;
-	  }
-	  if (isObject$4(value)) {
-	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-	    value = isObject$4(other) ? (other + '') : other;
-	  }
-	  if (typeof value != 'string') {
-	    return value === 0 ? value : +value;
-	  }
-	  value = value.replace(reTrim, '');
-	  var isBinary = reIsBinary.test(value);
-	  return (isBinary || reIsOctal.test(value))
-	    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
-	    : (reIsBadHex.test(value) ? NAN : +value);
-	}
-
-	var lodash_debounce = debounce;
-
-	/**
-	 * lodash (Custom Build) <https://lodash.com/>
-	 * Build: `lodash modularize exports="npm" -o ./`
-	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
-	 * Released under MIT license <https://lodash.com/license>
-	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
-	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
-	 */
-
-	/** Used as the `TypeError` message for "Functions" methods. */
-	var FUNC_ERROR_TEXT$1 = 'Expected a function';
-
-	/** Used as references for various `Number` constants. */
-	var NAN$1 = 0 / 0;
-
-	/** `Object#toString` result references. */
-	var symbolTag$1 = '[object Symbol]';
-
-	/** Used to match leading and trailing whitespace. */
-	var reTrim$1 = /^\s+|\s+$/g;
-
-	/** Used to detect bad signed hexadecimal string values. */
-	var reIsBadHex$1 = /^[-+]0x[0-9a-f]+$/i;
-
-	/** Used to detect binary string values. */
-	var reIsBinary$1 = /^0b[01]+$/i;
-
-	/** Used to detect octal string values. */
-	var reIsOctal$1 = /^0o[0-7]+$/i;
-
-	/** Built-in method references without a dependency on `root`. */
-	var freeParseInt$1 = parseInt;
-
-	/** Detect free variable `global` from Node.js. */
-	var freeGlobal$1 = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
-
-	/** Detect free variable `self`. */
-	var freeSelf$1 = typeof self == 'object' && self && self.Object === Object && self;
-
-	/** Used as a reference to the global object. */
-	var root$2 = freeGlobal$1 || freeSelf$1 || Function('return this')();
-
-	/** Used for built-in method references. */
-	var objectProto$5 = Object.prototype;
-
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString$2 = objectProto$5.toString;
-
-	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax$1 = Math.max,
-	    nativeMin$1 = Math.min;
-
-	/**
-	 * Gets the timestamp of the number of milliseconds that have elapsed since
-	 * the Unix epoch (1 January 1970 00:00:00 UTC).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 2.4.0
-	 * @category Date
-	 * @returns {number} Returns the timestamp.
-	 * @example
-	 *
-	 * _.defer(function(stamp) {
-	 *   console.log(_.now() - stamp);
-	 * }, _.now());
-	 * // => Logs the number of milliseconds it took for the deferred invocation.
-	 */
-	var now$1 = function() {
-	  return root$2.Date.now();
-	};
-
-	/**
-	 * Creates a debounced function that delays invoking `func` until after `wait`
-	 * milliseconds have elapsed since the last time the debounced function was
-	 * invoked. The debounced function comes with a `cancel` method to cancel
-	 * delayed `func` invocations and a `flush` method to immediately invoke them.
-	 * Provide `options` to indicate whether `func` should be invoked on the
-	 * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
-	 * with the last arguments provided to the debounced function. Subsequent
-	 * calls to the debounced function return the result of the last `func`
-	 * invocation.
-	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
-	 * invoked on the trailing edge of the timeout only if the debounced function
-	 * is invoked more than once during the `wait` timeout.
-	 *
-	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
-	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
-	 *
-	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
-	 * for details over the differences between `_.debounce` and `_.throttle`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Function
-	 * @param {Function} func The function to debounce.
-	 * @param {number} [wait=0] The number of milliseconds to delay.
-	 * @param {Object} [options={}] The options object.
-	 * @param {boolean} [options.leading=false]
-	 *  Specify invoking on the leading edge of the timeout.
-	 * @param {number} [options.maxWait]
-	 *  The maximum time `func` is allowed to be delayed before it's invoked.
-	 * @param {boolean} [options.trailing=true]
-	 *  Specify invoking on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new debounced function.
-	 * @example
-	 *
-	 * // Avoid costly calculations while the window size is in flux.
-	 * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
-	 *
-	 * // Invoke `sendMail` when clicked, debouncing subsequent calls.
-	 * jQuery(element).on('click', _.debounce(sendMail, 300, {
-	 *   'leading': true,
-	 *   'trailing': false
-	 * }));
-	 *
-	 * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
-	 * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
-	 * var source = new EventSource('/stream');
-	 * jQuery(source).on('message', debounced);
-	 *
-	 * // Cancel the trailing debounced invocation.
-	 * jQuery(window).on('popstate', debounced.cancel);
-	 */
-	function debounce$1(func, wait, options) {
-	  var lastArgs,
-	      lastThis,
-	      maxWait,
-	      result,
-	      timerId,
-	      lastCallTime,
-	      lastInvokeTime = 0,
-	      leading = false,
-	      maxing = false,
-	      trailing = true;
-
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT$1);
-	  }
-	  wait = toNumber$1(wait) || 0;
-	  if (isObject$5(options)) {
-	    leading = !!options.leading;
-	    maxing = 'maxWait' in options;
-	    maxWait = maxing ? nativeMax$1(toNumber$1(options.maxWait) || 0, wait) : maxWait;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
-
-	  function invokeFunc(time) {
-	    var args = lastArgs,
-	        thisArg = lastThis;
-
-	    lastArgs = lastThis = undefined;
-	    lastInvokeTime = time;
-	    result = func.apply(thisArg, args);
-	    return result;
-	  }
-
-	  function leadingEdge(time) {
-	    // Reset any `maxWait` timer.
-	    lastInvokeTime = time;
-	    // Start the timer for the trailing edge.
-	    timerId = setTimeout(timerExpired, wait);
-	    // Invoke the leading edge.
-	    return leading ? invokeFunc(time) : result;
-	  }
-
-	  function remainingWait(time) {
-	    var timeSinceLastCall = time - lastCallTime,
-	        timeSinceLastInvoke = time - lastInvokeTime,
-	        result = wait - timeSinceLastCall;
-
-	    return maxing ? nativeMin$1(result, maxWait - timeSinceLastInvoke) : result;
-	  }
-
-	  function shouldInvoke(time) {
-	    var timeSinceLastCall = time - lastCallTime,
-	        timeSinceLastInvoke = time - lastInvokeTime;
-
-	    // Either this is the first call, activity has stopped and we're at the
-	    // trailing edge, the system time has gone backwards and we're treating
-	    // it as the trailing edge, or we've hit the `maxWait` limit.
-	    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-	      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
-	  }
-
-	  function timerExpired() {
-	    var time = now$1();
-	    if (shouldInvoke(time)) {
-	      return trailingEdge(time);
-	    }
-	    // Restart the timer.
-	    timerId = setTimeout(timerExpired, remainingWait(time));
-	  }
-
-	  function trailingEdge(time) {
-	    timerId = undefined;
-
-	    // Only invoke if we have `lastArgs` which means `func` has been
-	    // debounced at least once.
-	    if (trailing && lastArgs) {
-	      return invokeFunc(time);
-	    }
-	    lastArgs = lastThis = undefined;
-	    return result;
-	  }
-
-	  function cancel() {
-	    if (timerId !== undefined) {
-	      clearTimeout(timerId);
-	    }
-	    lastInvokeTime = 0;
-	    lastArgs = lastCallTime = lastThis = timerId = undefined;
-	  }
-
-	  function flush() {
-	    return timerId === undefined ? result : trailingEdge(now$1());
-	  }
-
-	  function debounced() {
-	    var time = now$1(),
-	        isInvoking = shouldInvoke(time);
-
-	    lastArgs = arguments;
-	    lastThis = this;
-	    lastCallTime = time;
-
-	    if (isInvoking) {
-	      if (timerId === undefined) {
-	        return leadingEdge(lastCallTime);
-	      }
-	      if (maxing) {
-	        // Handle invocations in a tight loop.
-	        timerId = setTimeout(timerExpired, wait);
-	        return invokeFunc(lastCallTime);
-	      }
-	    }
-	    if (timerId === undefined) {
-	      timerId = setTimeout(timerExpired, wait);
-	    }
-	    return result;
-	  }
-	  debounced.cancel = cancel;
-	  debounced.flush = flush;
-	  return debounced;
-	}
-
-	/**
-	 * Creates a throttled function that only invokes `func` at most once per
-	 * every `wait` milliseconds. The throttled function comes with a `cancel`
-	 * method to cancel delayed `func` invocations and a `flush` method to
-	 * immediately invoke them. Provide `options` to indicate whether `func`
-	 * should be invoked on the leading and/or trailing edge of the `wait`
-	 * timeout. The `func` is invoked with the last arguments provided to the
-	 * throttled function. Subsequent calls to the throttled function return the
-	 * result of the last `func` invocation.
-	 *
-	 * **Note:** If `leading` and `trailing` options are `true`, `func` is
-	 * invoked on the trailing edge of the timeout only if the throttled function
-	 * is invoked more than once during the `wait` timeout.
-	 *
-	 * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
-	 * until to the next tick, similar to `setTimeout` with a timeout of `0`.
-	 *
-	 * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
-	 * for details over the differences between `_.throttle` and `_.debounce`.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Function
-	 * @param {Function} func The function to throttle.
-	 * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
-	 * @param {Object} [options={}] The options object.
-	 * @param {boolean} [options.leading=true]
-	 *  Specify invoking on the leading edge of the timeout.
-	 * @param {boolean} [options.trailing=true]
-	 *  Specify invoking on the trailing edge of the timeout.
-	 * @returns {Function} Returns the new throttled function.
-	 * @example
-	 *
-	 * // Avoid excessively updating the position while scrolling.
-	 * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
-	 *
-	 * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
-	 * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
-	 * jQuery(element).on('click', throttled);
-	 *
-	 * // Cancel the trailing throttled invocation.
-	 * jQuery(window).on('popstate', throttled.cancel);
-	 */
-	function throttle(func, wait, options) {
-	  var leading = true,
-	      trailing = true;
-
-	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT$1);
-	  }
-	  if (isObject$5(options)) {
-	    leading = 'leading' in options ? !!options.leading : leading;
-	    trailing = 'trailing' in options ? !!options.trailing : trailing;
-	  }
-	  return debounce$1(func, wait, {
-	    'leading': leading,
-	    'maxWait': wait,
-	    'trailing': trailing
-	  });
-	}
-
-	/**
-	 * Checks if `value` is the
-	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
-	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 0.1.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
-	 * @example
-	 *
-	 * _.isObject({});
-	 * // => true
-	 *
-	 * _.isObject([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObject(_.noop);
-	 * // => true
-	 *
-	 * _.isObject(null);
-	 * // => false
-	 */
-	function isObject$5(value) {
-	  var type = typeof value;
-	  return !!value && (type == 'object' || type == 'function');
-	}
-
-	/**
-	 * Checks if `value` is object-like. A value is object-like if it's not `null`
-	 * and has a `typeof` result of "object".
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
-	 * @example
-	 *
-	 * _.isObjectLike({});
-	 * // => true
-	 *
-	 * _.isObjectLike([1, 2, 3]);
-	 * // => true
-	 *
-	 * _.isObjectLike(_.noop);
-	 * // => false
-	 *
-	 * _.isObjectLike(null);
-	 * // => false
-	 */
-	function isObjectLike$4(value) {
-	  return !!value && typeof value == 'object';
-	}
-
-	/**
-	 * Checks if `value` is classified as a `Symbol` primitive or object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
-	 * @example
-	 *
-	 * _.isSymbol(Symbol.iterator);
-	 * // => true
-	 *
-	 * _.isSymbol('abc');
-	 * // => false
-	 */
-	function isSymbol$2(value) {
-	  return typeof value == 'symbol' ||
-	    (isObjectLike$4(value) && objectToString$2.call(value) == symbolTag$1);
-	}
-
-	/**
-	 * Converts `value` to a number.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @since 4.0.0
-	 * @category Lang
-	 * @param {*} value The value to process.
-	 * @returns {number} Returns the number.
-	 * @example
-	 *
-	 * _.toNumber(3.2);
-	 * // => 3.2
-	 *
-	 * _.toNumber(Number.MIN_VALUE);
-	 * // => 5e-324
-	 *
-	 * _.toNumber(Infinity);
-	 * // => Infinity
-	 *
-	 * _.toNumber('3.2');
-	 * // => 3.2
-	 */
-	function toNumber$1(value) {
-	  if (typeof value == 'number') {
-	    return value;
-	  }
-	  if (isSymbol$2(value)) {
-	    return NAN$1;
-	  }
-	  if (isObject$5(value)) {
-	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
-	    value = isObject$5(other) ? (other + '') : other;
-	  }
-	  if (typeof value != 'string') {
-	    return value === 0 ? value : +value;
-	  }
-	  value = value.replace(reTrim$1, '');
-	  var isBinary = reIsBinary$1.test(value);
-	  return (isBinary || reIsOctal$1.test(value))
-	    ? freeParseInt$1(value.slice(2), isBinary ? 2 : 8)
-	    : (reIsBadHex$1.test(value) ? NAN$1 : +value);
-	}
-
-	var lodash_throttle = throttle;
-
-	var parentScroll = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var style = function style(element, prop) {
-	  return typeof getComputedStyle !== 'undefined' ? getComputedStyle(element, null).getPropertyValue(prop) : element.style[prop];
-	};
-
-	var overflow = function overflow(element) {
-	  return style(element, 'overflow') + style(element, 'overflow-y') + style(element, 'overflow-x');
-	};
-
-	var scrollParent = function scrollParent(element) {
-	  if (!(element instanceof HTMLElement)) {
-	    return window;
-	  }
-
-	  var parent = element;
-
-	  while (parent) {
-	    if (parent === document.body || parent === document.documentElement) {
-	      break;
-	    }
-
-	    if (!parent.parentNode) {
-	      break;
-	    }
-
-	    if (/(scroll|auto)/.test(overflow(parent))) {
-	      return parent;
-	    }
-
-	    parent = parent.parentNode;
-	  }
-
-	  return window;
-	};
-
-	exports.default = scrollParent;
-	});
-
-	unwrapExports(parentScroll);
-
-	var getElementPosition_1 = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = getElementPosition;
-	/*
-	* Finds element's position relative to the whole document,
-	* rather than to the viewport as it is the case with .getBoundingClientRect().
-	*/
-	function getElementPosition(element) {
-	  var rect = element.getBoundingClientRect();
-
-	  return {
-	    top: rect.top + window.pageYOffset,
-	    left: rect.left + window.pageXOffset
-	  };
-	}
-	});
-
-	unwrapExports(getElementPosition_1);
-
-	var inViewport_1 = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = inViewport;
-
-
-
-	var _getElementPosition2 = _interopRequireDefault(getElementPosition_1);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var isHidden = function isHidden(element) {
-	  return element.offsetParent === null;
-	};
-
-	function inViewport(element, container, customOffset) {
-	  if (isHidden(element)) {
-	    return false;
-	  }
-
-	  var top = void 0;
-	  var bottom = void 0;
-	  var left = void 0;
-	  var right = void 0;
-
-	  if (typeof container === 'undefined' || container === window) {
-	    top = window.pageYOffset;
-	    left = window.pageXOffset;
-	    bottom = top + window.innerHeight;
-	    right = left + window.innerWidth;
-	  } else {
-	    var containerPosition = (0, _getElementPosition2.default)(container);
-
-	    top = containerPosition.top;
-	    left = containerPosition.left;
-	    bottom = top + container.offsetHeight;
-	    right = left + container.offsetWidth;
-	  }
-
-	  var elementPosition = (0, _getElementPosition2.default)(element);
-
-	  return top <= elementPosition.top + element.offsetHeight + customOffset.top && bottom >= elementPosition.top - customOffset.bottom && left <= elementPosition.left + element.offsetWidth + customOffset.left && right >= elementPosition.left - customOffset.right;
-	}
-	});
-
-	unwrapExports(inViewport_1);
-
-	var LazyLoad_1 = createCommonjsModule(function (module, exports) {
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-
-
-	var _react2 = _interopRequireDefault(React__default);
-
-
-
-	var _propTypes2 = _interopRequireDefault(PropTypes__default);
-
-
-
-
-
-
-
-	var _lodash2 = _interopRequireDefault(lodash_debounce);
-
-
-
-	var _lodash4 = _interopRequireDefault(lodash_throttle);
-
-
-
-	var _parentScroll2 = _interopRequireDefault(parentScroll);
-
-
-
-	var _inViewport2 = _interopRequireDefault(inViewport_1);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var LazyLoad = function (_Component) {
-	  _inherits(LazyLoad, _Component);
-
-	  function LazyLoad(props) {
-	    _classCallCheck(this, LazyLoad);
-
-	    var _this = _possibleConstructorReturn(this, (LazyLoad.__proto__ || Object.getPrototypeOf(LazyLoad)).call(this, props));
-
-	    _this.lazyLoadHandler = _this.lazyLoadHandler.bind(_this);
-
-	    if (props.throttle > 0) {
-	      if (props.debounce) {
-	        _this.lazyLoadHandler = (0, _lodash2.default)(_this.lazyLoadHandler, props.throttle);
-	      } else {
-	        _this.lazyLoadHandler = (0, _lodash4.default)(_this.lazyLoadHandler, props.throttle);
-	      }
-	    }
-
-	    _this.state = { visible: false };
-	    return _this;
-	  }
-
-	  _createClass(LazyLoad, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this._mounted = true;
-	      var eventNode = this.getEventNode();
-
-	      this.lazyLoadHandler();
-
-	      if (this.lazyLoadHandler.flush) {
-	        this.lazyLoadHandler.flush();
-	      }
-
-	      (0, eventlistener.add)(window, 'resize', this.lazyLoadHandler);
-	      (0, eventlistener.add)(eventNode, 'scroll', this.lazyLoadHandler);
-	    }
-	  }, {
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps() {
-	      if (!this.state.visible) {
-	        this.lazyLoadHandler();
-	      }
-	    }
-	  }, {
-	    key: 'shouldComponentUpdate',
-	    value: function shouldComponentUpdate(_nextProps, nextState) {
-	      return nextState.visible;
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this._mounted = false;
-	      if (this.lazyLoadHandler.cancel) {
-	        this.lazyLoadHandler.cancel();
-	      }
-
-	      this.detachListeners();
-	    }
-	  }, {
-	    key: 'getEventNode',
-	    value: function getEventNode() {
-	      return (0, _parentScroll2.default)((0, ReactDOM__default.findDOMNode)(this));
-	    }
-	  }, {
-	    key: 'getOffset',
-	    value: function getOffset() {
-	      var _props = this.props,
-	          offset = _props.offset,
-	          offsetVertical = _props.offsetVertical,
-	          offsetHorizontal = _props.offsetHorizontal,
-	          offsetTop = _props.offsetTop,
-	          offsetBottom = _props.offsetBottom,
-	          offsetLeft = _props.offsetLeft,
-	          offsetRight = _props.offsetRight,
-	          threshold = _props.threshold;
-
-
-	      var _offsetAll = threshold || offset;
-	      var _offsetVertical = offsetVertical || _offsetAll;
-	      var _offsetHorizontal = offsetHorizontal || _offsetAll;
-
-	      return {
-	        top: offsetTop || _offsetVertical,
-	        bottom: offsetBottom || _offsetVertical,
-	        left: offsetLeft || _offsetHorizontal,
-	        right: offsetRight || _offsetHorizontal
-	      };
-	    }
-	  }, {
-	    key: 'lazyLoadHandler',
-	    value: function lazyLoadHandler() {
-	      if (!this._mounted) {
-	        return;
-	      }
-	      var offset = this.getOffset();
-	      var node = (0, ReactDOM__default.findDOMNode)(this);
-	      var eventNode = this.getEventNode();
-
-	      if ((0, _inViewport2.default)(node, eventNode, offset)) {
-	        var onContentVisible = this.props.onContentVisible;
-
-
-	        this.setState({ visible: true }, function () {
-	          if (onContentVisible) {
-	            onContentVisible();
-	          }
-	        });
-	        this.detachListeners();
-	      }
-	    }
-	  }, {
-	    key: 'detachListeners',
-	    value: function detachListeners() {
-	      var eventNode = this.getEventNode();
-
-	      (0, eventlistener.remove)(window, 'resize', this.lazyLoadHandler);
-	      (0, eventlistener.remove)(eventNode, 'scroll', this.lazyLoadHandler);
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _props2 = this.props,
-	          children = _props2.children,
-	          className = _props2.className,
-	          height = _props2.height,
-	          width = _props2.width;
-	      var visible = this.state.visible;
-
-
-	      var elStyles = { height: height, width: width };
-	      var elClasses = 'LazyLoad' + (visible ? ' is-visible' : '') + (className ? ' ' + className : '');
-
-	      return _react2.default.createElement(this.props.elementType, {
-	        className: elClasses,
-	        style: elStyles
-	      }, visible && React__default.Children.only(children));
-	    }
-	  }]);
-
-	  return LazyLoad;
-	}(React__default.Component);
-
-	exports.default = LazyLoad;
-
-
-	LazyLoad.propTypes = {
-	  children: _propTypes2.default.node.isRequired,
-	  className: _propTypes2.default.string,
-	  debounce: _propTypes2.default.bool,
-	  elementType: _propTypes2.default.string,
-	  height: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
-	  offset: _propTypes2.default.number,
-	  offsetBottom: _propTypes2.default.number,
-	  offsetHorizontal: _propTypes2.default.number,
-	  offsetLeft: _propTypes2.default.number,
-	  offsetRight: _propTypes2.default.number,
-	  offsetTop: _propTypes2.default.number,
-	  offsetVertical: _propTypes2.default.number,
-	  threshold: _propTypes2.default.number,
-	  throttle: _propTypes2.default.number,
-	  width: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
-	  onContentVisible: _propTypes2.default.func
-	};
-
-	LazyLoad.defaultProps = {
-	  elementType: 'div',
-	  debounce: true,
-	  offset: 0,
-	  offsetBottom: 0,
-	  offsetHorizontal: 0,
-	  offsetLeft: 0,
-	  offsetRight: 0,
-	  offsetTop: 0,
-	  offsetVertical: 0,
-	  throttle: 250
-	};
-	});
-
-	var Lazyload = unwrapExports(LazyLoad_1);
-
-	var Item = function (_React$Component) {
-	    _inherits(Item, _React$Component);
-
-	    function Item() {
-	        _classCallCheck(this, Item);
-
-	        return _possibleConstructorReturn(this, (Item.__proto__ || Object.getPrototypeOf(Item)).apply(this, arguments));
-	    }
-
-	    _createClass(Item, [{
-	        key: 'shouldComponentUpdate',
-	        value: function shouldComponentUpdate() {
-	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	                args[_key] = arguments[_key];
-	            }
-
-	            return PureRenderMixin.shouldComponentUpdate.apply(this, args);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _classNames;
-
-	            var _props = this.props,
-	                renderedText = _props.renderedText,
-	                renderedEl = _props.renderedEl,
-	                item = _props.item,
-	                lazy = _props.lazy,
-	                checked = _props.checked,
-	                disabled = _props.disabled,
-	                prefixCls = _props.prefixCls,
-	                onClick = _props.onClick;
-
-	            var className = classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-content-item', true), _defineProperty(_classNames, prefixCls + '-content-item-disabled', disabled || item.disabled), _classNames));
-	            var title = undefined;
-	            if (typeof renderedText === 'string' || typeof renderedText === 'number') {
-	                title = String(renderedText);
-	            }
-	            var listItem = React.createElement(
-	                'li',
-	                { className: className, title: title, onClick: disabled || item.disabled ? undefined : function () {
-	                        return onClick(item);
-	                    } },
-	                React.createElement(Checkbox$1, { checked: checked, disabled: disabled || item.disabled }),
-	                React.createElement(
-	                    'span',
-	                    null,
-	                    renderedEl
-	                )
-	            );
-	            var children = null;
-	            if (lazy) {
-	                var lazyProps = _extends$1({ height: 32, offset: 500, throttle: 0, debounce: false }, lazy);
-	                children = React.createElement(
-	                    Lazyload,
-	                    lazyProps,
-	                    listItem
-	                );
-	            } else {
-	                children = listItem;
-	            }
-	            return children;
-	        }
-	    }]);
-
-	    return Item;
-	}(React.Component);
-
-	function triggerEvent(el, type) {
-	    if ('createEvent' in document) {
-	        // modern browsers, IE9+
-	        var e = document.createEvent('HTMLEvents');
-	        e.initEvent(type, false, true);
-	        el.dispatchEvent(e);
-	    }
-	}
-
-	function isIEorEDGE() {
-	    return document.documentMode || /Edge/.test(navigator.userAgent);
-	}
-	function noop$1() {}
-	function isRenderResultPlainObject(result) {
-	    return result && !React.isValidElement(result) && Object.prototype.toString.call(result) === '[object Object]';
-	}
-
-	var TransferList = function (_React$Component) {
-	    _inherits(TransferList, _React$Component);
-
-	    function TransferList(props) {
-	        _classCallCheck(this, TransferList);
-
-	        var _this = _possibleConstructorReturn(this, (TransferList.__proto__ || Object.getPrototypeOf(TransferList)).call(this, props));
-
-	        _this.handleSelect = function (selectedItem) {
-	            var checkedKeys = _this.props.checkedKeys;
-
-	            var result = checkedKeys.some(function (key) {
-	                return key === selectedItem.key;
-	            });
-	            _this.props.handleSelect(selectedItem, !result);
-	        };
-	        _this.handleFilter = function (e) {
-	            _this.props.handleFilter(e);
-	            if (!e.target.value) {
-	                return;
-	            }
-	            // Manually trigger scroll event for lazy search bug
-	            // https://github.com/ant-design/ant-design/issues/5631
-	            _this.triggerScrollTimer = window.setTimeout(function () {
-	                var transferNode = ReactDOM.findDOMNode(_this);
-	                var listNode = transferNode.querySelectorAll('.ant-transfer-list-content')[0];
-	                if (listNode) {
-	                    triggerEvent(listNode, 'scroll');
-	                }
-	            }, 0);
-	            _this.fixIERepaint();
-	        };
-	        _this.handleClear = function () {
-	            _this.props.handleClear();
-	            _this.fixIERepaint();
-	        };
-	        _this.matchFilter = function (text, item) {
-	            var _this$props = _this.props,
-	                filter = _this$props.filter,
-	                filterOption = _this$props.filterOption;
-
-	            if (filterOption) {
-	                return filterOption(filter, item);
-	            }
-	            return text.indexOf(filter) >= 0;
-	        };
-	        _this.renderItem = function (item) {
-	            var _this$props$render = _this.props.render,
-	                render = _this$props$render === undefined ? noop$1 : _this$props$render;
-
-	            var renderResult = render(item);
-	            var isRenderResultPlain = isRenderResultPlainObject(renderResult);
-	            return {
-	                renderedText: isRenderResultPlain ? renderResult.value : renderResult,
-	                renderedEl: isRenderResultPlain ? renderResult.label : renderResult
-	            };
-	        };
-	        _this.saveNotFoundRef = function (node) {
-	            _this.notFoundNode = node;
-	        };
-	        _this.state = {
-	            mounted: false
-	        };
-	        return _this;
-	    }
-
-	    _createClass(TransferList, [{
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            var _this2 = this;
-
-	            this.timer = window.setTimeout(function () {
-	                _this2.setState({
-	                    mounted: true
-	                });
-	            }, 0);
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            clearTimeout(this.timer);
-	            clearTimeout(this.triggerScrollTimer);
-	            clearTimeout(this.fixIERepaintTimer);
-	        }
-	    }, {
-	        key: 'shouldComponentUpdate',
-	        value: function shouldComponentUpdate() {
-	            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	                args[_key] = arguments[_key];
-	            }
-
-	            return PureRenderMixin.shouldComponentUpdate.apply(this, args);
-	        }
-	    }, {
-	        key: 'getCheckStatus',
-	        value: function getCheckStatus(filteredDataSource) {
-	            var checkedKeys = this.props.checkedKeys;
-
-	            if (checkedKeys.length === 0) {
-	                return 'none';
-	            } else if (filteredDataSource.every(function (item) {
-	                return checkedKeys.indexOf(item.key) >= 0;
-	            })) {
-	                return 'all';
-	            }
-	            return 'part';
-	        }
-	        // Fix IE/Edge repaint
-	        // https://github.com/ant-design/ant-design/issues/9697
-	        // https://stackoverflow.com/q/27947912/3040605
-
-	    }, {
-	        key: 'fixIERepaint',
-	        value: function fixIERepaint() {
-	            var _this3 = this;
-
-	            if (!isIEorEDGE()) {
-	                return;
-	            }
-	            this.fixIERepaintTimer = window.setTimeout(function () {
-	                if (_this3.notFoundNode) {
-	                    _this3.notFoundNode.className = _this3.notFoundNode.className;
-	                }
-	            }, 0);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this4 = this;
-
-	            var _props = this.props,
-	                prefixCls = _props.prefixCls,
-	                dataSource = _props.dataSource,
-	                titleText = _props.titleText,
-	                checkedKeys = _props.checkedKeys,
-	                lazy = _props.lazy,
-	                disabled = _props.disabled,
-	                body = _props.body,
-	                footer = _props.footer,
-	                showSearch = _props.showSearch,
-	                style = _props.style,
-	                filter = _props.filter,
-	                searchPlaceholder = _props.searchPlaceholder,
-	                notFoundContent = _props.notFoundContent,
-	                itemUnit = _props.itemUnit,
-	                itemsUnit = _props.itemsUnit,
-	                onScroll = _props.onScroll;
-	            // Custom Layout
-
-	            var footerDom = footer && footer(this.props);
-	            var bodyDom = body && body(this.props);
-	            var listCls = classnames(prefixCls, _defineProperty({}, prefixCls + '-with-footer', !!footerDom));
-	            var filteredDataSource = [];
-	            var totalDataSource = [];
-	            var showItems = dataSource.map(function (item) {
-	                var _renderItem = _this4.renderItem(item),
-	                    renderedText = _renderItem.renderedText,
-	                    renderedEl = _renderItem.renderedEl;
-
-	                if (filter && filter.trim() && !_this4.matchFilter(renderedText, item)) {
-	                    return null;
-	                }
-	                // all show items
-	                totalDataSource.push(item);
-	                if (!item.disabled) {
-	                    // response to checkAll items
-	                    filteredDataSource.push(item);
-	                }
-	                var checked = checkedKeys.indexOf(item.key) >= 0;
-	                return React.createElement(Item, { disabled: disabled, key: item.key, item: item, lazy: lazy, renderedText: renderedText, renderedEl: renderedEl, checked: checked, prefixCls: prefixCls, onClick: _this4.handleSelect });
-	            });
-	            var unit = dataSource.length > 1 ? itemsUnit : itemUnit;
-	            var search = showSearch ? React.createElement(
-	                'div',
-	                { className: prefixCls + '-body-search-wrapper' },
-	                React.createElement(Search$1, { prefixCls: prefixCls + '-search', onChange: this.handleFilter, handleClear: this.handleClear, placeholder: searchPlaceholder, value: filter })
-	            ) : null;
-	            var listBody = bodyDom || React.createElement(
-	                'div',
-	                { className: classnames(showSearch ? prefixCls + '-body ' + prefixCls + '-body-with-search' : prefixCls + '-body') },
-	                search,
-	                React.createElement(
-	                    Animate,
-	                    { component: 'ul', componentProps: { onScroll: onScroll }, className: prefixCls + '-content', transitionName: this.state.mounted ? prefixCls + '-content-item-highlight' : '', transitionLeave: false },
-	                    showItems
-	                ),
-	                React.createElement(
-	                    'div',
-	                    { className: prefixCls + '-body-not-found', ref: this.saveNotFoundRef },
-	                    notFoundContent
-	                )
-	            );
-	            var listFooter = footerDom ? React.createElement(
-	                'div',
-	                { className: prefixCls + '-footer' },
-	                footerDom
-	            ) : null;
-	            var checkStatus = this.getCheckStatus(filteredDataSource);
-	            var checkedAll = checkStatus === 'all';
-	            var checkAllCheckbox = React.createElement(Checkbox$1, { ref: 'checkbox', disabled: disabled, checked: checkedAll, indeterminate: checkStatus === 'part', onChange: function onChange() {
-	                    return _this4.props.handleSelectAll(filteredDataSource, checkedAll);
-	                } });
-	            return React.createElement(
-	                'div',
-	                { className: listCls, style: style },
-	                React.createElement(
-	                    'div',
-	                    { className: prefixCls + '-header' },
-	                    checkAllCheckbox,
-	                    React.createElement(
-	                        'span',
-	                        { className: prefixCls + '-header-selected' },
-	                        React.createElement(
-	                            'span',
-	                            null,
-	                            (checkedKeys.length > 0 ? checkedKeys.length + '/' : '') + totalDataSource.length,
-	                            ' ',
-	                            unit
-	                        ),
-	                        React.createElement(
-	                            'span',
-	                            { className: prefixCls + '-header-title' },
-	                            titleText
-	                        )
-	                    )
-	                ),
-	                listBody,
-	                listFooter
-	            );
-	        }
-	    }]);
-
-	    return TransferList;
-	}(React.Component);
-
-	TransferList.defaultProps = {
-	    dataSource: [],
-	    titleText: '',
-	    showSearch: false,
-	    render: noop$1,
-	    lazy: {}
-	};
-
-	var Operation = function (_React$Component) {
-	  _inherits(Operation, _React$Component);
-
-	  function Operation() {
-	    _classCallCheck(this, Operation);
-
-	    return _possibleConstructorReturn(this, (Operation.__proto__ || Object.getPrototypeOf(Operation)).apply(this, arguments));
-	  }
-
-	  _createClass(Operation, [{
-	    key: 'render',
-	    value: function render() {
-	      var _props = this.props,
-	          disabled = _props.disabled,
-	          moveToLeft = _props.moveToLeft,
-	          moveToRight = _props.moveToRight,
-	          _props$leftArrowText = _props.leftArrowText,
-	          leftArrowText = _props$leftArrowText === undefined ? '' : _props$leftArrowText,
-	          _props$rightArrowText = _props.rightArrowText,
-	          rightArrowText = _props$rightArrowText === undefined ? '' : _props$rightArrowText,
-	          leftActive = _props.leftActive,
-	          rightActive = _props.rightActive,
-	          className = _props.className,
-	          style = _props.style;
-
-	      return React.createElement(
-	        'div',
-	        { className: className, style: style },
-	        React.createElement(
-	          Button,
-	          { type: 'primary', size: 'small', disabled: disabled || !rightActive, onClick: moveToRight, icon: 'right' },
-	          rightArrowText
-	        ),
-	        React.createElement(
-	          Button,
-	          { type: 'primary', size: 'small', disabled: disabled || !leftActive, onClick: moveToLeft, icon: 'left' },
-	          leftArrowText
-	        )
-	      );
-	    }
-	  }]);
-
-	  return Operation;
-	}(React.Component);
-
-	function noop$2() {}
-
-	var Transfer = function (_React$Component) {
-	    _inherits(Transfer, _React$Component);
-
-	    function Transfer(props) {
-	        _classCallCheck(this, Transfer);
-
-	        var _this = _possibleConstructorReturn(this, (Transfer.__proto__ || Object.getPrototypeOf(Transfer)).call(this, props));
-
-	        _this.separatedDataSource = null;
-	        _this.moveTo = function (direction) {
-	            var _this$props = _this.props,
-	                _this$props$targetKey = _this$props.targetKeys,
-	                targetKeys = _this$props$targetKey === undefined ? [] : _this$props$targetKey,
-	                _this$props$dataSourc = _this$props.dataSource,
-	                dataSource = _this$props$dataSourc === undefined ? [] : _this$props$dataSourc,
-	                onChange = _this$props.onChange;
-	            var _this$state = _this.state,
-	                sourceSelectedKeys = _this$state.sourceSelectedKeys,
-	                targetSelectedKeys = _this$state.targetSelectedKeys;
-
-	            var moveKeys = direction === 'right' ? sourceSelectedKeys : targetSelectedKeys;
-	            // filter the disabled options
-	            var newMoveKeys = moveKeys.filter(function (key) {
-	                return !dataSource.some(function (data) {
-	                    return !!(key === data.key && data.disabled);
-	                });
-	            });
-	            // move items to target box
-	            var newTargetKeys = direction === 'right' ? newMoveKeys.concat(targetKeys) : targetKeys.filter(function (targetKey) {
-	                return newMoveKeys.indexOf(targetKey) === -1;
-	            });
-	            // empty checked keys
-	            var oppositeDirection = direction === 'right' ? 'left' : 'right';
-	            _this.setState(_defineProperty({}, _this.getSelectedKeysName(oppositeDirection), []));
-	            _this.handleSelectChange(oppositeDirection, []);
-	            if (onChange) {
-	                onChange(newTargetKeys, direction, newMoveKeys);
-	            }
-	        };
-	        _this.moveToLeft = function () {
-	            return _this.moveTo('left');
-	        };
-	        _this.moveToRight = function () {
-	            return _this.moveTo('right');
-	        };
-	        _this.handleSelectAll = function (direction, filteredDataSource, checkAll) {
-	            var originalSelectedKeys = _this.state[_this.getSelectedKeysName(direction)] || [];
-	            var currentKeys = filteredDataSource.map(function (item) {
-	                return item.key;
-	            });
-	            // Only operate current keys from original selected keys
-	            var newKeys1 = originalSelectedKeys.filter(function (key) {
-	                return currentKeys.indexOf(key) === -1;
-	            });
-	            var newKeys2 = [].concat(_toConsumableArray(originalSelectedKeys));
-	            currentKeys.forEach(function (key) {
-	                if (newKeys2.indexOf(key) === -1) {
-	                    newKeys2.push(key);
-	                }
-	            });
-	            var holder = checkAll ? newKeys1 : newKeys2;
-	            _this.handleSelectChange(direction, holder);
-	            if (!_this.props.selectedKeys) {
-	                _this.setState(_defineProperty({}, _this.getSelectedKeysName(direction), holder));
-	            }
-	        };
-	        _this.handleLeftSelectAll = function (filteredDataSource, checkAll) {
-	            return _this.handleSelectAll('left', filteredDataSource, checkAll);
-	        };
-	        _this.handleRightSelectAll = function (filteredDataSource, checkAll) {
-	            return _this.handleSelectAll('right', filteredDataSource, checkAll);
-	        };
-	        _this.handleFilter = function (direction, e) {
-	            _this.setState(_defineProperty({}, direction + 'Filter', e.target.value));
-	            if (_this.props.onSearchChange) {
-	                _this.props.onSearchChange(direction, e);
-	            }
-	        };
-	        _this.handleLeftFilter = function (e) {
-	            return _this.handleFilter('left', e);
-	        };
-	        _this.handleRightFilter = function (e) {
-	            return _this.handleFilter('right', e);
-	        };
-	        _this.handleClear = function (direction) {
-	            _this.setState(_defineProperty({}, direction + 'Filter', ''));
-	        };
-	        _this.handleLeftClear = function () {
-	            return _this.handleClear('left');
-	        };
-	        _this.handleRightClear = function () {
-	            return _this.handleClear('right');
-	        };
-	        _this.handleSelect = function (direction, selectedItem, checked) {
-	            var _this$state2 = _this.state,
-	                sourceSelectedKeys = _this$state2.sourceSelectedKeys,
-	                targetSelectedKeys = _this$state2.targetSelectedKeys;
-
-	            var holder = direction === 'left' ? [].concat(_toConsumableArray(sourceSelectedKeys)) : [].concat(_toConsumableArray(targetSelectedKeys));
-	            var index = holder.indexOf(selectedItem.key);
-	            if (index > -1) {
-	                holder.splice(index, 1);
-	            }
-	            if (checked) {
-	                holder.push(selectedItem.key);
-	            }
-	            _this.handleSelectChange(direction, holder);
-	            if (!_this.props.selectedKeys) {
-	                _this.setState(_defineProperty({}, _this.getSelectedKeysName(direction), holder));
-	            }
-	        };
-	        _this.handleLeftSelect = function (selectedItem, checked) {
-	            return _this.handleSelect('left', selectedItem, checked);
-	        };
-	        _this.handleRightSelect = function (selectedItem, checked) {
-	            return _this.handleSelect('right', selectedItem, checked);
-	        };
-	        _this.handleScroll = function (direction, e) {
-	            var onScroll = _this.props.onScroll;
-
-	            if (onScroll) {
-	                onScroll(direction, e);
-	            }
-	        };
-	        _this.handleLeftScroll = function (e) {
-	            return _this.handleScroll('left', e);
-	        };
-	        _this.handleRightScroll = function (e) {
-	            return _this.handleScroll('right', e);
-	        };
-	        _this.getLocale = function (transferLocale) {
-	            // Keep old locale props still working.
-	            var oldLocale = {};
-	            if ('notFoundContent' in _this.props) {
-	                oldLocale.notFoundContent = _this.props.notFoundContent;
-	            }
-	            if ('searchPlaceholder' in _this.props) {
-	                oldLocale.searchPlaceholder = _this.props.searchPlaceholder;
-	            }
-	            return _extends$1({}, transferLocale, oldLocale, _this.props.locale);
-	        };
-	        _this.renderTransfer = function (transferLocale) {
-	            var _this$props2 = _this.props,
-	                _this$props2$prefixCl = _this$props2.prefixCls,
-	                prefixCls = _this$props2$prefixCl === undefined ? 'ant-transfer' : _this$props2$prefixCl,
-	                className = _this$props2.className,
-	                disabled = _this$props2.disabled,
-	                _this$props2$operatio = _this$props2.operations,
-	                operations = _this$props2$operatio === undefined ? [] : _this$props2$operatio,
-	                showSearch = _this$props2.showSearch,
-	                body = _this$props2.body,
-	                footer = _this$props2.footer,
-	                style = _this$props2.style,
-	                listStyle = _this$props2.listStyle,
-	                operationStyle = _this$props2.operationStyle,
-	                filterOption = _this$props2.filterOption,
-	                render = _this$props2.render,
-	                lazy = _this$props2.lazy;
-
-	            var locale = _this.getLocale(transferLocale);
-	            var _this$state3 = _this.state,
-	                leftFilter = _this$state3.leftFilter,
-	                rightFilter = _this$state3.rightFilter,
-	                sourceSelectedKeys = _this$state3.sourceSelectedKeys,
-	                targetSelectedKeys = _this$state3.targetSelectedKeys;
-
-	            var _this$separateDataSou = _this.separateDataSource(_this.props),
-	                leftDataSource = _this$separateDataSou.leftDataSource,
-	                rightDataSource = _this$separateDataSou.rightDataSource;
-
-	            var leftActive = targetSelectedKeys.length > 0;
-	            var rightActive = sourceSelectedKeys.length > 0;
-	            var cls = classnames(className, prefixCls, disabled && prefixCls + '-disabled');
-	            var titles = _this.getTitles(locale);
-	            return React.createElement(
-	                'div',
-	                { className: cls, style: style },
-	                React.createElement(TransferList, _extends$1({ prefixCls: prefixCls + '-list', titleText: titles[0], dataSource: leftDataSource, filter: leftFilter, filterOption: filterOption, style: listStyle, checkedKeys: sourceSelectedKeys, handleFilter: _this.handleLeftFilter, handleClear: _this.handleLeftClear, handleSelect: _this.handleLeftSelect, handleSelectAll: _this.handleLeftSelectAll, render: render, showSearch: showSearch, body: body, footer: footer, lazy: lazy, onScroll: _this.handleLeftScroll, disabled: disabled }, locale)),
-	                React.createElement(Operation, { className: prefixCls + '-operation', rightActive: rightActive, rightArrowText: operations[0], moveToRight: _this.moveToRight, leftActive: leftActive, leftArrowText: operations[1], moveToLeft: _this.moveToLeft, style: operationStyle, disabled: disabled }),
-	                React.createElement(TransferList, _extends$1({ prefixCls: prefixCls + '-list', titleText: titles[1], dataSource: rightDataSource, filter: rightFilter, filterOption: filterOption, style: listStyle, checkedKeys: targetSelectedKeys, handleFilter: _this.handleRightFilter, handleClear: _this.handleRightClear, handleSelect: _this.handleRightSelect, handleSelectAll: _this.handleRightSelectAll, render: render, showSearch: showSearch, body: body, footer: footer, lazy: lazy, onScroll: _this.handleRightScroll, disabled: disabled }, locale))
-	            );
-	        };
-	        warning$1(!('notFoundContent' in props || 'searchPlaceholder' in props), 'Transfer[notFoundContent] and Transfer[searchPlaceholder] will be removed, ' + 'please use Transfer[locale] instead.');
-	        var _props$selectedKeys = props.selectedKeys,
-	            selectedKeys = _props$selectedKeys === undefined ? [] : _props$selectedKeys,
-	            _props$targetKeys = props.targetKeys,
-	            targetKeys = _props$targetKeys === undefined ? [] : _props$targetKeys;
-
-	        _this.state = {
-	            leftFilter: '',
-	            rightFilter: '',
-	            sourceSelectedKeys: selectedKeys.filter(function (key) {
-	                return targetKeys.indexOf(key) === -1;
-	            }),
-	            targetSelectedKeys: selectedKeys.filter(function (key) {
-	                return targetKeys.indexOf(key) > -1;
-	            })
-	        };
-	        return _this;
-	    }
-
-	    _createClass(Transfer, [{
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            var _state = this.state,
-	                sourceSelectedKeys = _state.sourceSelectedKeys,
-	                targetSelectedKeys = _state.targetSelectedKeys;
-
-	            if (nextProps.targetKeys !== this.props.targetKeys || nextProps.dataSource !== this.props.dataSource) {
-	                // clear cached separated dataSource
-	                this.separatedDataSource = null;
-	                if (!nextProps.selectedKeys) {
-	                    // clear key no longer existed
-	                    // clear checkedKeys according to targetKeys
-	                    var dataSource = nextProps.dataSource,
-	                        _nextProps$targetKeys = nextProps.targetKeys,
-	                        targetKeys = _nextProps$targetKeys === undefined ? [] : _nextProps$targetKeys;
-
-	                    var newSourceSelectedKeys = [];
-	                    var newTargetSelectedKeys = [];
-	                    dataSource.forEach(function (_ref) {
-	                        var key = _ref.key;
-
-	                        if (sourceSelectedKeys.includes(key) && !targetKeys.includes(key)) {
-	                            newSourceSelectedKeys.push(key);
-	                        }
-	                        if (targetSelectedKeys.includes(key) && targetKeys.includes(key)) {
-	                            newTargetSelectedKeys.push(key);
-	                        }
-	                    });
-	                    this.setState({
-	                        sourceSelectedKeys: newSourceSelectedKeys,
-	                        targetSelectedKeys: newTargetSelectedKeys
-	                    });
-	                }
-	            }
-	            if (nextProps.selectedKeys) {
-	                var _targetKeys = nextProps.targetKeys || [];
-	                this.setState({
-	                    sourceSelectedKeys: nextProps.selectedKeys.filter(function (key) {
-	                        return !_targetKeys.includes(key);
-	                    }),
-	                    targetSelectedKeys: nextProps.selectedKeys.filter(function (key) {
-	                        return _targetKeys.includes(key);
-	                    })
-	                });
-	            }
-	        }
-	    }, {
-	        key: 'separateDataSource',
-	        value: function separateDataSource(props) {
-	            if (this.separatedDataSource) {
-	                return this.separatedDataSource;
-	            }
-	            var dataSource = props.dataSource,
-	                rowKey = props.rowKey,
-	                _props$targetKeys2 = props.targetKeys,
-	                targetKeys = _props$targetKeys2 === undefined ? [] : _props$targetKeys2;
-
-	            var leftDataSource = [];
-	            var rightDataSource = new Array(targetKeys.length);
-	            dataSource.forEach(function (record) {
-	                if (rowKey) {
-	                    record.key = rowKey(record);
-	                }
-	                // rightDataSource should be ordered by targetKeys
-	                // leftDataSource should be ordered by dataSource
-	                var indexOfKey = targetKeys.indexOf(record.key);
-	                if (indexOfKey !== -1) {
-	                    rightDataSource[indexOfKey] = record;
-	                } else {
-	                    leftDataSource.push(record);
-	                }
-	            });
-	            this.separatedDataSource = {
-	                leftDataSource: leftDataSource,
-	                rightDataSource: rightDataSource
-	            };
-	            return this.separatedDataSource;
-	        }
-	    }, {
-	        key: 'handleSelectChange',
-	        value: function handleSelectChange(direction, holder) {
-	            var _state2 = this.state,
-	                sourceSelectedKeys = _state2.sourceSelectedKeys,
-	                targetSelectedKeys = _state2.targetSelectedKeys;
-
-	            var onSelectChange = this.props.onSelectChange;
-	            if (!onSelectChange) {
-	                return;
-	            }
-	            if (direction === 'left') {
-	                onSelectChange(holder, targetSelectedKeys);
-	            } else {
-	                onSelectChange(sourceSelectedKeys, holder);
-	            }
-	        }
-	    }, {
-	        key: 'getTitles',
-	        value: function getTitles(transferLocale) {
-	            var props = this.props;
-
-	            if (props.titles) {
-	                return props.titles;
-	            }
-	            return transferLocale.titles;
-	        }
-	    }, {
-	        key: 'getSelectedKeysName',
-	        value: function getSelectedKeysName(direction) {
-	            return direction === 'left' ? 'sourceSelectedKeys' : 'targetSelectedKeys';
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return React.createElement(
-	                LocaleReceiver,
-	                { componentName: 'Transfer', defaultLocale: defaultLocale.Transfer },
-	                this.renderTransfer
-	            );
-	        }
-	    }]);
-
-	    return Transfer;
-	}(React.Component);
-	Transfer.List = TransferList;
-	Transfer.Operation = Operation;
-	Transfer.Search = Search$1;
-	Transfer.defaultProps = {
-	    dataSource: [],
-	    render: noop$2,
-	    locale: {},
-	    showSearch: false
-	};
-	Transfer.propTypes = {
-	    prefixCls: PropTypes.string,
-	    disabled: PropTypes.bool,
-	    dataSource: PropTypes.array,
-	    render: PropTypes.func,
-	    targetKeys: PropTypes.array,
-	    onChange: PropTypes.func,
-	    height: PropTypes.number,
-	    style: PropTypes.object,
-	    listStyle: PropTypes.object,
-	    operationStyle: PropTypes.object,
-	    className: PropTypes.string,
-	    titles: PropTypes.array,
-	    operations: PropTypes.array,
-	    showSearch: PropTypes.bool,
-	    filterOption: PropTypes.func,
-	    searchPlaceholder: PropTypes.string,
-	    notFoundContent: PropTypes.node,
-	    locale: PropTypes.object,
-	    body: PropTypes.func,
-	    footer: PropTypes.func,
-	    rowKey: PropTypes.func,
-	    lazy: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
-	};
-
-	/**
-	 * Safe chained function
-	 *
-	 * Will only create a new function if needed,
-	 * otherwise will pass back existing functions or null.
-	 *
-	 * @returns {function|null}
-	 */
-	function createChainedFunction() {
-	  var args = [].slice.call(arguments, 0);
-	  if (args.length === 1) {
-	    return args[0];
-	  }
-
-	  return function chainedFunction() {
-	    for (var i = 0; i < args.length; i++) {
-	      if (args[i] && args[i].apply) {
-	        args[i].apply(this, arguments);
-	      }
-	    }
-	  };
-	}
-
-	var Notice = function (_Component) {
-	  _inherits(Notice, _Component);
-
-	  function Notice() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
-	    _classCallCheck(this, Notice);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Notice.__proto__ || Object.getPrototypeOf(Notice)).call.apply(_ref, [this].concat(args))), _this), _this.close = function () {
-	      _this.clearCloseTimer();
-	      _this.props.onClose();
-	    }, _this.startCloseTimer = function () {
-	      if (_this.props.duration) {
-	        _this.closeTimer = setTimeout(function () {
-	          _this.close();
-	        }, _this.props.duration * 1000);
-	      }
-	    }, _this.clearCloseTimer = function () {
-	      if (_this.closeTimer) {
-	        clearTimeout(_this.closeTimer);
-	        _this.closeTimer = null;
-	      }
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
-	  }
-
-	  _createClass(Notice, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      this.startCloseTimer();
-	    }
-	  }, {
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate(prevProps) {
-	      if (this.props.duration !== prevProps.duration || this.props.update) {
-	        this.restartCloseTimer();
-	      }
-	    }
-	  }, {
-	    key: 'componentWillUnmount',
-	    value: function componentWillUnmount() {
-	      this.clearCloseTimer();
-	    }
-	  }, {
-	    key: 'restartCloseTimer',
-	    value: function restartCloseTimer() {
-	      this.clearCloseTimer();
-	      this.startCloseTimer();
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _className;
-
-	      var props = this.props;
-	      var componentClass = props.prefixCls + '-notice';
-	      var className = (_className = {}, _defineProperty(_className, '' + componentClass, 1), _defineProperty(_className, componentClass + '-closable', props.closable), _defineProperty(_className, props.className, !!props.className), _className);
-	      return React__default.createElement(
-	        'div',
-	        { className: classnames(className), style: props.style, onMouseEnter: this.clearCloseTimer,
-	          onMouseLeave: this.startCloseTimer
-	        },
-	        React__default.createElement(
-	          'div',
-	          { className: componentClass + '-content' },
-	          props.children
-	        ),
-	        props.closable ? React__default.createElement(
-	          'a',
-	          { tabIndex: '0', onClick: this.close, className: componentClass + '-close' },
-	          props.closeIcon || React__default.createElement('span', { className: componentClass + '-close-x' })
-	        ) : null
-	      );
-	    }
-	  }]);
-
-	  return Notice;
-	}(React.Component);
-
-	Notice.propTypes = {
-	  duration: PropTypes__default.number,
-	  onClose: PropTypes__default.func,
-	  children: PropTypes__default.any,
-	  update: PropTypes__default.bool,
-	  closeIcon: PropTypes__default.node
-	};
-	Notice.defaultProps = {
-	  onEnd: function onEnd() {},
-	  onClose: function onClose() {},
-
-	  duration: 1.5,
-	  style: {
-	    right: '50%'
-	  }
-	};
-
-	var seed = 0;
-	var now$2 = Date.now();
-
-	function getUuid() {
-	  return 'rcNotification_' + now$2 + '_' + seed++;
-	}
-
-	var Notification = function (_Component) {
-	  _inherits(Notification, _Component);
-
-	  function Notification() {
-	    var _ref;
-
-	    var _temp, _this, _ret;
-
-	    _classCallCheck(this, Notification);
-
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Notification.__proto__ || Object.getPrototypeOf(Notification)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
-	      notices: []
-	    }, _this.add = function (notice) {
-	      var key = notice.key = notice.key || getUuid();
-	      var maxCount = _this.props.maxCount;
-
-	      _this.setState(function (previousState) {
-	        var notices = previousState.notices;
-	        var noticeIndex = notices.map(function (v) {
-	          return v.key;
-	        }).indexOf(key);
-	        var updatedNotices = notices.concat();
-	        if (noticeIndex !== -1) {
-	          updatedNotices.splice(noticeIndex, 1, notice);
-	        } else {
-	          if (maxCount && notices.length >= maxCount) {
-	                                                notice.updateKey = updatedNotices[0].updateKey || updatedNotices[0].key;
-	            updatedNotices.shift();
-	          }
-	          updatedNotices.push(notice);
-	        }
-	        return {
-	          notices: updatedNotices
-	        };
-	      });
-	    }, _this.remove = function (key) {
-	      _this.setState(function (previousState) {
-	        return {
-	          notices: previousState.notices.filter(function (notice) {
-	            return notice.key !== key;
-	          })
-	        };
-	      });
-	    }, _temp), _possibleConstructorReturn(_this, _ret);
-	  }
-
-	  _createClass(Notification, [{
-	    key: 'getTransitionName',
-	    value: function getTransitionName() {
-	      var props = this.props;
-	      var transitionName = props.transitionName;
-	      if (!transitionName && props.animation) {
-	        transitionName = props.prefixCls + '-' + props.animation;
-	      }
-	      return transitionName;
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this,
-	          _className;
-
-	      var props = this.props;
-	      var notices = this.state.notices;
-
-	      var noticeNodes = notices.map(function (notice, index) {
-	        var update = Boolean(index === notices.length - 1 && notice.updateKey);
-	        var key = notice.updateKey ? notice.updateKey : notice.key;
-	        var onClose = createChainedFunction(_this2.remove.bind(_this2, notice.key), notice.onClose);
-	        return React__default.createElement(
-	          Notice,
-	          _extends$1({
-	            prefixCls: props.prefixCls
-	          }, notice, {
-	            key: key,
-	            update: update,
-	            onClose: onClose,
-	            closeIcon: props.closeIcon
-	          }),
-	          notice.content
-	        );
-	      });
-	      var className = (_className = {}, _defineProperty(_className, props.prefixCls, 1), _defineProperty(_className, props.className, !!props.className), _className);
-	      return React__default.createElement(
-	        'div',
-	        { className: classnames(className), style: props.style },
-	        React__default.createElement(
-	          Animate,
-	          { transitionName: this.getTransitionName() },
-	          noticeNodes
-	        )
-	      );
-	    }
-	  }]);
-
-	  return Notification;
-	}(React.Component);
-
-	Notification.propTypes = {
-	  prefixCls: PropTypes__default.string,
-	  transitionName: PropTypes__default.string,
-	  animation: PropTypes__default.oneOfType([PropTypes__default.string, PropTypes__default.object]),
-	  style: PropTypes__default.object,
-	  maxCount: PropTypes__default.number,
-	  closeIcon: PropTypes__default.node
-	};
-	Notification.defaultProps = {
-	  prefixCls: 'rc-notification',
-	  animation: 'fade',
-	  style: {
-	    top: 65,
-	    left: '50%'
-	  }
-	};
-
-
-	Notification.newInstance = function newNotificationInstance(properties, callback) {
-	  var _ref2 = properties || {},
-	      getContainer = _ref2.getContainer,
-	      props = _objectWithoutProperties(_ref2, ['getContainer']);
-
-	  var div = document.createElement('div');
-	  if (getContainer) {
-	    var root = getContainer();
-	    root.appendChild(div);
-	  } else {
-	    document.body.appendChild(div);
-	  }
-	  var called = false;
-	  function ref(notification) {
-	    if (called) {
-	      return;
-	    }
-	    called = true;
-	    callback({
-	      notice: function notice(noticeProps) {
-	        notification.add(noticeProps);
-	      },
-	      removeNotice: function removeNotice(key) {
-	        notification.remove(key);
-	      },
-
-	      component: notification,
-	      destroy: function destroy() {
-	        ReactDOM__default.unmountComponentAtNode(div);
-	        div.parentNode.removeChild(div);
-	      }
-	    });
-	  }
-	  ReactDOM__default.render(React__default.createElement(Notification, _extends$1({}, props, { ref: ref })), div);
-	};
-
-	/* global Promise */
-	var defaultDuration = 3;
-	var defaultTop = void 0;
-	var messageInstance = void 0;
-	var key$1 = 1;
-	var prefixCls = 'ant-message';
-	var transitionName = 'move-up';
-	var getContainer = void 0;
-	var maxCount = void 0;
-	function getMessageInstance(callback) {
-	    if (messageInstance) {
-	        callback(messageInstance);
-	        return;
-	    }
-	    Notification.newInstance({
-	        prefixCls: prefixCls,
-	        transitionName: transitionName,
-	        style: { top: defaultTop },
-	        getContainer: getContainer,
-	        maxCount: maxCount
-	    }, function (instance) {
-	        if (messageInstance) {
-	            callback(messageInstance);
-	            return;
-	        }
-	        messageInstance = instance;
-	        callback(instance);
-	    });
-	}
-	function notice(args) {
-	    var duration = args.duration !== undefined ? args.duration : defaultDuration;
-	    var iconType = {
-	        info: 'info-circle',
-	        success: 'check-circle',
-	        error: 'close-circle',
-	        warning: 'exclamation-circle',
-	        loading: 'loading'
-	    }[args.type];
-	    var target = key$1++;
-	    var closePromise = new Promise(function (resolve) {
-	        var callback = function callback() {
-	            if (typeof args.onClose === 'function') {
-	                args.onClose();
-	            }
-	            return resolve(true);
-	        };
-	        getMessageInstance(function (instance) {
-	            var iconNode = React.createElement(Icon$1, { type: iconType, theme: iconType === 'loading' ? 'outlined' : 'filled' });
-	            instance.notice({
-	                key: target,
-	                duration: duration,
-	                style: {},
-	                content: React.createElement(
-	                    'div',
-	                    { className: prefixCls + '-custom-content' + (args.type ? ' ' + prefixCls + '-' + args.type : '') },
-	                    args.icon ? args.icon : iconType ? iconNode : '',
-	                    React.createElement(
-	                        'span',
-	                        null,
-	                        args.content
-	                    )
-	                ),
-	                onClose: callback
-	            });
-	        });
-	    });
-	    var result = function result() {
-	        if (messageInstance) {
-	            messageInstance.removeNotice(target);
-	        }
-	    };
-	    result.then = function (filled, rejected) {
-	        return closePromise.then(filled, rejected);
-	    };
-	    result.promise = closePromise;
-	    return result;
-	}
-	var api = {
-	    open: notice,
-	    config: function config(options) {
-	        if (options.top !== undefined) {
-	            defaultTop = options.top;
-	            messageInstance = null; // delete messageInstance for new defaultTop
-	        }
-	        if (options.duration !== undefined) {
-	            defaultDuration = options.duration;
-	        }
-	        if (options.prefixCls !== undefined) {
-	            prefixCls = options.prefixCls;
-	        }
-	        if (options.getContainer !== undefined) {
-	            getContainer = options.getContainer;
-	        }
-	        if (options.transitionName !== undefined) {
-	            transitionName = options.transitionName;
-	            messageInstance = null; // delete messageInstance for new transitionName
-	        }
-	        if (options.maxCount !== undefined) {
-	            maxCount = options.maxCount;
-	            messageInstance = null;
-	        }
-	    },
-	    destroy: function destroy() {
-	        if (messageInstance) {
-	            messageInstance.destroy();
-	            messageInstance = null;
-	        }
-	    }
-	};
-	['success', 'info', 'warning', 'error', 'loading'].forEach(function (type) {
-	    api[type] = function (content, duration, onClose) {
-	        if (typeof duration === 'function') {
-	            onClose = duration;
-	            duration = undefined;
-	        }
-	        return api.open({ content: content, duration: duration, type: type, onClose: onClose });
-	    };
-	});
-	api.warn = api.warning;
-
-	function _arrayWithoutHoles(arr) {
-	  if (Array.isArray(arr)) {
-	    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
-	      arr2[i] = arr[i];
-	    }
-
-	    return arr2;
-	  }
-	}
-
-	var arrayWithoutHoles = _arrayWithoutHoles;
-
-	function _iterableToArray(iter) {
-	  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-	}
-
-	var iterableToArray = _iterableToArray;
-
-	function _nonIterableSpread() {
-	  throw new TypeError("Invalid attempt to spread non-iterable instance");
-	}
-
-	var nonIterableSpread = _nonIterableSpread;
-
-	function _toConsumableArray$1(arr) {
-	  return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
-	}
-
-	var toConsumableArray$1 = _toConsumableArray$1;
-
-	function _classCallCheck$1(instance, Constructor) {
-	  if (!(instance instanceof Constructor)) {
-	    throw new TypeError("Cannot call a class as a function");
-	  }
-	}
-
-	var classCallCheck$1 = _classCallCheck$1;
-
-	function _defineProperties(target, props) {
-	  for (var i = 0; i < props.length; i++) {
-	    var descriptor = props[i];
-	    descriptor.enumerable = descriptor.enumerable || false;
-	    descriptor.configurable = true;
-	    if ("value" in descriptor) descriptor.writable = true;
-	    Object.defineProperty(target, descriptor.key, descriptor);
-	  }
-	}
-
-	function _createClass$1(Constructor, protoProps, staticProps) {
-	  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-	  if (staticProps) _defineProperties(Constructor, staticProps);
-	  return Constructor;
-	}
-
-	var createClass$1 = _createClass$1;
-
-	var _typeof_1$1 = createCommonjsModule(function (module) {
-	function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
-
-	function _typeof(obj) {
-	  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
-	    module.exports = _typeof = function _typeof(obj) {
-	      return _typeof2(obj);
-	    };
-	  } else {
-	    module.exports = _typeof = function _typeof(obj) {
-	      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
-	    };
-	  }
-
-	  return _typeof(obj);
-	}
-
-	module.exports = _typeof;
-	});
-
-	function _assertThisInitialized(self) {
-	  if (self === void 0) {
-	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-	  }
-
-	  return self;
-	}
-
-	var assertThisInitialized = _assertThisInitialized;
-
-	function _possibleConstructorReturn$1(self, call) {
-	  if (call && (_typeof_1$1(call) === "object" || typeof call === "function")) {
-	    return call;
-	  }
-
-	  return assertThisInitialized(self);
-	}
-
-	var possibleConstructorReturn$1 = _possibleConstructorReturn$1;
-
-	var getPrototypeOf = createCommonjsModule(function (module) {
-	function _getPrototypeOf(o) {
-	  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
-	    return o.__proto__ || Object.getPrototypeOf(o);
-	  };
-	  return _getPrototypeOf(o);
-	}
-
-	module.exports = _getPrototypeOf;
-	});
-
-	var setPrototypeOf$3 = createCommonjsModule(function (module) {
-	function _setPrototypeOf(o, p) {
-	  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
-	    o.__proto__ = p;
-	    return o;
-	  };
-
-	  return _setPrototypeOf(o, p);
-	}
-
-	module.exports = _setPrototypeOf;
-	});
-
-	function _inherits$1(subClass, superClass) {
-	  if (typeof superClass !== "function" && superClass !== null) {
-	    throw new TypeError("Super expression must either be null or a function");
-	  }
-
-	  subClass.prototype = Object.create(superClass && superClass.prototype, {
-	    constructor: {
-	      value: subClass,
-	      writable: true,
-	      configurable: true
-	    }
-	  });
-	  if (superClass) setPrototypeOf$3(subClass, superClass);
-	}
-
-	var inherits$1 = _inherits$1;
-
-	function _defineProperty$1(obj, key, value) {
-	  if (key in obj) {
-	    Object.defineProperty(obj, key, {
-	      value: value,
-	      enumerable: true,
-	      configurable: true,
-	      writable: true
-	    });
-	  } else {
-	    obj[key] = value;
-	  }
-
-	  return obj;
-	}
-
-	var defineProperty$5 = _defineProperty$1;
-
-	function toArray(children) {
-	  var ret = [];
-	  React__default.Children.forEach(children, function (c) {
-	    ret.push(c);
-	  });
-	  return ret;
-	}
-
 	var PropTypes$1 = createCommonjsModule(function (module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
@@ -16156,6 +10289,53 @@
 
 	unwrapExports(Provider_1);
 
+	//
+
+	var shallowequal = function shallowEqual(objA, objB, compare, compareContext) {
+	  var ret = compare ? compare.call(compareContext, objA, objB) : void 0;
+
+	  if (ret !== void 0) {
+	    return !!ret;
+	  }
+
+	  if (objA === objB) {
+	    return true;
+	  }
+
+	  if (typeof objA !== "object" || !objA || typeof objB !== "object" || !objB) {
+	    return false;
+	  }
+
+	  var keysA = Object.keys(objA);
+	  var keysB = Object.keys(objB);
+
+	  if (keysA.length !== keysB.length) {
+	    return false;
+	  }
+
+	  var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+
+	  // Test for A's keys different from B.
+	  for (var idx = 0; idx < keysA.length; idx++) {
+	    var key = keysA[idx];
+
+	    if (!bHasOwnProperty(key)) {
+	      return false;
+	    }
+
+	    var valueA = objA[key];
+	    var valueB = objB[key];
+
+	    ret = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
+
+	    if (ret === false || (ret === void 0 && valueA !== valueB)) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	};
+
 	/**
 	 * Copyright 2015, Yahoo! Inc.
 	 * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
@@ -16182,18 +10362,18 @@
 	    arity: true
 	};
 
-	var defineProperty$6 = Object.defineProperty;
+	var defineProperty$5 = Object.defineProperty;
 	var getOwnPropertyNames = Object.getOwnPropertyNames;
-	var getOwnPropertySymbols$1 = Object.getOwnPropertySymbols;
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-	var getPrototypeOf$1 = Object.getPrototypeOf;
-	var objectPrototype = getPrototypeOf$1 && getPrototypeOf$1(Object);
+	var getPrototypeOf = Object.getPrototypeOf;
+	var objectPrototype = getPrototypeOf && getPrototypeOf(Object);
 
 	function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 	    if (typeof sourceComponent !== 'string') { // don't hoist over string (html) components
 
 	        if (objectPrototype) {
-	            var inheritedComponent = getPrototypeOf$1(sourceComponent);
+	            var inheritedComponent = getPrototypeOf(sourceComponent);
 	            if (inheritedComponent && inheritedComponent !== objectPrototype) {
 	                hoistNonReactStatics(targetComponent, inheritedComponent, blacklist);
 	            }
@@ -16201,8 +10381,8 @@
 
 	        var keys = getOwnPropertyNames(sourceComponent);
 
-	        if (getOwnPropertySymbols$1) {
-	            keys = keys.concat(getOwnPropertySymbols$1(sourceComponent));
+	        if (getOwnPropertySymbols) {
+	            keys = keys.concat(getOwnPropertySymbols(sourceComponent));
 	        }
 
 	        for (var i = 0; i < keys.length; ++i) {
@@ -16210,7 +10390,7 @@
 	            if (!REACT_STATICS[key] && !KNOWN_STATICS[key] && (!blacklist || !blacklist[key])) {
 	                var descriptor = getOwnPropertyDescriptor(sourceComponent, key);
 	                try { // Avoid failures from read-only properties
-	                    defineProperty$6(targetComponent, key, descriptor);
+	                    defineProperty$5(targetComponent, key, descriptor);
 	                } catch (e) {}
 	            }
 	        }
@@ -16433,7 +10613,7 @@
 
 	unwrapExports(create_1);
 
-	var lib$3 = createCommonjsModule(function (module, exports) {
+	var lib$2 = createCommonjsModule(function (module, exports) {
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -16459,12 +10639,35 @@
 	exports.create = _create3.default;
 	});
 
-	unwrapExports(lib$3);
-	var lib_1$1 = lib$3.create;
-	var lib_2$1 = lib$3.connect;
-	var lib_3$1 = lib$3.Provider;
+	unwrapExports(lib$2);
+	var lib_1$1 = lib$2.create;
+	var lib_2$1 = lib$2.connect;
+	var lib_3$1 = lib$2.Provider;
 
-	function noop$3() {}
+	/**
+	 * Safe chained function
+	 *
+	 * Will only create a new function if needed,
+	 * otherwise will pass back existing functions or null.
+	 *
+	 * @returns {function|null}
+	 */
+	function createChainedFunction() {
+	  var args = [].slice.call(arguments, 0);
+	  if (args.length === 1) {
+	    return args[0];
+	  }
+
+	  return function chainedFunction() {
+	    for (var i = 0; i < args.length; i++) {
+	      if (args[i] && args[i].apply) {
+	        args[i].apply(this, arguments);
+	      }
+	    }
+	  };
+	}
+
+	function noop$1() {}
 
 	function getKeyFromChildrenIndex(child, menuEventKey, index) {
 	  var prefix = menuEventKey || '';
@@ -16701,7 +10904,7 @@
 	 * @param {number} delay - Delay after which to invoke callback.
 	 * @returns {Function}
 	 */
-	var throttle$1 = function (callback, delay) {
+	var throttle = function (callback, delay) {
 	    var leadingCall = false,
 	        trailingCall = false,
 	        lastCallTime = 0;
@@ -16787,7 +10990,7 @@
 	    this.observers_ = [];
 
 	    this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
-	    this.refresh = throttle$1(this.refresh.bind(this), REFRESH_DELAY);
+	    this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
 	};
 
 	/**
@@ -17548,6 +11751,658 @@
 	    return ResizeObserver;
 	})();
 
+	function contains(root, n) {
+	  var node = n;
+	  while (node) {
+	    if (node === root) {
+	      return true;
+	    }
+	    node = node.parentNode;
+	  }
+
+	  return false;
+	}
+
+	var EventBaseObject_1 = createCommonjsModule(function (module, exports) {
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function returnFalse() {
+	  return false;
+	}
+
+	function returnTrue() {
+	  return true;
+	}
+
+	function EventBaseObject() {
+	  this.timeStamp = Date.now();
+	  this.target = undefined;
+	  this.currentTarget = undefined;
+	}
+
+	EventBaseObject.prototype = {
+	  isEventObject: 1,
+
+	  constructor: EventBaseObject,
+
+	  isDefaultPrevented: returnFalse,
+
+	  isPropagationStopped: returnFalse,
+
+	  isImmediatePropagationStopped: returnFalse,
+
+	  preventDefault: function preventDefault() {
+	    this.isDefaultPrevented = returnTrue;
+	  },
+
+	  stopPropagation: function stopPropagation() {
+	    this.isPropagationStopped = returnTrue;
+	  },
+
+	  stopImmediatePropagation: function stopImmediatePropagation() {
+	    this.isImmediatePropagationStopped = returnTrue;
+	    // fixed 1.2
+	    // call stopPropagation implicitly
+	    this.stopPropagation();
+	  },
+
+	  halt: function halt(immediate) {
+	    if (immediate) {
+	      this.stopImmediatePropagation();
+	    } else {
+	      this.stopPropagation();
+	    }
+	    this.preventDefault();
+	  }
+	};
+
+	exports["default"] = EventBaseObject;
+	module.exports = exports["default"];
+	});
+
+	unwrapExports(EventBaseObject_1);
+
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols$1 = Object.getOwnPropertySymbols;
+	var hasOwnProperty$1 = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+
+			// Detect buggy property enumeration order in older V8 versions.
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
+
+			return true;
+		} catch (err) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+
+	var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty$1.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (getOwnPropertySymbols$1) {
+				symbols = getOwnPropertySymbols$1(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+	var EventObject = createCommonjsModule(function (module, exports) {
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+
+
+	var _EventBaseObject2 = _interopRequireDefault(EventBaseObject_1);
+
+
+
+	var _objectAssign2 = _interopRequireDefault(objectAssign);
+
+	var TRUE = true;
+	var FALSE = false;
+	var commonProps = ['altKey', 'bubbles', 'cancelable', 'ctrlKey', 'currentTarget', 'eventPhase', 'metaKey', 'shiftKey', 'target', 'timeStamp', 'view', 'type'];
+
+	function isNullOrUndefined(w) {
+	  return w === null || w === undefined;
+	}
+
+	var eventNormalizers = [{
+	  reg: /^key/,
+	  props: ['char', 'charCode', 'key', 'keyCode', 'which'],
+	  fix: function fix(event, nativeEvent) {
+	    if (isNullOrUndefined(event.which)) {
+	      event.which = !isNullOrUndefined(nativeEvent.charCode) ? nativeEvent.charCode : nativeEvent.keyCode;
+	    }
+
+	    // add metaKey to non-Mac browsers (use ctrl for PC 's and Meta for Macs)
+	    if (event.metaKey === undefined) {
+	      event.metaKey = event.ctrlKey;
+	    }
+	  }
+	}, {
+	  reg: /^touch/,
+	  props: ['touches', 'changedTouches', 'targetTouches']
+	}, {
+	  reg: /^hashchange$/,
+	  props: ['newURL', 'oldURL']
+	}, {
+	  reg: /^gesturechange$/i,
+	  props: ['rotation', 'scale']
+	}, {
+	  reg: /^(mousewheel|DOMMouseScroll)$/,
+	  props: [],
+	  fix: function fix(event, nativeEvent) {
+	    var deltaX = undefined;
+	    var deltaY = undefined;
+	    var delta = undefined;
+	    var wheelDelta = nativeEvent.wheelDelta;
+	    var axis = nativeEvent.axis;
+	    var wheelDeltaY = nativeEvent.wheelDeltaY;
+	    var wheelDeltaX = nativeEvent.wheelDeltaX;
+	    var detail = nativeEvent.detail;
+
+	    // ie/webkit
+	    if (wheelDelta) {
+	      delta = wheelDelta / 120;
+	    }
+
+	    // gecko
+	    if (detail) {
+	      // press control e.detail == 1 else e.detail == 3
+	      delta = 0 - (detail % 3 === 0 ? detail / 3 : detail);
+	    }
+
+	    // Gecko
+	    if (axis !== undefined) {
+	      if (axis === event.HORIZONTAL_AXIS) {
+	        deltaY = 0;
+	        deltaX = 0 - delta;
+	      } else if (axis === event.VERTICAL_AXIS) {
+	        deltaX = 0;
+	        deltaY = delta;
+	      }
+	    }
+
+	    // Webkit
+	    if (wheelDeltaY !== undefined) {
+	      deltaY = wheelDeltaY / 120;
+	    }
+	    if (wheelDeltaX !== undefined) {
+	      deltaX = -1 * wheelDeltaX / 120;
+	    }
+
+	    // 默认 deltaY (ie)
+	    if (!deltaX && !deltaY) {
+	      deltaY = delta;
+	    }
+
+	    if (deltaX !== undefined) {
+	      /**
+	       * deltaX of mousewheel event
+	       * @property deltaX
+	       * @member Event.DomEvent.Object
+	       */
+	      event.deltaX = deltaX;
+	    }
+
+	    if (deltaY !== undefined) {
+	      /**
+	       * deltaY of mousewheel event
+	       * @property deltaY
+	       * @member Event.DomEvent.Object
+	       */
+	      event.deltaY = deltaY;
+	    }
+
+	    if (delta !== undefined) {
+	      /**
+	       * delta of mousewheel event
+	       * @property delta
+	       * @member Event.DomEvent.Object
+	       */
+	      event.delta = delta;
+	    }
+	  }
+	}, {
+	  reg: /^mouse|contextmenu|click|mspointer|(^DOMMouseScroll$)/i,
+	  props: ['buttons', 'clientX', 'clientY', 'button', 'offsetX', 'relatedTarget', 'which', 'fromElement', 'toElement', 'offsetY', 'pageX', 'pageY', 'screenX', 'screenY'],
+	  fix: function fix(event, nativeEvent) {
+	    var eventDoc = undefined;
+	    var doc = undefined;
+	    var body = undefined;
+	    var target = event.target;
+	    var button = nativeEvent.button;
+
+	    // Calculate pageX/Y if missing and clientX/Y available
+	    if (target && isNullOrUndefined(event.pageX) && !isNullOrUndefined(nativeEvent.clientX)) {
+	      eventDoc = target.ownerDocument || document;
+	      doc = eventDoc.documentElement;
+	      body = eventDoc.body;
+	      event.pageX = nativeEvent.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+	      event.pageY = nativeEvent.clientY + (doc && doc.scrollTop || body && body.scrollTop || 0) - (doc && doc.clientTop || body && body.clientTop || 0);
+	    }
+
+	    // which for click: 1 === left; 2 === middle; 3 === right
+	    // do not use button
+	    if (!event.which && button !== undefined) {
+	      if (button & 1) {
+	        event.which = 1;
+	      } else if (button & 2) {
+	        event.which = 3;
+	      } else if (button & 4) {
+	        event.which = 2;
+	      } else {
+	        event.which = 0;
+	      }
+	    }
+
+	    // add relatedTarget, if necessary
+	    if (!event.relatedTarget && event.fromElement) {
+	      event.relatedTarget = event.fromElement === target ? event.toElement : event.fromElement;
+	    }
+
+	    return event;
+	  }
+	}];
+
+	function retTrue() {
+	  return TRUE;
+	}
+
+	function retFalse() {
+	  return FALSE;
+	}
+
+	function DomEventObject(nativeEvent) {
+	  var type = nativeEvent.type;
+
+	  var isNative = typeof nativeEvent.stopPropagation === 'function' || typeof nativeEvent.cancelBubble === 'boolean';
+
+	  _EventBaseObject2['default'].call(this);
+
+	  this.nativeEvent = nativeEvent;
+
+	  // in case dom event has been mark as default prevented by lower dom node
+	  var isDefaultPrevented = retFalse;
+	  if ('defaultPrevented' in nativeEvent) {
+	    isDefaultPrevented = nativeEvent.defaultPrevented ? retTrue : retFalse;
+	  } else if ('getPreventDefault' in nativeEvent) {
+	    // https://bugzilla.mozilla.org/show_bug.cgi?id=691151
+	    isDefaultPrevented = nativeEvent.getPreventDefault() ? retTrue : retFalse;
+	  } else if ('returnValue' in nativeEvent) {
+	    isDefaultPrevented = nativeEvent.returnValue === FALSE ? retTrue : retFalse;
+	  }
+
+	  this.isDefaultPrevented = isDefaultPrevented;
+
+	  var fixFns = [];
+	  var fixFn = undefined;
+	  var l = undefined;
+	  var prop = undefined;
+	  var props = commonProps.concat();
+
+	  eventNormalizers.forEach(function (normalizer) {
+	    if (type.match(normalizer.reg)) {
+	      props = props.concat(normalizer.props);
+	      if (normalizer.fix) {
+	        fixFns.push(normalizer.fix);
+	      }
+	    }
+	  });
+
+	  l = props.length;
+
+	  // clone properties of the original event object
+	  while (l) {
+	    prop = props[--l];
+	    this[prop] = nativeEvent[prop];
+	  }
+
+	  // fix target property, if necessary
+	  if (!this.target && isNative) {
+	    this.target = nativeEvent.srcElement || document; // srcElement might not be defined either
+	  }
+
+	  // check if target is a text node (safari)
+	  if (this.target && this.target.nodeType === 3) {
+	    this.target = this.target.parentNode;
+	  }
+
+	  l = fixFns.length;
+
+	  while (l) {
+	    fixFn = fixFns[--l];
+	    fixFn(this, nativeEvent);
+	  }
+
+	  this.timeStamp = nativeEvent.timeStamp || Date.now();
+	}
+
+	var EventBaseObjectProto = _EventBaseObject2['default'].prototype;
+
+	(0, _objectAssign2['default'])(DomEventObject.prototype, EventBaseObjectProto, {
+	  constructor: DomEventObject,
+
+	  preventDefault: function preventDefault() {
+	    var e = this.nativeEvent;
+
+	    // if preventDefault exists run it on the original event
+	    if (e.preventDefault) {
+	      e.preventDefault();
+	    } else {
+	      // otherwise set the returnValue property of the original event to FALSE (IE)
+	      e.returnValue = FALSE;
+	    }
+
+	    EventBaseObjectProto.preventDefault.call(this);
+	  },
+
+	  stopPropagation: function stopPropagation() {
+	    var e = this.nativeEvent;
+
+	    // if stopPropagation exists run it on the original event
+	    if (e.stopPropagation) {
+	      e.stopPropagation();
+	    } else {
+	      // otherwise set the cancelBubble property of the original event to TRUE (IE)
+	      e.cancelBubble = TRUE;
+	    }
+
+	    EventBaseObjectProto.stopPropagation.call(this);
+	  }
+	});
+
+	exports['default'] = DomEventObject;
+	module.exports = exports['default'];
+	});
+
+	unwrapExports(EventObject);
+
+	var lib$3 = createCommonjsModule(function (module, exports) {
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = addEventListener;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+
+
+	var _EventObject2 = _interopRequireDefault(EventObject);
+
+	function addEventListener(target, eventType, callback, option) {
+	  function wrapCallback(e) {
+	    var ne = new _EventObject2['default'](e);
+	    callback.call(target, ne);
+	  }
+
+	  if (target.addEventListener) {
+	    var _ret = (function () {
+	      var useCapture = false;
+	      if (typeof option === 'object') {
+	        useCapture = option.capture || false;
+	      } else if (typeof option === 'boolean') {
+	        useCapture = option;
+	      }
+
+	      target.addEventListener(eventType, wrapCallback, option || false);
+
+	      return {
+	        v: {
+	          remove: function remove() {
+	            target.removeEventListener(eventType, wrapCallback, useCapture);
+	          }
+	        }
+	      };
+	    })();
+
+	    if (typeof _ret === 'object') return _ret.v;
+	  } else if (target.attachEvent) {
+	    target.attachEvent('on' + eventType, wrapCallback);
+	    return {
+	      remove: function remove() {
+	        target.detachEvent('on' + eventType, wrapCallback);
+	      }
+	    };
+	  }
+	}
+
+	module.exports = exports['default'];
+	});
+
+	var addDOMEventListener = unwrapExports(lib$3);
+
+	function addEventListenerWrap(target, eventType, cb, option) {
+	  /* eslint camelcase: 2 */
+	  var callback = ReactDOM__default.unstable_batchedUpdates ? function run(e) {
+	    ReactDOM__default.unstable_batchedUpdates(cb, e);
+	  } : cb;
+	  return addDOMEventListener(target, eventType, callback, option);
+	}
+
+	var ContainerRender = function (_React$Component) {
+	  _inherits(ContainerRender, _React$Component);
+
+	  function ContainerRender() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, ContainerRender);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = ContainerRender.__proto__ || Object.getPrototypeOf(ContainerRender)).call.apply(_ref, [this].concat(args))), _this), _this.removeContainer = function () {
+	      if (_this.container) {
+	        ReactDOM__default.unmountComponentAtNode(_this.container);
+	        _this.container.parentNode.removeChild(_this.container);
+	        _this.container = null;
+	      }
+	    }, _this.renderComponent = function (props, ready) {
+	      var _this$props = _this.props,
+	          visible = _this$props.visible,
+	          getComponent = _this$props.getComponent,
+	          forceRender = _this$props.forceRender,
+	          getContainer = _this$props.getContainer,
+	          parent = _this$props.parent;
+
+	      if (visible || parent._component || forceRender) {
+	        if (!_this.container) {
+	          _this.container = getContainer();
+	        }
+	        ReactDOM__default.unstable_renderSubtreeIntoContainer(parent, getComponent(props), _this.container, function callback() {
+	          if (ready) {
+	            ready.call(this);
+	          }
+	        });
+	      }
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(ContainerRender, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      if (this.props.autoMount) {
+	        this.renderComponent();
+	      }
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      if (this.props.autoMount) {
+	        this.renderComponent();
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      if (this.props.autoDestroy) {
+	        this.removeContainer();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return this.props.children({
+	        renderComponent: this.renderComponent,
+	        removeContainer: this.removeContainer
+	      });
+	    }
+	  }]);
+
+	  return ContainerRender;
+	}(React__default.Component);
+
+	ContainerRender.propTypes = {
+	  autoMount: PropTypes__default.bool,
+	  autoDestroy: PropTypes__default.bool,
+	  visible: PropTypes__default.bool,
+	  forceRender: PropTypes__default.bool,
+	  parent: PropTypes__default.any,
+	  getComponent: PropTypes__default.func.isRequired,
+	  getContainer: PropTypes__default.func.isRequired,
+	  children: PropTypes__default.func.isRequired
+	};
+	ContainerRender.defaultProps = {
+	  autoMount: true,
+	  autoDestroy: true,
+	  forceRender: false
+	};
+
+	var Portal = function (_React$Component) {
+	  _inherits(Portal, _React$Component);
+
+	  function Portal() {
+	    _classCallCheck(this, Portal);
+
+	    return _possibleConstructorReturn(this, (Portal.__proto__ || Object.getPrototypeOf(Portal)).apply(this, arguments));
+	  }
+
+	  _createClass(Portal, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.createContainer();
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps) {
+	      var didUpdate = this.props.didUpdate;
+
+	      if (didUpdate) {
+	        didUpdate(prevProps);
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.removeContainer();
+	    }
+	  }, {
+	    key: 'createContainer',
+	    value: function createContainer() {
+	      this._container = this.props.getContainer();
+	      this.forceUpdate();
+	    }
+	  }, {
+	    key: 'removeContainer',
+	    value: function removeContainer() {
+	      if (this._container) {
+	        this._container.parentNode.removeChild(this._container);
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      if (this._container) {
+	        return ReactDOM__default.createPortal(this.props.children, this._container);
+	      }
+	      return null;
+	    }
+	  }]);
+
+	  return Portal;
+	}(React__default.Component);
+
+	Portal.propTypes = {
+	  getContainer: PropTypes__default.func.isRequired,
+	  children: PropTypes__default.node.isRequired,
+	  didUpdate: PropTypes__default.func
+	};
+
 	function isPointsEq(a1, a2, isAlignPoint) {
 	  if (isAlignPoint) {
 	    return a1[0] === a2[0];
@@ -17677,7 +12532,7 @@
 	  }
 	}
 
-	var _typeof$1 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof$2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	var RE_NUM = /[\-+]?(?:\d*\.|)\d+(?:[eE][\-+]?\d+|)/.source;
 
@@ -17693,7 +12548,7 @@
 
 	function css(el, name, v) {
 	  var value = v;
-	  if ((typeof name === 'undefined' ? 'undefined' : _typeof$1(name)) === 'object') {
+	  if ((typeof name === 'undefined' ? 'undefined' : _typeof$2(name)) === 'object') {
 	    for (var i in name) {
 	      if (name.hasOwnProperty(i)) {
 	        css(el, i, name[i]);
@@ -17757,7 +12612,7 @@
 	  };
 	}
 
-	function getScroll$1(w, top) {
+	function getScroll(w, top) {
 	  var ret = w['page' + (top ? 'Y' : 'X') + 'Offset'];
 	  var method = 'scroll' + (top ? 'Top' : 'Left');
 	  if (typeof ret !== 'number') {
@@ -17773,11 +12628,11 @@
 	}
 
 	function getScrollLeft(w) {
-	  return getScroll$1(w);
+	  return getScroll(w);
 	}
 
 	function getScrollTop(w) {
-	  return getScroll$1(w, true);
+	  return getScroll(w, true);
 	}
 
 	function getOffset(el) {
@@ -18713,7 +13568,7 @@
 
 	alignElement.__getVisibleRectForElement = getVisibleRectForElement;
 
-	var _extends$2 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	/**
 	 * `tgtPoint`: { pageX, pageY } or { clientX, clientY }.
@@ -18756,7 +13611,7 @@
 	  // Provide default target point
 	  var points = [align.points[0], 'cc'];
 
-	  return doAlign(el, tgtRegion, _extends$2({}, align, { points: points }), pointInView);
+	  return doAlign(el, tgtRegion, _extends$3({}, align, { points: points }), pointInView);
 	}
 
 	function buffer(fn, ms) {
@@ -18971,7 +13826,7 @@
 
 	// export this package's api
 
-	var LazyRenderBox$1 = function (_Component) {
+	var LazyRenderBox = function (_Component) {
 	  _inherits(LazyRenderBox, _Component);
 
 	  function LazyRenderBox() {
@@ -19003,7 +13858,7 @@
 	  return LazyRenderBox;
 	}(React.Component);
 
-	LazyRenderBox$1.propTypes = {
+	LazyRenderBox.propTypes = {
 	  children: PropTypes__default.any,
 	  className: PropTypes__default.string,
 	  visible: PropTypes__default.bool,
@@ -19036,7 +13891,7 @@
 	        style: props.style
 	      },
 	      React__default.createElement(
-	        LazyRenderBox$1,
+	        LazyRenderBox,
 	        { className: props.prefixCls + '-content', visible: props.visible },
 	        props.children
 	      )
@@ -19065,7 +13920,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
-	    _initialiseProps$2.call(_this);
+	    _initialiseProps$1.call(_this);
 
 	    _this.state = {
 	      // Used for stretch
@@ -19265,7 +14120,7 @@
 	    var maskElement = void 0;
 	    if (props.mask) {
 	      var maskTransition = this.getMaskTransitionName();
-	      maskElement = React__default.createElement(LazyRenderBox$1, {
+	      maskElement = React__default.createElement(LazyRenderBox, {
 	        style: this.getZIndexStyle(),
 	        key: 'mask',
 	        className: props.prefixCls + '-mask',
@@ -19323,7 +14178,7 @@
 	  })
 	};
 
-	var _initialiseProps$2 = function _initialiseProps() {
+	var _initialiseProps$1 = function _initialiseProps() {
 	  var _this3 = this;
 
 	  this.onAlign = function (popupDomNode, align) {
@@ -19385,7 +14240,7 @@
 	  };
 	};
 
-	function noop$4() {}
+	function noop$2() {}
 
 	function returnEmptyString() {
 	  return '';
@@ -19397,7 +14252,7 @@
 
 	var ALL_HANDLERS = ['onClick', 'onMouseDown', 'onTouchStart', 'onMouseEnter', 'onMouseLeave', 'onFocus', 'onBlur', 'onContextMenu'];
 
-	var IS_REACT_16$2 = !!ReactDOM.createPortal;
+	var IS_REACT_16 = !!ReactDOM.createPortal;
 
 	var contextTypes = {
 	  rcTrigger: PropTypes__default.shape({
@@ -19413,7 +14268,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-	    _initialiseProps$3.call(_this);
+	    _initialiseProps$2.call(_this);
 
 	    var popupVisible = void 0;
 	    if ('popupVisible' in props) {
@@ -19472,7 +14327,7 @@
 	        props.afterPopupVisibleChange(state.popupVisible);
 	      }
 	    };
-	    if (!IS_REACT_16$2) {
+	    if (!IS_REACT_16) {
 	      this.renderComponent(null, triggerAfterPopupVisibleChange);
 	    }
 
@@ -19743,7 +14598,7 @@
 	    }
 	    var trigger = React__default.cloneElement(child, newChildProps);
 
-	    if (!IS_REACT_16$2) {
+	    if (!IS_REACT_16) {
 	      return React__default.createElement(
 	        ContainerRender,
 	        {
@@ -19826,9 +14681,9 @@
 	  prefixCls: 'rc-trigger-popup',
 	  getPopupClassNameFromAlign: returnEmptyString,
 	  getDocument: returnDocument,
-	  onPopupVisibleChange: noop$4,
-	  afterPopupVisibleChange: noop$4,
-	  onPopupAlign: noop$4,
+	  onPopupVisibleChange: noop$2,
+	  afterPopupVisibleChange: noop$2,
+	  onPopupAlign: noop$2,
 	  popupClassName: '',
 	  mouseEnterDelay: 0,
 	  mouseLeaveDelay: 0.1,
@@ -19845,7 +14700,7 @@
 	  hideAction: []
 	};
 
-	var _initialiseProps$3 = function _initialiseProps() {
+	var _initialiseProps$2 = function _initialiseProps() {
 	  var _this5 = this;
 
 	  this.onMouseEnter = function (e) {
@@ -20153,7 +15008,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-	    _initialiseProps$4.call(_this);
+	    _initialiseProps$3.call(_this);
 
 	    var store = props.store;
 	    var eventKey = props.eventKey;
@@ -20452,17 +15307,17 @@
 	  expandIcon: PropTypes__default.oneOfType([PropTypes__default.func, PropTypes__default.node])
 	};
 	SubMenu.defaultProps = {
-	  onMouseEnter: noop$3,
-	  onMouseLeave: noop$3,
-	  onTitleMouseEnter: noop$3,
-	  onTitleMouseLeave: noop$3,
-	  onTitleClick: noop$3,
-	  manualRef: noop$3,
+	  onMouseEnter: noop$1,
+	  onMouseLeave: noop$1,
+	  onTitleMouseEnter: noop$1,
+	  onTitleMouseLeave: noop$1,
+	  onTitleClick: noop$1,
+	  manualRef: noop$1,
 	  mode: 'vertical',
 	  title: ''
 	};
 
-	var _initialiseProps$4 = function _initialiseProps() {
+	var _initialiseProps$3 = function _initialiseProps() {
 	  var _this3 = this;
 
 	  this.onDestroy = function (key) {
@@ -21088,7 +15943,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-	    _initialiseProps$5.call(_this);
+	    _initialiseProps$4.call(_this);
 
 	    props.store.setState({
 	      activeKey: _extends$1({}, props.store.getState().activeKey, (_extends3 = {}, _extends3[props.eventKey] = getActiveKey(props, props.activeKey), _extends3))
@@ -21225,10 +16080,10 @@
 	  visible: true,
 	  focusable: true,
 	  style: {},
-	  manualRef: noop$3
+	  manualRef: noop$1
 	};
 
-	var _initialiseProps$5 = function _initialiseProps() {
+	var _initialiseProps$4 = function _initialiseProps() {
 	  var _this3 = this;
 
 	  this.onKeyDown = function (e, callback) {
@@ -21351,7 +16206,7 @@
 	      active: !childProps.disabled && isActive,
 	      multiple: props.multiple,
 	      onClick: function onClick(e) {
-	        (childProps.onClick || noop$3)(e);
+	        (childProps.onClick || noop$1)(e);
 	        _this3.onClick(e);
 	      },
 	      onItemHover: _this3.onItemHover,
@@ -21399,7 +16254,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-	    _initialiseProps$6.call(_this);
+	    _initialiseProps$5.call(_this);
 
 	    _this.isRootMenu = true;
 
@@ -21509,10 +16364,10 @@
 	};
 	Menu.defaultProps = {
 	  selectable: true,
-	  onClick: noop$3,
-	  onSelect: noop$3,
-	  onOpenChange: noop$3,
-	  onDeselect: noop$3,
+	  onClick: noop$1,
+	  onSelect: noop$1,
+	  onOpenChange: noop$1,
+	  onDeselect: noop$1,
 	  defaultSelectedKeys: [],
 	  defaultOpenKeys: [],
 	  subMenuOpenDelay: 0.1,
@@ -21530,7 +16385,7 @@
 	  )
 	};
 
-	var _initialiseProps$6 = function _initialiseProps() {
+	var _initialiseProps$5 = function _initialiseProps() {
 	  var _this3 = this;
 
 	  this.onSelect = function (selectInfo) {
@@ -21628,9 +16483,9 @@
 	  };
 	};
 
-	var _extends$3 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _typeof$2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof$3 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var RE_NUM$1 = /[\-+]?(?:\d*\.|)\d+(?:[eE][\-+]?\d+|)/.source;
 
@@ -21680,7 +16535,7 @@
 	  };
 	}
 
-	function getScroll$2(w, top) {
+	function getScroll$1(w, top) {
 	  var ret = w['page' + (top ? 'Y' : 'X') + 'Offset'];
 	  var method = 'scroll' + (top ? 'Top' : 'Left');
 	  if (typeof ret !== 'number') {
@@ -21696,11 +16551,11 @@
 	}
 
 	function getScrollLeft$1(w) {
-	  return getScroll$2(w);
+	  return getScroll$1(w);
 	}
 
 	function getScrollTop$1(w) {
-	  return getScroll$2(w, true);
+	  return getScroll$1(w, true);
 	}
 
 	function getOffset$1(el) {
@@ -21940,7 +16795,7 @@
 
 	function css$1(el, name, v) {
 	  var value = v;
-	  if ((typeof name === 'undefined' ? 'undefined' : _typeof$2(name)) === 'object') {
+	  if ((typeof name === 'undefined' ? 'undefined' : _typeof$3(name)) === 'object') {
 	    for (var i in name) {
 	      if (name.hasOwnProperty(i)) {
 	        css$1(el, i, name[i]);
@@ -22002,7 +16857,7 @@
 	  css$1(elem, ret);
 	}
 
-	var util$1 = _extends$3({
+	var util$1 = _extends$4({
 	  getWindow: function getWindow(node) {
 	    var doc = node.ownerDocument || node;
 	    return doc.defaultView || doc.parentWindow;
@@ -22397,10 +17252,10 @@
 	  itemIcon: PropTypes__default.oneOfType([PropTypes__default.func, PropTypes__default.node])
 	};
 	MenuItem.defaultProps = {
-	  onSelect: noop$3,
-	  onMouseEnter: noop$3,
-	  onMouseLeave: noop$3,
-	  manualRef: noop$3
+	  onSelect: noop$1,
+	  onMouseEnter: noop$1,
+	  onMouseLeave: noop$1,
+	  manualRef: noop$1
 	};
 	MenuItem.isMenuItem = true;
 
@@ -22999,7 +17854,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (SelectTrigger.__proto__ || Object.getPrototypeOf(SelectTrigger)).call(this, props));
 
-	    _initialiseProps$7.call(_this);
+	    _initialiseProps$6.call(_this);
 
 	    _this.saveDropdownMenuRef = saveRef$2(_this, 'dropdownMenuRef');
 	    _this.saveTriggerRef = saveRef$2(_this, 'triggerRef');
@@ -23108,7 +17963,7 @@
 	  menuItemSelectedIcon: PropTypes__default.oneOfType([PropTypes__default.func, PropTypes__default.node])
 	};
 
-	var _initialiseProps$7 = function _initialiseProps() {
+	var _initialiseProps$6 = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.setDropdownWidth = function () {
@@ -23231,7 +18086,7 @@
 	  menuItemSelectedIcon: PropTypes__default.oneOfType([PropTypes__default.func, PropTypes__default.node])
 	};
 
-	function noop$5() {}
+	function noop$3() {}
 
 	function chaining() {
 	  for (var _len = arguments.length, fns = Array(_len), _key = 0; _key < _len; _key++) {
@@ -23261,7 +18116,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).call(this, props));
 
-	    _initialiseProps$8.call(_this);
+	    _initialiseProps$7.call(_this);
 
 	    var optionsInfo = Select.getOptionsInfoFromProps(props);
 	    _this.state = {
@@ -23502,13 +18357,13 @@
 	  showSearch: true,
 	  allowClear: false,
 	  placeholder: '',
-	  onChange: noop$5,
-	  onFocus: noop$5,
-	  onBlur: noop$5,
-	  onSelect: noop$5,
-	  onSearch: noop$5,
-	  onDeselect: noop$5,
-	  onInputKeyDown: noop$5,
+	  onChange: noop$3,
+	  onFocus: noop$3,
+	  onBlur: noop$3,
+	  onSelect: noop$3,
+	  onSearch: noop$3,
+	  onDeselect: noop$3,
+	  onInputKeyDown: noop$3,
 	  showArrow: true,
 	  dropdownMatchSelectWidth: true,
 	  dropdownStyle: {},
@@ -23631,7 +18486,7 @@
 	  return value;
 	};
 
-	var _initialiseProps$8 = function _initialiseProps() {
+	var _initialiseProps$7 = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.onInputChange = function (event) {
@@ -24669,7 +19524,159 @@
 	Select.Option = Option;
 	Select.OptGroup = OptGroup;
 
-	var __rest$a = undefined && undefined.__rest || function (s, e) {
+	var LocaleReceiver = function (_React$Component) {
+	    _inherits(LocaleReceiver, _React$Component);
+
+	    function LocaleReceiver() {
+	        _classCallCheck(this, LocaleReceiver);
+
+	        return _possibleConstructorReturn(this, (LocaleReceiver.__proto__ || Object.getPrototypeOf(LocaleReceiver)).apply(this, arguments));
+	    }
+
+	    _createClass(LocaleReceiver, [{
+	        key: 'getLocale',
+	        value: function getLocale() {
+	            var _props = this.props,
+	                componentName = _props.componentName,
+	                defaultLocale = _props.defaultLocale;
+	            var antLocale = this.context.antLocale;
+
+	            var localeFromContext = antLocale && antLocale[componentName];
+	            return _extends$1({}, typeof defaultLocale === 'function' ? defaultLocale() : defaultLocale, localeFromContext || {});
+	        }
+	    }, {
+	        key: 'getLocaleCode',
+	        value: function getLocaleCode() {
+	            var antLocale = this.context.antLocale;
+
+	            var localeCode = antLocale && antLocale.locale;
+	            // Had use LocaleProvide but didn't set locale
+	            if (antLocale && antLocale.exist && !localeCode) {
+	                return 'en-us';
+	            }
+	            return localeCode;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return this.props.children(this.getLocale(), this.getLocaleCode());
+	        }
+	    }]);
+
+	    return LocaleReceiver;
+	}(React.Component);
+
+	LocaleReceiver.contextTypes = {
+	    antLocale: PropTypes.object
+	};
+
+	var enUS = {
+	  // Options.jsx
+	  items_per_page: '/ page',
+	  jump_to: 'Goto',
+	  jump_to_confirm: 'confirm',
+	  page: '',
+
+	  // Pagination.jsx
+	  prev_page: 'Previous Page',
+	  next_page: 'Next Page',
+	  prev_5: 'Previous 5 Pages',
+	  next_5: 'Next 5 Pages',
+	  prev_3: 'Previous 3 Pages',
+	  next_3: 'Next 3 Pages'
+	};
+
+	var enUs = {
+	  today: 'Today',
+	  now: 'Now',
+	  backToToday: 'Back to today',
+	  ok: 'Ok',
+	  clear: 'Clear',
+	  month: 'Month',
+	  year: 'Year',
+	  timeSelect: 'select time',
+	  dateSelect: 'select date',
+	  weekSelect: 'Choose a week',
+	  monthSelect: 'Choose a month',
+	  yearSelect: 'Choose a year',
+	  decadeSelect: 'Choose a decade',
+	  yearFormat: 'YYYY',
+	  dateFormat: 'M/D/YYYY',
+	  dayFormat: 'D',
+	  dateTimeFormat: 'M/D/YYYY HH:mm:ss',
+	  monthBeforeYear: true,
+	  previousMonth: 'Previous month (PageUp)',
+	  nextMonth: 'Next month (PageDown)',
+	  previousYear: 'Last year (Control + left)',
+	  nextYear: 'Next year (Control + right)',
+	  previousDecade: 'Last decade',
+	  nextDecade: 'Next decade',
+	  previousCentury: 'Last century',
+	  nextCentury: 'Next century'
+	};
+
+	var locale = {
+	    placeholder: 'Select time'
+	};
+
+	// Merge into a locale object
+	var locale$1 = {
+	    lang: _extends$1({ placeholder: 'Select date', rangePlaceholder: ['Start date', 'End date'] }, enUs),
+	    timePickerLocale: _extends$1({}, locale)
+	};
+
+	var defaultLocale = {
+	    locale: 'en',
+	    Pagination: enUS,
+	    DatePicker: locale$1,
+	    TimePicker: locale,
+	    Calendar: locale$1,
+	    Table: {
+	        filterTitle: 'Filter menu',
+	        filterConfirm: 'OK',
+	        filterReset: 'Reset',
+	        emptyText: 'No data',
+	        selectAll: 'Select current page',
+	        selectInvert: 'Invert current page',
+	        sortTitle: 'Sort'
+	    },
+	    Modal: {
+	        okText: 'OK',
+	        cancelText: 'Cancel',
+	        justOkText: 'OK'
+	    },
+	    Popconfirm: {
+	        okText: 'OK',
+	        cancelText: 'Cancel'
+	    },
+	    Transfer: {
+	        titles: ['', ''],
+	        notFoundContent: 'Not Found',
+	        searchPlaceholder: 'Search here',
+	        itemUnit: 'item',
+	        itemsUnit: 'items'
+	    },
+	    Select: {
+	        notFoundContent: 'Not Found'
+	    },
+	    Upload: {
+	        uploading: 'Uploading...',
+	        removeFile: 'Remove file',
+	        uploadError: 'Upload error',
+	        previewFile: 'Preview file'
+	    }
+	};
+
+	function omit(obj, fields) {
+	  var shallowCopy = _extends$1({}, obj);
+	  for (var i = 0; i < fields.length; i++) {
+	    var key = fields[i];
+	    delete shallowCopy[key];
+	  }
+	  return shallowCopy;
+	}
+
+	var __rest$6 = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -24712,7 +19719,7 @@
 	                size = _a.size,
 	                mode = _a.mode,
 	                suffixIcon = _a.suffixIcon,
-	                restProps = __rest$a(_a, ["prefixCls", "className", "size", "mode", "suffixIcon"]);
+	                restProps = __rest$6(_a, ["prefixCls", "className", "size", "mode", "suffixIcon"]);
 	            var rest = omit(restProps, ['inputIcon', 'removeIcon', 'clearIcon']);
 	            var cls = classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty(_classNames, prefixCls + '-sm', size === 'small'), _classNames), className);
 	            var optionLabelProp = _this.props.optionLabelProp;
@@ -24789,49 +19796,11 @@
 	};
 	Select$1.propTypes = SelectPropTypes$1;
 
-	function _objectWithoutPropertiesLoose(source, excluded) {
-	  if (source == null) return {};
-	  var target = {};
-	  var sourceKeys = Object.keys(source);
-	  var key, i;
-
-	  for (i = 0; i < sourceKeys.length; i++) {
-	    key = sourceKeys[i];
-	    if (excluded.indexOf(key) >= 0) continue;
-	    target[key] = source[key];
-	  }
-
-	  return target;
-	}
-
-	var objectWithoutPropertiesLoose = _objectWithoutPropertiesLoose;
-
-	function _objectWithoutProperties$1(source, excluded) {
-	  if (source == null) return {};
-	  var target = objectWithoutPropertiesLoose(source, excluded);
-	  var key, i;
-
-	  if (Object.getOwnPropertySymbols) {
-	    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
-
-	    for (i = 0; i < sourceSymbolKeys.length; i++) {
-	      key = sourceSymbolKeys[i];
-	      if (excluded.indexOf(key) >= 0) continue;
-	      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
-	      target[key] = source[key];
-	    }
-	  }
-
-	  return target;
-	}
-
-	var objectWithoutProperties$1 = _objectWithoutProperties$1;
-
 	/** Used for built-in method references. */
-	var objectProto$6 = Object.prototype;
+	var objectProto = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$6 = objectProto$6.hasOwnProperty;
+	var hasOwnProperty$2 = objectProto.hasOwnProperty;
 
 	/**
 	 * The base implementation of `_.has` without support for deep paths.
@@ -24842,7 +19811,7 @@
 	 * @returns {boolean} Returns `true` if `key` exists, else `false`.
 	 */
 	function baseHas(object, key) {
-	  return object != null && hasOwnProperty$6.call(object, key);
+	  return object != null && hasOwnProperty$2.call(object, key);
 	}
 
 	var _baseHas = baseHas;
@@ -24870,22 +19839,22 @@
 	 * _.isArray(_.noop);
 	 * // => false
 	 */
-	var isArray$1 = Array.isArray;
+	var isArray = Array.isArray;
 
-	var isArray_1 = isArray$1;
+	var isArray_1 = isArray;
 
 	/** Detect free variable `global` from Node.js. */
-	var freeGlobal$2 = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+	var freeGlobal = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
 
-	var _freeGlobal = freeGlobal$2;
+	var _freeGlobal = freeGlobal;
 
 	/** Detect free variable `self`. */
-	var freeSelf$2 = typeof self == 'object' && self && self.Object === Object && self;
+	var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
 
 	/** Used as a reference to the global object. */
-	var root$3 = _freeGlobal || freeSelf$2 || Function('return this')();
+	var root$1 = _freeGlobal || freeSelf || Function('return this')();
 
-	var _root = root$3;
+	var _root = root$1;
 
 	/** Built-in value references. */
 	var Symbol$1 = _root.Symbol;
@@ -24893,17 +19862,17 @@
 	var _Symbol = Symbol$1;
 
 	/** Used for built-in method references. */
-	var objectProto$7 = Object.prototype;
+	var objectProto$1 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$7 = objectProto$7.hasOwnProperty;
+	var hasOwnProperty$3 = objectProto$1.hasOwnProperty;
 
 	/**
 	 * Used to resolve the
 	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
-	var nativeObjectToString = objectProto$7.toString;
+	var nativeObjectToString = objectProto$1.toString;
 
 	/** Built-in value references. */
 	var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
@@ -24916,7 +19885,7 @@
 	 * @returns {string} Returns the raw `toStringTag`.
 	 */
 	function getRawTag(value) {
-	  var isOwn = hasOwnProperty$7.call(value, symToStringTag),
+	  var isOwn = hasOwnProperty$3.call(value, symToStringTag),
 	      tag = value[symToStringTag];
 
 	  try {
@@ -24937,14 +19906,14 @@
 	var _getRawTag = getRawTag;
 
 	/** Used for built-in method references. */
-	var objectProto$8 = Object.prototype;
+	var objectProto$2 = Object.prototype;
 
 	/**
 	 * Used to resolve the
 	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	 * of values.
 	 */
-	var nativeObjectToString$1 = objectProto$8.toString;
+	var nativeObjectToString$1 = objectProto$2.toString;
 
 	/**
 	 * Converts `value` to a string using `Object.prototype.toString`.
@@ -24953,11 +19922,11 @@
 	 * @param {*} value The value to convert.
 	 * @returns {string} Returns the converted string.
 	 */
-	function objectToString$3(value) {
+	function objectToString(value) {
 	  return nativeObjectToString$1.call(value);
 	}
 
-	var _objectToString = objectToString$3;
+	var _objectToString = objectToString;
 
 	/** `Object#toString` result references. */
 	var nullTag = '[object Null]',
@@ -25008,14 +19977,14 @@
 	 * _.isObjectLike(null);
 	 * // => false
 	 */
-	function isObjectLike$5(value) {
+	function isObjectLike(value) {
 	  return value != null && typeof value == 'object';
 	}
 
-	var isObjectLike_1 = isObjectLike$5;
+	var isObjectLike_1 = isObjectLike;
 
 	/** `Object#toString` result references. */
-	var symbolTag$2 = '[object Symbol]';
+	var symbolTag = '[object Symbol]';
 
 	/**
 	 * Checks if `value` is classified as a `Symbol` primitive or object.
@@ -25034,12 +20003,12 @@
 	 * _.isSymbol('abc');
 	 * // => false
 	 */
-	function isSymbol$3(value) {
+	function isSymbol$1(value) {
 	  return typeof value == 'symbol' ||
-	    (isObjectLike_1(value) && _baseGetTag(value) == symbolTag$2);
+	    (isObjectLike_1(value) && _baseGetTag(value) == symbolTag);
 	}
 
-	var isSymbol_1 = isSymbol$3;
+	var isSymbol_1 = isSymbol$1;
 
 	/** Used to match property names within property paths. */
 	var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/,
@@ -25093,17 +20062,17 @@
 	 * _.isObject(null);
 	 * // => false
 	 */
-	function isObject$6(value) {
+	function isObject(value) {
 	  var type = typeof value;
 	  return value != null && (type == 'object' || type == 'function');
 	}
 
-	var isObject_1 = isObject$6;
+	var isObject_1 = isObject;
 
 	/** `Object#toString` result references. */
 	var asyncTag = '[object AsyncFunction]',
-	    funcTag$3 = '[object Function]',
-	    genTag$1 = '[object GeneratorFunction]',
+	    funcTag = '[object Function]',
+	    genTag = '[object GeneratorFunction]',
 	    proxyTag = '[object Proxy]';
 
 	/**
@@ -25123,17 +20092,17 @@
 	 * _.isFunction(/abc/);
 	 * // => false
 	 */
-	function isFunction$3(value) {
+	function isFunction(value) {
 	  if (!isObject_1(value)) {
 	    return false;
 	  }
 	  // The use of `Object#toString` avoids issues with the `typeof` operator
 	  // in Safari 9 which returns 'object' for typed arrays and other constructors.
 	  var tag = _baseGetTag(value);
-	  return tag == funcTag$3 || tag == genTag$1 || tag == asyncTag || tag == proxyTag;
+	  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
 	}
 
-	var isFunction_1 = isFunction$3;
+	var isFunction_1 = isFunction;
 
 	/** Used to detect overreaching core-js shims. */
 	var coreJsData = _root['__core-js_shared__'];
@@ -25193,21 +20162,21 @@
 	var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
 
 	/** Used to detect host constructors (Safari). */
-	var reIsHostCtor$2 = /^\[object .+?Constructor\]$/;
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
 
 	/** Used for built-in method references. */
 	var funcProto$1 = Function.prototype,
-	    objectProto$9 = Object.prototype;
+	    objectProto$3 = Object.prototype;
 
 	/** Used to resolve the decompiled source of functions. */
 	var funcToString$1 = funcProto$1.toString;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$8 = objectProto$9.hasOwnProperty;
+	var hasOwnProperty$4 = objectProto$3.hasOwnProperty;
 
 	/** Used to detect if a method is native. */
-	var reIsNative$2 = RegExp('^' +
-	  funcToString$1.call(hasOwnProperty$8).replace(reRegExpChar, '\\$&')
+	var reIsNative = RegExp('^' +
+	  funcToString$1.call(hasOwnProperty$4).replace(reRegExpChar, '\\$&')
 	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
 	);
 
@@ -25223,7 +20192,7 @@
 	  if (!isObject_1(value) || _isMasked(value)) {
 	    return false;
 	  }
-	  var pattern = isFunction_1(value) ? reIsNative$2 : reIsHostCtor$2;
+	  var pattern = isFunction_1(value) ? reIsNative : reIsHostCtor;
 	  return pattern.test(_toSource(value));
 	}
 
@@ -25251,12 +20220,12 @@
 	 * @param {string} key The key of the method to get.
 	 * @returns {*} Returns the function if it's native, else `undefined`.
 	 */
-	function getNative$2(object, key) {
+	function getNative(object, key) {
 	  var value = _getValue(object, key);
 	  return _baseIsNative(value) ? value : undefined;
 	}
 
-	var _getNative = getNative$2;
+	var _getNative = getNative;
 
 	/* Built-in method references that are verified to be native. */
 	var nativeCreate = _getNative(Object, 'create');
@@ -25299,10 +20268,10 @@
 	var HASH_UNDEFINED = '__lodash_hash_undefined__';
 
 	/** Used for built-in method references. */
-	var objectProto$a = Object.prototype;
+	var objectProto$4 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$9 = objectProto$a.hasOwnProperty;
+	var hasOwnProperty$5 = objectProto$4.hasOwnProperty;
 
 	/**
 	 * Gets the hash value for `key`.
@@ -25319,16 +20288,16 @@
 	    var result = data[key];
 	    return result === HASH_UNDEFINED ? undefined : result;
 	  }
-	  return hasOwnProperty$9.call(data, key) ? data[key] : undefined;
+	  return hasOwnProperty$5.call(data, key) ? data[key] : undefined;
 	}
 
 	var _hashGet = hashGet;
 
 	/** Used for built-in method references. */
-	var objectProto$b = Object.prototype;
+	var objectProto$5 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$a = objectProto$b.hasOwnProperty;
+	var hasOwnProperty$6 = objectProto$5.hasOwnProperty;
 
 	/**
 	 * Checks if a hash value for `key` exists.
@@ -25341,7 +20310,7 @@
 	 */
 	function hashHas(key) {
 	  var data = this.__data__;
-	  return _nativeCreate ? (data[key] !== undefined) : hasOwnProperty$a.call(data, key);
+	  return _nativeCreate ? (data[key] !== undefined) : hasOwnProperty$6.call(data, key);
 	}
 
 	var _hashHas = hashHas;
@@ -25738,7 +20707,7 @@
 	var _MapCache = MapCache;
 
 	/** Error message constants. */
-	var FUNC_ERROR_TEXT$2 = 'Expected a function';
+	var FUNC_ERROR_TEXT = 'Expected a function';
 
 	/**
 	 * Creates a function that memoizes the result of `func`. If `resolver` is
@@ -25786,7 +20755,7 @@
 	 */
 	function memoize(func, resolver) {
 	  if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
-	    throw new TypeError(FUNC_ERROR_TEXT$2);
+	    throw new TypeError(FUNC_ERROR_TEXT);
 	  }
 	  var memoized = function() {
 	    var args = arguments,
@@ -25960,7 +20929,7 @@
 	var _castPath = castPath;
 
 	/** `Object#toString` result references. */
-	var argsTag$1 = '[object Arguments]';
+	var argsTag = '[object Arguments]';
 
 	/**
 	 * The base implementation of `_.isArguments`.
@@ -25970,19 +20939,19 @@
 	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
 	 */
 	function baseIsArguments(value) {
-	  return isObjectLike_1(value) && _baseGetTag(value) == argsTag$1;
+	  return isObjectLike_1(value) && _baseGetTag(value) == argsTag;
 	}
 
 	var _baseIsArguments = baseIsArguments;
 
 	/** Used for built-in method references. */
-	var objectProto$c = Object.prototype;
+	var objectProto$6 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$b = objectProto$c.hasOwnProperty;
+	var hasOwnProperty$7 = objectProto$6.hasOwnProperty;
 
 	/** Built-in value references. */
-	var propertyIsEnumerable$1 = objectProto$c.propertyIsEnumerable;
+	var propertyIsEnumerable = objectProto$6.propertyIsEnumerable;
 
 	/**
 	 * Checks if `value` is likely an `arguments` object.
@@ -26002,18 +20971,18 @@
 	 * _.isArguments([1, 2, 3]);
 	 * // => false
 	 */
-	var isArguments$1 = _baseIsArguments(function() { return arguments; }()) ? _baseIsArguments : function(value) {
-	  return isObjectLike_1(value) && hasOwnProperty$b.call(value, 'callee') &&
-	    !propertyIsEnumerable$1.call(value, 'callee');
+	var isArguments = _baseIsArguments(function() { return arguments; }()) ? _baseIsArguments : function(value) {
+	  return isObjectLike_1(value) && hasOwnProperty$7.call(value, 'callee') &&
+	    !propertyIsEnumerable.call(value, 'callee');
 	};
 
-	var isArguments_1 = isArguments$1;
+	var isArguments_1 = isArguments;
 
 	/** Used as references for various `Number` constants. */
-	var MAX_SAFE_INTEGER$3 = 9007199254740991;
+	var MAX_SAFE_INTEGER = 9007199254740991;
 
 	/** Used to detect unsigned integer values. */
-	var reIsUint$1 = /^(?:0|[1-9]\d*)$/;
+	var reIsUint = /^(?:0|[1-9]\d*)$/;
 
 	/**
 	 * Checks if `value` is a valid array-like index.
@@ -26023,20 +20992,20 @@
 	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
 	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
 	 */
-	function isIndex$1(value, length) {
+	function isIndex(value, length) {
 	  var type = typeof value;
-	  length = length == null ? MAX_SAFE_INTEGER$3 : length;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
 
 	  return !!length &&
 	    (type == 'number' ||
-	      (type != 'symbol' && reIsUint$1.test(value))) &&
+	      (type != 'symbol' && reIsUint.test(value))) &&
 	        (value > -1 && value % 1 == 0 && value < length);
 	}
 
-	var _isIndex = isIndex$1;
+	var _isIndex = isIndex;
 
 	/** Used as references for various `Number` constants. */
-	var MAX_SAFE_INTEGER$4 = 9007199254740991;
+	var MAX_SAFE_INTEGER$1 = 9007199254740991;
 
 	/**
 	 * Checks if `value` is a valid array-like length.
@@ -26064,12 +21033,12 @@
 	 * _.isLength('3');
 	 * // => false
 	 */
-	function isLength$3(value) {
+	function isLength(value) {
 	  return typeof value == 'number' &&
-	    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$4;
+	    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$1;
 	}
 
-	var isLength_1 = isLength$3;
+	var isLength_1 = isLength;
 
 	/** Used as references for various `Number` constants. */
 	var INFINITY$1 = 1 / 0;
@@ -28342,7 +23311,7 @@
 
 	var get_1 = get;
 
-	var defineProperty$7 = (function() {
+	var defineProperty$6 = (function() {
 	  try {
 	    var func = _getNative(Object, 'defineProperty');
 	    func({}, '', {});
@@ -28350,7 +23319,7 @@
 	  } catch (e) {}
 	}());
 
-	var _defineProperty$2 = defineProperty$7;
+	var _defineProperty$2 = defineProperty$6;
 
 	/**
 	 * The base implementation of `assignValue` and `assignMergeValue` without
@@ -28377,10 +23346,10 @@
 	var _baseAssignValue = baseAssignValue;
 
 	/** Used for built-in method references. */
-	var objectProto$d = Object.prototype;
+	var objectProto$7 = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$c = objectProto$d.hasOwnProperty;
+	var hasOwnProperty$8 = objectProto$7.hasOwnProperty;
 
 	/**
 	 * Assigns `value` to `key` of `object` if the existing value is not equivalent
@@ -28394,7 +23363,7 @@
 	 */
 	function assignValue(object, key, value) {
 	  var objValue = object[key];
-	  if (!(hasOwnProperty$c.call(object, key) && eq_1(objValue, value)) ||
+	  if (!(hasOwnProperty$8.call(object, key) && eq_1(objValue, value)) ||
 	      (value === undefined && !(key in object))) {
 	    _baseAssignValue(object, key, value);
 	  }
@@ -28472,11 +23441,11 @@
 	 * console.log(object.x[0].y.z);
 	 * // => 5
 	 */
-	function set(object, path, value) {
+	function set$1(object, path, value) {
 	  return object == null ? object : _baseSet(object, path, value);
 	}
 
-	var set_1 = set;
+	var set_1 = set$1;
 
 	var Field = function Field(fields) {
 	  _classCallCheck(this, Field);
@@ -28659,7 +23628,7 @@
 	  function FieldsStore(fields) {
 	    _classCallCheck(this, FieldsStore);
 
-	    _initialiseProps$9.call(this);
+	    _initialiseProps$8.call(this);
 
 	    this.fields = internalFlattenFields(fields);
 	    this.fieldsMeta = {};
@@ -28864,7 +23833,7 @@
 	  return FieldsStore;
 	}();
 
-	var _initialiseProps$9 = function _initialiseProps() {
+	var _initialiseProps$8 = function _initialiseProps() {
 	  var _this5 = this;
 
 	  this.setFieldsInitialValue = function (initialValues) {
@@ -29992,6 +24961,10897 @@
 	    return createDOMForm(_extends$1({ fieldNameProp: 'id' }, options, { fieldMetaProp: FIELD_META_PROP, fieldDataProp: FIELD_DATA_PROP }));
 	};
 
+	var FormCreate = Form.create;
+
+	var BaseForm =
+	/*#__PURE__*/
+	function (_Component) {
+	  _inherits$1(BaseForm, _Component);
+
+	  function BaseForm() {
+	    _classCallCheck$1(this, BaseForm);
+
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(BaseForm).apply(this, arguments));
+	  }
+
+	  _createClass$1(BaseForm, [{
+	    key: "getChildContext",
+	    value: function getChildContext() {
+	      var _this$props = this.props,
+	          form = _this$props.form,
+	          itemLayout = _this$props.itemLayout; //  console.log("getChildContext",form)
+
+	      return {
+	        formRef: form,
+	        formLayout: itemLayout
+	      };
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this$props2 = this.props,
+	          autoSubmitForm = _this$props2.autoSubmitForm,
+	          itemLayout = _this$props2.itemLayout,
+	          children = _this$props2.children,
+	          otherProps = _objectWithoutProperties$1(_this$props2, ["autoSubmitForm", "itemLayout", "children"]); // console.log(otherProps.form)
+
+
+	      return React__default.createElement(Form, otherProps, children);
+	    }
+	  }]);
+
+	  return BaseForm;
+	}(React.Component);
+
+	_defineProperty$1(BaseForm, "childContextTypes", {
+	  formRef: PropTypes__default.any,
+	  formLayout: PropTypes__default.object
+	});
+
+	_defineProperty$1(BaseForm, "propTypes", {
+	  layout: PropTypes__default.oneOf(['horizontal', 'inline', 'vertical']),
+	  itemLayout: PropTypes__default.object
+	});
+
+	_defineProperty$1(BaseForm, "defaultProps", {
+	  prefixCls: 'ant-form',
+	  layout: 'horizontal',
+	  itemLayout: {
+	    labelCol: {
+	      span: 6
+	    },
+	    wrapperCol: {
+	      span: 18
+	    }
+	  }
+	});
+
+	var SubmitForm = FormCreate()(BaseForm);
+	/**
+	 * [AdvancedForm  高级Form组件带valuesChange特征]
+	 * @extends BaseForm
+	 */
+
+	var AdvancedForm =
+	/*#__PURE__*/
+	function (_SubmitForm) {
+	  _inherits$1(AdvancedForm, _SubmitForm);
+
+	  function AdvancedForm() {
+	    _classCallCheck$1(this, AdvancedForm);
+
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(AdvancedForm).apply(this, arguments));
+	  }
+
+	  return AdvancedForm;
+	}(SubmitForm);
+
+	_defineProperty$1(AdvancedForm, "propTypes", {
+	  layout: PropTypes__default.oneOf(['horizontal', 'inline', 'vertical']),
+	  itemLayout: PropTypes__default.object
+	});
+
+	_defineProperty$1(AdvancedForm, "defaultProps", {
+	  // containerTo:true,
+	  prefixCls: 'ant-form',
+	  layout: "horizontal",
+	  itemLayout: {
+	    labelCol: {
+	      span: 6
+	    },
+	    wrapperCol: {
+	      span: 18
+	    }
+	  }
+	});
+
+	function fixControlledValue(value) {
+	    if (typeof value === 'undefined' || value === null) {
+	        return '';
+	    }
+	    return value;
+	}
+
+	var Input = function (_React$Component) {
+	    _inherits(Input, _React$Component);
+
+	    function Input() {
+	        _classCallCheck(this, Input);
+
+	        var _this = _possibleConstructorReturn(this, (Input.__proto__ || Object.getPrototypeOf(Input)).apply(this, arguments));
+
+	        _this.handleKeyDown = function (e) {
+	            var _this$props = _this.props,
+	                onPressEnter = _this$props.onPressEnter,
+	                onKeyDown = _this$props.onKeyDown;
+
+	            if (e.keyCode === 13 && onPressEnter) {
+	                onPressEnter(e);
+	            }
+	            if (onKeyDown) {
+	                onKeyDown(e);
+	            }
+	        };
+	        _this.saveInput = function (node) {
+	            _this.input = node;
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Input, [{
+	        key: 'focus',
+	        value: function focus() {
+	            this.input.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.input.blur();
+	        }
+	    }, {
+	        key: 'select',
+	        value: function select() {
+	            this.input.select();
+	        }
+	    }, {
+	        key: 'getInputClassName',
+	        value: function getInputClassName() {
+	            var _classNames;
+
+	            var _props = this.props,
+	                prefixCls = _props.prefixCls,
+	                size = _props.size,
+	                disabled = _props.disabled;
+
+	            return classnames(prefixCls, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-sm', size === 'small'), _defineProperty(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty(_classNames, prefixCls + '-disabled', disabled), _classNames));
+	        }
+	    }, {
+	        key: 'renderLabeledInput',
+	        value: function renderLabeledInput(children) {
+	            var _classNames3;
+
+	            var props = this.props;
+	            // Not wrap when there is not addons
+	            if (!props.addonBefore && !props.addonAfter) {
+	                return children;
+	            }
+	            var wrapperClassName = props.prefixCls + '-group';
+	            var addonClassName = wrapperClassName + '-addon';
+	            var addonBefore = props.addonBefore ? React.createElement(
+	                'span',
+	                { className: addonClassName },
+	                props.addonBefore
+	            ) : null;
+	            var addonAfter = props.addonAfter ? React.createElement(
+	                'span',
+	                { className: addonClassName },
+	                props.addonAfter
+	            ) : null;
+	            var className = classnames(props.prefixCls + '-wrapper', _defineProperty({}, wrapperClassName, addonBefore || addonAfter));
+	            var groupClassName = classnames(props.prefixCls + '-group-wrapper', (_classNames3 = {}, _defineProperty(_classNames3, props.prefixCls + '-group-wrapper-sm', props.size === 'small'), _defineProperty(_classNames3, props.prefixCls + '-group-wrapper-lg', props.size === 'large'), _classNames3));
+	            // Need another wrapper for changing display:table to display:inline-block
+	            // and put style prop in wrapper
+	            return React.createElement(
+	                'span',
+	                { className: groupClassName, style: props.style },
+	                React.createElement(
+	                    'span',
+	                    { className: className },
+	                    addonBefore,
+	                    React.cloneElement(children, { style: null }),
+	                    addonAfter
+	                )
+	            );
+	        }
+	    }, {
+	        key: 'renderLabeledIcon',
+	        value: function renderLabeledIcon(children) {
+	            var _classNames4;
+
+	            var props = this.props;
+
+	            if (!('prefix' in props || 'suffix' in props)) {
+	                return children;
+	            }
+	            var prefix = props.prefix ? React.createElement(
+	                'span',
+	                { className: props.prefixCls + '-prefix' },
+	                props.prefix
+	            ) : null;
+	            var suffix = props.suffix ? React.createElement(
+	                'span',
+	                { className: props.prefixCls + '-suffix' },
+	                props.suffix
+	            ) : null;
+	            var affixWrapperCls = classnames(props.className, props.prefixCls + '-affix-wrapper', (_classNames4 = {}, _defineProperty(_classNames4, props.prefixCls + '-affix-wrapper-sm', props.size === 'small'), _defineProperty(_classNames4, props.prefixCls + '-affix-wrapper-lg', props.size === 'large'), _classNames4));
+	            return React.createElement(
+	                'span',
+	                { className: affixWrapperCls, style: props.style },
+	                prefix,
+	                React.cloneElement(children, { style: null, className: this.getInputClassName() }),
+	                suffix
+	            );
+	        }
+	    }, {
+	        key: 'renderInput',
+	        value: function renderInput() {
+	            var _props2 = this.props,
+	                value = _props2.value,
+	                className = _props2.className;
+	            // Fix https://fb.me/react-unknown-prop
+
+	            var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'addonBefore', 'addonAfter', 'prefix', 'suffix']);
+	            if ('value' in this.props) {
+	                otherProps.value = fixControlledValue(value);
+	                // Input elements must be either controlled or uncontrolled,
+	                // specify either the value prop, or the defaultValue prop, but not both.
+	                delete otherProps.defaultValue;
+	            }
+	            return this.renderLabeledIcon(React.createElement('input', _extends$1({}, otherProps, { className: classnames(this.getInputClassName(), className), onKeyDown: this.handleKeyDown, ref: this.saveInput })));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return this.renderLabeledInput(this.renderInput());
+	        }
+	    }]);
+
+	    return Input;
+	}(React.Component);
+
+	Input.defaultProps = {
+	    prefixCls: 'ant-input',
+	    type: 'text',
+	    disabled: false
+	};
+	Input.propTypes = {
+	    type: PropTypes.string,
+	    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	    size: PropTypes.oneOf(['small', 'default', 'large']),
+	    maxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	    disabled: PropTypes.bool,
+	    value: PropTypes.any,
+	    defaultValue: PropTypes.any,
+	    className: PropTypes.string,
+	    addonBefore: PropTypes.node,
+	    addonAfter: PropTypes.node,
+	    prefixCls: PropTypes.string,
+	    onPressEnter: PropTypes.func,
+	    onKeyDown: PropTypes.func,
+	    onKeyUp: PropTypes.func,
+	    onFocus: PropTypes.func,
+	    onBlur: PropTypes.func,
+	    prefix: PropTypes.node,
+	    suffix: PropTypes.node
+	};
+
+	var Group = function Group(props) {
+	    var _classNames;
+
+	    var _props$prefixCls = props.prefixCls,
+	        prefixCls = _props$prefixCls === undefined ? 'ant-input-group' : _props$prefixCls,
+	        _props$className = props.className,
+	        className = _props$className === undefined ? '' : _props$className;
+
+	    var cls = classnames(prefixCls, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-lg', props.size === 'large'), _defineProperty(_classNames, prefixCls + '-sm', props.size === 'small'), _defineProperty(_classNames, prefixCls + '-compact', props.compact), _classNames), className);
+	    return React.createElement(
+	        'span',
+	        { className: cls, style: props.style, onMouseEnter: props.onMouseEnter, onMouseLeave: props.onMouseLeave, onFocus: props.onFocus, onBlur: props.onBlur },
+	        props.children
+	    );
+	};
+
+	var __rest$7 = undefined && undefined.__rest || function (s, e) {
+	    var t = {};
+	    for (var p in s) {
+	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+	    }return t;
+	};
+
+	var Search = function (_React$Component) {
+	    _inherits(Search, _React$Component);
+
+	    function Search() {
+	        _classCallCheck(this, Search);
+
+	        var _this = _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+
+	        _this.onSearch = function (e) {
+	            var onSearch = _this.props.onSearch;
+
+	            if (onSearch) {
+	                onSearch(_this.input.input.value, e);
+	            }
+	            _this.input.focus();
+	        };
+	        _this.saveInput = function (node) {
+	            _this.input = node;
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Search, [{
+	        key: 'focus',
+	        value: function focus() {
+	            this.input.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.input.blur();
+	        }
+	    }, {
+	        key: 'getButtonOrIcon',
+	        value: function getButtonOrIcon() {
+	            var _props = this.props,
+	                enterButton = _props.enterButton,
+	                prefixCls = _props.prefixCls,
+	                size = _props.size,
+	                disabled = _props.disabled;
+
+	            var enterButtonAsElement = enterButton;
+	            var node = void 0;
+	            if (!enterButton) {
+	                node = React.createElement(Icon$1, { className: prefixCls + '-icon', type: 'search', key: 'searchIcon' });
+	            } else if (enterButtonAsElement.type === Button || enterButtonAsElement.type === 'button') {
+	                node = React.cloneElement(enterButtonAsElement, enterButtonAsElement.type === Button ? {
+	                    className: prefixCls + '-button',
+	                    size: size
+	                } : {});
+	            } else {
+	                node = React.createElement(
+	                    Button,
+	                    { className: prefixCls + '-button', type: 'primary', size: size, disabled: disabled, key: 'enterButton' },
+	                    enterButton === true ? React.createElement(Icon$1, { type: 'search' }) : enterButton
+	                );
+	            }
+	            return React.cloneElement(node, {
+	                onClick: this.onSearch
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _classNames;
+
+	            var _a = this.props,
+	                className = _a.className,
+	                prefixCls = _a.prefixCls,
+	                inputPrefixCls = _a.inputPrefixCls,
+	                size = _a.size,
+	                suffix = _a.suffix,
+	                enterButton = _a.enterButton,
+	                others = __rest$7(_a, ["className", "prefixCls", "inputPrefixCls", "size", "suffix", "enterButton"]);
+	            delete others.onSearch;
+	            var buttonOrIcon = this.getButtonOrIcon();
+	            var searchSuffix = suffix ? [suffix, buttonOrIcon] : buttonOrIcon;
+	            var inputClassName = classnames(prefixCls, className, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-enter-button', !!enterButton), _defineProperty(_classNames, prefixCls + '-' + size, !!size), _classNames));
+	            return React.createElement(Input, _extends$1({ onPressEnter: this.onSearch }, others, { size: size, className: inputClassName, prefixCls: inputPrefixCls, suffix: searchSuffix, ref: this.saveInput }));
+	        }
+	    }]);
+
+	    return Search;
+	}(React.Component);
+
+	Search.defaultProps = {
+	    inputPrefixCls: 'ant-input',
+	    prefixCls: 'ant-input-search',
+	    enterButton: false
+	};
+
+	// Thanks to https://github.com/andreypopp/react-textarea-autosize/
+	/**
+	 * calculateNodeHeight(uiTextNode, useCache = false)
+	 */
+	var HIDDEN_TEXTAREA_STYLE = '\n  min-height:0 !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n';
+	var SIZING_STYLE = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'text-rendering', 'text-transform', 'width', 'text-indent', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
+	var computedStyleCache = {};
+	var hiddenTextarea = void 0;
+	function calculateNodeStyling(node) {
+	    var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+	    var nodeRef = node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
+	    if (useCache && computedStyleCache[nodeRef]) {
+	        return computedStyleCache[nodeRef];
+	    }
+	    var style = window.getComputedStyle(node);
+	    var boxSizing = style.getPropertyValue('box-sizing') || style.getPropertyValue('-moz-box-sizing') || style.getPropertyValue('-webkit-box-sizing');
+	    var paddingSize = parseFloat(style.getPropertyValue('padding-bottom')) + parseFloat(style.getPropertyValue('padding-top'));
+	    var borderSize = parseFloat(style.getPropertyValue('border-bottom-width')) + parseFloat(style.getPropertyValue('border-top-width'));
+	    var sizingStyle = SIZING_STYLE.map(function (name) {
+	        return name + ':' + style.getPropertyValue(name);
+	    }).join(';');
+	    var nodeInfo = {
+	        sizingStyle: sizingStyle,
+	        paddingSize: paddingSize,
+	        borderSize: borderSize,
+	        boxSizing: boxSizing
+	    };
+	    if (useCache && nodeRef) {
+	        computedStyleCache[nodeRef] = nodeInfo;
+	    }
+	    return nodeInfo;
+	}
+	function calculateNodeHeight(uiTextNode) {
+	    var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+	    var minRows = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+	    var maxRows = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+	    if (!hiddenTextarea) {
+	        hiddenTextarea = document.createElement('textarea');
+	        document.body.appendChild(hiddenTextarea);
+	    }
+	    // Fix wrap="off" issue
+	    // https://github.com/ant-design/ant-design/issues/6577
+	    if (uiTextNode.getAttribute('wrap')) {
+	        hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap'));
+	    } else {
+	        hiddenTextarea.removeAttribute('wrap');
+	    }
+	    // Copy all CSS properties that have an impact on the height of the content in
+	    // the textbox
+
+	    var _calculateNodeStyling = calculateNodeStyling(uiTextNode, useCache),
+	        paddingSize = _calculateNodeStyling.paddingSize,
+	        borderSize = _calculateNodeStyling.borderSize,
+	        boxSizing = _calculateNodeStyling.boxSizing,
+	        sizingStyle = _calculateNodeStyling.sizingStyle;
+	    // Need to have the overflow attribute to hide the scrollbar otherwise
+	    // text-lines will not calculated properly as the shadow will technically be
+	    // narrower for content
+
+
+	    hiddenTextarea.setAttribute('style', sizingStyle + ';' + HIDDEN_TEXTAREA_STYLE);
+	    hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
+	    var minHeight = Number.MIN_SAFE_INTEGER;
+	    var maxHeight = Number.MAX_SAFE_INTEGER;
+	    var height = hiddenTextarea.scrollHeight;
+	    var overflowY = void 0;
+	    if (boxSizing === 'border-box') {
+	        // border-box: add border, since height = content + padding + border
+	        height = height + borderSize;
+	    } else if (boxSizing === 'content-box') {
+	        // remove padding, since height = content
+	        height = height - paddingSize;
+	    }
+	    if (minRows !== null || maxRows !== null) {
+	        // measure height of a textarea with a single row
+	        hiddenTextarea.value = ' ';
+	        var singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+	        if (minRows !== null) {
+	            minHeight = singleRowHeight * minRows;
+	            if (boxSizing === 'border-box') {
+	                minHeight = minHeight + paddingSize + borderSize;
+	            }
+	            height = Math.max(minHeight, height);
+	        }
+	        if (maxRows !== null) {
+	            maxHeight = singleRowHeight * maxRows;
+	            if (boxSizing === 'border-box') {
+	                maxHeight = maxHeight + paddingSize + borderSize;
+	            }
+	            overflowY = height > maxHeight ? '' : 'hidden';
+	            height = Math.min(maxHeight, height);
+	        }
+	    }
+	    // Remove scroll bar flash when autosize without maxRows
+	    if (!maxRows) {
+	        overflowY = 'hidden';
+	    }
+	    return { height: height, minHeight: minHeight, maxHeight: maxHeight, overflowY: overflowY };
+	}
+
+	function onNextFrame(cb) {
+	    if (window.requestAnimationFrame) {
+	        return window.requestAnimationFrame(cb);
+	    }
+	    return window.setTimeout(cb, 1);
+	}
+	function clearNextFrameAction(nextFrameId) {
+	    if (window.cancelAnimationFrame) {
+	        window.cancelAnimationFrame(nextFrameId);
+	    } else {
+	        window.clearTimeout(nextFrameId);
+	    }
+	}
+
+	var TextArea = function (_React$Component) {
+	    _inherits(TextArea, _React$Component);
+
+	    function TextArea() {
+	        _classCallCheck(this, TextArea);
+
+	        var _this = _possibleConstructorReturn(this, (TextArea.__proto__ || Object.getPrototypeOf(TextArea)).apply(this, arguments));
+
+	        _this.state = {
+	            textareaStyles: {}
+	        };
+	        _this.resizeTextarea = function () {
+	            var autosize = _this.props.autosize;
+
+	            if (!autosize || !_this.textAreaRef) {
+	                return;
+	            }
+	            var minRows = autosize ? autosize.minRows : null;
+	            var maxRows = autosize ? autosize.maxRows : null;
+	            var textareaStyles = calculateNodeHeight(_this.textAreaRef, false, minRows, maxRows);
+	            _this.setState({ textareaStyles: textareaStyles });
+	        };
+	        _this.handleTextareaChange = function (e) {
+	            if (!('value' in _this.props)) {
+	                _this.resizeTextarea();
+	            }
+	            var onChange = _this.props.onChange;
+
+	            if (onChange) {
+	                onChange(e);
+	            }
+	        };
+	        _this.handleKeyDown = function (e) {
+	            var _this$props = _this.props,
+	                onPressEnter = _this$props.onPressEnter,
+	                onKeyDown = _this$props.onKeyDown;
+
+	            if (e.keyCode === 13 && onPressEnter) {
+	                onPressEnter(e);
+	            }
+	            if (onKeyDown) {
+	                onKeyDown(e);
+	            }
+	        };
+	        _this.saveTextAreaRef = function (textArea) {
+	            _this.textAreaRef = textArea;
+	        };
+	        return _this;
+	    }
+
+	    _createClass(TextArea, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            this.resizeTextarea();
+	        }
+	    }, {
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            // Re-render with the new content then recalculate the height as required.
+	            if (this.props.value !== nextProps.value) {
+	                if (this.nextFrameActionId) {
+	                    clearNextFrameAction(this.nextFrameActionId);
+	                }
+	                this.nextFrameActionId = onNextFrame(this.resizeTextarea);
+	            }
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.textAreaRef.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.textAreaRef.blur();
+	        }
+	    }, {
+	        key: 'getTextAreaClassName',
+	        value: function getTextAreaClassName() {
+	            var _props = this.props,
+	                prefixCls = _props.prefixCls,
+	                className = _props.className,
+	                disabled = _props.disabled;
+
+	            return classnames(prefixCls, className, _defineProperty({}, prefixCls + '-disabled', disabled));
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var props = this.props;
+	            var otherProps = omit(props, ['prefixCls', 'onPressEnter', 'autosize']);
+	            var style = _extends$1({}, props.style, this.state.textareaStyles);
+	            // Fix https://github.com/ant-design/ant-design/issues/6776
+	            // Make sure it could be reset when using form.getFieldDecorator
+	            if ('value' in otherProps) {
+	                otherProps.value = otherProps.value || '';
+	            }
+	            return React.createElement('textarea', _extends$1({}, otherProps, { className: this.getTextAreaClassName(), style: style, onKeyDown: this.handleKeyDown, onChange: this.handleTextareaChange, ref: this.saveTextAreaRef }));
+	        }
+	    }]);
+
+	    return TextArea;
+	}(React.Component);
+
+	TextArea.defaultProps = {
+	    prefixCls: 'ant-input'
+	};
+
+	Input.Group = Group;
+	Input.Search = Search;
+	Input.TextArea = TextArea;
+
+	var DateConstants = {
+	  DATE_ROW_COUNT: 6,
+	  DATE_COL_COUNT: 7
+	};
+
+	var moment = createCommonjsModule(function (module, exports) {
+	(function (global, factory) {
+	    module.exports = factory();
+	}(commonjsGlobal, (function () {
+	    var hookCallback;
+
+	    function hooks () {
+	        return hookCallback.apply(null, arguments);
+	    }
+
+	    // This is done to register the method called with moment()
+	    // without creating circular dependencies.
+	    function setHookCallback (callback) {
+	        hookCallback = callback;
+	    }
+
+	    function isArray(input) {
+	        return input instanceof Array || Object.prototype.toString.call(input) === '[object Array]';
+	    }
+
+	    function isObject(input) {
+	        // IE8 will treat undefined and null as object if it wasn't for
+	        // input != null
+	        return input != null && Object.prototype.toString.call(input) === '[object Object]';
+	    }
+
+	    function isObjectEmpty(obj) {
+	        if (Object.getOwnPropertyNames) {
+	            return (Object.getOwnPropertyNames(obj).length === 0);
+	        } else {
+	            var k;
+	            for (k in obj) {
+	                if (obj.hasOwnProperty(k)) {
+	                    return false;
+	                }
+	            }
+	            return true;
+	        }
+	    }
+
+	    function isUndefined(input) {
+	        return input === void 0;
+	    }
+
+	    function isNumber(input) {
+	        return typeof input === 'number' || Object.prototype.toString.call(input) === '[object Number]';
+	    }
+
+	    function isDate(input) {
+	        return input instanceof Date || Object.prototype.toString.call(input) === '[object Date]';
+	    }
+
+	    function map(arr, fn) {
+	        var res = [], i;
+	        for (i = 0; i < arr.length; ++i) {
+	            res.push(fn(arr[i], i));
+	        }
+	        return res;
+	    }
+
+	    function hasOwnProp(a, b) {
+	        return Object.prototype.hasOwnProperty.call(a, b);
+	    }
+
+	    function extend(a, b) {
+	        for (var i in b) {
+	            if (hasOwnProp(b, i)) {
+	                a[i] = b[i];
+	            }
+	        }
+
+	        if (hasOwnProp(b, 'toString')) {
+	            a.toString = b.toString;
+	        }
+
+	        if (hasOwnProp(b, 'valueOf')) {
+	            a.valueOf = b.valueOf;
+	        }
+
+	        return a;
+	    }
+
+	    function createUTC (input, format, locale, strict) {
+	        return createLocalOrUTC(input, format, locale, strict, true).utc();
+	    }
+
+	    function defaultParsingFlags() {
+	        // We need to deep clone this object.
+	        return {
+	            empty           : false,
+	            unusedTokens    : [],
+	            unusedInput     : [],
+	            overflow        : -2,
+	            charsLeftOver   : 0,
+	            nullInput       : false,
+	            invalidMonth    : null,
+	            invalidFormat   : false,
+	            userInvalidated : false,
+	            iso             : false,
+	            parsedDateParts : [],
+	            meridiem        : null,
+	            rfc2822         : false,
+	            weekdayMismatch : false
+	        };
+	    }
+
+	    function getParsingFlags(m) {
+	        if (m._pf == null) {
+	            m._pf = defaultParsingFlags();
+	        }
+	        return m._pf;
+	    }
+
+	    var some;
+	    if (Array.prototype.some) {
+	        some = Array.prototype.some;
+	    } else {
+	        some = function (fun) {
+	            var t = Object(this);
+	            var len = t.length >>> 0;
+
+	            for (var i = 0; i < len; i++) {
+	                if (i in t && fun.call(this, t[i], i, t)) {
+	                    return true;
+	                }
+	            }
+
+	            return false;
+	        };
+	    }
+
+	    function isValid(m) {
+	        if (m._isValid == null) {
+	            var flags = getParsingFlags(m);
+	            var parsedParts = some.call(flags.parsedDateParts, function (i) {
+	                return i != null;
+	            });
+	            var isNowValid = !isNaN(m._d.getTime()) &&
+	                flags.overflow < 0 &&
+	                !flags.empty &&
+	                !flags.invalidMonth &&
+	                !flags.invalidWeekday &&
+	                !flags.weekdayMismatch &&
+	                !flags.nullInput &&
+	                !flags.invalidFormat &&
+	                !flags.userInvalidated &&
+	                (!flags.meridiem || (flags.meridiem && parsedParts));
+
+	            if (m._strict) {
+	                isNowValid = isNowValid &&
+	                    flags.charsLeftOver === 0 &&
+	                    flags.unusedTokens.length === 0 &&
+	                    flags.bigHour === undefined;
+	            }
+
+	            if (Object.isFrozen == null || !Object.isFrozen(m)) {
+	                m._isValid = isNowValid;
+	            }
+	            else {
+	                return isNowValid;
+	            }
+	        }
+	        return m._isValid;
+	    }
+
+	    function createInvalid (flags) {
+	        var m = createUTC(NaN);
+	        if (flags != null) {
+	            extend(getParsingFlags(m), flags);
+	        }
+	        else {
+	            getParsingFlags(m).userInvalidated = true;
+	        }
+
+	        return m;
+	    }
+
+	    // Plugins that add properties should also add the key here (null value),
+	    // so we can properly clone ourselves.
+	    var momentProperties = hooks.momentProperties = [];
+
+	    function copyConfig(to, from) {
+	        var i, prop, val;
+
+	        if (!isUndefined(from._isAMomentObject)) {
+	            to._isAMomentObject = from._isAMomentObject;
+	        }
+	        if (!isUndefined(from._i)) {
+	            to._i = from._i;
+	        }
+	        if (!isUndefined(from._f)) {
+	            to._f = from._f;
+	        }
+	        if (!isUndefined(from._l)) {
+	            to._l = from._l;
+	        }
+	        if (!isUndefined(from._strict)) {
+	            to._strict = from._strict;
+	        }
+	        if (!isUndefined(from._tzm)) {
+	            to._tzm = from._tzm;
+	        }
+	        if (!isUndefined(from._isUTC)) {
+	            to._isUTC = from._isUTC;
+	        }
+	        if (!isUndefined(from._offset)) {
+	            to._offset = from._offset;
+	        }
+	        if (!isUndefined(from._pf)) {
+	            to._pf = getParsingFlags(from);
+	        }
+	        if (!isUndefined(from._locale)) {
+	            to._locale = from._locale;
+	        }
+
+	        if (momentProperties.length > 0) {
+	            for (i = 0; i < momentProperties.length; i++) {
+	                prop = momentProperties[i];
+	                val = from[prop];
+	                if (!isUndefined(val)) {
+	                    to[prop] = val;
+	                }
+	            }
+	        }
+
+	        return to;
+	    }
+
+	    var updateInProgress = false;
+
+	    // Moment prototype object
+	    function Moment(config) {
+	        copyConfig(this, config);
+	        this._d = new Date(config._d != null ? config._d.getTime() : NaN);
+	        if (!this.isValid()) {
+	            this._d = new Date(NaN);
+	        }
+	        // Prevent infinite loop in case updateOffset creates new moment
+	        // objects.
+	        if (updateInProgress === false) {
+	            updateInProgress = true;
+	            hooks.updateOffset(this);
+	            updateInProgress = false;
+	        }
+	    }
+
+	    function isMoment (obj) {
+	        return obj instanceof Moment || (obj != null && obj._isAMomentObject != null);
+	    }
+
+	    function absFloor (number) {
+	        if (number < 0) {
+	            // -0 -> 0
+	            return Math.ceil(number) || 0;
+	        } else {
+	            return Math.floor(number);
+	        }
+	    }
+
+	    function toInt(argumentForCoercion) {
+	        var coercedNumber = +argumentForCoercion,
+	            value = 0;
+
+	        if (coercedNumber !== 0 && isFinite(coercedNumber)) {
+	            value = absFloor(coercedNumber);
+	        }
+
+	        return value;
+	    }
+
+	    // compare two arrays, return the number of differences
+	    function compareArrays(array1, array2, dontConvert) {
+	        var len = Math.min(array1.length, array2.length),
+	            lengthDiff = Math.abs(array1.length - array2.length),
+	            diffs = 0,
+	            i;
+	        for (i = 0; i < len; i++) {
+	            if ((dontConvert && array1[i] !== array2[i]) ||
+	                (!dontConvert && toInt(array1[i]) !== toInt(array2[i]))) {
+	                diffs++;
+	            }
+	        }
+	        return diffs + lengthDiff;
+	    }
+
+	    function warn(msg) {
+	        if (hooks.suppressDeprecationWarnings === false &&
+	                (typeof console !==  'undefined') && console.warn) {
+	            console.warn('Deprecation warning: ' + msg);
+	        }
+	    }
+
+	    function deprecate(msg, fn) {
+	        var firstTime = true;
+
+	        return extend(function () {
+	            if (hooks.deprecationHandler != null) {
+	                hooks.deprecationHandler(null, msg);
+	            }
+	            if (firstTime) {
+	                var args = [];
+	                var arg;
+	                for (var i = 0; i < arguments.length; i++) {
+	                    arg = '';
+	                    if (typeof arguments[i] === 'object') {
+	                        arg += '\n[' + i + '] ';
+	                        for (var key in arguments[0]) {
+	                            arg += key + ': ' + arguments[0][key] + ', ';
+	                        }
+	                        arg = arg.slice(0, -2); // Remove trailing comma and space
+	                    } else {
+	                        arg = arguments[i];
+	                    }
+	                    args.push(arg);
+	                }
+	                warn(msg + '\nArguments: ' + Array.prototype.slice.call(args).join('') + '\n' + (new Error()).stack);
+	                firstTime = false;
+	            }
+	            return fn.apply(this, arguments);
+	        }, fn);
+	    }
+
+	    var deprecations = {};
+
+	    function deprecateSimple(name, msg) {
+	        if (hooks.deprecationHandler != null) {
+	            hooks.deprecationHandler(name, msg);
+	        }
+	        if (!deprecations[name]) {
+	            warn(msg);
+	            deprecations[name] = true;
+	        }
+	    }
+
+	    hooks.suppressDeprecationWarnings = false;
+	    hooks.deprecationHandler = null;
+
+	    function isFunction(input) {
+	        return input instanceof Function || Object.prototype.toString.call(input) === '[object Function]';
+	    }
+
+	    function set (config) {
+	        var prop, i;
+	        for (i in config) {
+	            prop = config[i];
+	            if (isFunction(prop)) {
+	                this[i] = prop;
+	            } else {
+	                this['_' + i] = prop;
+	            }
+	        }
+	        this._config = config;
+	        // Lenient ordinal parsing accepts just a number in addition to
+	        // number + (possibly) stuff coming from _dayOfMonthOrdinalParse.
+	        // TODO: Remove "ordinalParse" fallback in next major release.
+	        this._dayOfMonthOrdinalParseLenient = new RegExp(
+	            (this._dayOfMonthOrdinalParse.source || this._ordinalParse.source) +
+	                '|' + (/\d{1,2}/).source);
+	    }
+
+	    function mergeConfigs(parentConfig, childConfig) {
+	        var res = extend({}, parentConfig), prop;
+	        for (prop in childConfig) {
+	            if (hasOwnProp(childConfig, prop)) {
+	                if (isObject(parentConfig[prop]) && isObject(childConfig[prop])) {
+	                    res[prop] = {};
+	                    extend(res[prop], parentConfig[prop]);
+	                    extend(res[prop], childConfig[prop]);
+	                } else if (childConfig[prop] != null) {
+	                    res[prop] = childConfig[prop];
+	                } else {
+	                    delete res[prop];
+	                }
+	            }
+	        }
+	        for (prop in parentConfig) {
+	            if (hasOwnProp(parentConfig, prop) &&
+	                    !hasOwnProp(childConfig, prop) &&
+	                    isObject(parentConfig[prop])) {
+	                // make sure changes to properties don't modify parent config
+	                res[prop] = extend({}, res[prop]);
+	            }
+	        }
+	        return res;
+	    }
+
+	    function Locale(config) {
+	        if (config != null) {
+	            this.set(config);
+	        }
+	    }
+
+	    var keys;
+
+	    if (Object.keys) {
+	        keys = Object.keys;
+	    } else {
+	        keys = function (obj) {
+	            var i, res = [];
+	            for (i in obj) {
+	                if (hasOwnProp(obj, i)) {
+	                    res.push(i);
+	                }
+	            }
+	            return res;
+	        };
+	    }
+
+	    var defaultCalendar = {
+	        sameDay : '[Today at] LT',
+	        nextDay : '[Tomorrow at] LT',
+	        nextWeek : 'dddd [at] LT',
+	        lastDay : '[Yesterday at] LT',
+	        lastWeek : '[Last] dddd [at] LT',
+	        sameElse : 'L'
+	    };
+
+	    function calendar (key, mom, now) {
+	        var output = this._calendar[key] || this._calendar['sameElse'];
+	        return isFunction(output) ? output.call(mom, now) : output;
+	    }
+
+	    var defaultLongDateFormat = {
+	        LTS  : 'h:mm:ss A',
+	        LT   : 'h:mm A',
+	        L    : 'MM/DD/YYYY',
+	        LL   : 'MMMM D, YYYY',
+	        LLL  : 'MMMM D, YYYY h:mm A',
+	        LLLL : 'dddd, MMMM D, YYYY h:mm A'
+	    };
+
+	    function longDateFormat (key) {
+	        var format = this._longDateFormat[key],
+	            formatUpper = this._longDateFormat[key.toUpperCase()];
+
+	        if (format || !formatUpper) {
+	            return format;
+	        }
+
+	        this._longDateFormat[key] = formatUpper.replace(/MMMM|MM|DD|dddd/g, function (val) {
+	            return val.slice(1);
+	        });
+
+	        return this._longDateFormat[key];
+	    }
+
+	    var defaultInvalidDate = 'Invalid date';
+
+	    function invalidDate () {
+	        return this._invalidDate;
+	    }
+
+	    var defaultOrdinal = '%d';
+	    var defaultDayOfMonthOrdinalParse = /\d{1,2}/;
+
+	    function ordinal (number) {
+	        return this._ordinal.replace('%d', number);
+	    }
+
+	    var defaultRelativeTime = {
+	        future : 'in %s',
+	        past   : '%s ago',
+	        s  : 'a few seconds',
+	        ss : '%d seconds',
+	        m  : 'a minute',
+	        mm : '%d minutes',
+	        h  : 'an hour',
+	        hh : '%d hours',
+	        d  : 'a day',
+	        dd : '%d days',
+	        M  : 'a month',
+	        MM : '%d months',
+	        y  : 'a year',
+	        yy : '%d years'
+	    };
+
+	    function relativeTime (number, withoutSuffix, string, isFuture) {
+	        var output = this._relativeTime[string];
+	        return (isFunction(output)) ?
+	            output(number, withoutSuffix, string, isFuture) :
+	            output.replace(/%d/i, number);
+	    }
+
+	    function pastFuture (diff, output) {
+	        var format = this._relativeTime[diff > 0 ? 'future' : 'past'];
+	        return isFunction(format) ? format(output) : format.replace(/%s/i, output);
+	    }
+
+	    var aliases = {};
+
+	    function addUnitAlias (unit, shorthand) {
+	        var lowerCase = unit.toLowerCase();
+	        aliases[lowerCase] = aliases[lowerCase + 's'] = aliases[shorthand] = unit;
+	    }
+
+	    function normalizeUnits(units) {
+	        return typeof units === 'string' ? aliases[units] || aliases[units.toLowerCase()] : undefined;
+	    }
+
+	    function normalizeObjectUnits(inputObject) {
+	        var normalizedInput = {},
+	            normalizedProp,
+	            prop;
+
+	        for (prop in inputObject) {
+	            if (hasOwnProp(inputObject, prop)) {
+	                normalizedProp = normalizeUnits(prop);
+	                if (normalizedProp) {
+	                    normalizedInput[normalizedProp] = inputObject[prop];
+	                }
+	            }
+	        }
+
+	        return normalizedInput;
+	    }
+
+	    var priorities = {};
+
+	    function addUnitPriority(unit, priority) {
+	        priorities[unit] = priority;
+	    }
+
+	    function getPrioritizedUnits(unitsObj) {
+	        var units = [];
+	        for (var u in unitsObj) {
+	            units.push({unit: u, priority: priorities[u]});
+	        }
+	        units.sort(function (a, b) {
+	            return a.priority - b.priority;
+	        });
+	        return units;
+	    }
+
+	    function zeroFill(number, targetLength, forceSign) {
+	        var absNumber = '' + Math.abs(number),
+	            zerosToFill = targetLength - absNumber.length,
+	            sign = number >= 0;
+	        return (sign ? (forceSign ? '+' : '') : '-') +
+	            Math.pow(10, Math.max(0, zerosToFill)).toString().substr(1) + absNumber;
+	    }
+
+	    var formattingTokens = /(\[[^\[]*\])|(\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|YYYYYY|YYYYY|YYYY|YY|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)/g;
+
+	    var localFormattingTokens = /(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g;
+
+	    var formatFunctions = {};
+
+	    var formatTokenFunctions = {};
+
+	    // token:    'M'
+	    // padded:   ['MM', 2]
+	    // ordinal:  'Mo'
+	    // callback: function () { this.month() + 1 }
+	    function addFormatToken (token, padded, ordinal, callback) {
+	        var func = callback;
+	        if (typeof callback === 'string') {
+	            func = function () {
+	                return this[callback]();
+	            };
+	        }
+	        if (token) {
+	            formatTokenFunctions[token] = func;
+	        }
+	        if (padded) {
+	            formatTokenFunctions[padded[0]] = function () {
+	                return zeroFill(func.apply(this, arguments), padded[1], padded[2]);
+	            };
+	        }
+	        if (ordinal) {
+	            formatTokenFunctions[ordinal] = function () {
+	                return this.localeData().ordinal(func.apply(this, arguments), token);
+	            };
+	        }
+	    }
+
+	    function removeFormattingTokens(input) {
+	        if (input.match(/\[[\s\S]/)) {
+	            return input.replace(/^\[|\]$/g, '');
+	        }
+	        return input.replace(/\\/g, '');
+	    }
+
+	    function makeFormatFunction(format) {
+	        var array = format.match(formattingTokens), i, length;
+
+	        for (i = 0, length = array.length; i < length; i++) {
+	            if (formatTokenFunctions[array[i]]) {
+	                array[i] = formatTokenFunctions[array[i]];
+	            } else {
+	                array[i] = removeFormattingTokens(array[i]);
+	            }
+	        }
+
+	        return function (mom) {
+	            var output = '', i;
+	            for (i = 0; i < length; i++) {
+	                output += isFunction(array[i]) ? array[i].call(mom, format) : array[i];
+	            }
+	            return output;
+	        };
+	    }
+
+	    // format date using native date object
+	    function formatMoment(m, format) {
+	        if (!m.isValid()) {
+	            return m.localeData().invalidDate();
+	        }
+
+	        format = expandFormat(format, m.localeData());
+	        formatFunctions[format] = formatFunctions[format] || makeFormatFunction(format);
+
+	        return formatFunctions[format](m);
+	    }
+
+	    function expandFormat(format, locale) {
+	        var i = 5;
+
+	        function replaceLongDateFormatTokens(input) {
+	            return locale.longDateFormat(input) || input;
+	        }
+
+	        localFormattingTokens.lastIndex = 0;
+	        while (i >= 0 && localFormattingTokens.test(format)) {
+	            format = format.replace(localFormattingTokens, replaceLongDateFormatTokens);
+	            localFormattingTokens.lastIndex = 0;
+	            i -= 1;
+	        }
+
+	        return format;
+	    }
+
+	    var match1         = /\d/;            //       0 - 9
+	    var match2         = /\d\d/;          //      00 - 99
+	    var match3         = /\d{3}/;         //     000 - 999
+	    var match4         = /\d{4}/;         //    0000 - 9999
+	    var match6         = /[+-]?\d{6}/;    // -999999 - 999999
+	    var match1to2      = /\d\d?/;         //       0 - 99
+	    var match3to4      = /\d\d\d\d?/;     //     999 - 9999
+	    var match5to6      = /\d\d\d\d\d\d?/; //   99999 - 999999
+	    var match1to3      = /\d{1,3}/;       //       0 - 999
+	    var match1to4      = /\d{1,4}/;       //       0 - 9999
+	    var match1to6      = /[+-]?\d{1,6}/;  // -999999 - 999999
+
+	    var matchUnsigned  = /\d+/;           //       0 - inf
+	    var matchSigned    = /[+-]?\d+/;      //    -inf - inf
+
+	    var matchOffset    = /Z|[+-]\d\d:?\d\d/gi; // +00:00 -00:00 +0000 -0000 or Z
+	    var matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi; // +00 -00 +00:00 -00:00 +0000 -0000 or Z
+
+	    var matchTimestamp = /[+-]?\d+(\.\d{1,3})?/; // 123456789 123456789.123
+
+	    // any word (or two) characters or numbers including two/three word month in arabic.
+	    // includes scottish gaelic two word and hyphenated months
+	    var matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i;
+
+	    var regexes = {};
+
+	    function addRegexToken (token, regex, strictRegex) {
+	        regexes[token] = isFunction(regex) ? regex : function (isStrict, localeData) {
+	            return (isStrict && strictRegex) ? strictRegex : regex;
+	        };
+	    }
+
+	    function getParseRegexForToken (token, config) {
+	        if (!hasOwnProp(regexes, token)) {
+	            return new RegExp(unescapeFormat(token));
+	        }
+
+	        return regexes[token](config._strict, config._locale);
+	    }
+
+	    // Code from http://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript
+	    function unescapeFormat(s) {
+	        return regexEscape(s.replace('\\', '').replace(/\\(\[)|\\(\])|\[([^\]\[]*)\]|\\(.)/g, function (matched, p1, p2, p3, p4) {
+	            return p1 || p2 || p3 || p4;
+	        }));
+	    }
+
+	    function regexEscape(s) {
+	        return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+	    }
+
+	    var tokens = {};
+
+	    function addParseToken (token, callback) {
+	        var i, func = callback;
+	        if (typeof token === 'string') {
+	            token = [token];
+	        }
+	        if (isNumber(callback)) {
+	            func = function (input, array) {
+	                array[callback] = toInt(input);
+	            };
+	        }
+	        for (i = 0; i < token.length; i++) {
+	            tokens[token[i]] = func;
+	        }
+	    }
+
+	    function addWeekParseToken (token, callback) {
+	        addParseToken(token, function (input, array, config, token) {
+	            config._w = config._w || {};
+	            callback(input, config._w, config, token);
+	        });
+	    }
+
+	    function addTimeToArrayFromToken(token, input, config) {
+	        if (input != null && hasOwnProp(tokens, token)) {
+	            tokens[token](input, config._a, config, token);
+	        }
+	    }
+
+	    var YEAR = 0;
+	    var MONTH = 1;
+	    var DATE = 2;
+	    var HOUR = 3;
+	    var MINUTE = 4;
+	    var SECOND = 5;
+	    var MILLISECOND = 6;
+	    var WEEK = 7;
+	    var WEEKDAY = 8;
+
+	    // FORMATTING
+
+	    addFormatToken('Y', 0, 0, function () {
+	        var y = this.year();
+	        return y <= 9999 ? '' + y : '+' + y;
+	    });
+
+	    addFormatToken(0, ['YY', 2], 0, function () {
+	        return this.year() % 100;
+	    });
+
+	    addFormatToken(0, ['YYYY',   4],       0, 'year');
+	    addFormatToken(0, ['YYYYY',  5],       0, 'year');
+	    addFormatToken(0, ['YYYYYY', 6, true], 0, 'year');
+
+	    // ALIASES
+
+	    addUnitAlias('year', 'y');
+
+	    // PRIORITIES
+
+	    addUnitPriority('year', 1);
+
+	    // PARSING
+
+	    addRegexToken('Y',      matchSigned);
+	    addRegexToken('YY',     match1to2, match2);
+	    addRegexToken('YYYY',   match1to4, match4);
+	    addRegexToken('YYYYY',  match1to6, match6);
+	    addRegexToken('YYYYYY', match1to6, match6);
+
+	    addParseToken(['YYYYY', 'YYYYYY'], YEAR);
+	    addParseToken('YYYY', function (input, array) {
+	        array[YEAR] = input.length === 2 ? hooks.parseTwoDigitYear(input) : toInt(input);
+	    });
+	    addParseToken('YY', function (input, array) {
+	        array[YEAR] = hooks.parseTwoDigitYear(input);
+	    });
+	    addParseToken('Y', function (input, array) {
+	        array[YEAR] = parseInt(input, 10);
+	    });
+
+	    // HELPERS
+
+	    function daysInYear(year) {
+	        return isLeapYear(year) ? 366 : 365;
+	    }
+
+	    function isLeapYear(year) {
+	        return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+	    }
+
+	    // HOOKS
+
+	    hooks.parseTwoDigitYear = function (input) {
+	        return toInt(input) + (toInt(input) > 68 ? 1900 : 2000);
+	    };
+
+	    // MOMENTS
+
+	    var getSetYear = makeGetSet('FullYear', true);
+
+	    function getIsLeapYear () {
+	        return isLeapYear(this.year());
+	    }
+
+	    function makeGetSet (unit, keepTime) {
+	        return function (value) {
+	            if (value != null) {
+	                set$1(this, unit, value);
+	                hooks.updateOffset(this, keepTime);
+	                return this;
+	            } else {
+	                return get(this, unit);
+	            }
+	        };
+	    }
+
+	    function get (mom, unit) {
+	        return mom.isValid() ?
+	            mom._d['get' + (mom._isUTC ? 'UTC' : '') + unit]() : NaN;
+	    }
+
+	    function set$1 (mom, unit, value) {
+	        if (mom.isValid() && !isNaN(value)) {
+	            if (unit === 'FullYear' && isLeapYear(mom.year()) && mom.month() === 1 && mom.date() === 29) {
+	                mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value, mom.month(), daysInMonth(value, mom.month()));
+	            }
+	            else {
+	                mom._d['set' + (mom._isUTC ? 'UTC' : '') + unit](value);
+	            }
+	        }
+	    }
+
+	    // MOMENTS
+
+	    function stringGet (units) {
+	        units = normalizeUnits(units);
+	        if (isFunction(this[units])) {
+	            return this[units]();
+	        }
+	        return this;
+	    }
+
+
+	    function stringSet (units, value) {
+	        if (typeof units === 'object') {
+	            units = normalizeObjectUnits(units);
+	            var prioritized = getPrioritizedUnits(units);
+	            for (var i = 0; i < prioritized.length; i++) {
+	                this[prioritized[i].unit](units[prioritized[i].unit]);
+	            }
+	        } else {
+	            units = normalizeUnits(units);
+	            if (isFunction(this[units])) {
+	                return this[units](value);
+	            }
+	        }
+	        return this;
+	    }
+
+	    function mod(n, x) {
+	        return ((n % x) + x) % x;
+	    }
+
+	    var indexOf;
+
+	    if (Array.prototype.indexOf) {
+	        indexOf = Array.prototype.indexOf;
+	    } else {
+	        indexOf = function (o) {
+	            // I know
+	            var i;
+	            for (i = 0; i < this.length; ++i) {
+	                if (this[i] === o) {
+	                    return i;
+	                }
+	            }
+	            return -1;
+	        };
+	    }
+
+	    function daysInMonth(year, month) {
+	        if (isNaN(year) || isNaN(month)) {
+	            return NaN;
+	        }
+	        var modMonth = mod(month, 12);
+	        year += (month - modMonth) / 12;
+	        return modMonth === 1 ? (isLeapYear(year) ? 29 : 28) : (31 - modMonth % 7 % 2);
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken('M', ['MM', 2], 'Mo', function () {
+	        return this.month() + 1;
+	    });
+
+	    addFormatToken('MMM', 0, 0, function (format) {
+	        return this.localeData().monthsShort(this, format);
+	    });
+
+	    addFormatToken('MMMM', 0, 0, function (format) {
+	        return this.localeData().months(this, format);
+	    });
+
+	    // ALIASES
+
+	    addUnitAlias('month', 'M');
+
+	    // PRIORITY
+
+	    addUnitPriority('month', 8);
+
+	    // PARSING
+
+	    addRegexToken('M',    match1to2);
+	    addRegexToken('MM',   match1to2, match2);
+	    addRegexToken('MMM',  function (isStrict, locale) {
+	        return locale.monthsShortRegex(isStrict);
+	    });
+	    addRegexToken('MMMM', function (isStrict, locale) {
+	        return locale.monthsRegex(isStrict);
+	    });
+
+	    addParseToken(['M', 'MM'], function (input, array) {
+	        array[MONTH] = toInt(input) - 1;
+	    });
+
+	    addParseToken(['MMM', 'MMMM'], function (input, array, config, token) {
+	        var month = config._locale.monthsParse(input, token, config._strict);
+	        // if we didn't find a month name, mark the date as invalid.
+	        if (month != null) {
+	            array[MONTH] = month;
+	        } else {
+	            getParsingFlags(config).invalidMonth = input;
+	        }
+	    });
+
+	    // LOCALES
+
+	    var MONTHS_IN_FORMAT = /D[oD]?(\[[^\[\]]*\]|\s)+MMMM?/;
+	    var defaultLocaleMonths = 'January_February_March_April_May_June_July_August_September_October_November_December'.split('_');
+	    function localeMonths (m, format) {
+	        if (!m) {
+	            return isArray(this._months) ? this._months :
+	                this._months['standalone'];
+	        }
+	        return isArray(this._months) ? this._months[m.month()] :
+	            this._months[(this._months.isFormat || MONTHS_IN_FORMAT).test(format) ? 'format' : 'standalone'][m.month()];
+	    }
+
+	    var defaultLocaleMonthsShort = 'Jan_Feb_Mar_Apr_May_Jun_Jul_Aug_Sep_Oct_Nov_Dec'.split('_');
+	    function localeMonthsShort (m, format) {
+	        if (!m) {
+	            return isArray(this._monthsShort) ? this._monthsShort :
+	                this._monthsShort['standalone'];
+	        }
+	        return isArray(this._monthsShort) ? this._monthsShort[m.month()] :
+	            this._monthsShort[MONTHS_IN_FORMAT.test(format) ? 'format' : 'standalone'][m.month()];
+	    }
+
+	    function handleStrictParse(monthName, format, strict) {
+	        var i, ii, mom, llc = monthName.toLocaleLowerCase();
+	        if (!this._monthsParse) {
+	            // this is not used
+	            this._monthsParse = [];
+	            this._longMonthsParse = [];
+	            this._shortMonthsParse = [];
+	            for (i = 0; i < 12; ++i) {
+	                mom = createUTC([2000, i]);
+	                this._shortMonthsParse[i] = this.monthsShort(mom, '').toLocaleLowerCase();
+	                this._longMonthsParse[i] = this.months(mom, '').toLocaleLowerCase();
+	            }
+	        }
+
+	        if (strict) {
+	            if (format === 'MMM') {
+	                ii = indexOf.call(this._shortMonthsParse, llc);
+	                return ii !== -1 ? ii : null;
+	            } else {
+	                ii = indexOf.call(this._longMonthsParse, llc);
+	                return ii !== -1 ? ii : null;
+	            }
+	        } else {
+	            if (format === 'MMM') {
+	                ii = indexOf.call(this._shortMonthsParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._longMonthsParse, llc);
+	                return ii !== -1 ? ii : null;
+	            } else {
+	                ii = indexOf.call(this._longMonthsParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._shortMonthsParse, llc);
+	                return ii !== -1 ? ii : null;
+	            }
+	        }
+	    }
+
+	    function localeMonthsParse (monthName, format, strict) {
+	        var i, mom, regex;
+
+	        if (this._monthsParseExact) {
+	            return handleStrictParse.call(this, monthName, format, strict);
+	        }
+
+	        if (!this._monthsParse) {
+	            this._monthsParse = [];
+	            this._longMonthsParse = [];
+	            this._shortMonthsParse = [];
+	        }
+
+	        // TODO: add sorting
+	        // Sorting makes sure if one month (or abbr) is a prefix of another
+	        // see sorting in computeMonthsParse
+	        for (i = 0; i < 12; i++) {
+	            // make the regex if we don't have it already
+	            mom = createUTC([2000, i]);
+	            if (strict && !this._longMonthsParse[i]) {
+	                this._longMonthsParse[i] = new RegExp('^' + this.months(mom, '').replace('.', '') + '$', 'i');
+	                this._shortMonthsParse[i] = new RegExp('^' + this.monthsShort(mom, '').replace('.', '') + '$', 'i');
+	            }
+	            if (!strict && !this._monthsParse[i]) {
+	                regex = '^' + this.months(mom, '') + '|^' + this.monthsShort(mom, '');
+	                this._monthsParse[i] = new RegExp(regex.replace('.', ''), 'i');
+	            }
+	            // test the regex
+	            if (strict && format === 'MMMM' && this._longMonthsParse[i].test(monthName)) {
+	                return i;
+	            } else if (strict && format === 'MMM' && this._shortMonthsParse[i].test(monthName)) {
+	                return i;
+	            } else if (!strict && this._monthsParse[i].test(monthName)) {
+	                return i;
+	            }
+	        }
+	    }
+
+	    // MOMENTS
+
+	    function setMonth (mom, value) {
+	        var dayOfMonth;
+
+	        if (!mom.isValid()) {
+	            // No op
+	            return mom;
+	        }
+
+	        if (typeof value === 'string') {
+	            if (/^\d+$/.test(value)) {
+	                value = toInt(value);
+	            } else {
+	                value = mom.localeData().monthsParse(value);
+	                // TODO: Another silent failure?
+	                if (!isNumber(value)) {
+	                    return mom;
+	                }
+	            }
+	        }
+
+	        dayOfMonth = Math.min(mom.date(), daysInMonth(mom.year(), value));
+	        mom._d['set' + (mom._isUTC ? 'UTC' : '') + 'Month'](value, dayOfMonth);
+	        return mom;
+	    }
+
+	    function getSetMonth (value) {
+	        if (value != null) {
+	            setMonth(this, value);
+	            hooks.updateOffset(this, true);
+	            return this;
+	        } else {
+	            return get(this, 'Month');
+	        }
+	    }
+
+	    function getDaysInMonth () {
+	        return daysInMonth(this.year(), this.month());
+	    }
+
+	    var defaultMonthsShortRegex = matchWord;
+	    function monthsShortRegex (isStrict) {
+	        if (this._monthsParseExact) {
+	            if (!hasOwnProp(this, '_monthsRegex')) {
+	                computeMonthsParse.call(this);
+	            }
+	            if (isStrict) {
+	                return this._monthsShortStrictRegex;
+	            } else {
+	                return this._monthsShortRegex;
+	            }
+	        } else {
+	            if (!hasOwnProp(this, '_monthsShortRegex')) {
+	                this._monthsShortRegex = defaultMonthsShortRegex;
+	            }
+	            return this._monthsShortStrictRegex && isStrict ?
+	                this._monthsShortStrictRegex : this._monthsShortRegex;
+	        }
+	    }
+
+	    var defaultMonthsRegex = matchWord;
+	    function monthsRegex (isStrict) {
+	        if (this._monthsParseExact) {
+	            if (!hasOwnProp(this, '_monthsRegex')) {
+	                computeMonthsParse.call(this);
+	            }
+	            if (isStrict) {
+	                return this._monthsStrictRegex;
+	            } else {
+	                return this._monthsRegex;
+	            }
+	        } else {
+	            if (!hasOwnProp(this, '_monthsRegex')) {
+	                this._monthsRegex = defaultMonthsRegex;
+	            }
+	            return this._monthsStrictRegex && isStrict ?
+	                this._monthsStrictRegex : this._monthsRegex;
+	        }
+	    }
+
+	    function computeMonthsParse () {
+	        function cmpLenRev(a, b) {
+	            return b.length - a.length;
+	        }
+
+	        var shortPieces = [], longPieces = [], mixedPieces = [],
+	            i, mom;
+	        for (i = 0; i < 12; i++) {
+	            // make the regex if we don't have it already
+	            mom = createUTC([2000, i]);
+	            shortPieces.push(this.monthsShort(mom, ''));
+	            longPieces.push(this.months(mom, ''));
+	            mixedPieces.push(this.months(mom, ''));
+	            mixedPieces.push(this.monthsShort(mom, ''));
+	        }
+	        // Sorting makes sure if one month (or abbr) is a prefix of another it
+	        // will match the longer piece.
+	        shortPieces.sort(cmpLenRev);
+	        longPieces.sort(cmpLenRev);
+	        mixedPieces.sort(cmpLenRev);
+	        for (i = 0; i < 12; i++) {
+	            shortPieces[i] = regexEscape(shortPieces[i]);
+	            longPieces[i] = regexEscape(longPieces[i]);
+	        }
+	        for (i = 0; i < 24; i++) {
+	            mixedPieces[i] = regexEscape(mixedPieces[i]);
+	        }
+
+	        this._monthsRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
+	        this._monthsShortRegex = this._monthsRegex;
+	        this._monthsStrictRegex = new RegExp('^(' + longPieces.join('|') + ')', 'i');
+	        this._monthsShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')', 'i');
+	    }
+
+	    function createDate (y, m, d, h, M, s, ms) {
+	        // can't just apply() to create a date:
+	        // https://stackoverflow.com/q/181348
+	        var date = new Date(y, m, d, h, M, s, ms);
+
+	        // the date constructor remaps years 0-99 to 1900-1999
+	        if (y < 100 && y >= 0 && isFinite(date.getFullYear())) {
+	            date.setFullYear(y);
+	        }
+	        return date;
+	    }
+
+	    function createUTCDate (y) {
+	        var date = new Date(Date.UTC.apply(null, arguments));
+
+	        // the Date.UTC function remaps years 0-99 to 1900-1999
+	        if (y < 100 && y >= 0 && isFinite(date.getUTCFullYear())) {
+	            date.setUTCFullYear(y);
+	        }
+	        return date;
+	    }
+
+	    // start-of-first-week - start-of-year
+	    function firstWeekOffset(year, dow, doy) {
+	        var // first-week day -- which january is always in the first week (4 for iso, 1 for other)
+	            fwd = 7 + dow - doy,
+	            // first-week day local weekday -- which local weekday is fwd
+	            fwdlw = (7 + createUTCDate(year, 0, fwd).getUTCDay() - dow) % 7;
+
+	        return -fwdlw + fwd - 1;
+	    }
+
+	    // https://en.wikipedia.org/wiki/ISO_week_date#Calculating_a_date_given_the_year.2C_week_number_and_weekday
+	    function dayOfYearFromWeeks(year, week, weekday, dow, doy) {
+	        var localWeekday = (7 + weekday - dow) % 7,
+	            weekOffset = firstWeekOffset(year, dow, doy),
+	            dayOfYear = 1 + 7 * (week - 1) + localWeekday + weekOffset,
+	            resYear, resDayOfYear;
+
+	        if (dayOfYear <= 0) {
+	            resYear = year - 1;
+	            resDayOfYear = daysInYear(resYear) + dayOfYear;
+	        } else if (dayOfYear > daysInYear(year)) {
+	            resYear = year + 1;
+	            resDayOfYear = dayOfYear - daysInYear(year);
+	        } else {
+	            resYear = year;
+	            resDayOfYear = dayOfYear;
+	        }
+
+	        return {
+	            year: resYear,
+	            dayOfYear: resDayOfYear
+	        };
+	    }
+
+	    function weekOfYear(mom, dow, doy) {
+	        var weekOffset = firstWeekOffset(mom.year(), dow, doy),
+	            week = Math.floor((mom.dayOfYear() - weekOffset - 1) / 7) + 1,
+	            resWeek, resYear;
+
+	        if (week < 1) {
+	            resYear = mom.year() - 1;
+	            resWeek = week + weeksInYear(resYear, dow, doy);
+	        } else if (week > weeksInYear(mom.year(), dow, doy)) {
+	            resWeek = week - weeksInYear(mom.year(), dow, doy);
+	            resYear = mom.year() + 1;
+	        } else {
+	            resYear = mom.year();
+	            resWeek = week;
+	        }
+
+	        return {
+	            week: resWeek,
+	            year: resYear
+	        };
+	    }
+
+	    function weeksInYear(year, dow, doy) {
+	        var weekOffset = firstWeekOffset(year, dow, doy),
+	            weekOffsetNext = firstWeekOffset(year + 1, dow, doy);
+	        return (daysInYear(year) - weekOffset + weekOffsetNext) / 7;
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken('w', ['ww', 2], 'wo', 'week');
+	    addFormatToken('W', ['WW', 2], 'Wo', 'isoWeek');
+
+	    // ALIASES
+
+	    addUnitAlias('week', 'w');
+	    addUnitAlias('isoWeek', 'W');
+
+	    // PRIORITIES
+
+	    addUnitPriority('week', 5);
+	    addUnitPriority('isoWeek', 5);
+
+	    // PARSING
+
+	    addRegexToken('w',  match1to2);
+	    addRegexToken('ww', match1to2, match2);
+	    addRegexToken('W',  match1to2);
+	    addRegexToken('WW', match1to2, match2);
+
+	    addWeekParseToken(['w', 'ww', 'W', 'WW'], function (input, week, config, token) {
+	        week[token.substr(0, 1)] = toInt(input);
+	    });
+
+	    // HELPERS
+
+	    // LOCALES
+
+	    function localeWeek (mom) {
+	        return weekOfYear(mom, this._week.dow, this._week.doy).week;
+	    }
+
+	    var defaultLocaleWeek = {
+	        dow : 0, // Sunday is the first day of the week.
+	        doy : 6  // The week that contains Jan 1st is the first week of the year.
+	    };
+
+	    function localeFirstDayOfWeek () {
+	        return this._week.dow;
+	    }
+
+	    function localeFirstDayOfYear () {
+	        return this._week.doy;
+	    }
+
+	    // MOMENTS
+
+	    function getSetWeek (input) {
+	        var week = this.localeData().week(this);
+	        return input == null ? week : this.add((input - week) * 7, 'd');
+	    }
+
+	    function getSetISOWeek (input) {
+	        var week = weekOfYear(this, 1, 4).week;
+	        return input == null ? week : this.add((input - week) * 7, 'd');
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken('d', 0, 'do', 'day');
+
+	    addFormatToken('dd', 0, 0, function (format) {
+	        return this.localeData().weekdaysMin(this, format);
+	    });
+
+	    addFormatToken('ddd', 0, 0, function (format) {
+	        return this.localeData().weekdaysShort(this, format);
+	    });
+
+	    addFormatToken('dddd', 0, 0, function (format) {
+	        return this.localeData().weekdays(this, format);
+	    });
+
+	    addFormatToken('e', 0, 0, 'weekday');
+	    addFormatToken('E', 0, 0, 'isoWeekday');
+
+	    // ALIASES
+
+	    addUnitAlias('day', 'd');
+	    addUnitAlias('weekday', 'e');
+	    addUnitAlias('isoWeekday', 'E');
+
+	    // PRIORITY
+	    addUnitPriority('day', 11);
+	    addUnitPriority('weekday', 11);
+	    addUnitPriority('isoWeekday', 11);
+
+	    // PARSING
+
+	    addRegexToken('d',    match1to2);
+	    addRegexToken('e',    match1to2);
+	    addRegexToken('E',    match1to2);
+	    addRegexToken('dd',   function (isStrict, locale) {
+	        return locale.weekdaysMinRegex(isStrict);
+	    });
+	    addRegexToken('ddd',   function (isStrict, locale) {
+	        return locale.weekdaysShortRegex(isStrict);
+	    });
+	    addRegexToken('dddd',   function (isStrict, locale) {
+	        return locale.weekdaysRegex(isStrict);
+	    });
+
+	    addWeekParseToken(['dd', 'ddd', 'dddd'], function (input, week, config, token) {
+	        var weekday = config._locale.weekdaysParse(input, token, config._strict);
+	        // if we didn't get a weekday name, mark the date as invalid
+	        if (weekday != null) {
+	            week.d = weekday;
+	        } else {
+	            getParsingFlags(config).invalidWeekday = input;
+	        }
+	    });
+
+	    addWeekParseToken(['d', 'e', 'E'], function (input, week, config, token) {
+	        week[token] = toInt(input);
+	    });
+
+	    // HELPERS
+
+	    function parseWeekday(input, locale) {
+	        if (typeof input !== 'string') {
+	            return input;
+	        }
+
+	        if (!isNaN(input)) {
+	            return parseInt(input, 10);
+	        }
+
+	        input = locale.weekdaysParse(input);
+	        if (typeof input === 'number') {
+	            return input;
+	        }
+
+	        return null;
+	    }
+
+	    function parseIsoWeekday(input, locale) {
+	        if (typeof input === 'string') {
+	            return locale.weekdaysParse(input) % 7 || 7;
+	        }
+	        return isNaN(input) ? null : input;
+	    }
+
+	    // LOCALES
+
+	    var defaultLocaleWeekdays = 'Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday'.split('_');
+	    function localeWeekdays (m, format) {
+	        if (!m) {
+	            return isArray(this._weekdays) ? this._weekdays :
+	                this._weekdays['standalone'];
+	        }
+	        return isArray(this._weekdays) ? this._weekdays[m.day()] :
+	            this._weekdays[this._weekdays.isFormat.test(format) ? 'format' : 'standalone'][m.day()];
+	    }
+
+	    var defaultLocaleWeekdaysShort = 'Sun_Mon_Tue_Wed_Thu_Fri_Sat'.split('_');
+	    function localeWeekdaysShort (m) {
+	        return (m) ? this._weekdaysShort[m.day()] : this._weekdaysShort;
+	    }
+
+	    var defaultLocaleWeekdaysMin = 'Su_Mo_Tu_We_Th_Fr_Sa'.split('_');
+	    function localeWeekdaysMin (m) {
+	        return (m) ? this._weekdaysMin[m.day()] : this._weekdaysMin;
+	    }
+
+	    function handleStrictParse$1(weekdayName, format, strict) {
+	        var i, ii, mom, llc = weekdayName.toLocaleLowerCase();
+	        if (!this._weekdaysParse) {
+	            this._weekdaysParse = [];
+	            this._shortWeekdaysParse = [];
+	            this._minWeekdaysParse = [];
+
+	            for (i = 0; i < 7; ++i) {
+	                mom = createUTC([2000, 1]).day(i);
+	                this._minWeekdaysParse[i] = this.weekdaysMin(mom, '').toLocaleLowerCase();
+	                this._shortWeekdaysParse[i] = this.weekdaysShort(mom, '').toLocaleLowerCase();
+	                this._weekdaysParse[i] = this.weekdays(mom, '').toLocaleLowerCase();
+	            }
+	        }
+
+	        if (strict) {
+	            if (format === 'dddd') {
+	                ii = indexOf.call(this._weekdaysParse, llc);
+	                return ii !== -1 ? ii : null;
+	            } else if (format === 'ddd') {
+	                ii = indexOf.call(this._shortWeekdaysParse, llc);
+	                return ii !== -1 ? ii : null;
+	            } else {
+	                ii = indexOf.call(this._minWeekdaysParse, llc);
+	                return ii !== -1 ? ii : null;
+	            }
+	        } else {
+	            if (format === 'dddd') {
+	                ii = indexOf.call(this._weekdaysParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._shortWeekdaysParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._minWeekdaysParse, llc);
+	                return ii !== -1 ? ii : null;
+	            } else if (format === 'ddd') {
+	                ii = indexOf.call(this._shortWeekdaysParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._weekdaysParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._minWeekdaysParse, llc);
+	                return ii !== -1 ? ii : null;
+	            } else {
+	                ii = indexOf.call(this._minWeekdaysParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._weekdaysParse, llc);
+	                if (ii !== -1) {
+	                    return ii;
+	                }
+	                ii = indexOf.call(this._shortWeekdaysParse, llc);
+	                return ii !== -1 ? ii : null;
+	            }
+	        }
+	    }
+
+	    function localeWeekdaysParse (weekdayName, format, strict) {
+	        var i, mom, regex;
+
+	        if (this._weekdaysParseExact) {
+	            return handleStrictParse$1.call(this, weekdayName, format, strict);
+	        }
+
+	        if (!this._weekdaysParse) {
+	            this._weekdaysParse = [];
+	            this._minWeekdaysParse = [];
+	            this._shortWeekdaysParse = [];
+	            this._fullWeekdaysParse = [];
+	        }
+
+	        for (i = 0; i < 7; i++) {
+	            // make the regex if we don't have it already
+
+	            mom = createUTC([2000, 1]).day(i);
+	            if (strict && !this._fullWeekdaysParse[i]) {
+	                this._fullWeekdaysParse[i] = new RegExp('^' + this.weekdays(mom, '').replace('.', '\\.?') + '$', 'i');
+	                this._shortWeekdaysParse[i] = new RegExp('^' + this.weekdaysShort(mom, '').replace('.', '\\.?') + '$', 'i');
+	                this._minWeekdaysParse[i] = new RegExp('^' + this.weekdaysMin(mom, '').replace('.', '\\.?') + '$', 'i');
+	            }
+	            if (!this._weekdaysParse[i]) {
+	                regex = '^' + this.weekdays(mom, '') + '|^' + this.weekdaysShort(mom, '') + '|^' + this.weekdaysMin(mom, '');
+	                this._weekdaysParse[i] = new RegExp(regex.replace('.', ''), 'i');
+	            }
+	            // test the regex
+	            if (strict && format === 'dddd' && this._fullWeekdaysParse[i].test(weekdayName)) {
+	                return i;
+	            } else if (strict && format === 'ddd' && this._shortWeekdaysParse[i].test(weekdayName)) {
+	                return i;
+	            } else if (strict && format === 'dd' && this._minWeekdaysParse[i].test(weekdayName)) {
+	                return i;
+	            } else if (!strict && this._weekdaysParse[i].test(weekdayName)) {
+	                return i;
+	            }
+	        }
+	    }
+
+	    // MOMENTS
+
+	    function getSetDayOfWeek (input) {
+	        if (!this.isValid()) {
+	            return input != null ? this : NaN;
+	        }
+	        var day = this._isUTC ? this._d.getUTCDay() : this._d.getDay();
+	        if (input != null) {
+	            input = parseWeekday(input, this.localeData());
+	            return this.add(input - day, 'd');
+	        } else {
+	            return day;
+	        }
+	    }
+
+	    function getSetLocaleDayOfWeek (input) {
+	        if (!this.isValid()) {
+	            return input != null ? this : NaN;
+	        }
+	        var weekday = (this.day() + 7 - this.localeData()._week.dow) % 7;
+	        return input == null ? weekday : this.add(input - weekday, 'd');
+	    }
+
+	    function getSetISODayOfWeek (input) {
+	        if (!this.isValid()) {
+	            return input != null ? this : NaN;
+	        }
+
+	        // behaves the same as moment#day except
+	        // as a getter, returns 7 instead of 0 (1-7 range instead of 0-6)
+	        // as a setter, sunday should belong to the previous week.
+
+	        if (input != null) {
+	            var weekday = parseIsoWeekday(input, this.localeData());
+	            return this.day(this.day() % 7 ? weekday : weekday - 7);
+	        } else {
+	            return this.day() || 7;
+	        }
+	    }
+
+	    var defaultWeekdaysRegex = matchWord;
+	    function weekdaysRegex (isStrict) {
+	        if (this._weekdaysParseExact) {
+	            if (!hasOwnProp(this, '_weekdaysRegex')) {
+	                computeWeekdaysParse.call(this);
+	            }
+	            if (isStrict) {
+	                return this._weekdaysStrictRegex;
+	            } else {
+	                return this._weekdaysRegex;
+	            }
+	        } else {
+	            if (!hasOwnProp(this, '_weekdaysRegex')) {
+	                this._weekdaysRegex = defaultWeekdaysRegex;
+	            }
+	            return this._weekdaysStrictRegex && isStrict ?
+	                this._weekdaysStrictRegex : this._weekdaysRegex;
+	        }
+	    }
+
+	    var defaultWeekdaysShortRegex = matchWord;
+	    function weekdaysShortRegex (isStrict) {
+	        if (this._weekdaysParseExact) {
+	            if (!hasOwnProp(this, '_weekdaysRegex')) {
+	                computeWeekdaysParse.call(this);
+	            }
+	            if (isStrict) {
+	                return this._weekdaysShortStrictRegex;
+	            } else {
+	                return this._weekdaysShortRegex;
+	            }
+	        } else {
+	            if (!hasOwnProp(this, '_weekdaysShortRegex')) {
+	                this._weekdaysShortRegex = defaultWeekdaysShortRegex;
+	            }
+	            return this._weekdaysShortStrictRegex && isStrict ?
+	                this._weekdaysShortStrictRegex : this._weekdaysShortRegex;
+	        }
+	    }
+
+	    var defaultWeekdaysMinRegex = matchWord;
+	    function weekdaysMinRegex (isStrict) {
+	        if (this._weekdaysParseExact) {
+	            if (!hasOwnProp(this, '_weekdaysRegex')) {
+	                computeWeekdaysParse.call(this);
+	            }
+	            if (isStrict) {
+	                return this._weekdaysMinStrictRegex;
+	            } else {
+	                return this._weekdaysMinRegex;
+	            }
+	        } else {
+	            if (!hasOwnProp(this, '_weekdaysMinRegex')) {
+	                this._weekdaysMinRegex = defaultWeekdaysMinRegex;
+	            }
+	            return this._weekdaysMinStrictRegex && isStrict ?
+	                this._weekdaysMinStrictRegex : this._weekdaysMinRegex;
+	        }
+	    }
+
+
+	    function computeWeekdaysParse () {
+	        function cmpLenRev(a, b) {
+	            return b.length - a.length;
+	        }
+
+	        var minPieces = [], shortPieces = [], longPieces = [], mixedPieces = [],
+	            i, mom, minp, shortp, longp;
+	        for (i = 0; i < 7; i++) {
+	            // make the regex if we don't have it already
+	            mom = createUTC([2000, 1]).day(i);
+	            minp = this.weekdaysMin(mom, '');
+	            shortp = this.weekdaysShort(mom, '');
+	            longp = this.weekdays(mom, '');
+	            minPieces.push(minp);
+	            shortPieces.push(shortp);
+	            longPieces.push(longp);
+	            mixedPieces.push(minp);
+	            mixedPieces.push(shortp);
+	            mixedPieces.push(longp);
+	        }
+	        // Sorting makes sure if one weekday (or abbr) is a prefix of another it
+	        // will match the longer piece.
+	        minPieces.sort(cmpLenRev);
+	        shortPieces.sort(cmpLenRev);
+	        longPieces.sort(cmpLenRev);
+	        mixedPieces.sort(cmpLenRev);
+	        for (i = 0; i < 7; i++) {
+	            shortPieces[i] = regexEscape(shortPieces[i]);
+	            longPieces[i] = regexEscape(longPieces[i]);
+	            mixedPieces[i] = regexEscape(mixedPieces[i]);
+	        }
+
+	        this._weekdaysRegex = new RegExp('^(' + mixedPieces.join('|') + ')', 'i');
+	        this._weekdaysShortRegex = this._weekdaysRegex;
+	        this._weekdaysMinRegex = this._weekdaysRegex;
+
+	        this._weekdaysStrictRegex = new RegExp('^(' + longPieces.join('|') + ')', 'i');
+	        this._weekdaysShortStrictRegex = new RegExp('^(' + shortPieces.join('|') + ')', 'i');
+	        this._weekdaysMinStrictRegex = new RegExp('^(' + minPieces.join('|') + ')', 'i');
+	    }
+
+	    // FORMATTING
+
+	    function hFormat() {
+	        return this.hours() % 12 || 12;
+	    }
+
+	    function kFormat() {
+	        return this.hours() || 24;
+	    }
+
+	    addFormatToken('H', ['HH', 2], 0, 'hour');
+	    addFormatToken('h', ['hh', 2], 0, hFormat);
+	    addFormatToken('k', ['kk', 2], 0, kFormat);
+
+	    addFormatToken('hmm', 0, 0, function () {
+	        return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2);
+	    });
+
+	    addFormatToken('hmmss', 0, 0, function () {
+	        return '' + hFormat.apply(this) + zeroFill(this.minutes(), 2) +
+	            zeroFill(this.seconds(), 2);
+	    });
+
+	    addFormatToken('Hmm', 0, 0, function () {
+	        return '' + this.hours() + zeroFill(this.minutes(), 2);
+	    });
+
+	    addFormatToken('Hmmss', 0, 0, function () {
+	        return '' + this.hours() + zeroFill(this.minutes(), 2) +
+	            zeroFill(this.seconds(), 2);
+	    });
+
+	    function meridiem (token, lowercase) {
+	        addFormatToken(token, 0, 0, function () {
+	            return this.localeData().meridiem(this.hours(), this.minutes(), lowercase);
+	        });
+	    }
+
+	    meridiem('a', true);
+	    meridiem('A', false);
+
+	    // ALIASES
+
+	    addUnitAlias('hour', 'h');
+
+	    // PRIORITY
+	    addUnitPriority('hour', 13);
+
+	    // PARSING
+
+	    function matchMeridiem (isStrict, locale) {
+	        return locale._meridiemParse;
+	    }
+
+	    addRegexToken('a',  matchMeridiem);
+	    addRegexToken('A',  matchMeridiem);
+	    addRegexToken('H',  match1to2);
+	    addRegexToken('h',  match1to2);
+	    addRegexToken('k',  match1to2);
+	    addRegexToken('HH', match1to2, match2);
+	    addRegexToken('hh', match1to2, match2);
+	    addRegexToken('kk', match1to2, match2);
+
+	    addRegexToken('hmm', match3to4);
+	    addRegexToken('hmmss', match5to6);
+	    addRegexToken('Hmm', match3to4);
+	    addRegexToken('Hmmss', match5to6);
+
+	    addParseToken(['H', 'HH'], HOUR);
+	    addParseToken(['k', 'kk'], function (input, array, config) {
+	        var kInput = toInt(input);
+	        array[HOUR] = kInput === 24 ? 0 : kInput;
+	    });
+	    addParseToken(['a', 'A'], function (input, array, config) {
+	        config._isPm = config._locale.isPM(input);
+	        config._meridiem = input;
+	    });
+	    addParseToken(['h', 'hh'], function (input, array, config) {
+	        array[HOUR] = toInt(input);
+	        getParsingFlags(config).bigHour = true;
+	    });
+	    addParseToken('hmm', function (input, array, config) {
+	        var pos = input.length - 2;
+	        array[HOUR] = toInt(input.substr(0, pos));
+	        array[MINUTE] = toInt(input.substr(pos));
+	        getParsingFlags(config).bigHour = true;
+	    });
+	    addParseToken('hmmss', function (input, array, config) {
+	        var pos1 = input.length - 4;
+	        var pos2 = input.length - 2;
+	        array[HOUR] = toInt(input.substr(0, pos1));
+	        array[MINUTE] = toInt(input.substr(pos1, 2));
+	        array[SECOND] = toInt(input.substr(pos2));
+	        getParsingFlags(config).bigHour = true;
+	    });
+	    addParseToken('Hmm', function (input, array, config) {
+	        var pos = input.length - 2;
+	        array[HOUR] = toInt(input.substr(0, pos));
+	        array[MINUTE] = toInt(input.substr(pos));
+	    });
+	    addParseToken('Hmmss', function (input, array, config) {
+	        var pos1 = input.length - 4;
+	        var pos2 = input.length - 2;
+	        array[HOUR] = toInt(input.substr(0, pos1));
+	        array[MINUTE] = toInt(input.substr(pos1, 2));
+	        array[SECOND] = toInt(input.substr(pos2));
+	    });
+
+	    // LOCALES
+
+	    function localeIsPM (input) {
+	        // IE8 Quirks Mode & IE7 Standards Mode do not allow accessing strings like arrays
+	        // Using charAt should be more compatible.
+	        return ((input + '').toLowerCase().charAt(0) === 'p');
+	    }
+
+	    var defaultLocaleMeridiemParse = /[ap]\.?m?\.?/i;
+	    function localeMeridiem (hours, minutes, isLower) {
+	        if (hours > 11) {
+	            return isLower ? 'pm' : 'PM';
+	        } else {
+	            return isLower ? 'am' : 'AM';
+	        }
+	    }
+
+
+	    // MOMENTS
+
+	    // Setting the hour should keep the time, because the user explicitly
+	    // specified which hour they want. So trying to maintain the same hour (in
+	    // a new timezone) makes sense. Adding/subtracting hours does not follow
+	    // this rule.
+	    var getSetHour = makeGetSet('Hours', true);
+
+	    var baseConfig = {
+	        calendar: defaultCalendar,
+	        longDateFormat: defaultLongDateFormat,
+	        invalidDate: defaultInvalidDate,
+	        ordinal: defaultOrdinal,
+	        dayOfMonthOrdinalParse: defaultDayOfMonthOrdinalParse,
+	        relativeTime: defaultRelativeTime,
+
+	        months: defaultLocaleMonths,
+	        monthsShort: defaultLocaleMonthsShort,
+
+	        week: defaultLocaleWeek,
+
+	        weekdays: defaultLocaleWeekdays,
+	        weekdaysMin: defaultLocaleWeekdaysMin,
+	        weekdaysShort: defaultLocaleWeekdaysShort,
+
+	        meridiemParse: defaultLocaleMeridiemParse
+	    };
+
+	    // internal storage for locale config files
+	    var locales = {};
+	    var localeFamilies = {};
+	    var globalLocale;
+
+	    function normalizeLocale(key) {
+	        return key ? key.toLowerCase().replace('_', '-') : key;
+	    }
+
+	    // pick the locale from the array
+	    // try ['en-au', 'en-gb'] as 'en-au', 'en-gb', 'en', as in move through the list trying each
+	    // substring from most specific to least, but move to the next array item if it's a more specific variant than the current root
+	    function chooseLocale(names) {
+	        var i = 0, j, next, locale, split;
+
+	        while (i < names.length) {
+	            split = normalizeLocale(names[i]).split('-');
+	            j = split.length;
+	            next = normalizeLocale(names[i + 1]);
+	            next = next ? next.split('-') : null;
+	            while (j > 0) {
+	                locale = loadLocale(split.slice(0, j).join('-'));
+	                if (locale) {
+	                    return locale;
+	                }
+	                if (next && next.length >= j && compareArrays(split, next, true) >= j - 1) {
+	                    //the next array item is better than a shallower substring of this one
+	                    break;
+	                }
+	                j--;
+	            }
+	            i++;
+	        }
+	        return globalLocale;
+	    }
+
+	    function loadLocale(name) {
+	        var oldLocale = null;
+	        // TODO: Find a better way to register and load all the locales in Node
+	        if (!locales[name] && ('object' !== 'undefined') &&
+	                module && module.exports) {
+	            try {
+	                oldLocale = globalLocale._abbr;
+	                var aliasedRequire = commonjsRequire;
+	                aliasedRequire('./locale/' + name);
+	                getSetGlobalLocale(oldLocale);
+	            } catch (e) {}
+	        }
+	        return locales[name];
+	    }
+
+	    // This function will load locale and then set the global locale.  If
+	    // no arguments are passed in, it will simply return the current global
+	    // locale key.
+	    function getSetGlobalLocale (key, values) {
+	        var data;
+	        if (key) {
+	            if (isUndefined(values)) {
+	                data = getLocale(key);
+	            }
+	            else {
+	                data = defineLocale(key, values);
+	            }
+
+	            if (data) {
+	                // moment.duration._locale = moment._locale = data;
+	                globalLocale = data;
+	            }
+	            else {
+	                if ((typeof console !==  'undefined') && console.warn) {
+	                    //warn user if arguments are passed but the locale could not be set
+	                    console.warn('Locale ' + key +  ' not found. Did you forget to load it?');
+	                }
+	            }
+	        }
+
+	        return globalLocale._abbr;
+	    }
+
+	    function defineLocale (name, config) {
+	        if (config !== null) {
+	            var locale, parentConfig = baseConfig;
+	            config.abbr = name;
+	            if (locales[name] != null) {
+	                deprecateSimple('defineLocaleOverride',
+	                        'use moment.updateLocale(localeName, config) to change ' +
+	                        'an existing locale. moment.defineLocale(localeName, ' +
+	                        'config) should only be used for creating a new locale ' +
+	                        'See http://momentjs.com/guides/#/warnings/define-locale/ for more info.');
+	                parentConfig = locales[name]._config;
+	            } else if (config.parentLocale != null) {
+	                if (locales[config.parentLocale] != null) {
+	                    parentConfig = locales[config.parentLocale]._config;
+	                } else {
+	                    locale = loadLocale(config.parentLocale);
+	                    if (locale != null) {
+	                        parentConfig = locale._config;
+	                    } else {
+	                        if (!localeFamilies[config.parentLocale]) {
+	                            localeFamilies[config.parentLocale] = [];
+	                        }
+	                        localeFamilies[config.parentLocale].push({
+	                            name: name,
+	                            config: config
+	                        });
+	                        return null;
+	                    }
+	                }
+	            }
+	            locales[name] = new Locale(mergeConfigs(parentConfig, config));
+
+	            if (localeFamilies[name]) {
+	                localeFamilies[name].forEach(function (x) {
+	                    defineLocale(x.name, x.config);
+	                });
+	            }
+
+	            // backwards compat for now: also set the locale
+	            // make sure we set the locale AFTER all child locales have been
+	            // created, so we won't end up with the child locale set.
+	            getSetGlobalLocale(name);
+
+
+	            return locales[name];
+	        } else {
+	            // useful for testing
+	            delete locales[name];
+	            return null;
+	        }
+	    }
+
+	    function updateLocale(name, config) {
+	        if (config != null) {
+	            var locale, tmpLocale, parentConfig = baseConfig;
+	            // MERGE
+	            tmpLocale = loadLocale(name);
+	            if (tmpLocale != null) {
+	                parentConfig = tmpLocale._config;
+	            }
+	            config = mergeConfigs(parentConfig, config);
+	            locale = new Locale(config);
+	            locale.parentLocale = locales[name];
+	            locales[name] = locale;
+
+	            // backwards compat for now: also set the locale
+	            getSetGlobalLocale(name);
+	        } else {
+	            // pass null for config to unupdate, useful for tests
+	            if (locales[name] != null) {
+	                if (locales[name].parentLocale != null) {
+	                    locales[name] = locales[name].parentLocale;
+	                } else if (locales[name] != null) {
+	                    delete locales[name];
+	                }
+	            }
+	        }
+	        return locales[name];
+	    }
+
+	    // returns locale data
+	    function getLocale (key) {
+	        var locale;
+
+	        if (key && key._locale && key._locale._abbr) {
+	            key = key._locale._abbr;
+	        }
+
+	        if (!key) {
+	            return globalLocale;
+	        }
+
+	        if (!isArray(key)) {
+	            //short-circuit everything else
+	            locale = loadLocale(key);
+	            if (locale) {
+	                return locale;
+	            }
+	            key = [key];
+	        }
+
+	        return chooseLocale(key);
+	    }
+
+	    function listLocales() {
+	        return keys(locales);
+	    }
+
+	    function checkOverflow (m) {
+	        var overflow;
+	        var a = m._a;
+
+	        if (a && getParsingFlags(m).overflow === -2) {
+	            overflow =
+	                a[MONTH]       < 0 || a[MONTH]       > 11  ? MONTH :
+	                a[DATE]        < 1 || a[DATE]        > daysInMonth(a[YEAR], a[MONTH]) ? DATE :
+	                a[HOUR]        < 0 || a[HOUR]        > 24 || (a[HOUR] === 24 && (a[MINUTE] !== 0 || a[SECOND] !== 0 || a[MILLISECOND] !== 0)) ? HOUR :
+	                a[MINUTE]      < 0 || a[MINUTE]      > 59  ? MINUTE :
+	                a[SECOND]      < 0 || a[SECOND]      > 59  ? SECOND :
+	                a[MILLISECOND] < 0 || a[MILLISECOND] > 999 ? MILLISECOND :
+	                -1;
+
+	            if (getParsingFlags(m)._overflowDayOfYear && (overflow < YEAR || overflow > DATE)) {
+	                overflow = DATE;
+	            }
+	            if (getParsingFlags(m)._overflowWeeks && overflow === -1) {
+	                overflow = WEEK;
+	            }
+	            if (getParsingFlags(m)._overflowWeekday && overflow === -1) {
+	                overflow = WEEKDAY;
+	            }
+
+	            getParsingFlags(m).overflow = overflow;
+	        }
+
+	        return m;
+	    }
+
+	    // Pick the first defined of two or three arguments.
+	    function defaults(a, b, c) {
+	        if (a != null) {
+	            return a;
+	        }
+	        if (b != null) {
+	            return b;
+	        }
+	        return c;
+	    }
+
+	    function currentDateArray(config) {
+	        // hooks is actually the exported moment object
+	        var nowValue = new Date(hooks.now());
+	        if (config._useUTC) {
+	            return [nowValue.getUTCFullYear(), nowValue.getUTCMonth(), nowValue.getUTCDate()];
+	        }
+	        return [nowValue.getFullYear(), nowValue.getMonth(), nowValue.getDate()];
+	    }
+
+	    // convert an array to a date.
+	    // the array should mirror the parameters below
+	    // note: all values past the year are optional and will default to the lowest possible value.
+	    // [year, month, day , hour, minute, second, millisecond]
+	    function configFromArray (config) {
+	        var i, date, input = [], currentDate, expectedWeekday, yearToUse;
+
+	        if (config._d) {
+	            return;
+	        }
+
+	        currentDate = currentDateArray(config);
+
+	        //compute day of the year from weeks and weekdays
+	        if (config._w && config._a[DATE] == null && config._a[MONTH] == null) {
+	            dayOfYearFromWeekInfo(config);
+	        }
+
+	        //if the day of the year is set, figure out what it is
+	        if (config._dayOfYear != null) {
+	            yearToUse = defaults(config._a[YEAR], currentDate[YEAR]);
+
+	            if (config._dayOfYear > daysInYear(yearToUse) || config._dayOfYear === 0) {
+	                getParsingFlags(config)._overflowDayOfYear = true;
+	            }
+
+	            date = createUTCDate(yearToUse, 0, config._dayOfYear);
+	            config._a[MONTH] = date.getUTCMonth();
+	            config._a[DATE] = date.getUTCDate();
+	        }
+
+	        // Default to current date.
+	        // * if no year, month, day of month are given, default to today
+	        // * if day of month is given, default month and year
+	        // * if month is given, default only year
+	        // * if year is given, don't default anything
+	        for (i = 0; i < 3 && config._a[i] == null; ++i) {
+	            config._a[i] = input[i] = currentDate[i];
+	        }
+
+	        // Zero out whatever was not defaulted, including time
+	        for (; i < 7; i++) {
+	            config._a[i] = input[i] = (config._a[i] == null) ? (i === 2 ? 1 : 0) : config._a[i];
+	        }
+
+	        // Check for 24:00:00.000
+	        if (config._a[HOUR] === 24 &&
+	                config._a[MINUTE] === 0 &&
+	                config._a[SECOND] === 0 &&
+	                config._a[MILLISECOND] === 0) {
+	            config._nextDay = true;
+	            config._a[HOUR] = 0;
+	        }
+
+	        config._d = (config._useUTC ? createUTCDate : createDate).apply(null, input);
+	        expectedWeekday = config._useUTC ? config._d.getUTCDay() : config._d.getDay();
+
+	        // Apply timezone offset from input. The actual utcOffset can be changed
+	        // with parseZone.
+	        if (config._tzm != null) {
+	            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+	        }
+
+	        if (config._nextDay) {
+	            config._a[HOUR] = 24;
+	        }
+
+	        // check for mismatching day of week
+	        if (config._w && typeof config._w.d !== 'undefined' && config._w.d !== expectedWeekday) {
+	            getParsingFlags(config).weekdayMismatch = true;
+	        }
+	    }
+
+	    function dayOfYearFromWeekInfo(config) {
+	        var w, weekYear, week, weekday, dow, doy, temp, weekdayOverflow;
+
+	        w = config._w;
+	        if (w.GG != null || w.W != null || w.E != null) {
+	            dow = 1;
+	            doy = 4;
+
+	            // TODO: We need to take the current isoWeekYear, but that depends on
+	            // how we interpret now (local, utc, fixed offset). So create
+	            // a now version of current config (take local/utc/offset flags, and
+	            // create now).
+	            weekYear = defaults(w.GG, config._a[YEAR], weekOfYear(createLocal(), 1, 4).year);
+	            week = defaults(w.W, 1);
+	            weekday = defaults(w.E, 1);
+	            if (weekday < 1 || weekday > 7) {
+	                weekdayOverflow = true;
+	            }
+	        } else {
+	            dow = config._locale._week.dow;
+	            doy = config._locale._week.doy;
+
+	            var curWeek = weekOfYear(createLocal(), dow, doy);
+
+	            weekYear = defaults(w.gg, config._a[YEAR], curWeek.year);
+
+	            // Default to current week.
+	            week = defaults(w.w, curWeek.week);
+
+	            if (w.d != null) {
+	                // weekday -- low day numbers are considered next week
+	                weekday = w.d;
+	                if (weekday < 0 || weekday > 6) {
+	                    weekdayOverflow = true;
+	                }
+	            } else if (w.e != null) {
+	                // local weekday -- counting starts from begining of week
+	                weekday = w.e + dow;
+	                if (w.e < 0 || w.e > 6) {
+	                    weekdayOverflow = true;
+	                }
+	            } else {
+	                // default to begining of week
+	                weekday = dow;
+	            }
+	        }
+	        if (week < 1 || week > weeksInYear(weekYear, dow, doy)) {
+	            getParsingFlags(config)._overflowWeeks = true;
+	        } else if (weekdayOverflow != null) {
+	            getParsingFlags(config)._overflowWeekday = true;
+	        } else {
+	            temp = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy);
+	            config._a[YEAR] = temp.year;
+	            config._dayOfYear = temp.dayOfYear;
+	        }
+	    }
+
+	    // iso 8601 regex
+	    // 0000-00-00 0000-W00 or 0000-W00-0 + T + 00 or 00:00 or 00:00:00 or 00:00:00.000 + +00:00 or +0000 or +00)
+	    var extendedIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})-(?:\d\d-\d\d|W\d\d-\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?::\d\d(?::\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+	    var basicIsoRegex = /^\s*((?:[+-]\d{6}|\d{4})(?:\d\d\d\d|W\d\d\d|W\d\d|\d\d\d|\d\d))(?:(T| )(\d\d(?:\d\d(?:\d\d(?:[.,]\d+)?)?)?)([\+\-]\d\d(?::?\d\d)?|\s*Z)?)?$/;
+
+	    var tzRegex = /Z|[+-]\d\d(?::?\d\d)?/;
+
+	    var isoDates = [
+	        ['YYYYYY-MM-DD', /[+-]\d{6}-\d\d-\d\d/],
+	        ['YYYY-MM-DD', /\d{4}-\d\d-\d\d/],
+	        ['GGGG-[W]WW-E', /\d{4}-W\d\d-\d/],
+	        ['GGGG-[W]WW', /\d{4}-W\d\d/, false],
+	        ['YYYY-DDD', /\d{4}-\d{3}/],
+	        ['YYYY-MM', /\d{4}-\d\d/, false],
+	        ['YYYYYYMMDD', /[+-]\d{10}/],
+	        ['YYYYMMDD', /\d{8}/],
+	        // YYYYMM is NOT allowed by the standard
+	        ['GGGG[W]WWE', /\d{4}W\d{3}/],
+	        ['GGGG[W]WW', /\d{4}W\d{2}/, false],
+	        ['YYYYDDD', /\d{7}/]
+	    ];
+
+	    // iso time formats and regexes
+	    var isoTimes = [
+	        ['HH:mm:ss.SSSS', /\d\d:\d\d:\d\d\.\d+/],
+	        ['HH:mm:ss,SSSS', /\d\d:\d\d:\d\d,\d+/],
+	        ['HH:mm:ss', /\d\d:\d\d:\d\d/],
+	        ['HH:mm', /\d\d:\d\d/],
+	        ['HHmmss.SSSS', /\d\d\d\d\d\d\.\d+/],
+	        ['HHmmss,SSSS', /\d\d\d\d\d\d,\d+/],
+	        ['HHmmss', /\d\d\d\d\d\d/],
+	        ['HHmm', /\d\d\d\d/],
+	        ['HH', /\d\d/]
+	    ];
+
+	    var aspNetJsonRegex = /^\/?Date\((\-?\d+)/i;
+
+	    // date from iso format
+	    function configFromISO(config) {
+	        var i, l,
+	            string = config._i,
+	            match = extendedIsoRegex.exec(string) || basicIsoRegex.exec(string),
+	            allowTime, dateFormat, timeFormat, tzFormat;
+
+	        if (match) {
+	            getParsingFlags(config).iso = true;
+
+	            for (i = 0, l = isoDates.length; i < l; i++) {
+	                if (isoDates[i][1].exec(match[1])) {
+	                    dateFormat = isoDates[i][0];
+	                    allowTime = isoDates[i][2] !== false;
+	                    break;
+	                }
+	            }
+	            if (dateFormat == null) {
+	                config._isValid = false;
+	                return;
+	            }
+	            if (match[3]) {
+	                for (i = 0, l = isoTimes.length; i < l; i++) {
+	                    if (isoTimes[i][1].exec(match[3])) {
+	                        // match[2] should be 'T' or space
+	                        timeFormat = (match[2] || ' ') + isoTimes[i][0];
+	                        break;
+	                    }
+	                }
+	                if (timeFormat == null) {
+	                    config._isValid = false;
+	                    return;
+	                }
+	            }
+	            if (!allowTime && timeFormat != null) {
+	                config._isValid = false;
+	                return;
+	            }
+	            if (match[4]) {
+	                if (tzRegex.exec(match[4])) {
+	                    tzFormat = 'Z';
+	                } else {
+	                    config._isValid = false;
+	                    return;
+	                }
+	            }
+	            config._f = dateFormat + (timeFormat || '') + (tzFormat || '');
+	            configFromStringAndFormat(config);
+	        } else {
+	            config._isValid = false;
+	        }
+	    }
+
+	    // RFC 2822 regex: For details see https://tools.ietf.org/html/rfc2822#section-3.3
+	    var rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),?\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|([+-]\d{4}))$/;
+
+	    function extractFromRFC2822Strings(yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr) {
+	        var result = [
+	            untruncateYear(yearStr),
+	            defaultLocaleMonthsShort.indexOf(monthStr),
+	            parseInt(dayStr, 10),
+	            parseInt(hourStr, 10),
+	            parseInt(minuteStr, 10)
+	        ];
+
+	        if (secondStr) {
+	            result.push(parseInt(secondStr, 10));
+	        }
+
+	        return result;
+	    }
+
+	    function untruncateYear(yearStr) {
+	        var year = parseInt(yearStr, 10);
+	        if (year <= 49) {
+	            return 2000 + year;
+	        } else if (year <= 999) {
+	            return 1900 + year;
+	        }
+	        return year;
+	    }
+
+	    function preprocessRFC2822(s) {
+	        // Remove comments and folding whitespace and replace multiple-spaces with a single space
+	        return s.replace(/\([^)]*\)|[\n\t]/g, ' ').replace(/(\s\s+)/g, ' ').replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+	    }
+
+	    function checkWeekday(weekdayStr, parsedInput, config) {
+	        if (weekdayStr) {
+	            // TODO: Replace the vanilla JS Date object with an indepentent day-of-week check.
+	            var weekdayProvided = defaultLocaleWeekdaysShort.indexOf(weekdayStr),
+	                weekdayActual = new Date(parsedInput[0], parsedInput[1], parsedInput[2]).getDay();
+	            if (weekdayProvided !== weekdayActual) {
+	                getParsingFlags(config).weekdayMismatch = true;
+	                config._isValid = false;
+	                return false;
+	            }
+	        }
+	        return true;
+	    }
+
+	    var obsOffsets = {
+	        UT: 0,
+	        GMT: 0,
+	        EDT: -4 * 60,
+	        EST: -5 * 60,
+	        CDT: -5 * 60,
+	        CST: -6 * 60,
+	        MDT: -6 * 60,
+	        MST: -7 * 60,
+	        PDT: -7 * 60,
+	        PST: -8 * 60
+	    };
+
+	    function calculateOffset(obsOffset, militaryOffset, numOffset) {
+	        if (obsOffset) {
+	            return obsOffsets[obsOffset];
+	        } else if (militaryOffset) {
+	            // the only allowed military tz is Z
+	            return 0;
+	        } else {
+	            var hm = parseInt(numOffset, 10);
+	            var m = hm % 100, h = (hm - m) / 100;
+	            return h * 60 + m;
+	        }
+	    }
+
+	    // date and time from ref 2822 format
+	    function configFromRFC2822(config) {
+	        var match = rfc2822.exec(preprocessRFC2822(config._i));
+	        if (match) {
+	            var parsedArray = extractFromRFC2822Strings(match[4], match[3], match[2], match[5], match[6], match[7]);
+	            if (!checkWeekday(match[1], parsedArray, config)) {
+	                return;
+	            }
+
+	            config._a = parsedArray;
+	            config._tzm = calculateOffset(match[8], match[9], match[10]);
+
+	            config._d = createUTCDate.apply(null, config._a);
+	            config._d.setUTCMinutes(config._d.getUTCMinutes() - config._tzm);
+
+	            getParsingFlags(config).rfc2822 = true;
+	        } else {
+	            config._isValid = false;
+	        }
+	    }
+
+	    // date from iso format or fallback
+	    function configFromString(config) {
+	        var matched = aspNetJsonRegex.exec(config._i);
+
+	        if (matched !== null) {
+	            config._d = new Date(+matched[1]);
+	            return;
+	        }
+
+	        configFromISO(config);
+	        if (config._isValid === false) {
+	            delete config._isValid;
+	        } else {
+	            return;
+	        }
+
+	        configFromRFC2822(config);
+	        if (config._isValid === false) {
+	            delete config._isValid;
+	        } else {
+	            return;
+	        }
+
+	        // Final attempt, use Input Fallback
+	        hooks.createFromInputFallback(config);
+	    }
+
+	    hooks.createFromInputFallback = deprecate(
+	        'value provided is not in a recognized RFC2822 or ISO format. moment construction falls back to js Date(), ' +
+	        'which is not reliable across all browsers and versions. Non RFC2822/ISO date formats are ' +
+	        'discouraged and will be removed in an upcoming major release. Please refer to ' +
+	        'http://momentjs.com/guides/#/warnings/js-date/ for more info.',
+	        function (config) {
+	            config._d = new Date(config._i + (config._useUTC ? ' UTC' : ''));
+	        }
+	    );
+
+	    // constant that refers to the ISO standard
+	    hooks.ISO_8601 = function () {};
+
+	    // constant that refers to the RFC 2822 form
+	    hooks.RFC_2822 = function () {};
+
+	    // date from string and format string
+	    function configFromStringAndFormat(config) {
+	        // TODO: Move this to another part of the creation flow to prevent circular deps
+	        if (config._f === hooks.ISO_8601) {
+	            configFromISO(config);
+	            return;
+	        }
+	        if (config._f === hooks.RFC_2822) {
+	            configFromRFC2822(config);
+	            return;
+	        }
+	        config._a = [];
+	        getParsingFlags(config).empty = true;
+
+	        // This array is used to make a Date, either with `new Date` or `Date.UTC`
+	        var string = '' + config._i,
+	            i, parsedInput, tokens, token, skipped,
+	            stringLength = string.length,
+	            totalParsedInputLength = 0;
+
+	        tokens = expandFormat(config._f, config._locale).match(formattingTokens) || [];
+
+	        for (i = 0; i < tokens.length; i++) {
+	            token = tokens[i];
+	            parsedInput = (string.match(getParseRegexForToken(token, config)) || [])[0];
+	            // console.log('token', token, 'parsedInput', parsedInput,
+	            //         'regex', getParseRegexForToken(token, config));
+	            if (parsedInput) {
+	                skipped = string.substr(0, string.indexOf(parsedInput));
+	                if (skipped.length > 0) {
+	                    getParsingFlags(config).unusedInput.push(skipped);
+	                }
+	                string = string.slice(string.indexOf(parsedInput) + parsedInput.length);
+	                totalParsedInputLength += parsedInput.length;
+	            }
+	            // don't parse if it's not a known token
+	            if (formatTokenFunctions[token]) {
+	                if (parsedInput) {
+	                    getParsingFlags(config).empty = false;
+	                }
+	                else {
+	                    getParsingFlags(config).unusedTokens.push(token);
+	                }
+	                addTimeToArrayFromToken(token, parsedInput, config);
+	            }
+	            else if (config._strict && !parsedInput) {
+	                getParsingFlags(config).unusedTokens.push(token);
+	            }
+	        }
+
+	        // add remaining unparsed input length to the string
+	        getParsingFlags(config).charsLeftOver = stringLength - totalParsedInputLength;
+	        if (string.length > 0) {
+	            getParsingFlags(config).unusedInput.push(string);
+	        }
+
+	        // clear _12h flag if hour is <= 12
+	        if (config._a[HOUR] <= 12 &&
+	            getParsingFlags(config).bigHour === true &&
+	            config._a[HOUR] > 0) {
+	            getParsingFlags(config).bigHour = undefined;
+	        }
+
+	        getParsingFlags(config).parsedDateParts = config._a.slice(0);
+	        getParsingFlags(config).meridiem = config._meridiem;
+	        // handle meridiem
+	        config._a[HOUR] = meridiemFixWrap(config._locale, config._a[HOUR], config._meridiem);
+
+	        configFromArray(config);
+	        checkOverflow(config);
+	    }
+
+
+	    function meridiemFixWrap (locale, hour, meridiem) {
+	        var isPm;
+
+	        if (meridiem == null) {
+	            // nothing to do
+	            return hour;
+	        }
+	        if (locale.meridiemHour != null) {
+	            return locale.meridiemHour(hour, meridiem);
+	        } else if (locale.isPM != null) {
+	            // Fallback
+	            isPm = locale.isPM(meridiem);
+	            if (isPm && hour < 12) {
+	                hour += 12;
+	            }
+	            if (!isPm && hour === 12) {
+	                hour = 0;
+	            }
+	            return hour;
+	        } else {
+	            // this is not supposed to happen
+	            return hour;
+	        }
+	    }
+
+	    // date from string and array of format strings
+	    function configFromStringAndArray(config) {
+	        var tempConfig,
+	            bestMoment,
+
+	            scoreToBeat,
+	            i,
+	            currentScore;
+
+	        if (config._f.length === 0) {
+	            getParsingFlags(config).invalidFormat = true;
+	            config._d = new Date(NaN);
+	            return;
+	        }
+
+	        for (i = 0; i < config._f.length; i++) {
+	            currentScore = 0;
+	            tempConfig = copyConfig({}, config);
+	            if (config._useUTC != null) {
+	                tempConfig._useUTC = config._useUTC;
+	            }
+	            tempConfig._f = config._f[i];
+	            configFromStringAndFormat(tempConfig);
+
+	            if (!isValid(tempConfig)) {
+	                continue;
+	            }
+
+	            // if there is any input that was not parsed add a penalty for that format
+	            currentScore += getParsingFlags(tempConfig).charsLeftOver;
+
+	            //or tokens
+	            currentScore += getParsingFlags(tempConfig).unusedTokens.length * 10;
+
+	            getParsingFlags(tempConfig).score = currentScore;
+
+	            if (scoreToBeat == null || currentScore < scoreToBeat) {
+	                scoreToBeat = currentScore;
+	                bestMoment = tempConfig;
+	            }
+	        }
+
+	        extend(config, bestMoment || tempConfig);
+	    }
+
+	    function configFromObject(config) {
+	        if (config._d) {
+	            return;
+	        }
+
+	        var i = normalizeObjectUnits(config._i);
+	        config._a = map([i.year, i.month, i.day || i.date, i.hour, i.minute, i.second, i.millisecond], function (obj) {
+	            return obj && parseInt(obj, 10);
+	        });
+
+	        configFromArray(config);
+	    }
+
+	    function createFromConfig (config) {
+	        var res = new Moment(checkOverflow(prepareConfig(config)));
+	        if (res._nextDay) {
+	            // Adding is smart enough around DST
+	            res.add(1, 'd');
+	            res._nextDay = undefined;
+	        }
+
+	        return res;
+	    }
+
+	    function prepareConfig (config) {
+	        var input = config._i,
+	            format = config._f;
+
+	        config._locale = config._locale || getLocale(config._l);
+
+	        if (input === null || (format === undefined && input === '')) {
+	            return createInvalid({nullInput: true});
+	        }
+
+	        if (typeof input === 'string') {
+	            config._i = input = config._locale.preparse(input);
+	        }
+
+	        if (isMoment(input)) {
+	            return new Moment(checkOverflow(input));
+	        } else if (isDate(input)) {
+	            config._d = input;
+	        } else if (isArray(format)) {
+	            configFromStringAndArray(config);
+	        } else if (format) {
+	            configFromStringAndFormat(config);
+	        }  else {
+	            configFromInput(config);
+	        }
+
+	        if (!isValid(config)) {
+	            config._d = null;
+	        }
+
+	        return config;
+	    }
+
+	    function configFromInput(config) {
+	        var input = config._i;
+	        if (isUndefined(input)) {
+	            config._d = new Date(hooks.now());
+	        } else if (isDate(input)) {
+	            config._d = new Date(input.valueOf());
+	        } else if (typeof input === 'string') {
+	            configFromString(config);
+	        } else if (isArray(input)) {
+	            config._a = map(input.slice(0), function (obj) {
+	                return parseInt(obj, 10);
+	            });
+	            configFromArray(config);
+	        } else if (isObject(input)) {
+	            configFromObject(config);
+	        } else if (isNumber(input)) {
+	            // from milliseconds
+	            config._d = new Date(input);
+	        } else {
+	            hooks.createFromInputFallback(config);
+	        }
+	    }
+
+	    function createLocalOrUTC (input, format, locale, strict, isUTC) {
+	        var c = {};
+
+	        if (locale === true || locale === false) {
+	            strict = locale;
+	            locale = undefined;
+	        }
+
+	        if ((isObject(input) && isObjectEmpty(input)) ||
+	                (isArray(input) && input.length === 0)) {
+	            input = undefined;
+	        }
+	        // object construction must be done this way.
+	        // https://github.com/moment/moment/issues/1423
+	        c._isAMomentObject = true;
+	        c._useUTC = c._isUTC = isUTC;
+	        c._l = locale;
+	        c._i = input;
+	        c._f = format;
+	        c._strict = strict;
+
+	        return createFromConfig(c);
+	    }
+
+	    function createLocal (input, format, locale, strict) {
+	        return createLocalOrUTC(input, format, locale, strict, false);
+	    }
+
+	    var prototypeMin = deprecate(
+	        'moment().min is deprecated, use moment.max instead. http://momentjs.com/guides/#/warnings/min-max/',
+	        function () {
+	            var other = createLocal.apply(null, arguments);
+	            if (this.isValid() && other.isValid()) {
+	                return other < this ? this : other;
+	            } else {
+	                return createInvalid();
+	            }
+	        }
+	    );
+
+	    var prototypeMax = deprecate(
+	        'moment().max is deprecated, use moment.min instead. http://momentjs.com/guides/#/warnings/min-max/',
+	        function () {
+	            var other = createLocal.apply(null, arguments);
+	            if (this.isValid() && other.isValid()) {
+	                return other > this ? this : other;
+	            } else {
+	                return createInvalid();
+	            }
+	        }
+	    );
+
+	    // Pick a moment m from moments so that m[fn](other) is true for all
+	    // other. This relies on the function fn to be transitive.
+	    //
+	    // moments should either be an array of moment objects or an array, whose
+	    // first element is an array of moment objects.
+	    function pickBy(fn, moments) {
+	        var res, i;
+	        if (moments.length === 1 && isArray(moments[0])) {
+	            moments = moments[0];
+	        }
+	        if (!moments.length) {
+	            return createLocal();
+	        }
+	        res = moments[0];
+	        for (i = 1; i < moments.length; ++i) {
+	            if (!moments[i].isValid() || moments[i][fn](res)) {
+	                res = moments[i];
+	            }
+	        }
+	        return res;
+	    }
+
+	    // TODO: Use [].sort instead?
+	    function min () {
+	        var args = [].slice.call(arguments, 0);
+
+	        return pickBy('isBefore', args);
+	    }
+
+	    function max () {
+	        var args = [].slice.call(arguments, 0);
+
+	        return pickBy('isAfter', args);
+	    }
+
+	    var now = function () {
+	        return Date.now ? Date.now() : +(new Date());
+	    };
+
+	    var ordering = ['year', 'quarter', 'month', 'week', 'day', 'hour', 'minute', 'second', 'millisecond'];
+
+	    function isDurationValid(m) {
+	        for (var key in m) {
+	            if (!(indexOf.call(ordering, key) !== -1 && (m[key] == null || !isNaN(m[key])))) {
+	                return false;
+	            }
+	        }
+
+	        var unitHasDecimal = false;
+	        for (var i = 0; i < ordering.length; ++i) {
+	            if (m[ordering[i]]) {
+	                if (unitHasDecimal) {
+	                    return false; // only allow non-integers for smallest unit
+	                }
+	                if (parseFloat(m[ordering[i]]) !== toInt(m[ordering[i]])) {
+	                    unitHasDecimal = true;
+	                }
+	            }
+	        }
+
+	        return true;
+	    }
+
+	    function isValid$1() {
+	        return this._isValid;
+	    }
+
+	    function createInvalid$1() {
+	        return createDuration(NaN);
+	    }
+
+	    function Duration (duration) {
+	        var normalizedInput = normalizeObjectUnits(duration),
+	            years = normalizedInput.year || 0,
+	            quarters = normalizedInput.quarter || 0,
+	            months = normalizedInput.month || 0,
+	            weeks = normalizedInput.week || 0,
+	            days = normalizedInput.day || 0,
+	            hours = normalizedInput.hour || 0,
+	            minutes = normalizedInput.minute || 0,
+	            seconds = normalizedInput.second || 0,
+	            milliseconds = normalizedInput.millisecond || 0;
+
+	        this._isValid = isDurationValid(normalizedInput);
+
+	        // representation for dateAddRemove
+	        this._milliseconds = +milliseconds +
+	            seconds * 1e3 + // 1000
+	            minutes * 6e4 + // 1000 * 60
+	            hours * 1000 * 60 * 60; //using 1000 * 60 * 60 instead of 36e5 to avoid floating point rounding errors https://github.com/moment/moment/issues/2978
+	        // Because of dateAddRemove treats 24 hours as different from a
+	        // day when working around DST, we need to store them separately
+	        this._days = +days +
+	            weeks * 7;
+	        // It is impossible to translate months into days without knowing
+	        // which months you are are talking about, so we have to store
+	        // it separately.
+	        this._months = +months +
+	            quarters * 3 +
+	            years * 12;
+
+	        this._data = {};
+
+	        this._locale = getLocale();
+
+	        this._bubble();
+	    }
+
+	    function isDuration (obj) {
+	        return obj instanceof Duration;
+	    }
+
+	    function absRound (number) {
+	        if (number < 0) {
+	            return Math.round(-1 * number) * -1;
+	        } else {
+	            return Math.round(number);
+	        }
+	    }
+
+	    // FORMATTING
+
+	    function offset (token, separator) {
+	        addFormatToken(token, 0, 0, function () {
+	            var offset = this.utcOffset();
+	            var sign = '+';
+	            if (offset < 0) {
+	                offset = -offset;
+	                sign = '-';
+	            }
+	            return sign + zeroFill(~~(offset / 60), 2) + separator + zeroFill(~~(offset) % 60, 2);
+	        });
+	    }
+
+	    offset('Z', ':');
+	    offset('ZZ', '');
+
+	    // PARSING
+
+	    addRegexToken('Z',  matchShortOffset);
+	    addRegexToken('ZZ', matchShortOffset);
+	    addParseToken(['Z', 'ZZ'], function (input, array, config) {
+	        config._useUTC = true;
+	        config._tzm = offsetFromString(matchShortOffset, input);
+	    });
+
+	    // HELPERS
+
+	    // timezone chunker
+	    // '+10:00' > ['10',  '00']
+	    // '-1530'  > ['-15', '30']
+	    var chunkOffset = /([\+\-]|\d\d)/gi;
+
+	    function offsetFromString(matcher, string) {
+	        var matches = (string || '').match(matcher);
+
+	        if (matches === null) {
+	            return null;
+	        }
+
+	        var chunk   = matches[matches.length - 1] || [];
+	        var parts   = (chunk + '').match(chunkOffset) || ['-', 0, 0];
+	        var minutes = +(parts[1] * 60) + toInt(parts[2]);
+
+	        return minutes === 0 ?
+	          0 :
+	          parts[0] === '+' ? minutes : -minutes;
+	    }
+
+	    // Return a moment from input, that is local/utc/zone equivalent to model.
+	    function cloneWithOffset(input, model) {
+	        var res, diff;
+	        if (model._isUTC) {
+	            res = model.clone();
+	            diff = (isMoment(input) || isDate(input) ? input.valueOf() : createLocal(input).valueOf()) - res.valueOf();
+	            // Use low-level api, because this fn is low-level api.
+	            res._d.setTime(res._d.valueOf() + diff);
+	            hooks.updateOffset(res, false);
+	            return res;
+	        } else {
+	            return createLocal(input).local();
+	        }
+	    }
+
+	    function getDateOffset (m) {
+	        // On Firefox.24 Date#getTimezoneOffset returns a floating point.
+	        // https://github.com/moment/moment/pull/1871
+	        return -Math.round(m._d.getTimezoneOffset() / 15) * 15;
+	    }
+
+	    // HOOKS
+
+	    // This function will be called whenever a moment is mutated.
+	    // It is intended to keep the offset in sync with the timezone.
+	    hooks.updateOffset = function () {};
+
+	    // MOMENTS
+
+	    // keepLocalTime = true means only change the timezone, without
+	    // affecting the local hour. So 5:31:26 +0300 --[utcOffset(2, true)]-->
+	    // 5:31:26 +0200 It is possible that 5:31:26 doesn't exist with offset
+	    // +0200, so we adjust the time as needed, to be valid.
+	    //
+	    // Keeping the time actually adds/subtracts (one hour)
+	    // from the actual represented time. That is why we call updateOffset
+	    // a second time. In case it wants us to change the offset again
+	    // _changeInProgress == true case, then we have to adjust, because
+	    // there is no such time in the given timezone.
+	    function getSetOffset (input, keepLocalTime, keepMinutes) {
+	        var offset = this._offset || 0,
+	            localAdjust;
+	        if (!this.isValid()) {
+	            return input != null ? this : NaN;
+	        }
+	        if (input != null) {
+	            if (typeof input === 'string') {
+	                input = offsetFromString(matchShortOffset, input);
+	                if (input === null) {
+	                    return this;
+	                }
+	            } else if (Math.abs(input) < 16 && !keepMinutes) {
+	                input = input * 60;
+	            }
+	            if (!this._isUTC && keepLocalTime) {
+	                localAdjust = getDateOffset(this);
+	            }
+	            this._offset = input;
+	            this._isUTC = true;
+	            if (localAdjust != null) {
+	                this.add(localAdjust, 'm');
+	            }
+	            if (offset !== input) {
+	                if (!keepLocalTime || this._changeInProgress) {
+	                    addSubtract(this, createDuration(input - offset, 'm'), 1, false);
+	                } else if (!this._changeInProgress) {
+	                    this._changeInProgress = true;
+	                    hooks.updateOffset(this, true);
+	                    this._changeInProgress = null;
+	                }
+	            }
+	            return this;
+	        } else {
+	            return this._isUTC ? offset : getDateOffset(this);
+	        }
+	    }
+
+	    function getSetZone (input, keepLocalTime) {
+	        if (input != null) {
+	            if (typeof input !== 'string') {
+	                input = -input;
+	            }
+
+	            this.utcOffset(input, keepLocalTime);
+
+	            return this;
+	        } else {
+	            return -this.utcOffset();
+	        }
+	    }
+
+	    function setOffsetToUTC (keepLocalTime) {
+	        return this.utcOffset(0, keepLocalTime);
+	    }
+
+	    function setOffsetToLocal (keepLocalTime) {
+	        if (this._isUTC) {
+	            this.utcOffset(0, keepLocalTime);
+	            this._isUTC = false;
+
+	            if (keepLocalTime) {
+	                this.subtract(getDateOffset(this), 'm');
+	            }
+	        }
+	        return this;
+	    }
+
+	    function setOffsetToParsedOffset () {
+	        if (this._tzm != null) {
+	            this.utcOffset(this._tzm, false, true);
+	        } else if (typeof this._i === 'string') {
+	            var tZone = offsetFromString(matchOffset, this._i);
+	            if (tZone != null) {
+	                this.utcOffset(tZone);
+	            }
+	            else {
+	                this.utcOffset(0, true);
+	            }
+	        }
+	        return this;
+	    }
+
+	    function hasAlignedHourOffset (input) {
+	        if (!this.isValid()) {
+	            return false;
+	        }
+	        input = input ? createLocal(input).utcOffset() : 0;
+
+	        return (this.utcOffset() - input) % 60 === 0;
+	    }
+
+	    function isDaylightSavingTime () {
+	        return (
+	            this.utcOffset() > this.clone().month(0).utcOffset() ||
+	            this.utcOffset() > this.clone().month(5).utcOffset()
+	        );
+	    }
+
+	    function isDaylightSavingTimeShifted () {
+	        if (!isUndefined(this._isDSTShifted)) {
+	            return this._isDSTShifted;
+	        }
+
+	        var c = {};
+
+	        copyConfig(c, this);
+	        c = prepareConfig(c);
+
+	        if (c._a) {
+	            var other = c._isUTC ? createUTC(c._a) : createLocal(c._a);
+	            this._isDSTShifted = this.isValid() &&
+	                compareArrays(c._a, other.toArray()) > 0;
+	        } else {
+	            this._isDSTShifted = false;
+	        }
+
+	        return this._isDSTShifted;
+	    }
+
+	    function isLocal () {
+	        return this.isValid() ? !this._isUTC : false;
+	    }
+
+	    function isUtcOffset () {
+	        return this.isValid() ? this._isUTC : false;
+	    }
+
+	    function isUtc () {
+	        return this.isValid() ? this._isUTC && this._offset === 0 : false;
+	    }
+
+	    // ASP.NET json date format regex
+	    var aspNetRegex = /^(\-|\+)?(?:(\d*)[. ])?(\d+)\:(\d+)(?:\:(\d+)(\.\d*)?)?$/;
+
+	    // from http://docs.closure-library.googlecode.com/git/closure_goog_date_date.js.source.html
+	    // somewhat more in line with 4.4.3.2 2004 spec, but allows decimal anywhere
+	    // and further modified to allow for strings containing both week and day
+	    var isoRegex = /^(-|\+)?P(?:([-+]?[0-9,.]*)Y)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)W)?(?:([-+]?[0-9,.]*)D)?(?:T(?:([-+]?[0-9,.]*)H)?(?:([-+]?[0-9,.]*)M)?(?:([-+]?[0-9,.]*)S)?)?$/;
+
+	    function createDuration (input, key) {
+	        var duration = input,
+	            // matching against regexp is expensive, do it on demand
+	            match = null,
+	            sign,
+	            ret,
+	            diffRes;
+
+	        if (isDuration(input)) {
+	            duration = {
+	                ms : input._milliseconds,
+	                d  : input._days,
+	                M  : input._months
+	            };
+	        } else if (isNumber(input)) {
+	            duration = {};
+	            if (key) {
+	                duration[key] = input;
+	            } else {
+	                duration.milliseconds = input;
+	            }
+	        } else if (!!(match = aspNetRegex.exec(input))) {
+	            sign = (match[1] === '-') ? -1 : 1;
+	            duration = {
+	                y  : 0,
+	                d  : toInt(match[DATE])                         * sign,
+	                h  : toInt(match[HOUR])                         * sign,
+	                m  : toInt(match[MINUTE])                       * sign,
+	                s  : toInt(match[SECOND])                       * sign,
+	                ms : toInt(absRound(match[MILLISECOND] * 1000)) * sign // the millisecond decimal point is included in the match
+	            };
+	        } else if (!!(match = isoRegex.exec(input))) {
+	            sign = (match[1] === '-') ? -1 : (match[1] === '+') ? 1 : 1;
+	            duration = {
+	                y : parseIso(match[2], sign),
+	                M : parseIso(match[3], sign),
+	                w : parseIso(match[4], sign),
+	                d : parseIso(match[5], sign),
+	                h : parseIso(match[6], sign),
+	                m : parseIso(match[7], sign),
+	                s : parseIso(match[8], sign)
+	            };
+	        } else if (duration == null) {// checks for null or undefined
+	            duration = {};
+	        } else if (typeof duration === 'object' && ('from' in duration || 'to' in duration)) {
+	            diffRes = momentsDifference(createLocal(duration.from), createLocal(duration.to));
+
+	            duration = {};
+	            duration.ms = diffRes.milliseconds;
+	            duration.M = diffRes.months;
+	        }
+
+	        ret = new Duration(duration);
+
+	        if (isDuration(input) && hasOwnProp(input, '_locale')) {
+	            ret._locale = input._locale;
+	        }
+
+	        return ret;
+	    }
+
+	    createDuration.fn = Duration.prototype;
+	    createDuration.invalid = createInvalid$1;
+
+	    function parseIso (inp, sign) {
+	        // We'd normally use ~~inp for this, but unfortunately it also
+	        // converts floats to ints.
+	        // inp may be undefined, so careful calling replace on it.
+	        var res = inp && parseFloat(inp.replace(',', '.'));
+	        // apply sign while we're at it
+	        return (isNaN(res) ? 0 : res) * sign;
+	    }
+
+	    function positiveMomentsDifference(base, other) {
+	        var res = {milliseconds: 0, months: 0};
+
+	        res.months = other.month() - base.month() +
+	            (other.year() - base.year()) * 12;
+	        if (base.clone().add(res.months, 'M').isAfter(other)) {
+	            --res.months;
+	        }
+
+	        res.milliseconds = +other - +(base.clone().add(res.months, 'M'));
+
+	        return res;
+	    }
+
+	    function momentsDifference(base, other) {
+	        var res;
+	        if (!(base.isValid() && other.isValid())) {
+	            return {milliseconds: 0, months: 0};
+	        }
+
+	        other = cloneWithOffset(other, base);
+	        if (base.isBefore(other)) {
+	            res = positiveMomentsDifference(base, other);
+	        } else {
+	            res = positiveMomentsDifference(other, base);
+	            res.milliseconds = -res.milliseconds;
+	            res.months = -res.months;
+	        }
+
+	        return res;
+	    }
+
+	    // TODO: remove 'name' arg after deprecation is removed
+	    function createAdder(direction, name) {
+	        return function (val, period) {
+	            var dur, tmp;
+	            //invert the arguments, but complain about it
+	            if (period !== null && !isNaN(+period)) {
+	                deprecateSimple(name, 'moment().' + name  + '(period, number) is deprecated. Please use moment().' + name + '(number, period). ' +
+	                'See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info.');
+	                tmp = val; val = period; period = tmp;
+	            }
+
+	            val = typeof val === 'string' ? +val : val;
+	            dur = createDuration(val, period);
+	            addSubtract(this, dur, direction);
+	            return this;
+	        };
+	    }
+
+	    function addSubtract (mom, duration, isAdding, updateOffset) {
+	        var milliseconds = duration._milliseconds,
+	            days = absRound(duration._days),
+	            months = absRound(duration._months);
+
+	        if (!mom.isValid()) {
+	            // No op
+	            return;
+	        }
+
+	        updateOffset = updateOffset == null ? true : updateOffset;
+
+	        if (months) {
+	            setMonth(mom, get(mom, 'Month') + months * isAdding);
+	        }
+	        if (days) {
+	            set$1(mom, 'Date', get(mom, 'Date') + days * isAdding);
+	        }
+	        if (milliseconds) {
+	            mom._d.setTime(mom._d.valueOf() + milliseconds * isAdding);
+	        }
+	        if (updateOffset) {
+	            hooks.updateOffset(mom, days || months);
+	        }
+	    }
+
+	    var add      = createAdder(1, 'add');
+	    var subtract = createAdder(-1, 'subtract');
+
+	    function getCalendarFormat(myMoment, now) {
+	        var diff = myMoment.diff(now, 'days', true);
+	        return diff < -6 ? 'sameElse' :
+	                diff < -1 ? 'lastWeek' :
+	                diff < 0 ? 'lastDay' :
+	                diff < 1 ? 'sameDay' :
+	                diff < 2 ? 'nextDay' :
+	                diff < 7 ? 'nextWeek' : 'sameElse';
+	    }
+
+	    function calendar$1 (time, formats) {
+	        // We want to compare the start of today, vs this.
+	        // Getting start-of-today depends on whether we're local/utc/offset or not.
+	        var now = time || createLocal(),
+	            sod = cloneWithOffset(now, this).startOf('day'),
+	            format = hooks.calendarFormat(this, sod) || 'sameElse';
+
+	        var output = formats && (isFunction(formats[format]) ? formats[format].call(this, now) : formats[format]);
+
+	        return this.format(output || this.localeData().calendar(format, this, createLocal(now)));
+	    }
+
+	    function clone () {
+	        return new Moment(this);
+	    }
+
+	    function isAfter (input, units) {
+	        var localInput = isMoment(input) ? input : createLocal(input);
+	        if (!(this.isValid() && localInput.isValid())) {
+	            return false;
+	        }
+	        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+	        if (units === 'millisecond') {
+	            return this.valueOf() > localInput.valueOf();
+	        } else {
+	            return localInput.valueOf() < this.clone().startOf(units).valueOf();
+	        }
+	    }
+
+	    function isBefore (input, units) {
+	        var localInput = isMoment(input) ? input : createLocal(input);
+	        if (!(this.isValid() && localInput.isValid())) {
+	            return false;
+	        }
+	        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+	        if (units === 'millisecond') {
+	            return this.valueOf() < localInput.valueOf();
+	        } else {
+	            return this.clone().endOf(units).valueOf() < localInput.valueOf();
+	        }
+	    }
+
+	    function isBetween (from, to, units, inclusivity) {
+	        inclusivity = inclusivity || '()';
+	        return (inclusivity[0] === '(' ? this.isAfter(from, units) : !this.isBefore(from, units)) &&
+	            (inclusivity[1] === ')' ? this.isBefore(to, units) : !this.isAfter(to, units));
+	    }
+
+	    function isSame (input, units) {
+	        var localInput = isMoment(input) ? input : createLocal(input),
+	            inputMs;
+	        if (!(this.isValid() && localInput.isValid())) {
+	            return false;
+	        }
+	        units = normalizeUnits(units || 'millisecond');
+	        if (units === 'millisecond') {
+	            return this.valueOf() === localInput.valueOf();
+	        } else {
+	            inputMs = localInput.valueOf();
+	            return this.clone().startOf(units).valueOf() <= inputMs && inputMs <= this.clone().endOf(units).valueOf();
+	        }
+	    }
+
+	    function isSameOrAfter (input, units) {
+	        return this.isSame(input, units) || this.isAfter(input,units);
+	    }
+
+	    function isSameOrBefore (input, units) {
+	        return this.isSame(input, units) || this.isBefore(input,units);
+	    }
+
+	    function diff (input, units, asFloat) {
+	        var that,
+	            zoneDelta,
+	            output;
+
+	        if (!this.isValid()) {
+	            return NaN;
+	        }
+
+	        that = cloneWithOffset(input, this);
+
+	        if (!that.isValid()) {
+	            return NaN;
+	        }
+
+	        zoneDelta = (that.utcOffset() - this.utcOffset()) * 6e4;
+
+	        units = normalizeUnits(units);
+
+	        switch (units) {
+	            case 'year': output = monthDiff(this, that) / 12; break;
+	            case 'month': output = monthDiff(this, that); break;
+	            case 'quarter': output = monthDiff(this, that) / 3; break;
+	            case 'second': output = (this - that) / 1e3; break; // 1000
+	            case 'minute': output = (this - that) / 6e4; break; // 1000 * 60
+	            case 'hour': output = (this - that) / 36e5; break; // 1000 * 60 * 60
+	            case 'day': output = (this - that - zoneDelta) / 864e5; break; // 1000 * 60 * 60 * 24, negate dst
+	            case 'week': output = (this - that - zoneDelta) / 6048e5; break; // 1000 * 60 * 60 * 24 * 7, negate dst
+	            default: output = this - that;
+	        }
+
+	        return asFloat ? output : absFloor(output);
+	    }
+
+	    function monthDiff (a, b) {
+	        // difference in months
+	        var wholeMonthDiff = ((b.year() - a.year()) * 12) + (b.month() - a.month()),
+	            // b is in (anchor - 1 month, anchor + 1 month)
+	            anchor = a.clone().add(wholeMonthDiff, 'months'),
+	            anchor2, adjust;
+
+	        if (b - anchor < 0) {
+	            anchor2 = a.clone().add(wholeMonthDiff - 1, 'months');
+	            // linear across the month
+	            adjust = (b - anchor) / (anchor - anchor2);
+	        } else {
+	            anchor2 = a.clone().add(wholeMonthDiff + 1, 'months');
+	            // linear across the month
+	            adjust = (b - anchor) / (anchor2 - anchor);
+	        }
+
+	        //check for negative zero, return zero if negative zero
+	        return -(wholeMonthDiff + adjust) || 0;
+	    }
+
+	    hooks.defaultFormat = 'YYYY-MM-DDTHH:mm:ssZ';
+	    hooks.defaultFormatUtc = 'YYYY-MM-DDTHH:mm:ss[Z]';
+
+	    function toString () {
+	        return this.clone().locale('en').format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ');
+	    }
+
+	    function toISOString(keepOffset) {
+	        if (!this.isValid()) {
+	            return null;
+	        }
+	        var utc = keepOffset !== true;
+	        var m = utc ? this.clone().utc() : this;
+	        if (m.year() < 0 || m.year() > 9999) {
+	            return formatMoment(m, utc ? 'YYYYYY-MM-DD[T]HH:mm:ss.SSS[Z]' : 'YYYYYY-MM-DD[T]HH:mm:ss.SSSZ');
+	        }
+	        if (isFunction(Date.prototype.toISOString)) {
+	            // native implementation is ~50x faster, use it when we can
+	            if (utc) {
+	                return this.toDate().toISOString();
+	            } else {
+	                return new Date(this.valueOf() + this.utcOffset() * 60 * 1000).toISOString().replace('Z', formatMoment(m, 'Z'));
+	            }
+	        }
+	        return formatMoment(m, utc ? 'YYYY-MM-DD[T]HH:mm:ss.SSS[Z]' : 'YYYY-MM-DD[T]HH:mm:ss.SSSZ');
+	    }
+
+	    /**
+	     * Return a human readable representation of a moment that can
+	     * also be evaluated to get a new moment which is the same
+	     *
+	     * @link https://nodejs.org/dist/latest/docs/api/util.html#util_custom_inspect_function_on_objects
+	     */
+	    function inspect () {
+	        if (!this.isValid()) {
+	            return 'moment.invalid(/* ' + this._i + ' */)';
+	        }
+	        var func = 'moment';
+	        var zone = '';
+	        if (!this.isLocal()) {
+	            func = this.utcOffset() === 0 ? 'moment.utc' : 'moment.parseZone';
+	            zone = 'Z';
+	        }
+	        var prefix = '[' + func + '("]';
+	        var year = (0 <= this.year() && this.year() <= 9999) ? 'YYYY' : 'YYYYYY';
+	        var datetime = '-MM-DD[T]HH:mm:ss.SSS';
+	        var suffix = zone + '[")]';
+
+	        return this.format(prefix + year + datetime + suffix);
+	    }
+
+	    function format (inputString) {
+	        if (!inputString) {
+	            inputString = this.isUtc() ? hooks.defaultFormatUtc : hooks.defaultFormat;
+	        }
+	        var output = formatMoment(this, inputString);
+	        return this.localeData().postformat(output);
+	    }
+
+	    function from (time, withoutSuffix) {
+	        if (this.isValid() &&
+	                ((isMoment(time) && time.isValid()) ||
+	                 createLocal(time).isValid())) {
+	            return createDuration({to: this, from: time}).locale(this.locale()).humanize(!withoutSuffix);
+	        } else {
+	            return this.localeData().invalidDate();
+	        }
+	    }
+
+	    function fromNow (withoutSuffix) {
+	        return this.from(createLocal(), withoutSuffix);
+	    }
+
+	    function to (time, withoutSuffix) {
+	        if (this.isValid() &&
+	                ((isMoment(time) && time.isValid()) ||
+	                 createLocal(time).isValid())) {
+	            return createDuration({from: this, to: time}).locale(this.locale()).humanize(!withoutSuffix);
+	        } else {
+	            return this.localeData().invalidDate();
+	        }
+	    }
+
+	    function toNow (withoutSuffix) {
+	        return this.to(createLocal(), withoutSuffix);
+	    }
+
+	    // If passed a locale key, it will set the locale for this
+	    // instance.  Otherwise, it will return the locale configuration
+	    // variables for this instance.
+	    function locale (key) {
+	        var newLocaleData;
+
+	        if (key === undefined) {
+	            return this._locale._abbr;
+	        } else {
+	            newLocaleData = getLocale(key);
+	            if (newLocaleData != null) {
+	                this._locale = newLocaleData;
+	            }
+	            return this;
+	        }
+	    }
+
+	    var lang = deprecate(
+	        'moment().lang() is deprecated. Instead, use moment().localeData() to get the language configuration. Use moment().locale() to change languages.',
+	        function (key) {
+	            if (key === undefined) {
+	                return this.localeData();
+	            } else {
+	                return this.locale(key);
+	            }
+	        }
+	    );
+
+	    function localeData () {
+	        return this._locale;
+	    }
+
+	    function startOf (units) {
+	        units = normalizeUnits(units);
+	        // the following switch intentionally omits break keywords
+	        // to utilize falling through the cases.
+	        switch (units) {
+	            case 'year':
+	                this.month(0);
+	                /* falls through */
+	            case 'quarter':
+	            case 'month':
+	                this.date(1);
+	                /* falls through */
+	            case 'week':
+	            case 'isoWeek':
+	            case 'day':
+	            case 'date':
+	                this.hours(0);
+	                /* falls through */
+	            case 'hour':
+	                this.minutes(0);
+	                /* falls through */
+	            case 'minute':
+	                this.seconds(0);
+	                /* falls through */
+	            case 'second':
+	                this.milliseconds(0);
+	        }
+
+	        // weeks are a special case
+	        if (units === 'week') {
+	            this.weekday(0);
+	        }
+	        if (units === 'isoWeek') {
+	            this.isoWeekday(1);
+	        }
+
+	        // quarters are also special
+	        if (units === 'quarter') {
+	            this.month(Math.floor(this.month() / 3) * 3);
+	        }
+
+	        return this;
+	    }
+
+	    function endOf (units) {
+	        units = normalizeUnits(units);
+	        if (units === undefined || units === 'millisecond') {
+	            return this;
+	        }
+
+	        // 'date' is an alias for 'day', so it should be considered as such.
+	        if (units === 'date') {
+	            units = 'day';
+	        }
+
+	        return this.startOf(units).add(1, (units === 'isoWeek' ? 'week' : units)).subtract(1, 'ms');
+	    }
+
+	    function valueOf () {
+	        return this._d.valueOf() - ((this._offset || 0) * 60000);
+	    }
+
+	    function unix () {
+	        return Math.floor(this.valueOf() / 1000);
+	    }
+
+	    function toDate () {
+	        return new Date(this.valueOf());
+	    }
+
+	    function toArray () {
+	        var m = this;
+	        return [m.year(), m.month(), m.date(), m.hour(), m.minute(), m.second(), m.millisecond()];
+	    }
+
+	    function toObject () {
+	        var m = this;
+	        return {
+	            years: m.year(),
+	            months: m.month(),
+	            date: m.date(),
+	            hours: m.hours(),
+	            minutes: m.minutes(),
+	            seconds: m.seconds(),
+	            milliseconds: m.milliseconds()
+	        };
+	    }
+
+	    function toJSON () {
+	        // new Date(NaN).toJSON() === null
+	        return this.isValid() ? this.toISOString() : null;
+	    }
+
+	    function isValid$2 () {
+	        return isValid(this);
+	    }
+
+	    function parsingFlags () {
+	        return extend({}, getParsingFlags(this));
+	    }
+
+	    function invalidAt () {
+	        return getParsingFlags(this).overflow;
+	    }
+
+	    function creationData() {
+	        return {
+	            input: this._i,
+	            format: this._f,
+	            locale: this._locale,
+	            isUTC: this._isUTC,
+	            strict: this._strict
+	        };
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken(0, ['gg', 2], 0, function () {
+	        return this.weekYear() % 100;
+	    });
+
+	    addFormatToken(0, ['GG', 2], 0, function () {
+	        return this.isoWeekYear() % 100;
+	    });
+
+	    function addWeekYearFormatToken (token, getter) {
+	        addFormatToken(0, [token, token.length], 0, getter);
+	    }
+
+	    addWeekYearFormatToken('gggg',     'weekYear');
+	    addWeekYearFormatToken('ggggg',    'weekYear');
+	    addWeekYearFormatToken('GGGG',  'isoWeekYear');
+	    addWeekYearFormatToken('GGGGG', 'isoWeekYear');
+
+	    // ALIASES
+
+	    addUnitAlias('weekYear', 'gg');
+	    addUnitAlias('isoWeekYear', 'GG');
+
+	    // PRIORITY
+
+	    addUnitPriority('weekYear', 1);
+	    addUnitPriority('isoWeekYear', 1);
+
+
+	    // PARSING
+
+	    addRegexToken('G',      matchSigned);
+	    addRegexToken('g',      matchSigned);
+	    addRegexToken('GG',     match1to2, match2);
+	    addRegexToken('gg',     match1to2, match2);
+	    addRegexToken('GGGG',   match1to4, match4);
+	    addRegexToken('gggg',   match1to4, match4);
+	    addRegexToken('GGGGG',  match1to6, match6);
+	    addRegexToken('ggggg',  match1to6, match6);
+
+	    addWeekParseToken(['gggg', 'ggggg', 'GGGG', 'GGGGG'], function (input, week, config, token) {
+	        week[token.substr(0, 2)] = toInt(input);
+	    });
+
+	    addWeekParseToken(['gg', 'GG'], function (input, week, config, token) {
+	        week[token] = hooks.parseTwoDigitYear(input);
+	    });
+
+	    // MOMENTS
+
+	    function getSetWeekYear (input) {
+	        return getSetWeekYearHelper.call(this,
+	                input,
+	                this.week(),
+	                this.weekday(),
+	                this.localeData()._week.dow,
+	                this.localeData()._week.doy);
+	    }
+
+	    function getSetISOWeekYear (input) {
+	        return getSetWeekYearHelper.call(this,
+	                input, this.isoWeek(), this.isoWeekday(), 1, 4);
+	    }
+
+	    function getISOWeeksInYear () {
+	        return weeksInYear(this.year(), 1, 4);
+	    }
+
+	    function getWeeksInYear () {
+	        var weekInfo = this.localeData()._week;
+	        return weeksInYear(this.year(), weekInfo.dow, weekInfo.doy);
+	    }
+
+	    function getSetWeekYearHelper(input, week, weekday, dow, doy) {
+	        var weeksTarget;
+	        if (input == null) {
+	            return weekOfYear(this, dow, doy).year;
+	        } else {
+	            weeksTarget = weeksInYear(input, dow, doy);
+	            if (week > weeksTarget) {
+	                week = weeksTarget;
+	            }
+	            return setWeekAll.call(this, input, week, weekday, dow, doy);
+	        }
+	    }
+
+	    function setWeekAll(weekYear, week, weekday, dow, doy) {
+	        var dayOfYearData = dayOfYearFromWeeks(weekYear, week, weekday, dow, doy),
+	            date = createUTCDate(dayOfYearData.year, 0, dayOfYearData.dayOfYear);
+
+	        this.year(date.getUTCFullYear());
+	        this.month(date.getUTCMonth());
+	        this.date(date.getUTCDate());
+	        return this;
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken('Q', 0, 'Qo', 'quarter');
+
+	    // ALIASES
+
+	    addUnitAlias('quarter', 'Q');
+
+	    // PRIORITY
+
+	    addUnitPriority('quarter', 7);
+
+	    // PARSING
+
+	    addRegexToken('Q', match1);
+	    addParseToken('Q', function (input, array) {
+	        array[MONTH] = (toInt(input) - 1) * 3;
+	    });
+
+	    // MOMENTS
+
+	    function getSetQuarter (input) {
+	        return input == null ? Math.ceil((this.month() + 1) / 3) : this.month((input - 1) * 3 + this.month() % 3);
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken('D', ['DD', 2], 'Do', 'date');
+
+	    // ALIASES
+
+	    addUnitAlias('date', 'D');
+
+	    // PRIORITY
+	    addUnitPriority('date', 9);
+
+	    // PARSING
+
+	    addRegexToken('D',  match1to2);
+	    addRegexToken('DD', match1to2, match2);
+	    addRegexToken('Do', function (isStrict, locale) {
+	        // TODO: Remove "ordinalParse" fallback in next major release.
+	        return isStrict ?
+	          (locale._dayOfMonthOrdinalParse || locale._ordinalParse) :
+	          locale._dayOfMonthOrdinalParseLenient;
+	    });
+
+	    addParseToken(['D', 'DD'], DATE);
+	    addParseToken('Do', function (input, array) {
+	        array[DATE] = toInt(input.match(match1to2)[0]);
+	    });
+
+	    // MOMENTS
+
+	    var getSetDayOfMonth = makeGetSet('Date', true);
+
+	    // FORMATTING
+
+	    addFormatToken('DDD', ['DDDD', 3], 'DDDo', 'dayOfYear');
+
+	    // ALIASES
+
+	    addUnitAlias('dayOfYear', 'DDD');
+
+	    // PRIORITY
+	    addUnitPriority('dayOfYear', 4);
+
+	    // PARSING
+
+	    addRegexToken('DDD',  match1to3);
+	    addRegexToken('DDDD', match3);
+	    addParseToken(['DDD', 'DDDD'], function (input, array, config) {
+	        config._dayOfYear = toInt(input);
+	    });
+
+	    // HELPERS
+
+	    // MOMENTS
+
+	    function getSetDayOfYear (input) {
+	        var dayOfYear = Math.round((this.clone().startOf('day') - this.clone().startOf('year')) / 864e5) + 1;
+	        return input == null ? dayOfYear : this.add((input - dayOfYear), 'd');
+	    }
+
+	    // FORMATTING
+
+	    addFormatToken('m', ['mm', 2], 0, 'minute');
+
+	    // ALIASES
+
+	    addUnitAlias('minute', 'm');
+
+	    // PRIORITY
+
+	    addUnitPriority('minute', 14);
+
+	    // PARSING
+
+	    addRegexToken('m',  match1to2);
+	    addRegexToken('mm', match1to2, match2);
+	    addParseToken(['m', 'mm'], MINUTE);
+
+	    // MOMENTS
+
+	    var getSetMinute = makeGetSet('Minutes', false);
+
+	    // FORMATTING
+
+	    addFormatToken('s', ['ss', 2], 0, 'second');
+
+	    // ALIASES
+
+	    addUnitAlias('second', 's');
+
+	    // PRIORITY
+
+	    addUnitPriority('second', 15);
+
+	    // PARSING
+
+	    addRegexToken('s',  match1to2);
+	    addRegexToken('ss', match1to2, match2);
+	    addParseToken(['s', 'ss'], SECOND);
+
+	    // MOMENTS
+
+	    var getSetSecond = makeGetSet('Seconds', false);
+
+	    // FORMATTING
+
+	    addFormatToken('S', 0, 0, function () {
+	        return ~~(this.millisecond() / 100);
+	    });
+
+	    addFormatToken(0, ['SS', 2], 0, function () {
+	        return ~~(this.millisecond() / 10);
+	    });
+
+	    addFormatToken(0, ['SSS', 3], 0, 'millisecond');
+	    addFormatToken(0, ['SSSS', 4], 0, function () {
+	        return this.millisecond() * 10;
+	    });
+	    addFormatToken(0, ['SSSSS', 5], 0, function () {
+	        return this.millisecond() * 100;
+	    });
+	    addFormatToken(0, ['SSSSSS', 6], 0, function () {
+	        return this.millisecond() * 1000;
+	    });
+	    addFormatToken(0, ['SSSSSSS', 7], 0, function () {
+	        return this.millisecond() * 10000;
+	    });
+	    addFormatToken(0, ['SSSSSSSS', 8], 0, function () {
+	        return this.millisecond() * 100000;
+	    });
+	    addFormatToken(0, ['SSSSSSSSS', 9], 0, function () {
+	        return this.millisecond() * 1000000;
+	    });
+
+
+	    // ALIASES
+
+	    addUnitAlias('millisecond', 'ms');
+
+	    // PRIORITY
+
+	    addUnitPriority('millisecond', 16);
+
+	    // PARSING
+
+	    addRegexToken('S',    match1to3, match1);
+	    addRegexToken('SS',   match1to3, match2);
+	    addRegexToken('SSS',  match1to3, match3);
+
+	    var token;
+	    for (token = 'SSSS'; token.length <= 9; token += 'S') {
+	        addRegexToken(token, matchUnsigned);
+	    }
+
+	    function parseMs(input, array) {
+	        array[MILLISECOND] = toInt(('0.' + input) * 1000);
+	    }
+
+	    for (token = 'S'; token.length <= 9; token += 'S') {
+	        addParseToken(token, parseMs);
+	    }
+	    // MOMENTS
+
+	    var getSetMillisecond = makeGetSet('Milliseconds', false);
+
+	    // FORMATTING
+
+	    addFormatToken('z',  0, 0, 'zoneAbbr');
+	    addFormatToken('zz', 0, 0, 'zoneName');
+
+	    // MOMENTS
+
+	    function getZoneAbbr () {
+	        return this._isUTC ? 'UTC' : '';
+	    }
+
+	    function getZoneName () {
+	        return this._isUTC ? 'Coordinated Universal Time' : '';
+	    }
+
+	    var proto = Moment.prototype;
+
+	    proto.add               = add;
+	    proto.calendar          = calendar$1;
+	    proto.clone             = clone;
+	    proto.diff              = diff;
+	    proto.endOf             = endOf;
+	    proto.format            = format;
+	    proto.from              = from;
+	    proto.fromNow           = fromNow;
+	    proto.to                = to;
+	    proto.toNow             = toNow;
+	    proto.get               = stringGet;
+	    proto.invalidAt         = invalidAt;
+	    proto.isAfter           = isAfter;
+	    proto.isBefore          = isBefore;
+	    proto.isBetween         = isBetween;
+	    proto.isSame            = isSame;
+	    proto.isSameOrAfter     = isSameOrAfter;
+	    proto.isSameOrBefore    = isSameOrBefore;
+	    proto.isValid           = isValid$2;
+	    proto.lang              = lang;
+	    proto.locale            = locale;
+	    proto.localeData        = localeData;
+	    proto.max               = prototypeMax;
+	    proto.min               = prototypeMin;
+	    proto.parsingFlags      = parsingFlags;
+	    proto.set               = stringSet;
+	    proto.startOf           = startOf;
+	    proto.subtract          = subtract;
+	    proto.toArray           = toArray;
+	    proto.toObject          = toObject;
+	    proto.toDate            = toDate;
+	    proto.toISOString       = toISOString;
+	    proto.inspect           = inspect;
+	    proto.toJSON            = toJSON;
+	    proto.toString          = toString;
+	    proto.unix              = unix;
+	    proto.valueOf           = valueOf;
+	    proto.creationData      = creationData;
+	    proto.year       = getSetYear;
+	    proto.isLeapYear = getIsLeapYear;
+	    proto.weekYear    = getSetWeekYear;
+	    proto.isoWeekYear = getSetISOWeekYear;
+	    proto.quarter = proto.quarters = getSetQuarter;
+	    proto.month       = getSetMonth;
+	    proto.daysInMonth = getDaysInMonth;
+	    proto.week           = proto.weeks        = getSetWeek;
+	    proto.isoWeek        = proto.isoWeeks     = getSetISOWeek;
+	    proto.weeksInYear    = getWeeksInYear;
+	    proto.isoWeeksInYear = getISOWeeksInYear;
+	    proto.date       = getSetDayOfMonth;
+	    proto.day        = proto.days             = getSetDayOfWeek;
+	    proto.weekday    = getSetLocaleDayOfWeek;
+	    proto.isoWeekday = getSetISODayOfWeek;
+	    proto.dayOfYear  = getSetDayOfYear;
+	    proto.hour = proto.hours = getSetHour;
+	    proto.minute = proto.minutes = getSetMinute;
+	    proto.second = proto.seconds = getSetSecond;
+	    proto.millisecond = proto.milliseconds = getSetMillisecond;
+	    proto.utcOffset            = getSetOffset;
+	    proto.utc                  = setOffsetToUTC;
+	    proto.local                = setOffsetToLocal;
+	    proto.parseZone            = setOffsetToParsedOffset;
+	    proto.hasAlignedHourOffset = hasAlignedHourOffset;
+	    proto.isDST                = isDaylightSavingTime;
+	    proto.isLocal              = isLocal;
+	    proto.isUtcOffset          = isUtcOffset;
+	    proto.isUtc                = isUtc;
+	    proto.isUTC                = isUtc;
+	    proto.zoneAbbr = getZoneAbbr;
+	    proto.zoneName = getZoneName;
+	    proto.dates  = deprecate('dates accessor is deprecated. Use date instead.', getSetDayOfMonth);
+	    proto.months = deprecate('months accessor is deprecated. Use month instead', getSetMonth);
+	    proto.years  = deprecate('years accessor is deprecated. Use year instead', getSetYear);
+	    proto.zone   = deprecate('moment().zone is deprecated, use moment().utcOffset instead. http://momentjs.com/guides/#/warnings/zone/', getSetZone);
+	    proto.isDSTShifted = deprecate('isDSTShifted is deprecated. See http://momentjs.com/guides/#/warnings/dst-shifted/ for more information', isDaylightSavingTimeShifted);
+
+	    function createUnix (input) {
+	        return createLocal(input * 1000);
+	    }
+
+	    function createInZone () {
+	        return createLocal.apply(null, arguments).parseZone();
+	    }
+
+	    function preParsePostFormat (string) {
+	        return string;
+	    }
+
+	    var proto$1 = Locale.prototype;
+
+	    proto$1.calendar        = calendar;
+	    proto$1.longDateFormat  = longDateFormat;
+	    proto$1.invalidDate     = invalidDate;
+	    proto$1.ordinal         = ordinal;
+	    proto$1.preparse        = preParsePostFormat;
+	    proto$1.postformat      = preParsePostFormat;
+	    proto$1.relativeTime    = relativeTime;
+	    proto$1.pastFuture      = pastFuture;
+	    proto$1.set             = set;
+
+	    proto$1.months            =        localeMonths;
+	    proto$1.monthsShort       =        localeMonthsShort;
+	    proto$1.monthsParse       =        localeMonthsParse;
+	    proto$1.monthsRegex       = monthsRegex;
+	    proto$1.monthsShortRegex  = monthsShortRegex;
+	    proto$1.week = localeWeek;
+	    proto$1.firstDayOfYear = localeFirstDayOfYear;
+	    proto$1.firstDayOfWeek = localeFirstDayOfWeek;
+
+	    proto$1.weekdays       =        localeWeekdays;
+	    proto$1.weekdaysMin    =        localeWeekdaysMin;
+	    proto$1.weekdaysShort  =        localeWeekdaysShort;
+	    proto$1.weekdaysParse  =        localeWeekdaysParse;
+
+	    proto$1.weekdaysRegex       =        weekdaysRegex;
+	    proto$1.weekdaysShortRegex  =        weekdaysShortRegex;
+	    proto$1.weekdaysMinRegex    =        weekdaysMinRegex;
+
+	    proto$1.isPM = localeIsPM;
+	    proto$1.meridiem = localeMeridiem;
+
+	    function get$1 (format, index, field, setter) {
+	        var locale = getLocale();
+	        var utc = createUTC().set(setter, index);
+	        return locale[field](utc, format);
+	    }
+
+	    function listMonthsImpl (format, index, field) {
+	        if (isNumber(format)) {
+	            index = format;
+	            format = undefined;
+	        }
+
+	        format = format || '';
+
+	        if (index != null) {
+	            return get$1(format, index, field, 'month');
+	        }
+
+	        var i;
+	        var out = [];
+	        for (i = 0; i < 12; i++) {
+	            out[i] = get$1(format, i, field, 'month');
+	        }
+	        return out;
+	    }
+
+	    // ()
+	    // (5)
+	    // (fmt, 5)
+	    // (fmt)
+	    // (true)
+	    // (true, 5)
+	    // (true, fmt, 5)
+	    // (true, fmt)
+	    function listWeekdaysImpl (localeSorted, format, index, field) {
+	        if (typeof localeSorted === 'boolean') {
+	            if (isNumber(format)) {
+	                index = format;
+	                format = undefined;
+	            }
+
+	            format = format || '';
+	        } else {
+	            format = localeSorted;
+	            index = format;
+	            localeSorted = false;
+
+	            if (isNumber(format)) {
+	                index = format;
+	                format = undefined;
+	            }
+
+	            format = format || '';
+	        }
+
+	        var locale = getLocale(),
+	            shift = localeSorted ? locale._week.dow : 0;
+
+	        if (index != null) {
+	            return get$1(format, (index + shift) % 7, field, 'day');
+	        }
+
+	        var i;
+	        var out = [];
+	        for (i = 0; i < 7; i++) {
+	            out[i] = get$1(format, (i + shift) % 7, field, 'day');
+	        }
+	        return out;
+	    }
+
+	    function listMonths (format, index) {
+	        return listMonthsImpl(format, index, 'months');
+	    }
+
+	    function listMonthsShort (format, index) {
+	        return listMonthsImpl(format, index, 'monthsShort');
+	    }
+
+	    function listWeekdays (localeSorted, format, index) {
+	        return listWeekdaysImpl(localeSorted, format, index, 'weekdays');
+	    }
+
+	    function listWeekdaysShort (localeSorted, format, index) {
+	        return listWeekdaysImpl(localeSorted, format, index, 'weekdaysShort');
+	    }
+
+	    function listWeekdaysMin (localeSorted, format, index) {
+	        return listWeekdaysImpl(localeSorted, format, index, 'weekdaysMin');
+	    }
+
+	    getSetGlobalLocale('en', {
+	        dayOfMonthOrdinalParse: /\d{1,2}(th|st|nd|rd)/,
+	        ordinal : function (number) {
+	            var b = number % 10,
+	                output = (toInt(number % 100 / 10) === 1) ? 'th' :
+	                (b === 1) ? 'st' :
+	                (b === 2) ? 'nd' :
+	                (b === 3) ? 'rd' : 'th';
+	            return number + output;
+	        }
+	    });
+
+	    // Side effect imports
+
+	    hooks.lang = deprecate('moment.lang is deprecated. Use moment.locale instead.', getSetGlobalLocale);
+	    hooks.langData = deprecate('moment.langData is deprecated. Use moment.localeData instead.', getLocale);
+
+	    var mathAbs = Math.abs;
+
+	    function abs () {
+	        var data           = this._data;
+
+	        this._milliseconds = mathAbs(this._milliseconds);
+	        this._days         = mathAbs(this._days);
+	        this._months       = mathAbs(this._months);
+
+	        data.milliseconds  = mathAbs(data.milliseconds);
+	        data.seconds       = mathAbs(data.seconds);
+	        data.minutes       = mathAbs(data.minutes);
+	        data.hours         = mathAbs(data.hours);
+	        data.months        = mathAbs(data.months);
+	        data.years         = mathAbs(data.years);
+
+	        return this;
+	    }
+
+	    function addSubtract$1 (duration, input, value, direction) {
+	        var other = createDuration(input, value);
+
+	        duration._milliseconds += direction * other._milliseconds;
+	        duration._days         += direction * other._days;
+	        duration._months       += direction * other._months;
+
+	        return duration._bubble();
+	    }
+
+	    // supports only 2.0-style add(1, 's') or add(duration)
+	    function add$1 (input, value) {
+	        return addSubtract$1(this, input, value, 1);
+	    }
+
+	    // supports only 2.0-style subtract(1, 's') or subtract(duration)
+	    function subtract$1 (input, value) {
+	        return addSubtract$1(this, input, value, -1);
+	    }
+
+	    function absCeil (number) {
+	        if (number < 0) {
+	            return Math.floor(number);
+	        } else {
+	            return Math.ceil(number);
+	        }
+	    }
+
+	    function bubble () {
+	        var milliseconds = this._milliseconds;
+	        var days         = this._days;
+	        var months       = this._months;
+	        var data         = this._data;
+	        var seconds, minutes, hours, years, monthsFromDays;
+
+	        // if we have a mix of positive and negative values, bubble down first
+	        // check: https://github.com/moment/moment/issues/2166
+	        if (!((milliseconds >= 0 && days >= 0 && months >= 0) ||
+	                (milliseconds <= 0 && days <= 0 && months <= 0))) {
+	            milliseconds += absCeil(monthsToDays(months) + days) * 864e5;
+	            days = 0;
+	            months = 0;
+	        }
+
+	        // The following code bubbles up values, see the tests for
+	        // examples of what that means.
+	        data.milliseconds = milliseconds % 1000;
+
+	        seconds           = absFloor(milliseconds / 1000);
+	        data.seconds      = seconds % 60;
+
+	        minutes           = absFloor(seconds / 60);
+	        data.minutes      = minutes % 60;
+
+	        hours             = absFloor(minutes / 60);
+	        data.hours        = hours % 24;
+
+	        days += absFloor(hours / 24);
+
+	        // convert days to months
+	        monthsFromDays = absFloor(daysToMonths(days));
+	        months += monthsFromDays;
+	        days -= absCeil(monthsToDays(monthsFromDays));
+
+	        // 12 months -> 1 year
+	        years = absFloor(months / 12);
+	        months %= 12;
+
+	        data.days   = days;
+	        data.months = months;
+	        data.years  = years;
+
+	        return this;
+	    }
+
+	    function daysToMonths (days) {
+	        // 400 years have 146097 days (taking into account leap year rules)
+	        // 400 years have 12 months === 4800
+	        return days * 4800 / 146097;
+	    }
+
+	    function monthsToDays (months) {
+	        // the reverse of daysToMonths
+	        return months * 146097 / 4800;
+	    }
+
+	    function as (units) {
+	        if (!this.isValid()) {
+	            return NaN;
+	        }
+	        var days;
+	        var months;
+	        var milliseconds = this._milliseconds;
+
+	        units = normalizeUnits(units);
+
+	        if (units === 'month' || units === 'year') {
+	            days   = this._days   + milliseconds / 864e5;
+	            months = this._months + daysToMonths(days);
+	            return units === 'month' ? months : months / 12;
+	        } else {
+	            // handle milliseconds separately because of floating point math errors (issue #1867)
+	            days = this._days + Math.round(monthsToDays(this._months));
+	            switch (units) {
+	                case 'week'   : return days / 7     + milliseconds / 6048e5;
+	                case 'day'    : return days         + milliseconds / 864e5;
+	                case 'hour'   : return days * 24    + milliseconds / 36e5;
+	                case 'minute' : return days * 1440  + milliseconds / 6e4;
+	                case 'second' : return days * 86400 + milliseconds / 1000;
+	                // Math.floor prevents floating point math errors here
+	                case 'millisecond': return Math.floor(days * 864e5) + milliseconds;
+	                default: throw new Error('Unknown unit ' + units);
+	            }
+	        }
+	    }
+
+	    // TODO: Use this.as('ms')?
+	    function valueOf$1 () {
+	        if (!this.isValid()) {
+	            return NaN;
+	        }
+	        return (
+	            this._milliseconds +
+	            this._days * 864e5 +
+	            (this._months % 12) * 2592e6 +
+	            toInt(this._months / 12) * 31536e6
+	        );
+	    }
+
+	    function makeAs (alias) {
+	        return function () {
+	            return this.as(alias);
+	        };
+	    }
+
+	    var asMilliseconds = makeAs('ms');
+	    var asSeconds      = makeAs('s');
+	    var asMinutes      = makeAs('m');
+	    var asHours        = makeAs('h');
+	    var asDays         = makeAs('d');
+	    var asWeeks        = makeAs('w');
+	    var asMonths       = makeAs('M');
+	    var asYears        = makeAs('y');
+
+	    function clone$1 () {
+	        return createDuration(this);
+	    }
+
+	    function get$2 (units) {
+	        units = normalizeUnits(units);
+	        return this.isValid() ? this[units + 's']() : NaN;
+	    }
+
+	    function makeGetter(name) {
+	        return function () {
+	            return this.isValid() ? this._data[name] : NaN;
+	        };
+	    }
+
+	    var milliseconds = makeGetter('milliseconds');
+	    var seconds      = makeGetter('seconds');
+	    var minutes      = makeGetter('minutes');
+	    var hours        = makeGetter('hours');
+	    var days         = makeGetter('days');
+	    var months       = makeGetter('months');
+	    var years        = makeGetter('years');
+
+	    function weeks () {
+	        return absFloor(this.days() / 7);
+	    }
+
+	    var round = Math.round;
+	    var thresholds = {
+	        ss: 44,         // a few seconds to seconds
+	        s : 45,         // seconds to minute
+	        m : 45,         // minutes to hour
+	        h : 22,         // hours to day
+	        d : 26,         // days to month
+	        M : 11          // months to year
+	    };
+
+	    // helper function for moment.fn.from, moment.fn.fromNow, and moment.duration.fn.humanize
+	    function substituteTimeAgo(string, number, withoutSuffix, isFuture, locale) {
+	        return locale.relativeTime(number || 1, !!withoutSuffix, string, isFuture);
+	    }
+
+	    function relativeTime$1 (posNegDuration, withoutSuffix, locale) {
+	        var duration = createDuration(posNegDuration).abs();
+	        var seconds  = round(duration.as('s'));
+	        var minutes  = round(duration.as('m'));
+	        var hours    = round(duration.as('h'));
+	        var days     = round(duration.as('d'));
+	        var months   = round(duration.as('M'));
+	        var years    = round(duration.as('y'));
+
+	        var a = seconds <= thresholds.ss && ['s', seconds]  ||
+	                seconds < thresholds.s   && ['ss', seconds] ||
+	                minutes <= 1             && ['m']           ||
+	                minutes < thresholds.m   && ['mm', minutes] ||
+	                hours   <= 1             && ['h']           ||
+	                hours   < thresholds.h   && ['hh', hours]   ||
+	                days    <= 1             && ['d']           ||
+	                days    < thresholds.d   && ['dd', days]    ||
+	                months  <= 1             && ['M']           ||
+	                months  < thresholds.M   && ['MM', months]  ||
+	                years   <= 1             && ['y']           || ['yy', years];
+
+	        a[2] = withoutSuffix;
+	        a[3] = +posNegDuration > 0;
+	        a[4] = locale;
+	        return substituteTimeAgo.apply(null, a);
+	    }
+
+	    // This function allows you to set the rounding function for relative time strings
+	    function getSetRelativeTimeRounding (roundingFunction) {
+	        if (roundingFunction === undefined) {
+	            return round;
+	        }
+	        if (typeof(roundingFunction) === 'function') {
+	            round = roundingFunction;
+	            return true;
+	        }
+	        return false;
+	    }
+
+	    // This function allows you to set a threshold for relative time strings
+	    function getSetRelativeTimeThreshold (threshold, limit) {
+	        if (thresholds[threshold] === undefined) {
+	            return false;
+	        }
+	        if (limit === undefined) {
+	            return thresholds[threshold];
+	        }
+	        thresholds[threshold] = limit;
+	        if (threshold === 's') {
+	            thresholds.ss = limit - 1;
+	        }
+	        return true;
+	    }
+
+	    function humanize (withSuffix) {
+	        if (!this.isValid()) {
+	            return this.localeData().invalidDate();
+	        }
+
+	        var locale = this.localeData();
+	        var output = relativeTime$1(this, !withSuffix, locale);
+
+	        if (withSuffix) {
+	            output = locale.pastFuture(+this, output);
+	        }
+
+	        return locale.postformat(output);
+	    }
+
+	    var abs$1 = Math.abs;
+
+	    function sign(x) {
+	        return ((x > 0) - (x < 0)) || +x;
+	    }
+
+	    function toISOString$1() {
+	        // for ISO strings we do not use the normal bubbling rules:
+	        //  * milliseconds bubble up until they become hours
+	        //  * days do not bubble at all
+	        //  * months bubble up until they become years
+	        // This is because there is no context-free conversion between hours and days
+	        // (think of clock changes)
+	        // and also not between days and months (28-31 days per month)
+	        if (!this.isValid()) {
+	            return this.localeData().invalidDate();
+	        }
+
+	        var seconds = abs$1(this._milliseconds) / 1000;
+	        var days         = abs$1(this._days);
+	        var months       = abs$1(this._months);
+	        var minutes, hours, years;
+
+	        // 3600 seconds -> 60 minutes -> 1 hour
+	        minutes           = absFloor(seconds / 60);
+	        hours             = absFloor(minutes / 60);
+	        seconds %= 60;
+	        minutes %= 60;
+
+	        // 12 months -> 1 year
+	        years  = absFloor(months / 12);
+	        months %= 12;
+
+
+	        // inspired by https://github.com/dordille/moment-isoduration/blob/master/moment.isoduration.js
+	        var Y = years;
+	        var M = months;
+	        var D = days;
+	        var h = hours;
+	        var m = minutes;
+	        var s = seconds ? seconds.toFixed(3).replace(/\.?0+$/, '') : '';
+	        var total = this.asSeconds();
+
+	        if (!total) {
+	            // this is the same as C#'s (Noda) and python (isodate)...
+	            // but not other JS (goog.date)
+	            return 'P0D';
+	        }
+
+	        var totalSign = total < 0 ? '-' : '';
+	        var ymSign = sign(this._months) !== sign(total) ? '-' : '';
+	        var daysSign = sign(this._days) !== sign(total) ? '-' : '';
+	        var hmsSign = sign(this._milliseconds) !== sign(total) ? '-' : '';
+
+	        return totalSign + 'P' +
+	            (Y ? ymSign + Y + 'Y' : '') +
+	            (M ? ymSign + M + 'M' : '') +
+	            (D ? daysSign + D + 'D' : '') +
+	            ((h || m || s) ? 'T' : '') +
+	            (h ? hmsSign + h + 'H' : '') +
+	            (m ? hmsSign + m + 'M' : '') +
+	            (s ? hmsSign + s + 'S' : '');
+	    }
+
+	    var proto$2 = Duration.prototype;
+
+	    proto$2.isValid        = isValid$1;
+	    proto$2.abs            = abs;
+	    proto$2.add            = add$1;
+	    proto$2.subtract       = subtract$1;
+	    proto$2.as             = as;
+	    proto$2.asMilliseconds = asMilliseconds;
+	    proto$2.asSeconds      = asSeconds;
+	    proto$2.asMinutes      = asMinutes;
+	    proto$2.asHours        = asHours;
+	    proto$2.asDays         = asDays;
+	    proto$2.asWeeks        = asWeeks;
+	    proto$2.asMonths       = asMonths;
+	    proto$2.asYears        = asYears;
+	    proto$2.valueOf        = valueOf$1;
+	    proto$2._bubble        = bubble;
+	    proto$2.clone          = clone$1;
+	    proto$2.get            = get$2;
+	    proto$2.milliseconds   = milliseconds;
+	    proto$2.seconds        = seconds;
+	    proto$2.minutes        = minutes;
+	    proto$2.hours          = hours;
+	    proto$2.days           = days;
+	    proto$2.weeks          = weeks;
+	    proto$2.months         = months;
+	    proto$2.years          = years;
+	    proto$2.humanize       = humanize;
+	    proto$2.toISOString    = toISOString$1;
+	    proto$2.toString       = toISOString$1;
+	    proto$2.toJSON         = toISOString$1;
+	    proto$2.locale         = locale;
+	    proto$2.localeData     = localeData;
+
+	    proto$2.toIsoString = deprecate('toIsoString() is deprecated. Please use toISOString() instead (notice the capitals)', toISOString$1);
+	    proto$2.lang = lang;
+
+	    // Side effect imports
+
+	    // FORMATTING
+
+	    addFormatToken('X', 0, 0, 'unix');
+	    addFormatToken('x', 0, 0, 'valueOf');
+
+	    // PARSING
+
+	    addRegexToken('x', matchSigned);
+	    addRegexToken('X', matchTimestamp);
+	    addParseToken('X', function (input, array, config) {
+	        config._d = new Date(parseFloat(input, 10) * 1000);
+	    });
+	    addParseToken('x', function (input, array, config) {
+	        config._d = new Date(toInt(input));
+	    });
+
+	    // Side effect imports
+
+
+	    hooks.version = '2.22.2';
+
+	    setHookCallback(createLocal);
+
+	    hooks.fn                    = proto;
+	    hooks.min                   = min;
+	    hooks.max                   = max;
+	    hooks.now                   = now;
+	    hooks.utc                   = createUTC;
+	    hooks.unix                  = createUnix;
+	    hooks.months                = listMonths;
+	    hooks.isDate                = isDate;
+	    hooks.locale                = getSetGlobalLocale;
+	    hooks.invalid               = createInvalid;
+	    hooks.duration              = createDuration;
+	    hooks.isMoment              = isMoment;
+	    hooks.weekdays              = listWeekdays;
+	    hooks.parseZone             = createInZone;
+	    hooks.localeData            = getLocale;
+	    hooks.isDuration            = isDuration;
+	    hooks.monthsShort           = listMonthsShort;
+	    hooks.weekdaysMin           = listWeekdaysMin;
+	    hooks.defineLocale          = defineLocale;
+	    hooks.updateLocale          = updateLocale;
+	    hooks.locales               = listLocales;
+	    hooks.weekdaysShort         = listWeekdaysShort;
+	    hooks.normalizeUnits        = normalizeUnits;
+	    hooks.relativeTimeRounding  = getSetRelativeTimeRounding;
+	    hooks.relativeTimeThreshold = getSetRelativeTimeThreshold;
+	    hooks.calendarFormat        = getCalendarFormat;
+	    hooks.prototype             = proto;
+
+	    // currently HTML5 input type only supports 24-hour formats
+	    hooks.HTML5_FMT = {
+	        DATETIME_LOCAL: 'YYYY-MM-DDTHH:mm',             // <input type="datetime-local" />
+	        DATETIME_LOCAL_SECONDS: 'YYYY-MM-DDTHH:mm:ss',  // <input type="datetime-local" step="1" />
+	        DATETIME_LOCAL_MS: 'YYYY-MM-DDTHH:mm:ss.SSS',   // <input type="datetime-local" step="0.001" />
+	        DATE: 'YYYY-MM-DD',                             // <input type="date" />
+	        TIME: 'HH:mm',                                  // <input type="time" />
+	        TIME_SECONDS: 'HH:mm:ss',                       // <input type="time" step="1" />
+	        TIME_MS: 'HH:mm:ss.SSS',                        // <input type="time" step="0.001" />
+	        WEEK: 'YYYY-[W]WW',                             // <input type="week" />
+	        MONTH: 'YYYY-MM'                                // <input type="month" />
+	    };
+
+	    return hooks;
+
+	})));
+	});
+
+	var moment$1 = /*#__PURE__*/Object.freeze({
+		default: moment,
+		__moduleExports: moment
+	});
+
+	var DateTHead = function (_React$Component) {
+	  _inherits(DateTHead, _React$Component);
+
+	  function DateTHead() {
+	    _classCallCheck(this, DateTHead);
+
+	    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+	  }
+
+	  DateTHead.prototype.render = function render() {
+	    var props = this.props;
+	    var value = props.value;
+	    var localeData = value.localeData();
+	    var prefixCls = props.prefixCls;
+	    var veryShortWeekdays = [];
+	    var weekDays = [];
+	    var firstDayOfWeek = localeData.firstDayOfWeek();
+	    var showWeekNumberEl = void 0;
+	    var now = moment();
+	    for (var dateColIndex = 0; dateColIndex < DateConstants.DATE_COL_COUNT; dateColIndex++) {
+	      var index = (firstDayOfWeek + dateColIndex) % DateConstants.DATE_COL_COUNT;
+	      now.day(index);
+	      veryShortWeekdays[dateColIndex] = localeData.weekdaysMin(now);
+	      weekDays[dateColIndex] = localeData.weekdaysShort(now);
+	    }
+
+	    if (props.showWeekNumber) {
+	      showWeekNumberEl = React__default.createElement(
+	        'th',
+	        {
+	          role: 'columnheader',
+	          className: prefixCls + '-column-header ' + prefixCls + '-week-number-header'
+	        },
+	        React__default.createElement(
+	          'span',
+	          { className: prefixCls + '-column-header-inner' },
+	          'x'
+	        )
+	      );
+	    }
+	    var weekDaysEls = weekDays.map(function (day, xindex) {
+	      return React__default.createElement(
+	        'th',
+	        {
+	          key: xindex,
+	          role: 'columnheader',
+	          title: day,
+	          className: prefixCls + '-column-header'
+	        },
+	        React__default.createElement(
+	          'span',
+	          { className: prefixCls + '-column-header-inner' },
+	          veryShortWeekdays[xindex]
+	        )
+	      );
+	    });
+	    return React__default.createElement(
+	      'thead',
+	      null,
+	      React__default.createElement(
+	        'tr',
+	        { role: 'row' },
+	        showWeekNumberEl,
+	        weekDaysEls
+	      )
+	    );
+	  };
+
+	  return DateTHead;
+	}(React__default.Component);
+
+	var defaultDisabledTime = {
+	  disabledHours: function disabledHours() {
+	    return [];
+	  },
+	  disabledMinutes: function disabledMinutes() {
+	    return [];
+	  },
+	  disabledSeconds: function disabledSeconds() {
+	    return [];
+	  }
+	};
+
+	function getTodayTime(value) {
+	  var today = moment();
+	  today.locale(value.locale()).utcOffset(value.utcOffset());
+	  return today;
+	}
+
+	function getTitleString(value) {
+	  return value.format('LL');
+	}
+
+	function getTodayTimeStr(value) {
+	  var today = getTodayTime(value);
+	  return getTitleString(today);
+	}
+
+	function getMonthName(month) {
+	  var locale = month.locale();
+	  var localeData = month.localeData();
+	  return localeData[locale === 'zh-cn' ? 'months' : 'monthsShort'](month);
+	}
+
+	function syncTime(from, to) {
+	  if (!moment.isMoment(from) || !moment.isMoment(to)) return;
+	  to.hour(from.hour());
+	  to.minute(from.minute());
+	  to.second(from.second());
+	}
+
+	function getTimeConfig(value, disabledTime) {
+	  var disabledTimeConfig = disabledTime ? disabledTime(value) : {};
+	  disabledTimeConfig = _extends$1({}, defaultDisabledTime, disabledTimeConfig);
+	  return disabledTimeConfig;
+	}
+
+	function isTimeValidByConfig(value, disabledTimeConfig) {
+	  var invalidTime = false;
+	  if (value) {
+	    var hour = value.hour();
+	    var minutes = value.minute();
+	    var seconds = value.second();
+	    var disabledHours = disabledTimeConfig.disabledHours();
+	    if (disabledHours.indexOf(hour) === -1) {
+	      var disabledMinutes = disabledTimeConfig.disabledMinutes(hour);
+	      if (disabledMinutes.indexOf(minutes) === -1) {
+	        var disabledSeconds = disabledTimeConfig.disabledSeconds(hour, minutes);
+	        invalidTime = disabledSeconds.indexOf(seconds) !== -1;
+	      } else {
+	        invalidTime = true;
+	      }
+	    } else {
+	      invalidTime = true;
+	    }
+	  }
+	  return !invalidTime;
+	}
+
+	function isTimeValid(value, disabledTime) {
+	  var disabledTimeConfig = getTimeConfig(value, disabledTime);
+	  return isTimeValidByConfig(value, disabledTimeConfig);
+	}
+
+	function isAllowedDate(value, disabledDate, disabledTime) {
+	  if (disabledDate) {
+	    if (disabledDate(value)) {
+	      return false;
+	    }
+	  }
+	  if (disabledTime) {
+	    if (!isTimeValid(value, disabledTime)) {
+	      return false;
+	    }
+	  }
+	  return true;
+	}
+
+	function isSameDay(one, two) {
+	  return one && two && one.isSame(two, 'day');
+	}
+
+	function beforeCurrentMonthYear(current, today) {
+	  if (current.year() < today.year()) {
+	    return 1;
+	  }
+	  return current.year() === today.year() && current.month() < today.month();
+	}
+
+	function afterCurrentMonthYear(current, today) {
+	  if (current.year() > today.year()) {
+	    return 1;
+	  }
+	  return current.year() === today.year() && current.month() > today.month();
+	}
+
+	function getIdFromDate(date) {
+	  return 'rc-calendar-' + date.year() + '-' + date.month() + '-' + date.date();
+	}
+
+	var DateTBody = createReactClass({
+	  displayName: 'DateTBody',
+
+	  propTypes: {
+	    contentRender: PropTypes__default.func,
+	    dateRender: PropTypes__default.func,
+	    disabledDate: PropTypes__default.func,
+	    prefixCls: PropTypes__default.string,
+	    selectedValue: PropTypes__default.oneOfType([PropTypes__default.object, PropTypes__default.arrayOf(PropTypes__default.object)]),
+	    value: PropTypes__default.object,
+	    hoverValue: PropTypes__default.any,
+	    showWeekNumber: PropTypes__default.bool
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      hoverValue: []
+	    };
+	  },
+	  render: function render() {
+	    var props = this.props;
+	    var contentRender = props.contentRender,
+	        prefixCls = props.prefixCls,
+	        selectedValue = props.selectedValue,
+	        value = props.value,
+	        showWeekNumber = props.showWeekNumber,
+	        dateRender = props.dateRender,
+	        disabledDate = props.disabledDate,
+	        hoverValue = props.hoverValue;
+
+	    var iIndex = void 0;
+	    var jIndex = void 0;
+	    var current = void 0;
+	    var dateTable = [];
+	    var today = getTodayTime(value);
+	    var cellClass = prefixCls + '-cell';
+	    var weekNumberCellClass = prefixCls + '-week-number-cell';
+	    var dateClass = prefixCls + '-date';
+	    var todayClass = prefixCls + '-today';
+	    var selectedClass = prefixCls + '-selected-day';
+	    var selectedDateClass = prefixCls + '-selected-date'; // do not move with mouse operation
+	    var selectedStartDateClass = prefixCls + '-selected-start-date';
+	    var selectedEndDateClass = prefixCls + '-selected-end-date';
+	    var inRangeClass = prefixCls + '-in-range-cell';
+	    var lastMonthDayClass = prefixCls + '-last-month-cell';
+	    var nextMonthDayClass = prefixCls + '-next-month-btn-day';
+	    var disabledClass = prefixCls + '-disabled-cell';
+	    var firstDisableClass = prefixCls + '-disabled-cell-first-of-row';
+	    var lastDisableClass = prefixCls + '-disabled-cell-last-of-row';
+	    var lastDayOfMonthClass = prefixCls + '-last-day-of-month';
+	    var month1 = value.clone();
+	    month1.date(1);
+	    var day = month1.day();
+	    var lastMonthDiffDay = (day + 7 - value.localeData().firstDayOfWeek()) % 7;
+	    // calculate last month
+	    var lastMonth1 = month1.clone();
+	    lastMonth1.add(0 - lastMonthDiffDay, 'days');
+	    var passed = 0;
+
+	    for (iIndex = 0; iIndex < DateConstants.DATE_ROW_COUNT; iIndex++) {
+	      for (jIndex = 0; jIndex < DateConstants.DATE_COL_COUNT; jIndex++) {
+	        current = lastMonth1;
+	        if (passed) {
+	          current = current.clone();
+	          current.add(passed, 'days');
+	        }
+	        dateTable.push(current);
+	        passed++;
+	      }
+	    }
+	    var tableHtml = [];
+	    passed = 0;
+
+	    for (iIndex = 0; iIndex < DateConstants.DATE_ROW_COUNT; iIndex++) {
+	      var _cx;
+
+	      var isCurrentWeek = void 0;
+	      var weekNumberCell = void 0;
+	      var isActiveWeek = false;
+	      var dateCells = [];
+	      if (showWeekNumber) {
+	        weekNumberCell = React__default.createElement(
+	          'td',
+	          {
+	            key: dateTable[passed].week(),
+	            role: 'gridcell',
+	            className: weekNumberCellClass
+	          },
+	          dateTable[passed].week()
+	        );
+	      }
+	      for (jIndex = 0; jIndex < DateConstants.DATE_COL_COUNT; jIndex++) {
+	        var next = null;
+	        var last = null;
+	        current = dateTable[passed];
+	        if (jIndex < DateConstants.DATE_COL_COUNT - 1) {
+	          next = dateTable[passed + 1];
+	        }
+	        if (jIndex > 0) {
+	          last = dateTable[passed - 1];
+	        }
+	        var cls = cellClass;
+	        var disabled = false;
+	        var selected = false;
+
+	        if (isSameDay(current, today)) {
+	          cls += ' ' + todayClass;
+	          isCurrentWeek = true;
+	        }
+
+	        var isBeforeCurrentMonthYear = beforeCurrentMonthYear(current, value);
+	        var isAfterCurrentMonthYear = afterCurrentMonthYear(current, value);
+
+	        if (selectedValue && Array.isArray(selectedValue)) {
+	          var rangeValue = hoverValue.length ? hoverValue : selectedValue;
+	          if (!isBeforeCurrentMonthYear && !isAfterCurrentMonthYear) {
+	            var startValue = rangeValue[0];
+	            var endValue = rangeValue[1];
+	            if (startValue) {
+	              if (isSameDay(current, startValue)) {
+	                selected = true;
+	                isActiveWeek = true;
+	                cls += ' ' + selectedStartDateClass;
+	              }
+	            }
+	            if (startValue && endValue) {
+	              if (isSameDay(current, endValue)) {
+	                selected = true;
+	                isActiveWeek = true;
+	                cls += ' ' + selectedEndDateClass;
+	              } else if (current.isAfter(startValue, 'day') && current.isBefore(endValue, 'day')) {
+	                cls += ' ' + inRangeClass;
+	              }
+	            }
+	          }
+	        } else if (isSameDay(current, value)) {
+	          // keyboard change value, highlight works
+	          selected = true;
+	          isActiveWeek = true;
+	        }
+
+	        if (isSameDay(current, selectedValue)) {
+	          cls += ' ' + selectedDateClass;
+	        }
+
+	        if (isBeforeCurrentMonthYear) {
+	          cls += ' ' + lastMonthDayClass;
+	        }
+
+	        if (isAfterCurrentMonthYear) {
+	          cls += ' ' + nextMonthDayClass;
+	        }
+
+	        if (current.clone().endOf('month').date() === current.date()) {
+	          cls += ' ' + lastDayOfMonthClass;
+	        }
+
+	        if (disabledDate) {
+	          if (disabledDate(current, value)) {
+	            disabled = true;
+
+	            if (!last || !disabledDate(last, value)) {
+	              cls += ' ' + firstDisableClass;
+	            }
+
+	            if (!next || !disabledDate(next, value)) {
+	              cls += ' ' + lastDisableClass;
+	            }
+	          }
+	        }
+
+	        if (selected) {
+	          cls += ' ' + selectedClass;
+	        }
+
+	        if (disabled) {
+	          cls += ' ' + disabledClass;
+	        }
+
+	        var dateHtml = void 0;
+	        if (dateRender) {
+	          dateHtml = dateRender(current, value);
+	        } else {
+	          var content = contentRender ? contentRender(current, value) : current.date();
+	          dateHtml = React__default.createElement(
+	            'div',
+	            {
+	              key: getIdFromDate(current),
+	              className: dateClass,
+	              'aria-selected': selected,
+	              'aria-disabled': disabled
+	            },
+	            content
+	          );
+	        }
+
+	        dateCells.push(React__default.createElement(
+	          'td',
+	          {
+	            key: passed,
+	            onClick: disabled ? undefined : props.onSelect.bind(null, current),
+	            onMouseEnter: disabled ? undefined : props.onDayHover && props.onDayHover.bind(null, current) || undefined,
+	            role: 'gridcell',
+	            title: getTitleString(current),
+	            className: cls
+	          },
+	          dateHtml
+	        ));
+
+	        passed++;
+	      }
+
+	      tableHtml.push(React__default.createElement(
+	        'tr',
+	        {
+	          key: iIndex,
+	          role: 'row',
+	          className: classnames((_cx = {}, _cx[prefixCls + '-current-week'] = isCurrentWeek, _cx[prefixCls + '-active-week'] = isActiveWeek, _cx))
+	        },
+	        weekNumberCell,
+	        dateCells
+	      ));
+	    }
+	    return React__default.createElement(
+	      'tbody',
+	      { className: prefixCls + '-tbody' },
+	      tableHtml
+	    );
+	  }
+	});
+
+	var DateTable = function (_React$Component) {
+	  _inherits(DateTable, _React$Component);
+
+	  function DateTable() {
+	    _classCallCheck(this, DateTable);
+
+	    return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+	  }
+
+	  DateTable.prototype.render = function render() {
+	    var props = this.props;
+	    var prefixCls = props.prefixCls;
+	    return React__default.createElement(
+	      'table',
+	      { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+	      React__default.createElement(DateTHead, props),
+	      React__default.createElement(DateTBody, props)
+	    );
+	  };
+
+	  return DateTable;
+	}(React__default.Component);
+
+	function mirror(o) {
+	  return o;
+	}
+
+	function mapSelf(children) {
+	  // return ReactFragment
+	  return React__default.Children.map(children, mirror);
+	}
+
+	var ROW = 4;
+	var COL = 3;
+
+	function chooseMonth(month) {
+	  var next = this.state.value.clone();
+	  next.month(month);
+	  this.setAndSelectValue(next);
+	}
+
+	function noop$4() {}
+
+	var MonthTable = function (_Component) {
+	  _inherits(MonthTable, _Component);
+
+	  function MonthTable(props) {
+	    _classCallCheck(this, MonthTable);
+
+	    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
+
+	    _this.state = {
+	      value: props.value
+	    };
+	    return _this;
+	  }
+
+	  MonthTable.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	    if ('value' in nextProps) {
+	      this.setState({
+	        value: nextProps.value
+	      });
+	    }
+	  };
+
+	  MonthTable.prototype.setAndSelectValue = function setAndSelectValue(value) {
+	    this.setState({
+	      value: value
+	    });
+	    this.props.onSelect(value);
+	  };
+
+	  MonthTable.prototype.months = function months() {
+	    var value = this.state.value;
+	    var current = value.clone();
+	    var months = [];
+	    var index = 0;
+	    for (var rowIndex = 0; rowIndex < ROW; rowIndex++) {
+	      months[rowIndex] = [];
+	      for (var colIndex = 0; colIndex < COL; colIndex++) {
+	        current.month(index);
+	        var content = getMonthName(current);
+	        months[rowIndex][colIndex] = {
+	          value: index,
+	          content: content,
+	          title: content
+	        };
+	        index++;
+	      }
+	    }
+	    return months;
+	  };
+
+	  MonthTable.prototype.render = function render() {
+	    var _this2 = this;
+
+	    var props = this.props;
+	    var value = this.state.value;
+	    var today = getTodayTime(value);
+	    var months = this.months();
+	    var currentMonth = value.month();
+	    var prefixCls = props.prefixCls,
+	        locale = props.locale,
+	        contentRender = props.contentRender,
+	        cellRender = props.cellRender;
+
+	    var monthsEls = months.map(function (month, index) {
+	      var tds = month.map(function (monthData) {
+	        var _classNameMap;
+
+	        var disabled = false;
+	        if (props.disabledDate) {
+	          var testValue = value.clone();
+	          testValue.month(monthData.value);
+	          disabled = props.disabledDate(testValue);
+	        }
+	        var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-cell-disabled'] = disabled, _classNameMap[prefixCls + '-selected-cell'] = monthData.value === currentMonth, _classNameMap[prefixCls + '-current-cell'] = today.year() === value.year() && monthData.value === today.month(), _classNameMap);
+	        var cellEl = void 0;
+	        if (cellRender) {
+	          var currentValue = value.clone();
+	          currentValue.month(monthData.value);
+	          cellEl = cellRender(currentValue, locale);
+	        } else {
+	          var content = void 0;
+	          if (contentRender) {
+	            var _currentValue = value.clone();
+	            _currentValue.month(monthData.value);
+	            content = contentRender(_currentValue, locale);
+	          } else {
+	            content = monthData.content;
+	          }
+	          cellEl = React__default.createElement(
+	            'a',
+	            { className: prefixCls + '-month' },
+	            content
+	          );
+	        }
+	        return React__default.createElement(
+	          'td',
+	          {
+	            role: 'gridcell',
+	            key: monthData.value,
+	            onClick: disabled ? null : chooseMonth.bind(_this2, monthData.value),
+	            title: monthData.title,
+	            className: classnames(classNameMap)
+	          },
+	          cellEl
+	        );
+	      });
+	      return React__default.createElement(
+	        'tr',
+	        { key: index, role: 'row' },
+	        tds
+	      );
+	    });
+
+	    return React__default.createElement(
+	      'table',
+	      { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+	      React__default.createElement(
+	        'tbody',
+	        { className: prefixCls + '-tbody' },
+	        monthsEls
+	      )
+	    );
+	  };
+
+	  return MonthTable;
+	}(React.Component);
+
+	MonthTable.defaultProps = {
+	  onSelect: noop$4
+	};
+	MonthTable.propTypes = {
+	  onSelect: PropTypes__default.func,
+	  cellRender: PropTypes__default.func,
+	  prefixCls: PropTypes__default.string,
+	  value: PropTypes__default.object
+	};
+
+	function goYear(direction) {
+	  var next = this.state.value.clone();
+	  next.add(direction, 'year');
+	  this.setAndChangeValue(next);
+	}
+
+	function noop$5() {}
+
+	var MonthPanel = createReactClass({
+	  displayName: 'MonthPanel',
+
+	  propTypes: {
+	    onChange: PropTypes__default.func,
+	    disabledDate: PropTypes__default.func,
+	    onSelect: PropTypes__default.func
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      onChange: noop$5,
+	      onSelect: noop$5
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    var props = this.props;
+	    // bind methods
+	    this.nextYear = goYear.bind(this, 1);
+	    this.previousYear = goYear.bind(this, -1);
+	    this.prefixCls = props.rootPrefixCls + '-month-panel';
+	    return {
+	      value: props.value || props.defaultValue
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    if ('value' in nextProps) {
+	      this.setState({
+	        value: nextProps.value
+	      });
+	    }
+	  },
+	  setAndChangeValue: function setAndChangeValue(value) {
+	    this.setValue(value);
+	    this.props.onChange(value);
+	  },
+	  setAndSelectValue: function setAndSelectValue(value) {
+	    this.setValue(value);
+	    this.props.onSelect(value);
+	  },
+	  setValue: function setValue(value) {
+	    if (!('value' in this.props)) {
+	      this.setState({
+	        value: value
+	      });
+	    }
+	  },
+	  render: function render() {
+	    var props = this.props;
+	    var value = this.state.value;
+	    var cellRender = props.cellRender;
+	    var contentRender = props.contentRender;
+	    var locale = props.locale;
+
+	    var year = value.year();
+	    var prefixCls = this.prefixCls;
+
+	    return React__default.createElement(
+	      'div',
+	      { className: prefixCls, style: props.style },
+	      React__default.createElement(
+	        'div',
+	        null,
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-header' },
+	          React__default.createElement('a', {
+	            className: prefixCls + '-prev-year-btn',
+	            role: 'button',
+	            onClick: this.previousYear,
+	            title: locale.previousYear
+	          }),
+	          React__default.createElement(
+	            'a',
+	            {
+	              className: prefixCls + '-year-select',
+	              role: 'button',
+	              onClick: props.onYearPanelShow,
+	              title: locale.yearSelect
+	            },
+	            React__default.createElement(
+	              'span',
+	              { className: prefixCls + '-year-select-content' },
+	              year
+	            ),
+	            React__default.createElement(
+	              'span',
+	              { className: prefixCls + '-year-select-arrow' },
+	              'x'
+	            )
+	          ),
+	          React__default.createElement('a', {
+	            className: prefixCls + '-next-year-btn',
+	            role: 'button',
+	            onClick: this.nextYear,
+	            title: locale.nextYear
+	          })
+	        ),
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-body' },
+	          React__default.createElement(MonthTable, {
+	            disabledDate: props.disabledDate,
+	            onSelect: this.setAndSelectValue,
+	            locale: locale,
+	            value: value,
+	            cellRender: cellRender,
+	            contentRender: contentRender,
+	            prefixCls: prefixCls
+	          })
+	        )
+	      )
+	    );
+	  }
+	});
+
+	var ROW$1 = 4;
+	var COL$1 = 3;
+
+	function goYear$1(direction) {
+	  var value = this.state.value.clone();
+	  value.add(direction, 'year');
+	  this.setState({
+	    value: value
+	  });
+	}
+
+	function chooseYear(year) {
+	  var value = this.state.value.clone();
+	  value.year(year);
+	  value.month(this.state.value.month());
+	  this.props.onSelect(value);
+	}
+
+	var YearPanel = function (_React$Component) {
+	  _inherits(YearPanel, _React$Component);
+
+	  function YearPanel(props) {
+	    _classCallCheck(this, YearPanel);
+
+	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+
+	    _this.prefixCls = props.rootPrefixCls + '-year-panel';
+	    _this.state = {
+	      value: props.value || props.defaultValue
+	    };
+	    _this.nextDecade = goYear$1.bind(_this, 10);
+	    _this.previousDecade = goYear$1.bind(_this, -10);
+	    return _this;
+	  }
+
+	  YearPanel.prototype.years = function years() {
+	    var value = this.state.value;
+	    var currentYear = value.year();
+	    var startYear = parseInt(currentYear / 10, 10) * 10;
+	    var previousYear = startYear - 1;
+	    var years = [];
+	    var index = 0;
+	    for (var rowIndex = 0; rowIndex < ROW$1; rowIndex++) {
+	      years[rowIndex] = [];
+	      for (var colIndex = 0; colIndex < COL$1; colIndex++) {
+	        var year = previousYear + index;
+	        var content = String(year);
+	        years[rowIndex][colIndex] = {
+	          content: content,
+	          year: year,
+	          title: content
+	        };
+	        index++;
+	      }
+	    }
+	    return years;
+	  };
+
+	  YearPanel.prototype.render = function render() {
+	    var _this2 = this;
+
+	    var props = this.props;
+	    var value = this.state.value;
+	    var locale = props.locale;
+
+	    var years = this.years();
+	    var currentYear = value.year();
+	    var startYear = parseInt(currentYear / 10, 10) * 10;
+	    var endYear = startYear + 9;
+	    var prefixCls = this.prefixCls;
+
+	    var yeasEls = years.map(function (row, index) {
+	      var tds = row.map(function (yearData) {
+	        var _classNameMap;
+
+	        var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-selected-cell'] = yearData.year === currentYear, _classNameMap[prefixCls + '-last-decade-cell'] = yearData.year < startYear, _classNameMap[prefixCls + '-next-decade-cell'] = yearData.year > endYear, _classNameMap);
+	        var clickHandler = void 0;
+	        if (yearData.year < startYear) {
+	          clickHandler = _this2.previousDecade;
+	        } else if (yearData.year > endYear) {
+	          clickHandler = _this2.nextDecade;
+	        } else {
+	          clickHandler = chooseYear.bind(_this2, yearData.year);
+	        }
+	        return React__default.createElement(
+	          'td',
+	          {
+	            role: 'gridcell',
+	            title: yearData.title,
+	            key: yearData.content,
+	            onClick: clickHandler,
+	            className: classnames(classNameMap)
+	          },
+	          React__default.createElement(
+	            'a',
+	            {
+	              className: prefixCls + '-year'
+	            },
+	            yearData.content
+	          )
+	        );
+	      });
+	      return React__default.createElement(
+	        'tr',
+	        { key: index, role: 'row' },
+	        tds
+	      );
+	    });
+
+	    return React__default.createElement(
+	      'div',
+	      { className: this.prefixCls },
+	      React__default.createElement(
+	        'div',
+	        null,
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-header' },
+	          React__default.createElement('a', {
+	            className: prefixCls + '-prev-decade-btn',
+	            role: 'button',
+	            onClick: this.previousDecade,
+	            title: locale.previousDecade
+	          }),
+	          React__default.createElement(
+	            'a',
+	            {
+	              className: prefixCls + '-decade-select',
+	              role: 'button',
+	              onClick: props.onDecadePanelShow,
+	              title: locale.decadeSelect
+	            },
+	            React__default.createElement(
+	              'span',
+	              { className: prefixCls + '-decade-select-content' },
+	              startYear,
+	              '-',
+	              endYear
+	            ),
+	            React__default.createElement(
+	              'span',
+	              { className: prefixCls + '-decade-select-arrow' },
+	              'x'
+	            )
+	          ),
+	          React__default.createElement('a', {
+	            className: prefixCls + '-next-decade-btn',
+	            role: 'button',
+	            onClick: this.nextDecade,
+	            title: locale.nextDecade
+	          })
+	        ),
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-body' },
+	          React__default.createElement(
+	            'table',
+	            { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+	            React__default.createElement(
+	              'tbody',
+	              { className: prefixCls + '-tbody' },
+	              yeasEls
+	            )
+	          )
+	        )
+	      )
+	    );
+	  };
+
+	  return YearPanel;
+	}(React__default.Component);
+
+
+	YearPanel.propTypes = {
+	  rootPrefixCls: PropTypes__default.string,
+	  value: PropTypes__default.object,
+	  defaultValue: PropTypes__default.object
+	};
+
+	YearPanel.defaultProps = {
+	  onSelect: function onSelect() {}
+	};
+
+	var ROW$2 = 4;
+	var COL$2 = 3;
+
+	function goYear$2(direction) {
+	  var next = this.state.value.clone();
+	  next.add(direction, 'years');
+	  this.setState({
+	    value: next
+	  });
+	}
+
+	function chooseDecade(year, event) {
+	  var next = this.state.value.clone();
+	  next.year(year);
+	  next.month(this.state.value.month());
+	  this.props.onSelect(next);
+	  event.preventDefault();
+	}
+
+	var DecadePanel = function (_React$Component) {
+	  _inherits(DecadePanel, _React$Component);
+
+	  function DecadePanel(props) {
+	    _classCallCheck(this, DecadePanel);
+
+	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+
+	    _this.state = {
+	      value: props.value || props.defaultValue
+	    };
+
+	    // bind methods
+	    _this.prefixCls = props.rootPrefixCls + '-decade-panel';
+	    _this.nextCentury = goYear$2.bind(_this, 100);
+	    _this.previousCentury = goYear$2.bind(_this, -100);
+	    return _this;
+	  }
+
+	  DecadePanel.prototype.render = function render() {
+	    var _this2 = this;
+
+	    var value = this.state.value;
+	    var locale = this.props.locale;
+
+	    var currentYear = value.year();
+	    var startYear = parseInt(currentYear / 100, 10) * 100;
+	    var preYear = startYear - 10;
+	    var endYear = startYear + 99;
+	    var decades = [];
+	    var index = 0;
+	    var prefixCls = this.prefixCls;
+
+	    for (var rowIndex = 0; rowIndex < ROW$2; rowIndex++) {
+	      decades[rowIndex] = [];
+	      for (var colIndex = 0; colIndex < COL$2; colIndex++) {
+	        var startDecade = preYear + index * 10;
+	        var endDecade = preYear + index * 10 + 9;
+	        decades[rowIndex][colIndex] = {
+	          startDecade: startDecade,
+	          endDecade: endDecade
+	        };
+	        index++;
+	      }
+	    }
+
+	    var decadesEls = decades.map(function (row, decadeIndex) {
+	      var tds = row.map(function (decadeData) {
+	        var _classNameMap;
+
+	        var dStartDecade = decadeData.startDecade;
+	        var dEndDecade = decadeData.endDecade;
+	        var isLast = dStartDecade < startYear;
+	        var isNext = dEndDecade > endYear;
+	        var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-selected-cell'] = dStartDecade <= currentYear && currentYear <= dEndDecade, _classNameMap[prefixCls + '-last-century-cell'] = isLast, _classNameMap[prefixCls + '-next-century-cell'] = isNext, _classNameMap);
+	        var content = dStartDecade + '-' + dEndDecade;
+	        var clickHandler = void 0;
+	        if (isLast) {
+	          clickHandler = _this2.previousCentury;
+	        } else if (isNext) {
+	          clickHandler = _this2.nextCentury;
+	        } else {
+	          clickHandler = chooseDecade.bind(_this2, dStartDecade);
+	        }
+	        return React__default.createElement(
+	          'td',
+	          {
+	            key: dStartDecade,
+	            onClick: clickHandler,
+	            role: 'gridcell',
+	            className: classnames(classNameMap)
+	          },
+	          React__default.createElement(
+	            'a',
+	            {
+	              className: prefixCls + '-decade'
+	            },
+	            content
+	          )
+	        );
+	      });
+	      return React__default.createElement(
+	        'tr',
+	        { key: decadeIndex, role: 'row' },
+	        tds
+	      );
+	    });
+
+	    return React__default.createElement(
+	      'div',
+	      { className: this.prefixCls },
+	      React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-header' },
+	        React__default.createElement('a', {
+	          className: prefixCls + '-prev-century-btn',
+	          role: 'button',
+	          onClick: this.previousCentury,
+	          title: locale.previousCentury
+	        }),
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-century' },
+	          startYear,
+	          '-',
+	          endYear
+	        ),
+	        React__default.createElement('a', {
+	          className: prefixCls + '-next-century-btn',
+	          role: 'button',
+	          onClick: this.nextCentury,
+	          title: locale.nextCentury
+	        })
+	      ),
+	      React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-body' },
+	        React__default.createElement(
+	          'table',
+	          { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+	          React__default.createElement(
+	            'tbody',
+	            { className: prefixCls + '-tbody' },
+	            decadesEls
+	          )
+	        )
+	      )
+	    );
+	  };
+
+	  return DecadePanel;
+	}(React__default.Component);
+
+
+	DecadePanel.propTypes = {
+	  locale: PropTypes__default.object,
+	  value: PropTypes__default.object,
+	  defaultValue: PropTypes__default.object,
+	  rootPrefixCls: PropTypes__default.string
+	};
+
+	DecadePanel.defaultProps = {
+	  onSelect: function onSelect() {}
+	};
+
+	function goMonth(direction) {
+	  var next = this.props.value.clone();
+	  next.add(direction, 'months');
+	  this.props.onValueChange(next);
+	}
+
+	function goYear$3(direction) {
+	  var next = this.props.value.clone();
+	  next.add(direction, 'years');
+	  this.props.onValueChange(next);
+	}
+
+	function showIf(condition, el) {
+	  return condition ? el : null;
+	}
+
+	var CalendarHeader = createReactClass({
+	  displayName: 'CalendarHeader',
+
+	  propTypes: {
+	    prefixCls: PropTypes__default.string,
+	    value: PropTypes__default.object,
+	    onValueChange: PropTypes__default.func,
+	    showTimePicker: PropTypes__default.bool,
+	    onPanelChange: PropTypes__default.func,
+	    locale: PropTypes__default.object,
+	    enablePrev: PropTypes__default.any,
+	    enableNext: PropTypes__default.any,
+	    disabledMonth: PropTypes__default.func
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      enableNext: 1,
+	      enablePrev: 1,
+	      onPanelChange: function onPanelChange() {},
+	      onValueChange: function onValueChange() {}
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    this.nextMonth = goMonth.bind(this, 1);
+	    this.previousMonth = goMonth.bind(this, -1);
+	    this.nextYear = goYear$3.bind(this, 1);
+	    this.previousYear = goYear$3.bind(this, -1);
+	    return { yearPanelReferer: null };
+	  },
+	  onMonthSelect: function onMonthSelect(value) {
+	    this.props.onPanelChange(value, 'date');
+	    if (this.props.onMonthSelect) {
+	      this.props.onMonthSelect(value);
+	    } else {
+	      this.props.onValueChange(value);
+	    }
+	  },
+	  onYearSelect: function onYearSelect(value) {
+	    var referer = this.state.yearPanelReferer;
+	    this.setState({ yearPanelReferer: null });
+	    this.props.onPanelChange(value, referer);
+	    this.props.onValueChange(value);
+	  },
+	  onDecadeSelect: function onDecadeSelect(value) {
+	    this.props.onPanelChange(value, 'year');
+	    this.props.onValueChange(value);
+	  },
+	  monthYearElement: function monthYearElement(showTimePicker) {
+	    var _this = this;
+
+	    var props = this.props;
+	    var prefixCls = props.prefixCls;
+	    var locale = props.locale;
+	    var value = props.value;
+	    var localeData = value.localeData();
+	    var monthBeforeYear = locale.monthBeforeYear;
+	    var selectClassName = prefixCls + '-' + (monthBeforeYear ? 'my-select' : 'ym-select');
+	    var timeClassName = showTimePicker ? ' ' + prefixCls + '-time-status' : '';
+	    var year = React__default.createElement(
+	      'a',
+	      {
+	        className: prefixCls + '-year-select' + timeClassName,
+	        role: 'button',
+	        onClick: showTimePicker ? null : function () {
+	          return _this.showYearPanel('date');
+	        },
+	        title: showTimePicker ? null : locale.yearSelect
+	      },
+	      value.format(locale.yearFormat)
+	    );
+	    var month = React__default.createElement(
+	      'a',
+	      {
+	        className: prefixCls + '-month-select' + timeClassName,
+	        role: 'button',
+	        onClick: showTimePicker ? null : this.showMonthPanel,
+	        title: showTimePicker ? null : locale.monthSelect
+	      },
+	      locale.monthFormat ? value.format(locale.monthFormat) : localeData.monthsShort(value)
+	    );
+	    var day = void 0;
+	    if (showTimePicker) {
+	      day = React__default.createElement(
+	        'a',
+	        {
+	          className: prefixCls + '-day-select' + timeClassName,
+	          role: 'button'
+	        },
+	        value.format(locale.dayFormat)
+	      );
+	    }
+	    var my = [];
+	    if (monthBeforeYear) {
+	      my = [month, day, year];
+	    } else {
+	      my = [year, month, day];
+	    }
+	    return React__default.createElement(
+	      'span',
+	      { className: selectClassName },
+	      mapSelf(my)
+	    );
+	  },
+	  showMonthPanel: function showMonthPanel() {
+	    // null means that users' interaction doesn't change value
+	    this.props.onPanelChange(null, 'month');
+	  },
+	  showYearPanel: function showYearPanel(referer) {
+	    this.setState({ yearPanelReferer: referer });
+	    this.props.onPanelChange(null, 'year');
+	  },
+	  showDecadePanel: function showDecadePanel() {
+	    this.props.onPanelChange(null, 'decade');
+	  },
+	  render: function render() {
+	    var _this2 = this;
+
+	    var props = this.props;
+	    var prefixCls = props.prefixCls,
+	        locale = props.locale,
+	        mode = props.mode,
+	        value = props.value,
+	        showTimePicker = props.showTimePicker,
+	        enableNext = props.enableNext,
+	        enablePrev = props.enablePrev,
+	        disabledMonth = props.disabledMonth;
+
+
+	    var panel = null;
+	    if (mode === 'month') {
+	      panel = React__default.createElement(MonthPanel, {
+	        locale: locale,
+	        defaultValue: value,
+	        rootPrefixCls: prefixCls,
+	        onSelect: this.onMonthSelect,
+	        onYearPanelShow: function onYearPanelShow() {
+	          return _this2.showYearPanel('month');
+	        },
+	        disabledDate: disabledMonth,
+	        cellRender: props.monthCellRender,
+	        contentRender: props.monthCellContentRender
+	      });
+	    }
+	    if (mode === 'year') {
+	      panel = React__default.createElement(YearPanel, {
+	        locale: locale,
+	        defaultValue: value,
+	        rootPrefixCls: prefixCls,
+	        onSelect: this.onYearSelect,
+	        onDecadePanelShow: this.showDecadePanel
+	      });
+	    }
+	    if (mode === 'decade') {
+	      panel = React__default.createElement(DecadePanel, {
+	        locale: locale,
+	        defaultValue: value,
+	        rootPrefixCls: prefixCls,
+	        onSelect: this.onDecadeSelect
+	      });
+	    }
+
+	    return React__default.createElement(
+	      'div',
+	      { className: prefixCls + '-header' },
+	      React__default.createElement(
+	        'div',
+	        { style: { position: 'relative' } },
+	        showIf(enablePrev && !showTimePicker, React__default.createElement('a', {
+	          className: prefixCls + '-prev-year-btn',
+	          role: 'button',
+	          onClick: this.previousYear,
+	          title: locale.previousYear
+	        })),
+	        showIf(enablePrev && !showTimePicker, React__default.createElement('a', {
+	          className: prefixCls + '-prev-month-btn',
+	          role: 'button',
+	          onClick: this.previousMonth,
+	          title: locale.previousMonth
+	        })),
+	        this.monthYearElement(showTimePicker),
+	        showIf(enableNext && !showTimePicker, React__default.createElement('a', {
+	          className: prefixCls + '-next-month-btn',
+	          onClick: this.nextMonth,
+	          title: locale.nextMonth
+	        })),
+	        showIf(enableNext && !showTimePicker, React__default.createElement('a', {
+	          className: prefixCls + '-next-year-btn',
+	          onClick: this.nextYear,
+	          title: locale.nextYear
+	        }))
+	      ),
+	      panel
+	    );
+	  }
+	});
+
+	function TodayButton(_ref) {
+	  var prefixCls = _ref.prefixCls,
+	      locale = _ref.locale,
+	      value = _ref.value,
+	      timePicker = _ref.timePicker,
+	      disabled = _ref.disabled,
+	      disabledDate = _ref.disabledDate,
+	      onToday = _ref.onToday,
+	      text = _ref.text;
+
+	  var localeNow = (!text && timePicker ? locale.now : text) || locale.today;
+	  var disabledToday = disabledDate && !isAllowedDate(getTodayTime(value), disabledDate);
+	  var isDisabled = disabledToday || disabled;
+	  var disabledTodayClass = isDisabled ? prefixCls + '-today-btn-disabled' : '';
+	  return React__default.createElement(
+	    'a',
+	    {
+	      className: prefixCls + '-today-btn ' + disabledTodayClass,
+	      role: 'button',
+	      onClick: isDisabled ? null : onToday,
+	      title: getTodayTimeStr(value)
+	    },
+	    localeNow
+	  );
+	}
+
+	function OkButton(_ref) {
+	  var prefixCls = _ref.prefixCls,
+	      locale = _ref.locale,
+	      okDisabled = _ref.okDisabled,
+	      onOk = _ref.onOk;
+
+	  var className = prefixCls + "-ok-btn";
+	  if (okDisabled) {
+	    className += " " + prefixCls + "-ok-btn-disabled";
+	  }
+	  return React__default.createElement(
+	    "a",
+	    {
+	      className: className,
+	      role: "button",
+	      onClick: okDisabled ? null : onOk
+	    },
+	    locale.ok
+	  );
+	}
+
+	function TimePickerButton(_ref) {
+	  var _classnames;
+
+	  var prefixCls = _ref.prefixCls,
+	      locale = _ref.locale,
+	      showTimePicker = _ref.showTimePicker,
+	      onOpenTimePicker = _ref.onOpenTimePicker,
+	      onCloseTimePicker = _ref.onCloseTimePicker,
+	      timePickerDisabled = _ref.timePickerDisabled;
+
+	  var className = classnames((_classnames = {}, _classnames[prefixCls + '-time-picker-btn'] = true, _classnames[prefixCls + '-time-picker-btn-disabled'] = timePickerDisabled, _classnames));
+	  var onClick = null;
+	  if (!timePickerDisabled) {
+	    onClick = showTimePicker ? onCloseTimePicker : onOpenTimePicker;
+	  }
+	  return React__default.createElement(
+	    'a',
+	    {
+	      className: className,
+	      role: 'button',
+	      onClick: onClick
+	    },
+	    showTimePicker ? locale.dateSelect : locale.timeSelect
+	  );
+	}
+
+	var CalendarFooter = createReactClass({
+	  displayName: 'CalendarFooter',
+
+	  propTypes: {
+	    prefixCls: PropTypes__default.string,
+	    showDateInput: PropTypes__default.bool,
+	    disabledTime: PropTypes__default.any,
+	    timePicker: PropTypes__default.element,
+	    selectedValue: PropTypes__default.any,
+	    showOk: PropTypes__default.bool,
+	    onSelect: PropTypes__default.func,
+	    value: PropTypes__default.object,
+	    renderFooter: PropTypes__default.func,
+	    defaultValue: PropTypes__default.object
+	  },
+
+	  onSelect: function onSelect(value) {
+	    this.props.onSelect(value);
+	  },
+	  getRootDOMNode: function getRootDOMNode() {
+	    return ReactDOM__default.findDOMNode(this);
+	  },
+	  render: function render() {
+	    var props = this.props;
+	    var value = props.value,
+	        prefixCls = props.prefixCls,
+	        showOk = props.showOk,
+	        timePicker = props.timePicker,
+	        renderFooter = props.renderFooter;
+
+	    var footerEl = null;
+	    var extraFooter = renderFooter();
+	    if (props.showToday || timePicker || extraFooter) {
+	      var _cx;
+
+	      var nowEl = void 0;
+	      if (props.showToday) {
+	        nowEl = React__default.createElement(TodayButton, _extends$1({}, props, { value: value }));
+	      }
+	      var okBtn = void 0;
+	      if (showOk === true || showOk !== false && !!props.timePicker) {
+	        okBtn = React__default.createElement(OkButton, props);
+	      }
+	      var timePickerBtn = void 0;
+	      if (!!props.timePicker) {
+	        timePickerBtn = React__default.createElement(TimePickerButton, props);
+	      }
+
+	      var footerBtn = void 0;
+	      if (nowEl || timePickerBtn || okBtn || extraFooter) {
+	        footerBtn = React__default.createElement(
+	          'span',
+	          { className: prefixCls + '-footer-btn' },
+	          extraFooter,
+	          mapSelf([nowEl, timePickerBtn, okBtn])
+	        );
+	      }
+	      var cls = classnames(prefixCls + '-footer', (_cx = {}, _cx[prefixCls + '-footer-show-ok'] = okBtn, _cx));
+	      footerEl = React__default.createElement(
+	        'div',
+	        { className: cls },
+	        footerBtn
+	      );
+	    }
+	    return footerEl;
+	  }
+	});
+
+	function noop$6() {}
+
+	function getNow() {
+	  return moment();
+	}
+
+	function getNowByCurrentStateValue(value) {
+	  var ret = void 0;
+	  if (value) {
+	    ret = getTodayTime(value);
+	  } else {
+	    ret = getNow();
+	  }
+	  return ret;
+	}
+
+	var CalendarMixin = {
+	  propTypes: {
+	    value: PropTypes__default.object,
+	    defaultValue: PropTypes__default.object,
+	    onKeyDown: PropTypes__default.func
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      onKeyDown: noop$6
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    var props = this.props;
+	    var value = props.value || props.defaultValue || getNow();
+	    return {
+	      value: value,
+	      selectedValue: props.selectedValue || props.defaultSelectedValue
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    var value = nextProps.value;
+	    var selectedValue = nextProps.selectedValue;
+
+	    if ('value' in nextProps) {
+	      value = value || nextProps.defaultValue || getNowByCurrentStateValue(this.state.value);
+	      this.setState({
+	        value: value
+	      });
+	    }
+	    if ('selectedValue' in nextProps) {
+	      this.setState({
+	        selectedValue: selectedValue
+	      });
+	    }
+	  },
+	  onSelect: function onSelect(value, cause) {
+	    if (value) {
+	      this.setValue(value);
+	    }
+	    this.setSelectedValue(value, cause);
+	  },
+	  renderRoot: function renderRoot(newProps) {
+	    var _className;
+
+	    var props = this.props;
+	    var prefixCls = props.prefixCls;
+
+	    var className = (_className = {}, _className[prefixCls] = 1, _className[prefixCls + '-hidden'] = !props.visible, _className[props.className] = !!props.className, _className[newProps.className] = !!newProps.className, _className);
+
+	    return React__default.createElement(
+	      'div',
+	      {
+	        ref: this.saveRoot,
+	        className: '' + classnames(className),
+	        style: this.props.style,
+	        tabIndex: '0',
+	        onKeyDown: this.onKeyDown
+	      },
+	      newProps.children
+	    );
+	  },
+	  setSelectedValue: function setSelectedValue(selectedValue, cause) {
+	    // if (this.isAllowedDate(selectedValue)) {
+	    if (!('selectedValue' in this.props)) {
+	      this.setState({
+	        selectedValue: selectedValue
+	      });
+	    }
+	    this.props.onSelect(selectedValue, cause);
+	    // }
+	  },
+	  setValue: function setValue(value) {
+	    var originalValue = this.state.value;
+	    if (!('value' in this.props)) {
+	      this.setState({
+	        value: value
+	      });
+	    }
+	    if (originalValue && value && !originalValue.isSame(value) || !originalValue && value || originalValue && !value) {
+	      this.props.onChange(value);
+	    }
+	  },
+	  isAllowedDate: function isAllowedDate$$1(value) {
+	    var disabledDate = this.props.disabledDate;
+	    var disabledTime = this.props.disabledTime;
+	    return isAllowedDate(value, disabledDate, disabledTime);
+	  }
+	};
+
+	function noop$7() {}
+
+	var CommonMixin = {
+	  propTypes: {
+	    className: PropTypes__default.string,
+	    locale: PropTypes__default.object,
+	    style: PropTypes__default.object,
+	    visible: PropTypes__default.bool,
+	    onSelect: PropTypes__default.func,
+	    prefixCls: PropTypes__default.string,
+	    onChange: PropTypes__default.func,
+	    onOk: PropTypes__default.func
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      locale: enUs,
+	      style: {},
+	      visible: true,
+	      prefixCls: 'rc-calendar',
+	      className: '',
+	      onSelect: noop$7,
+	      onChange: noop$7,
+	      onClear: noop$7,
+	      renderFooter: function renderFooter() {
+	        return null;
+	      },
+	      renderSidebar: function renderSidebar() {
+	        return null;
+	      }
+	    };
+	  },
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
+	    return this.props.visible || nextProps.visible;
+	  },
+	  getFormat: function getFormat() {
+	    var format = this.props.format;
+	    var _props = this.props,
+	        locale = _props.locale,
+	        timePicker = _props.timePicker;
+
+	    if (!format) {
+	      if (timePicker) {
+	        format = locale.dateTimeFormat;
+	      } else {
+	        format = locale.dateFormat;
+	      }
+	    }
+	    return format;
+	  },
+	  focus: function focus() {
+	    if (this.rootInstance) {
+	      this.rootInstance.focus();
+	    }
+	  },
+	  saveRoot: function saveRoot(root) {
+	    this.rootInstance = root;
+	  }
+	};
+
+	var DateInput = createReactClass({
+	  displayName: 'DateInput',
+
+	  propTypes: {
+	    prefixCls: PropTypes__default.string,
+	    timePicker: PropTypes__default.object,
+	    value: PropTypes__default.object,
+	    disabledTime: PropTypes__default.any,
+	    format: PropTypes__default.string,
+	    locale: PropTypes__default.object,
+	    disabledDate: PropTypes__default.func,
+	    onChange: PropTypes__default.func,
+	    onClear: PropTypes__default.func,
+	    placeholder: PropTypes__default.string,
+	    onSelect: PropTypes__default.func,
+	    selectedValue: PropTypes__default.object,
+	    clearIcon: PropTypes__default.node
+	  },
+
+	  getInitialState: function getInitialState() {
+	    var selectedValue = this.props.selectedValue;
+	    return {
+	      str: selectedValue && selectedValue.format(this.props.format) || '',
+	      invalid: false
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    this.cachedSelectionStart = this.dateInputInstance.selectionStart;
+	    this.cachedSelectionEnd = this.dateInputInstance.selectionEnd;
+	    // when popup show, click body will call this, bug!
+	    var selectedValue = nextProps.selectedValue;
+	    this.setState({
+	      str: selectedValue && selectedValue.format(nextProps.format) || '',
+	      invalid: false
+	    });
+	  },
+	  componentDidUpdate: function componentDidUpdate() {
+	    if (!this.state.invalid && !(this.cachedSelectionStart === 0 && this.cachedSelectionEnd === 0)) {
+	      this.dateInputInstance.setSelectionRange(this.cachedSelectionStart, this.cachedSelectionEnd);
+	    }
+	  },
+	  onInputChange: function onInputChange(event) {
+	    var str = event.target.value;
+	    this.setState({
+	      str: str
+	    });
+	    var value = void 0;
+	    var _props = this.props,
+	        disabledDate = _props.disabledDate,
+	        format = _props.format,
+	        onChange = _props.onChange;
+
+	    if (str) {
+	      var parsed = moment(str, format, true);
+	      if (!parsed.isValid()) {
+	        this.setState({
+	          invalid: true
+	        });
+	        return;
+	      }
+	      value = this.props.value.clone();
+	      value.year(parsed.year()).month(parsed.month()).date(parsed.date()).hour(parsed.hour()).minute(parsed.minute()).second(parsed.second());
+
+	      if (value && (!disabledDate || !disabledDate(value))) {
+	        var originalValue = this.props.selectedValue;
+	        if (originalValue && value) {
+	          if (!originalValue.isSame(value)) {
+	            onChange(value);
+	          }
+	        } else if (originalValue !== value) {
+	          onChange(value);
+	        }
+	      } else {
+	        this.setState({
+	          invalid: true
+	        });
+	        return;
+	      }
+	    } else {
+	      onChange(null);
+	    }
+	    this.setState({
+	      invalid: false
+	    });
+	  },
+	  onClear: function onClear() {
+	    this.setState({
+	      str: ''
+	    });
+	    this.props.onClear(null);
+	  },
+	  getRootDOMNode: function getRootDOMNode() {
+	    return ReactDOM__default.findDOMNode(this);
+	  },
+	  focus: function focus() {
+	    if (this.dateInputInstance) {
+	      this.dateInputInstance.focus();
+	    }
+	  },
+	  saveDateInput: function saveDateInput(dateInput) {
+	    this.dateInputInstance = dateInput;
+	  },
+	  render: function render() {
+	    var props = this.props;
+	    var _state = this.state,
+	        invalid = _state.invalid,
+	        str = _state.str;
+	    var locale = props.locale,
+	        prefixCls = props.prefixCls,
+	        placeholder = props.placeholder,
+	        clearIcon = props.clearIcon;
+
+	    var invalidClass = invalid ? prefixCls + '-input-invalid' : '';
+	    return React__default.createElement(
+	      'div',
+	      { className: prefixCls + '-input-wrap' },
+	      React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-date-input-wrap' },
+	        React__default.createElement('input', {
+	          ref: this.saveDateInput,
+	          className: prefixCls + '-input ' + invalidClass,
+	          value: str,
+	          disabled: props.disabled,
+	          placeholder: placeholder,
+	          onChange: this.onInputChange
+	        })
+	      ),
+	      props.showClear ? React__default.createElement(
+	        'a',
+	        {
+	          role: 'button',
+	          title: locale.clear,
+	          onClick: this.onClear
+	        },
+	        clearIcon || React__default.createElement('span', { className: prefixCls + '-clear-btn' })
+	      ) : null
+	    );
+	  }
+	});
+
+	function goStartMonth(time) {
+	  return time.clone().startOf('month');
+	}
+
+	function goEndMonth(time) {
+	  return time.clone().endOf('month');
+	}
+
+	function goTime(time, direction, unit) {
+	  return time.clone().add(direction, unit);
+	}
+
+	function includesTime() {
+	  var timeList = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	  var time = arguments[1];
+	  var unit = arguments[2];
+
+	  return timeList.some(function (t) {
+	    return t.isSame(time, unit);
+	  });
+	}
+
+	function noop$8() {}
+
+	var Calendar = createReactClass({
+	  displayName: 'Calendar',
+
+	  propTypes: {
+	    prefixCls: PropTypes__default.string,
+	    className: PropTypes__default.string,
+	    style: PropTypes__default.object,
+	    defaultValue: PropTypes__default.object,
+	    value: PropTypes__default.object,
+	    selectedValue: PropTypes__default.object,
+	    mode: PropTypes__default.oneOf(['time', 'date', 'month', 'year', 'decade']),
+	    locale: PropTypes__default.object,
+	    showDateInput: PropTypes__default.bool,
+	    showWeekNumber: PropTypes__default.bool,
+	    showToday: PropTypes__default.bool,
+	    showOk: PropTypes__default.bool,
+	    onSelect: PropTypes__default.func,
+	    onOk: PropTypes__default.func,
+	    onKeyDown: PropTypes__default.func,
+	    timePicker: PropTypes__default.element,
+	    dateInputPlaceholder: PropTypes__default.any,
+	    onClear: PropTypes__default.func,
+	    onChange: PropTypes__default.func,
+	    onPanelChange: PropTypes__default.func,
+	    disabledDate: PropTypes__default.func,
+	    disabledTime: PropTypes__default.any,
+	    dateRender: PropTypes__default.func,
+	    renderFooter: PropTypes__default.func,
+	    renderSidebar: PropTypes__default.func,
+	    clearIcon: PropTypes__default.node
+	  },
+
+	  mixins: [CommonMixin, CalendarMixin],
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      showToday: true,
+	      showDateInput: true,
+	      timePicker: null,
+	      onOk: noop$8,
+	      onPanelChange: noop$8
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    return {
+	      mode: this.props.mode || 'date'
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    if ('mode' in nextProps && this.state.mode !== nextProps.mode) {
+	      this.setState({ mode: nextProps.mode });
+	    }
+	  },
+	  onKeyDown: function onKeyDown(event) {
+	    if (event.target.nodeName.toLowerCase() === 'input') {
+	      return undefined;
+	    }
+	    var keyCode = event.keyCode;
+	    // mac
+	    var ctrlKey = event.ctrlKey || event.metaKey;
+	    var disabledDate = this.props.disabledDate;
+	    var value = this.state.value;
+
+	    switch (keyCode) {
+	      case KeyCode.DOWN:
+	        this.goTime(1, 'weeks');
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.UP:
+	        this.goTime(-1, 'weeks');
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.LEFT:
+	        if (ctrlKey) {
+	          this.goTime(-1, 'years');
+	        } else {
+	          this.goTime(-1, 'days');
+	        }
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.RIGHT:
+	        if (ctrlKey) {
+	          this.goTime(1, 'years');
+	        } else {
+	          this.goTime(1, 'days');
+	        }
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.HOME:
+	        this.setValue(goStartMonth(this.state.value));
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.END:
+	        this.setValue(goEndMonth(this.state.value));
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.PAGE_DOWN:
+	        this.goTime(1, 'month');
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.PAGE_UP:
+	        this.goTime(-1, 'month');
+	        event.preventDefault();
+	        return 1;
+	      case KeyCode.ENTER:
+	        if (!disabledDate || !disabledDate(value)) {
+	          this.onSelect(value, {
+	            source: 'keyboard'
+	          });
+	        }
+	        event.preventDefault();
+	        return 1;
+	      default:
+	        this.props.onKeyDown(event);
+	        return 1;
+	    }
+	  },
+	  onClear: function onClear() {
+	    this.onSelect(null);
+	    this.props.onClear();
+	  },
+	  onOk: function onOk() {
+	    var selectedValue = this.state.selectedValue;
+
+	    if (this.isAllowedDate(selectedValue)) {
+	      this.props.onOk(selectedValue);
+	    }
+	  },
+	  onDateInputChange: function onDateInputChange(value) {
+	    this.onSelect(value, {
+	      source: 'dateInput'
+	    });
+	  },
+	  onDateTableSelect: function onDateTableSelect(value) {
+	    var timePicker = this.props.timePicker;
+	    var selectedValue = this.state.selectedValue;
+
+	    if (!selectedValue && timePicker) {
+	      var timePickerDefaultValue = timePicker.props.defaultValue;
+	      if (timePickerDefaultValue) {
+	        syncTime(timePickerDefaultValue, value);
+	      }
+	    }
+	    this.onSelect(value);
+	  },
+	  onToday: function onToday() {
+	    var value = this.state.value;
+
+	    var now = getTodayTime(value);
+	    this.onSelect(now, {
+	      source: 'todayButton'
+	    });
+	  },
+	  onPanelChange: function onPanelChange(value, mode) {
+	    var props = this.props,
+	        state = this.state;
+
+	    if (!('mode' in props)) {
+	      this.setState({ mode: mode });
+	    }
+	    props.onPanelChange(value || state.value, mode);
+	  },
+	  getRootDOMNode: function getRootDOMNode() {
+	    return ReactDOM__default.findDOMNode(this);
+	  },
+	  openTimePicker: function openTimePicker() {
+	    this.onPanelChange(null, 'time');
+	  },
+	  closeTimePicker: function closeTimePicker() {
+	    this.onPanelChange(null, 'date');
+	  },
+	  goTime: function goTime$$1(direction, unit) {
+	    this.setValue(goTime(this.state.value, direction, unit));
+	  },
+	  render: function render() {
+	    var props = this.props,
+	        state = this.state;
+	    var locale = props.locale,
+	        prefixCls = props.prefixCls,
+	        disabledDate = props.disabledDate,
+	        dateInputPlaceholder = props.dateInputPlaceholder,
+	        timePicker = props.timePicker,
+	        disabledTime = props.disabledTime,
+	        clearIcon = props.clearIcon;
+	    var value = state.value,
+	        selectedValue = state.selectedValue,
+	        mode = state.mode;
+
+	    var showTimePicker = mode === 'time';
+	    var disabledTimeConfig = showTimePicker && disabledTime && timePicker ? getTimeConfig(selectedValue, disabledTime) : null;
+
+	    var timePickerEle = null;
+
+	    if (timePicker && showTimePicker) {
+	      var timePickerProps = _extends$1({
+	        showHour: true,
+	        showSecond: true,
+	        showMinute: true
+	      }, timePicker.props, disabledTimeConfig, {
+	        onChange: this.onDateInputChange,
+	        value: selectedValue,
+	        disabledTime: disabledTime
+	      });
+
+	      if (timePicker.props.defaultValue !== undefined) {
+	        timePickerProps.defaultOpenValue = timePicker.props.defaultValue;
+	      }
+
+	      timePickerEle = React__default.cloneElement(timePicker, timePickerProps);
+	    }
+
+	    var dateInputElement = props.showDateInput ? React__default.createElement(DateInput, {
+	      format: this.getFormat(),
+	      key: 'date-input',
+	      value: value,
+	      locale: locale,
+	      placeholder: dateInputPlaceholder,
+	      showClear: true,
+	      disabledTime: disabledTime,
+	      disabledDate: disabledDate,
+	      onClear: this.onClear,
+	      prefixCls: prefixCls,
+	      selectedValue: selectedValue,
+	      onChange: this.onDateInputChange,
+	      clearIcon: clearIcon
+	    }) : null;
+	    var children = [props.renderSidebar(), React__default.createElement(
+	      'div',
+	      { className: prefixCls + '-panel', key: 'panel' },
+	      dateInputElement,
+	      React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-date-panel' },
+	        React__default.createElement(CalendarHeader, {
+	          locale: locale,
+	          mode: mode,
+	          value: value,
+	          onValueChange: this.setValue,
+	          onPanelChange: this.onPanelChange,
+	          showTimePicker: showTimePicker,
+	          prefixCls: prefixCls
+	        }),
+	        timePicker && showTimePicker ? React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-time-picker' },
+	          React__default.createElement(
+	            'div',
+	            { className: prefixCls + '-time-picker-panel' },
+	            timePickerEle
+	          )
+	        ) : null,
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-body' },
+	          React__default.createElement(DateTable, {
+	            locale: locale,
+	            value: value,
+	            selectedValue: selectedValue,
+	            prefixCls: prefixCls,
+	            dateRender: props.dateRender,
+	            onSelect: this.onDateTableSelect,
+	            disabledDate: disabledDate,
+	            showWeekNumber: props.showWeekNumber
+	          })
+	        ),
+	        React__default.createElement(CalendarFooter, {
+	          showOk: props.showOk,
+	          renderFooter: props.renderFooter,
+	          locale: locale,
+	          prefixCls: prefixCls,
+	          showToday: props.showToday,
+	          disabledTime: disabledTime,
+	          showTimePicker: showTimePicker,
+	          showDateInput: props.showDateInput,
+	          timePicker: timePicker,
+	          selectedValue: selectedValue,
+	          value: value,
+	          disabledDate: disabledDate,
+	          okDisabled: !this.isAllowedDate(selectedValue),
+	          onOk: this.onOk,
+	          onSelect: this.onSelect,
+	          onToday: this.onToday,
+	          onOpenTimePicker: this.openTimePicker,
+	          onCloseTimePicker: this.closeTimePicker
+	        })
+	      )
+	    )];
+
+	    return this.renderRoot({
+	      children: children,
+	      className: props.showWeekNumber ? prefixCls + '-week-number' : ''
+	    });
+	  }
+	});
+
+	var MonthCalendar = createReactClass({
+	  displayName: 'MonthCalendar',
+
+	  propTypes: {
+	    monthCellRender: PropTypes__default.func,
+	    dateCellRender: PropTypes__default.func
+	  },
+	  mixins: [CommonMixin, CalendarMixin],
+
+	  getInitialState: function getInitialState() {
+	    return { mode: 'month' };
+	  },
+	  onKeyDown: function onKeyDown(event) {
+	    var keyCode = event.keyCode;
+	    var ctrlKey = event.ctrlKey || event.metaKey;
+	    var stateValue = this.state.value;
+	    var disabledDate = this.props.disabledDate;
+
+	    var value = stateValue;
+	    switch (keyCode) {
+	      case KeyCode.DOWN:
+	        value = stateValue.clone();
+	        value.add(3, 'months');
+	        break;
+	      case KeyCode.UP:
+	        value = stateValue.clone();
+	        value.add(-3, 'months');
+	        break;
+	      case KeyCode.LEFT:
+	        value = stateValue.clone();
+	        if (ctrlKey) {
+	          value.add(-1, 'years');
+	        } else {
+	          value.add(-1, 'months');
+	        }
+	        break;
+	      case KeyCode.RIGHT:
+	        value = stateValue.clone();
+	        if (ctrlKey) {
+	          value.add(1, 'years');
+	        } else {
+	          value.add(1, 'months');
+	        }
+	        break;
+	      case KeyCode.ENTER:
+	        if (!disabledDate || !disabledDate(stateValue)) {
+	          this.onSelect(stateValue);
+	        }
+	        event.preventDefault();
+	        return 1;
+	      default:
+	        return undefined;
+	    }
+	    if (value !== stateValue) {
+	      this.setValue(value);
+	      event.preventDefault();
+	      return 1;
+	    }
+	  },
+	  handlePanelChange: function handlePanelChange(_, mode) {
+	    if (mode !== 'date') {
+	      this.setState({ mode: mode });
+	    }
+	  },
+	  render: function render() {
+	    var props = this.props,
+	        state = this.state;
+	    var mode = state.mode,
+	        value = state.value;
+
+	    var children = React__default.createElement(
+	      'div',
+	      { className: props.prefixCls + '-month-calendar-content' },
+	      React__default.createElement(
+	        'div',
+	        { className: props.prefixCls + '-month-header-wrap' },
+	        React__default.createElement(CalendarHeader, {
+	          prefixCls: props.prefixCls,
+	          mode: mode,
+	          value: value,
+	          locale: props.locale,
+	          disabledMonth: props.disabledDate,
+	          monthCellRender: props.monthCellRender,
+	          monthCellContentRender: props.monthCellContentRender,
+	          onMonthSelect: this.onSelect,
+	          onValueChange: this.setValue,
+	          onPanelChange: this.handlePanelChange
+	        })
+	      ),
+	      React__default.createElement(CalendarFooter, {
+	        prefixCls: props.prefixCls,
+	        renderFooter: props.renderFooter
+	      })
+	    );
+	    return this.renderRoot({
+	      className: props.prefixCls + '-month-calendar',
+	      children: children
+	    });
+	  }
+	});
+
+	var autoAdjustOverflow$1 = {
+	  adjustX: 1,
+	  adjustY: 1
+	};
+
+	var targetOffset = [0, 0];
+
+	var placements$1 = {
+	  bottomLeft: {
+	    points: ['tl', 'tl'],
+	    overflow: autoAdjustOverflow$1,
+	    offset: [0, -3],
+	    targetOffset: targetOffset
+	  },
+	  bottomRight: {
+	    points: ['tr', 'tr'],
+	    overflow: autoAdjustOverflow$1,
+	    offset: [0, -3],
+	    targetOffset: targetOffset
+	  },
+	  topRight: {
+	    points: ['br', 'br'],
+	    overflow: autoAdjustOverflow$1,
+	    offset: [0, 3],
+	    targetOffset: targetOffset
+	  },
+	  topLeft: {
+	    points: ['bl', 'bl'],
+	    overflow: autoAdjustOverflow$1,
+	    offset: [0, 3],
+	    targetOffset: targetOffset
+	  }
+	};
+
+	function noop$9() {}
+
+	function refFn(field, component) {
+	  this[field] = component;
+	}
+
+	var Picker = createReactClass({
+	  displayName: 'Picker',
+
+	  propTypes: {
+	    animation: PropTypes__default.oneOfType([PropTypes__default.func, PropTypes__default.string]),
+	    disabled: PropTypes__default.bool,
+	    transitionName: PropTypes__default.string,
+	    onChange: PropTypes__default.func,
+	    onOpenChange: PropTypes__default.func,
+	    children: PropTypes__default.func,
+	    getCalendarContainer: PropTypes__default.func,
+	    calendar: PropTypes__default.element,
+	    style: PropTypes__default.object,
+	    open: PropTypes__default.bool,
+	    defaultOpen: PropTypes__default.bool,
+	    prefixCls: PropTypes__default.string,
+	    placement: PropTypes__default.any,
+	    value: PropTypes__default.oneOfType([PropTypes__default.object, PropTypes__default.array]),
+	    defaultValue: PropTypes__default.oneOfType([PropTypes__default.object, PropTypes__default.array]),
+	    align: PropTypes__default.object
+	  },
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      prefixCls: 'rc-calendar-picker',
+	      style: {},
+	      align: {},
+	      placement: 'bottomLeft',
+	      defaultOpen: false,
+	      onChange: noop$9,
+	      onOpenChange: noop$9
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    var props = this.props;
+	    var open = void 0;
+	    if ('open' in props) {
+	      open = props.open;
+	    } else {
+	      open = props.defaultOpen;
+	    }
+	    var value = props.value || props.defaultValue;
+	    this.saveCalendarRef = refFn.bind(this, 'calendarInstance');
+	    return {
+	      open: open,
+	      value: value
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    var value = nextProps.value,
+	        open = nextProps.open;
+
+	    if ('value' in nextProps) {
+	      this.setState({
+	        value: value
+	      });
+	    }
+	    if (open !== undefined) {
+	      this.setState({
+	        open: open
+	      });
+	    }
+	  },
+	  componentDidUpdate: function componentDidUpdate(_, prevState) {
+	    if (!prevState.open && this.state.open) {
+	      // setTimeout is for making sure saveCalendarRef happen before focusCalendar
+	      this.focusTimeout = setTimeout(this.focusCalendar, 0, this);
+	    }
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    clearTimeout(this.focusTimeout);
+	  },
+	  onCalendarKeyDown: function onCalendarKeyDown(event) {
+	    if (event.keyCode === KeyCode.ESC) {
+	      event.stopPropagation();
+	      this.close(this.focus);
+	    }
+	  },
+	  onCalendarSelect: function onCalendarSelect(value) {
+	    var cause = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	    var props = this.props;
+	    if (!('value' in props)) {
+	      this.setState({
+	        value: value
+	      });
+	    }
+	    if (cause.source === 'keyboard' || !props.calendar.props.timePicker && cause.source !== 'dateInput' || cause.source === 'todayButton') {
+	      this.close(this.focus);
+	    }
+	    props.onChange(value);
+	  },
+	  onKeyDown: function onKeyDown(event) {
+	    if (event.keyCode === KeyCode.DOWN && !this.state.open) {
+	      this.open();
+	      event.preventDefault();
+	    }
+	  },
+	  onCalendarOk: function onCalendarOk() {
+	    this.close(this.focus);
+	  },
+	  onCalendarClear: function onCalendarClear() {
+	    this.close(this.focus);
+	  },
+	  onVisibleChange: function onVisibleChange(open) {
+	    this.setOpen(open);
+	  },
+	  getCalendarElement: function getCalendarElement() {
+	    var props = this.props;
+	    var state = this.state;
+	    var calendarProps = props.calendar.props;
+	    var value = state.value;
+
+	    var defaultValue = value;
+	    var extraProps = {
+	      ref: this.saveCalendarRef,
+	      defaultValue: defaultValue || calendarProps.defaultValue,
+	      selectedValue: value,
+	      onKeyDown: this.onCalendarKeyDown,
+	      onOk: createChainedFunction(calendarProps.onOk, this.onCalendarOk),
+	      onSelect: createChainedFunction(calendarProps.onSelect, this.onCalendarSelect),
+	      onClear: createChainedFunction(calendarProps.onClear, this.onCalendarClear)
+	    };
+
+	    return React__default.cloneElement(props.calendar, extraProps);
+	  },
+	  setOpen: function setOpen(open, callback) {
+	    var onOpenChange = this.props.onOpenChange;
+
+	    if (this.state.open !== open) {
+	      if (!('open' in this.props)) {
+	        this.setState({
+	          open: open
+	        }, callback);
+	      }
+	      onOpenChange(open);
+	    }
+	  },
+	  open: function open(callback) {
+	    this.setOpen(true, callback);
+	  },
+	  close: function close(callback) {
+	    this.setOpen(false, callback);
+	  },
+	  focus: function focus() {
+	    if (!this.state.open) {
+	      ReactDOM__default.findDOMNode(this).focus();
+	    }
+	  },
+	  focusCalendar: function focusCalendar() {
+	    if (this.state.open && !!this.calendarInstance) {
+	      this.calendarInstance.focus();
+	    }
+	  },
+	  render: function render() {
+	    var props = this.props;
+	    var prefixCls = props.prefixCls,
+	        placement = props.placement,
+	        style = props.style,
+	        getCalendarContainer = props.getCalendarContainer,
+	        align = props.align,
+	        animation = props.animation,
+	        disabled = props.disabled,
+	        dropdownClassName = props.dropdownClassName,
+	        transitionName = props.transitionName,
+	        children = props.children;
+
+	    var state = this.state;
+	    return React__default.createElement(
+	      Trigger,
+	      {
+	        popup: this.getCalendarElement(),
+	        popupAlign: align,
+	        builtinPlacements: placements$1,
+	        popupPlacement: placement,
+	        action: disabled && !state.open ? [] : ['click'],
+	        destroyPopupOnHide: true,
+	        getPopupContainer: getCalendarContainer,
+	        popupStyle: style,
+	        popupAnimation: animation,
+	        popupTransitionName: transitionName,
+	        popupVisible: state.open,
+	        onPopupVisibleChange: this.onVisibleChange,
+	        prefixCls: prefixCls,
+	        popupClassName: dropdownClassName
+	      },
+	      React__default.cloneElement(children(state, props), { onKeyDown: this.onKeyDown })
+	    );
+	  }
+	});
+
+	// https://github.com/moment/moment/issues/3650
+	function interopDefault(m) {
+	    return m["default"] || m;
+	}
+
+	function getDataOrAriaProps(props) {
+	    return Object.keys(props).reduce(function (prev, key) {
+	        if ((key.substr(0, 5) === 'data-' || key.substr(0, 5) === 'aria-' || key === 'role') && key.substr(0, 7) !== 'data-__') {
+	            prev[key] = props[key];
+	        }
+	        return prev;
+	    }, {});
+	}
+
+	function createPicker(TheCalendar) {
+	    var CalenderWrapper = function (_React$Component) {
+	        _inherits(CalenderWrapper, _React$Component);
+
+	        function CalenderWrapper(props) {
+	            _classCallCheck(this, CalenderWrapper);
+
+	            var _this = _possibleConstructorReturn(this, (CalenderWrapper.__proto__ || Object.getPrototypeOf(CalenderWrapper)).call(this, props));
+
+	            _this.renderFooter = function () {
+	                var _this$props = _this.props,
+	                    prefixCls = _this$props.prefixCls,
+	                    renderExtraFooter = _this$props.renderExtraFooter;
+
+	                return renderExtraFooter ? React.createElement(
+	                    'div',
+	                    { className: prefixCls + '-footer-extra' },
+	                    renderExtraFooter.apply(undefined, arguments)
+	                ) : null;
+	            };
+	            _this.clearSelection = function (e) {
+	                e.preventDefault();
+	                e.stopPropagation();
+	                _this.handleChange(null);
+	            };
+	            _this.handleChange = function (value) {
+	                var props = _this.props;
+	                if (!('value' in props)) {
+	                    _this.setState({
+	                        value: value,
+	                        showDate: value
+	                    });
+	                }
+	                props.onChange(value, value && value.format(props.format) || '');
+	                _this.focus();
+	            };
+	            _this.handleCalendarChange = function (value) {
+	                _this.setState({ showDate: value });
+	            };
+	            _this.saveInput = function (node) {
+	                _this.input = node;
+	            };
+	            var value = props.value || props.defaultValue;
+	            if (value && !interopDefault(moment$1).isMoment(value)) {
+	                throw new Error('The value/defaultValue of DatePicker or MonthPicker must be ' + 'a moment object after `antd@2.0`, see: https://u.ant.design/date-picker-value');
+	            }
+	            _this.state = {
+	                value: value,
+	                showDate: value
+	            };
+	            return _this;
+	        }
+
+	        _createClass(CalenderWrapper, [{
+	            key: 'focus',
+	            value: function focus() {
+	                this.input.focus();
+	            }
+	        }, {
+	            key: 'blur',
+	            value: function blur() {
+	                this.input.blur();
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                var _classNames,
+	                    _classNames2,
+	                    _this2 = this;
+
+	                var _state = this.state,
+	                    value = _state.value,
+	                    showDate = _state.showDate;
+
+	                var props = omit(this.props, ['onChange']);
+	                var prefixCls = props.prefixCls,
+	                    locale = props.locale,
+	                    localeCode = props.localeCode,
+	                    suffixIcon = props.suffixIcon;
+
+	                var placeholder = 'placeholder' in props ? props.placeholder : locale.lang.placeholder;
+	                var disabledTime = props.showTime ? props.disabledTime : null;
+	                var calendarClassName = classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-time', props.showTime), _defineProperty(_classNames, prefixCls + '-month', MonthCalendar === TheCalendar), _classNames));
+	                if (value && localeCode) {
+	                    value.locale(localeCode);
+	                }
+	                var pickerProps = {};
+	                var calendarProps = {};
+	                var pickerStyle = {};
+	                if (props.showTime) {
+	                    calendarProps = {
+	                        // fix https://github.com/ant-design/ant-design/issues/1902
+	                        onSelect: this.handleChange
+	                    };
+	                    pickerStyle.width = 195;
+	                } else {
+	                    pickerProps = {
+	                        onChange: this.handleChange
+	                    };
+	                }
+	                if ('mode' in props) {
+	                    calendarProps.mode = props.mode;
+	                }
+	                warning$1(!('onOK' in props), 'It should be `DatePicker[onOk]` or `MonthPicker[onOk]`, instead of `onOK`!');
+	                var calendar = React.createElement(TheCalendar, _extends$1({}, calendarProps, { disabledDate: props.disabledDate, disabledTime: disabledTime, locale: locale.lang, timePicker: props.timePicker, defaultValue: props.defaultPickerValue || interopDefault(moment$1)(), dateInputPlaceholder: placeholder, prefixCls: prefixCls, className: calendarClassName, onOk: props.onOk, dateRender: props.dateRender, format: props.format, showToday: props.showToday, monthCellContentRender: props.monthCellContentRender, renderFooter: this.renderFooter, onPanelChange: props.onPanelChange, onChange: this.handleCalendarChange, value: showDate }));
+	                var clearIcon = !props.disabled && props.allowClear && value ? React.createElement(Icon$1, { type: 'close-circle', className: prefixCls + '-picker-clear', onClick: this.clearSelection, theme: 'filled' }) : null;
+	                var inputIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
+	                    className: classnames((_classNames2 = {}, _defineProperty(_classNames2, suffixIcon.props.className, suffixIcon.props.className), _defineProperty(_classNames2, prefixCls + '-picker-icon', true), _classNames2))
+	                }) : React.createElement(
+	                    'span',
+	                    { className: prefixCls + '-picker-icon' },
+	                    suffixIcon
+	                )) || React.createElement(Icon$1, { type: 'calendar', className: prefixCls + '-picker-icon' });
+	                var dataOrAriaProps = getDataOrAriaProps(props);
+	                var input = function input(_ref) {
+	                    var inputValue = _ref.value;
+	                    return React.createElement(
+	                        'div',
+	                        null,
+	                        React.createElement('input', _extends$1({ ref: _this2.saveInput, disabled: props.disabled, readOnly: true, value: inputValue && inputValue.format(props.format) || '', placeholder: placeholder, className: props.pickerInputClass }, dataOrAriaProps)),
+	                        clearIcon,
+	                        inputIcon
+	                    );
+	                };
+	                return React.createElement(
+	                    'span',
+	                    { id: props.id, className: classnames(props.className, props.pickerClass), style: _extends$1({}, pickerStyle, props.style), onFocus: props.onFocus, onBlur: props.onBlur, onMouseEnter: props.onMouseEnter, onMouseLeave: props.onMouseLeave },
+	                    React.createElement(
+	                        Picker,
+	                        _extends$1({}, props, pickerProps, { calendar: calendar, value: value, prefixCls: prefixCls + '-picker-container', style: props.popupStyle }),
+	                        input
+	                    )
+	                );
+	            }
+	        }], [{
+	            key: 'getDerivedStateFromProps',
+	            value: function getDerivedStateFromProps(nextProps, prevState) {
+	                var state = null;
+	                if ('value' in nextProps) {
+	                    state = {
+	                        value: nextProps.value
+	                    };
+	                    if (nextProps.value !== prevState.value) {
+	                        state = _extends$1({}, state, { showDate: nextProps.value });
+	                    }
+	                }
+	                return state;
+	            }
+	        }]);
+
+	        return CalenderWrapper;
+	    }(React.Component);
+
+	    CalenderWrapper.defaultProps = {
+	        prefixCls: 'ant-calendar',
+	        allowClear: true,
+	        showToday: true
+	    };
+	    polyfill(CalenderWrapper);
+	    return CalenderWrapper;
+	}
+
+	var Header = function (_Component) {
+	  _inherits(Header, _Component);
+
+	  function Header(props) {
+	    _classCallCheck(this, Header);
+
+	    var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
+
+	    _initialiseProps$9.call(_this);
+
+	    var value = props.value,
+	        format = props.format;
+
+	    _this.state = {
+	      str: value && value.format(format) || '',
+	      invalid: false
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Header, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+
+	      if (this.props.focusOnOpen) {
+	        // Wait one frame for the panel to be positioned before focusing
+	        var requestAnimationFrame = window.requestAnimationFrame || window.setTimeout;
+	        requestAnimationFrame(function () {
+	          _this2.refs.input.focus();
+	          _this2.refs.input.select();
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var value = nextProps.value,
+	          format = nextProps.format;
+
+	      this.setState({
+	        str: value && value.format(format) || '',
+	        invalid: false
+	      });
+	    }
+	  }, {
+	    key: 'getClearButton',
+	    value: function getClearButton() {
+	      var _props = this.props,
+	          prefixCls = _props.prefixCls,
+	          allowEmpty = _props.allowEmpty,
+	          clearIcon = _props.clearIcon;
+
+	      if (!allowEmpty) {
+	        return null;
+	      }
+	      return React__default.createElement(
+	        'a',
+	        {
+	          role: 'button',
+	          className: prefixCls + '-clear-btn',
+	          title: this.props.clearText,
+	          onMouseDown: this.onClear
+	        },
+	        clearIcon || React__default.createElement('i', { className: prefixCls + '-clear-btn-icon' })
+	      );
+	    }
+	  }, {
+	    key: 'getProtoValue',
+	    value: function getProtoValue() {
+	      return this.props.value || this.props.defaultOpenValue;
+	    }
+	  }, {
+	    key: 'getInput',
+	    value: function getInput() {
+	      var _props2 = this.props,
+	          prefixCls = _props2.prefixCls,
+	          placeholder = _props2.placeholder,
+	          inputReadOnly = _props2.inputReadOnly;
+	      var _state = this.state,
+	          invalid = _state.invalid,
+	          str = _state.str;
+
+	      var invalidClass = invalid ? prefixCls + '-input-invalid' : '';
+	      return React__default.createElement('input', {
+	        className: prefixCls + '-input  ' + invalidClass,
+	        ref: 'input',
+	        onKeyDown: this.onKeyDown,
+	        value: str,
+	        placeholder: placeholder,
+	        onChange: this.onInputChange,
+	        readOnly: !!inputReadOnly
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var prefixCls = this.props.prefixCls;
+
+	      return React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-input-wrap' },
+	        this.getInput(),
+	        this.getClearButton()
+	      );
+	    }
+	  }]);
+
+	  return Header;
+	}(React.Component);
+
+	Header.propTypes = {
+	  format: PropTypes__default.string,
+	  prefixCls: PropTypes__default.string,
+	  disabledDate: PropTypes__default.func,
+	  placeholder: PropTypes__default.string,
+	  clearText: PropTypes__default.string,
+	  value: PropTypes__default.object,
+	  inputReadOnly: PropTypes__default.bool,
+	  hourOptions: PropTypes__default.array,
+	  minuteOptions: PropTypes__default.array,
+	  secondOptions: PropTypes__default.array,
+	  disabledHours: PropTypes__default.func,
+	  disabledMinutes: PropTypes__default.func,
+	  disabledSeconds: PropTypes__default.func,
+	  onChange: PropTypes__default.func,
+	  onClear: PropTypes__default.func,
+	  onEsc: PropTypes__default.func,
+	  allowEmpty: PropTypes__default.bool,
+	  defaultOpenValue: PropTypes__default.object,
+	  currentSelectPanel: PropTypes__default.string,
+	  focusOnOpen: PropTypes__default.bool,
+	  onKeyDown: PropTypes__default.func,
+	  clearIcon: PropTypes__default.node
+	};
+	Header.defaultProps = {
+	  inputReadOnly: false
+	};
+
+	var _initialiseProps$9 = function _initialiseProps() {
+	  var _this3 = this;
+
+	  this.onInputChange = function (event) {
+	    var str = event.target.value;
+	    _this3.setState({
+	      str: str
+	    });
+	    var _props3 = _this3.props,
+	        format = _props3.format,
+	        hourOptions = _props3.hourOptions,
+	        minuteOptions = _props3.minuteOptions,
+	        secondOptions = _props3.secondOptions,
+	        disabledHours = _props3.disabledHours,
+	        disabledMinutes = _props3.disabledMinutes,
+	        disabledSeconds = _props3.disabledSeconds,
+	        onChange = _props3.onChange,
+	        allowEmpty = _props3.allowEmpty;
+
+
+	    if (str) {
+	      var originalValue = _this3.props.value;
+	      var value = _this3.getProtoValue().clone();
+	      var parsed = moment(str, format, true);
+	      if (!parsed.isValid()) {
+	        _this3.setState({
+	          invalid: true
+	        });
+	        return;
+	      }
+	      value.hour(parsed.hour()).minute(parsed.minute()).second(parsed.second());
+
+	      // if time value not allowed, response warning.
+	      if (hourOptions.indexOf(value.hour()) < 0 || minuteOptions.indexOf(value.minute()) < 0 || secondOptions.indexOf(value.second()) < 0) {
+	        _this3.setState({
+	          invalid: true
+	        });
+	        return;
+	      }
+
+	      // if time value is disabled, response warning.
+	      var disabledHourOptions = disabledHours();
+	      var disabledMinuteOptions = disabledMinutes(value.hour());
+	      var disabledSecondOptions = disabledSeconds(value.hour(), value.minute());
+	      if (disabledHourOptions && disabledHourOptions.indexOf(value.hour()) >= 0 || disabledMinuteOptions && disabledMinuteOptions.indexOf(value.minute()) >= 0 || disabledSecondOptions && disabledSecondOptions.indexOf(value.second()) >= 0) {
+	        _this3.setState({
+	          invalid: true
+	        });
+	        return;
+	      }
+
+	      if (originalValue) {
+	        if (originalValue.hour() !== value.hour() || originalValue.minute() !== value.minute() || originalValue.second() !== value.second()) {
+	          // keep other fields for rc-calendar
+	          var changedValue = originalValue.clone();
+	          changedValue.hour(value.hour());
+	          changedValue.minute(value.minute());
+	          changedValue.second(value.second());
+	          onChange(changedValue);
+	        }
+	      } else if (originalValue !== value) {
+	        onChange(value);
+	      }
+	    } else if (allowEmpty) {
+	      onChange(null);
+	    } else {
+	      _this3.setState({
+	        invalid: true
+	      });
+	      return;
+	    }
+
+	    _this3.setState({
+	      invalid: false
+	    });
+	  };
+
+	  this.onKeyDown = function (e) {
+	    var _props4 = _this3.props,
+	        onEsc = _props4.onEsc,
+	        onKeyDown = _props4.onKeyDown;
+
+	    if (e.keyCode === 27) {
+	      onEsc();
+	    }
+
+	    onKeyDown(e);
+	  };
+
+	  this.onClear = function () {
+	    _this3.setState({ str: '' });
+	    _this3.props.onClear();
+	  };
+	};
+
+	var scrollTo = function scrollTo(element, to, duration) {
+	  var requestAnimationFrame = window.requestAnimationFrame || function requestAnimationFrameTimeout() {
+	    return setTimeout(arguments[0], 10);
+	  };
+	  // jump to target if duration zero
+	  if (duration <= 0) {
+	    element.scrollTop = to;
+	    return;
+	  }
+	  var difference = to - element.scrollTop;
+	  var perTick = difference / duration * 10;
+
+	  requestAnimationFrame(function () {
+	    element.scrollTop = element.scrollTop + perTick;
+	    if (element.scrollTop === to) return;
+	    scrollTo(element, to, duration - 10);
+	  });
+	};
+
+	var Select$2 = function (_Component) {
+	  _inherits(Select, _Component);
+
+	  function Select() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Select);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Select.__proto__ || Object.getPrototypeOf(Select)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+	      active: false
+	    }, _this.onSelect = function (value) {
+	      var _this$props = _this.props,
+	          onSelect = _this$props.onSelect,
+	          type = _this$props.type;
+
+	      onSelect(type, value);
+	    }, _this.handleMouseEnter = function (e) {
+	      _this.setState({ active: true });
+	      _this.props.onMouseEnter(e);
+	    }, _this.handleMouseLeave = function () {
+	      _this.setState({ active: false });
+	    }, _this.saveList = function (node) {
+	      _this.list = node;
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(Select, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      // jump to selected option
+	      this.scrollToSelected(0);
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps) {
+	      // smooth scroll to selected option
+	      if (prevProps.selectedIndex !== this.props.selectedIndex) {
+	        this.scrollToSelected(120);
+	      }
+	    }
+	  }, {
+	    key: 'getOptions',
+	    value: function getOptions() {
+	      var _this2 = this;
+
+	      var _props = this.props,
+	          options = _props.options,
+	          selectedIndex = _props.selectedIndex,
+	          prefixCls = _props.prefixCls;
+
+	      return options.map(function (item, index) {
+	        var _classnames;
+
+	        var cls = classnames((_classnames = {}, _defineProperty(_classnames, prefixCls + '-select-option-selected', selectedIndex === index), _defineProperty(_classnames, prefixCls + '-select-option-disabled', item.disabled), _classnames));
+	        var onclick = null;
+	        if (!item.disabled) {
+	          onclick = _this2.onSelect.bind(_this2, item.value);
+	        }
+	        return React__default.createElement(
+	          'li',
+	          {
+	            className: cls,
+	            key: index,
+	            onClick: onclick,
+	            disabled: item.disabled
+	          },
+	          item.value
+	        );
+	      });
+	    }
+	  }, {
+	    key: 'scrollToSelected',
+	    value: function scrollToSelected(duration) {
+	      // move to selected item
+	      var select = ReactDOM__default.findDOMNode(this);
+	      var list = ReactDOM__default.findDOMNode(this.list);
+	      if (!list) {
+	        return;
+	      }
+	      var index = this.props.selectedIndex;
+	      if (index < 0) {
+	        index = 0;
+	      }
+	      var topOption = list.children[index];
+	      var to = topOption.offsetTop;
+	      scrollTo(select, to, duration);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _classnames2;
+
+	      if (this.props.options.length === 0) {
+	        return null;
+	      }
+
+	      var prefixCls = this.props.prefixCls;
+
+	      var cls = classnames((_classnames2 = {}, _defineProperty(_classnames2, prefixCls + '-select', 1), _defineProperty(_classnames2, prefixCls + '-select-active', this.state.active), _classnames2));
+
+	      return React__default.createElement(
+	        'div',
+	        {
+	          className: cls,
+	          onMouseEnter: this.handleMouseEnter,
+	          onMouseLeave: this.handleMouseLeave
+	        },
+	        React__default.createElement(
+	          'ul',
+	          { ref: this.saveList },
+	          this.getOptions()
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Select;
+	}(React.Component);
+
+	Select$2.propTypes = {
+	  prefixCls: PropTypes__default.string,
+	  options: PropTypes__default.array,
+	  selectedIndex: PropTypes__default.number,
+	  type: PropTypes__default.string,
+	  onSelect: PropTypes__default.func,
+	  onMouseEnter: PropTypes__default.func
+	};
+
+	var formatOption = function formatOption(option, disabledOptions) {
+	  var value = '' + option;
+	  if (option < 10) {
+	    value = '0' + option;
+	  }
+
+	  var disabled = false;
+	  if (disabledOptions && disabledOptions.indexOf(option) >= 0) {
+	    disabled = true;
+	  }
+
+	  return {
+	    value: value,
+	    disabled: disabled
+	  };
+	};
+
+	var Combobox = function (_Component) {
+	  _inherits(Combobox, _Component);
+
+	  function Combobox() {
+	    var _ref;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, Combobox);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Combobox.__proto__ || Object.getPrototypeOf(Combobox)).call.apply(_ref, [this].concat(args))), _this), _this.onItemChange = function (type, itemValue) {
+	      var _this$props = _this.props,
+	          onChange = _this$props.onChange,
+	          defaultOpenValue = _this$props.defaultOpenValue,
+	          use12Hours = _this$props.use12Hours;
+
+	      var value = (_this.props.value || defaultOpenValue).clone();
+
+	      if (type === 'hour') {
+	        if (use12Hours) {
+	          if (_this.props.isAM) {
+	            value.hour(+itemValue % 12);
+	          } else {
+	            value.hour(+itemValue % 12 + 12);
+	          }
+	        } else {
+	          value.hour(+itemValue);
+	        }
+	      } else if (type === 'minute') {
+	        value.minute(+itemValue);
+	      } else if (type === 'ampm') {
+	        var ampm = itemValue.toUpperCase();
+	        if (use12Hours) {
+	          if (ampm === 'PM' && value.hour() < 12) {
+	            value.hour(value.hour() % 12 + 12);
+	          }
+
+	          if (ampm === 'AM') {
+	            if (value.hour() >= 12) {
+	              value.hour(value.hour() - 12);
+	            }
+	          }
+	        }
+	      } else {
+	        value.second(+itemValue);
+	      }
+	      onChange(value);
+	    }, _this.onEnterSelectPanel = function (range) {
+	      _this.props.onCurrentSelectPanelChange(range);
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(Combobox, [{
+	    key: 'getHourSelect',
+	    value: function getHourSelect(hour) {
+	      var _props = this.props,
+	          prefixCls = _props.prefixCls,
+	          hourOptions = _props.hourOptions,
+	          disabledHours = _props.disabledHours,
+	          showHour = _props.showHour,
+	          use12Hours = _props.use12Hours;
+
+	      if (!showHour) {
+	        return null;
+	      }
+	      var disabledOptions = disabledHours();
+	      var hourOptionsAdj = void 0;
+	      var hourAdj = void 0;
+	      if (use12Hours) {
+	        hourOptionsAdj = [12].concat(hourOptions.filter(function (h) {
+	          return h < 12 && h > 0;
+	        }));
+	        hourAdj = hour % 12 || 12;
+	      } else {
+	        hourOptionsAdj = hourOptions;
+	        hourAdj = hour;
+	      }
+
+	      return React__default.createElement(Select$2, {
+	        prefixCls: prefixCls,
+	        options: hourOptionsAdj.map(function (option) {
+	          return formatOption(option, disabledOptions);
+	        }),
+	        selectedIndex: hourOptionsAdj.indexOf(hourAdj),
+	        type: 'hour',
+	        onSelect: this.onItemChange,
+	        onMouseEnter: this.onEnterSelectPanel.bind(this, 'hour')
+	      });
+	    }
+	  }, {
+	    key: 'getMinuteSelect',
+	    value: function getMinuteSelect(minute) {
+	      var _props2 = this.props,
+	          prefixCls = _props2.prefixCls,
+	          minuteOptions = _props2.minuteOptions,
+	          disabledMinutes = _props2.disabledMinutes,
+	          defaultOpenValue = _props2.defaultOpenValue,
+	          showMinute = _props2.showMinute;
+
+	      if (!showMinute) {
+	        return null;
+	      }
+	      var value = this.props.value || defaultOpenValue;
+	      var disabledOptions = disabledMinutes(value.hour());
+
+	      return React__default.createElement(Select$2, {
+	        prefixCls: prefixCls,
+	        options: minuteOptions.map(function (option) {
+	          return formatOption(option, disabledOptions);
+	        }),
+	        selectedIndex: minuteOptions.indexOf(minute),
+	        type: 'minute',
+	        onSelect: this.onItemChange,
+	        onMouseEnter: this.onEnterSelectPanel.bind(this, 'minute')
+	      });
+	    }
+	  }, {
+	    key: 'getSecondSelect',
+	    value: function getSecondSelect(second) {
+	      var _props3 = this.props,
+	          prefixCls = _props3.prefixCls,
+	          secondOptions = _props3.secondOptions,
+	          disabledSeconds = _props3.disabledSeconds,
+	          showSecond = _props3.showSecond,
+	          defaultOpenValue = _props3.defaultOpenValue;
+
+	      if (!showSecond) {
+	        return null;
+	      }
+	      var value = this.props.value || defaultOpenValue;
+	      var disabledOptions = disabledSeconds(value.hour(), value.minute());
+
+	      return React__default.createElement(Select$2, {
+	        prefixCls: prefixCls,
+	        options: secondOptions.map(function (option) {
+	          return formatOption(option, disabledOptions);
+	        }),
+	        selectedIndex: secondOptions.indexOf(second),
+	        type: 'second',
+	        onSelect: this.onItemChange,
+	        onMouseEnter: this.onEnterSelectPanel.bind(this, 'second')
+	      });
+	    }
+	  }, {
+	    key: 'getAMPMSelect',
+	    value: function getAMPMSelect() {
+	      var _props4 = this.props,
+	          prefixCls = _props4.prefixCls,
+	          use12Hours = _props4.use12Hours,
+	          format = _props4.format;
+
+	      if (!use12Hours) {
+	        return null;
+	      }
+
+	      var AMPMOptions = ['am', 'pm'] // If format has A char, then we should uppercase AM/PM
+	      .map(function (c) {
+	        return format.match(/\sA/) ? c.toUpperCase() : c;
+	      }).map(function (c) {
+	        return { value: c };
+	      });
+
+	      var selected = this.props.isAM ? 0 : 1;
+
+	      return React__default.createElement(Select$2, {
+	        prefixCls: prefixCls,
+	        options: AMPMOptions,
+	        selectedIndex: selected,
+	        type: 'ampm',
+	        onSelect: this.onItemChange,
+	        onMouseEnter: this.onEnterSelectPanel.bind(this, 'ampm')
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props5 = this.props,
+	          prefixCls = _props5.prefixCls,
+	          defaultOpenValue = _props5.defaultOpenValue;
+
+	      var value = this.props.value || defaultOpenValue;
+	      return React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-combobox' },
+	        this.getHourSelect(value.hour()),
+	        this.getMinuteSelect(value.minute()),
+	        this.getSecondSelect(value.second()),
+	        this.getAMPMSelect(value.hour())
+	      );
+	    }
+	  }]);
+
+	  return Combobox;
+	}(React.Component);
+
+	Combobox.propTypes = {
+	  format: PropTypes__default.string,
+	  defaultOpenValue: PropTypes__default.object,
+	  prefixCls: PropTypes__default.string,
+	  value: PropTypes__default.object,
+	  onChange: PropTypes__default.func,
+	  showHour: PropTypes__default.bool,
+	  showMinute: PropTypes__default.bool,
+	  showSecond: PropTypes__default.bool,
+	  hourOptions: PropTypes__default.array,
+	  minuteOptions: PropTypes__default.array,
+	  secondOptions: PropTypes__default.array,
+	  disabledHours: PropTypes__default.func,
+	  disabledMinutes: PropTypes__default.func,
+	  disabledSeconds: PropTypes__default.func,
+	  onCurrentSelectPanelChange: PropTypes__default.func,
+	  use12Hours: PropTypes__default.bool,
+	  isAM: PropTypes__default.bool
+	};
+
+	function noop$a() {}
+
+	function generateOptions(length, disabledOptions, hideDisabledOptions) {
+	  var step = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+
+	  var arr = [];
+	  for (var value = 0; value < length; value += step) {
+	    if (!disabledOptions || disabledOptions.indexOf(value) < 0 || !hideDisabledOptions) {
+	      arr.push(value);
+	    }
+	  }
+	  return arr;
+	}
+
+	var Panel = function (_Component) {
+	  _inherits(Panel, _Component);
+
+	  function Panel(props) {
+	    _classCallCheck(this, Panel);
+
+	    var _this = _possibleConstructorReturn(this, (Panel.__proto__ || Object.getPrototypeOf(Panel)).call(this, props));
+
+	    _this.onChange = function (newValue) {
+	      _this.setState({ value: newValue });
+	      _this.props.onChange(newValue);
+	    };
+
+	    _this.onCurrentSelectPanelChange = function (currentSelectPanel) {
+	      _this.setState({ currentSelectPanel: currentSelectPanel });
+	    };
+
+	    _this.disabledHours = function () {
+	      var _this$props = _this.props,
+	          use12Hours = _this$props.use12Hours,
+	          disabledHours = _this$props.disabledHours;
+
+	      var disabledOptions = disabledHours();
+	      if (use12Hours && Array.isArray(disabledOptions)) {
+	        if (_this.isAM()) {
+	          disabledOptions = disabledOptions.filter(function (h) {
+	            return h < 12;
+	          }).map(function (h) {
+	            return h === 0 ? 12 : h;
+	          });
+	        } else {
+	          disabledOptions = disabledOptions.map(function (h) {
+	            return h === 12 ? 12 : h - 12;
+	          });
+	        }
+	      }
+	      return disabledOptions;
+	    };
+
+	    _this.state = {
+	      value: props.value,
+	      selectionRange: []
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Panel, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var value = nextProps.value;
+	      if (value) {
+	        this.setState({
+	          value: value
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'close',
+
+
+	    // https://github.com/ant-design/ant-design/issues/5829
+	    value: function close() {
+	      this.props.onEsc();
+	    }
+	  }, {
+	    key: 'isAM',
+	    value: function isAM() {
+	      var value = this.state.value || this.props.defaultOpenValue;
+	      return value.hour() >= 0 && value.hour() < 12;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _classNames;
+
+	      var _props = this.props,
+	          prefixCls = _props.prefixCls,
+	          className = _props.className,
+	          placeholder = _props.placeholder,
+	          disabledMinutes = _props.disabledMinutes,
+	          disabledSeconds = _props.disabledSeconds,
+	          hideDisabledOptions = _props.hideDisabledOptions,
+	          allowEmpty = _props.allowEmpty,
+	          showHour = _props.showHour,
+	          showMinute = _props.showMinute,
+	          showSecond = _props.showSecond,
+	          format = _props.format,
+	          defaultOpenValue = _props.defaultOpenValue,
+	          clearText = _props.clearText,
+	          onEsc = _props.onEsc,
+	          addon = _props.addon,
+	          use12Hours = _props.use12Hours,
+	          onClear = _props.onClear,
+	          focusOnOpen = _props.focusOnOpen,
+	          onKeyDown = _props.onKeyDown,
+	          hourStep = _props.hourStep,
+	          minuteStep = _props.minuteStep,
+	          secondStep = _props.secondStep,
+	          inputReadOnly = _props.inputReadOnly,
+	          clearIcon = _props.clearIcon;
+	      var _state = this.state,
+	          value = _state.value,
+	          currentSelectPanel = _state.currentSelectPanel;
+
+	      var disabledHourOptions = this.disabledHours();
+	      var disabledMinuteOptions = disabledMinutes(value ? value.hour() : null);
+	      var disabledSecondOptions = disabledSeconds(value ? value.hour() : null, value ? value.minute() : null);
+	      var hourOptions = generateOptions(24, disabledHourOptions, hideDisabledOptions, hourStep);
+	      var minuteOptions = generateOptions(60, disabledMinuteOptions, hideDisabledOptions, minuteStep);
+	      var secondOptions = generateOptions(60, disabledSecondOptions, hideDisabledOptions, secondStep);
+
+	      return React__default.createElement(
+	        'div',
+	        { className: classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-inner', true), _defineProperty(_classNames, className, !!className), _classNames)) },
+	        React__default.createElement(Header, {
+	          clearText: clearText,
+	          prefixCls: prefixCls,
+	          defaultOpenValue: defaultOpenValue,
+	          value: value,
+	          currentSelectPanel: currentSelectPanel,
+	          onEsc: onEsc,
+	          format: format,
+	          placeholder: placeholder,
+	          hourOptions: hourOptions,
+	          minuteOptions: minuteOptions,
+	          secondOptions: secondOptions,
+	          disabledHours: this.disabledHours,
+	          disabledMinutes: disabledMinutes,
+	          disabledSeconds: disabledSeconds,
+	          onChange: this.onChange,
+	          onClear: onClear,
+	          allowEmpty: allowEmpty,
+	          focusOnOpen: focusOnOpen,
+	          onKeyDown: onKeyDown,
+	          inputReadOnly: inputReadOnly,
+	          clearIcon: clearIcon
+	        }),
+	        React__default.createElement(Combobox, {
+	          prefixCls: prefixCls,
+	          value: value,
+	          defaultOpenValue: defaultOpenValue,
+	          format: format,
+	          onChange: this.onChange,
+	          showHour: showHour,
+	          showMinute: showMinute,
+	          showSecond: showSecond,
+	          hourOptions: hourOptions,
+	          minuteOptions: minuteOptions,
+	          secondOptions: secondOptions,
+	          disabledHours: this.disabledHours,
+	          disabledMinutes: disabledMinutes,
+	          disabledSeconds: disabledSeconds,
+	          onCurrentSelectPanelChange: this.onCurrentSelectPanelChange,
+	          use12Hours: use12Hours,
+	          isAM: this.isAM()
+	        }),
+	        addon(this)
+	      );
+	    }
+	  }]);
+
+	  return Panel;
+	}(React.Component);
+
+	Panel.propTypes = {
+	  clearText: PropTypes__default.string,
+	  prefixCls: PropTypes__default.string,
+	  className: PropTypes__default.string,
+	  defaultOpenValue: PropTypes__default.object,
+	  value: PropTypes__default.object,
+	  placeholder: PropTypes__default.string,
+	  format: PropTypes__default.string,
+	  inputReadOnly: PropTypes__default.bool,
+	  disabledHours: PropTypes__default.func,
+	  disabledMinutes: PropTypes__default.func,
+	  disabledSeconds: PropTypes__default.func,
+	  hideDisabledOptions: PropTypes__default.bool,
+	  onChange: PropTypes__default.func,
+	  onEsc: PropTypes__default.func,
+	  allowEmpty: PropTypes__default.bool,
+	  showHour: PropTypes__default.bool,
+	  showMinute: PropTypes__default.bool,
+	  showSecond: PropTypes__default.bool,
+	  onClear: PropTypes__default.func,
+	  use12Hours: PropTypes__default.bool,
+	  hourStep: PropTypes__default.number,
+	  minuteStep: PropTypes__default.number,
+	  secondStep: PropTypes__default.number,
+	  addon: PropTypes__default.func,
+	  focusOnOpen: PropTypes__default.bool,
+	  onKeyDown: PropTypes__default.func,
+	  clearIcon: PropTypes__default.node
+	};
+	Panel.defaultProps = {
+	  prefixCls: 'rc-time-picker-panel',
+	  onChange: noop$a,
+	  onClear: noop$a,
+	  disabledHours: noop$a,
+	  disabledMinutes: noop$a,
+	  disabledSeconds: noop$a,
+	  defaultOpenValue: moment(),
+	  use12Hours: false,
+	  addon: noop$a,
+	  onKeyDown: noop$a,
+	  inputReadOnly: false
+	};
+
+	var autoAdjustOverflow$2 = {
+	  adjustX: 1,
+	  adjustY: 1
+	};
+
+	var targetOffset$1 = [0, 0];
+
+	var placements$2 = {
+	  bottomLeft: {
+	    points: ['tl', 'tl'],
+	    overflow: autoAdjustOverflow$2,
+	    offset: [0, -3],
+	    targetOffset: targetOffset$1
+	  },
+	  bottomRight: {
+	    points: ['tr', 'tr'],
+	    overflow: autoAdjustOverflow$2,
+	    offset: [0, -3],
+	    targetOffset: targetOffset$1
+	  },
+	  topRight: {
+	    points: ['br', 'br'],
+	    overflow: autoAdjustOverflow$2,
+	    offset: [0, 3],
+	    targetOffset: targetOffset$1
+	  },
+	  topLeft: {
+	    points: ['bl', 'bl'],
+	    overflow: autoAdjustOverflow$2,
+	    offset: [0, 3],
+	    targetOffset: targetOffset$1
+	  }
+	};
+
+	function noop$b() {}
+
+	function refFn$1(field, component) {
+	  this[field] = component;
+	}
+
+	var Picker$1 = function (_Component) {
+	  _inherits(Picker, _Component);
+
+	  function Picker(props) {
+	    _classCallCheck(this, Picker);
+
+	    var _this = _possibleConstructorReturn(this, (Picker.__proto__ || Object.getPrototypeOf(Picker)).call(this, props));
+
+	    _initialiseProps$a.call(_this);
+
+	    _this.saveInputRef = refFn$1.bind(_this, 'picker');
+	    _this.savePanelRef = refFn$1.bind(_this, 'panelInstance');
+	    var defaultOpen = props.defaultOpen,
+	        defaultValue = props.defaultValue,
+	        _props$open = props.open,
+	        open = _props$open === undefined ? defaultOpen : _props$open,
+	        _props$value = props.value,
+	        value = _props$value === undefined ? defaultValue : _props$value;
+
+	    _this.state = {
+	      open: open,
+	      value: value
+	    };
+	    return _this;
+	  }
+
+	  _createClass(Picker, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      var value = nextProps.value,
+	          open = nextProps.open;
+
+	      if ('value' in nextProps) {
+	        this.setState({
+	          value: value
+	        });
+	      }
+	      if (open !== undefined) {
+	        this.setState({ open: open });
+	      }
+	    }
+	  }, {
+	    key: 'setValue',
+	    value: function setValue(value) {
+	      if (!('value' in this.props)) {
+	        this.setState({
+	          value: value
+	        });
+	      }
+	      this.props.onChange(value);
+	    }
+	  }, {
+	    key: 'getFormat',
+	    value: function getFormat() {
+	      var _props = this.props,
+	          format = _props.format,
+	          showHour = _props.showHour,
+	          showMinute = _props.showMinute,
+	          showSecond = _props.showSecond,
+	          use12Hours = _props.use12Hours;
+
+	      if (format) {
+	        return format;
+	      }
+
+	      if (use12Hours) {
+	        var fmtString = [showHour ? 'h' : '', showMinute ? 'mm' : '', showSecond ? 'ss' : ''].filter(function (item) {
+	          return !!item;
+	        }).join(':');
+
+	        return fmtString.concat(' a');
+	      }
+
+	      return [showHour ? 'HH' : '', showMinute ? 'mm' : '', showSecond ? 'ss' : ''].filter(function (item) {
+	        return !!item;
+	      }).join(':');
+	    }
+	  }, {
+	    key: 'getPanelElement',
+	    value: function getPanelElement() {
+	      var _props2 = this.props,
+	          prefixCls = _props2.prefixCls,
+	          placeholder = _props2.placeholder,
+	          disabledHours = _props2.disabledHours,
+	          disabledMinutes = _props2.disabledMinutes,
+	          disabledSeconds = _props2.disabledSeconds,
+	          hideDisabledOptions = _props2.hideDisabledOptions,
+	          inputReadOnly = _props2.inputReadOnly,
+	          allowEmpty = _props2.allowEmpty,
+	          showHour = _props2.showHour,
+	          showMinute = _props2.showMinute,
+	          showSecond = _props2.showSecond,
+	          defaultOpenValue = _props2.defaultOpenValue,
+	          clearText = _props2.clearText,
+	          addon = _props2.addon,
+	          use12Hours = _props2.use12Hours,
+	          focusOnOpen = _props2.focusOnOpen,
+	          onKeyDown = _props2.onKeyDown,
+	          hourStep = _props2.hourStep,
+	          minuteStep = _props2.minuteStep,
+	          secondStep = _props2.secondStep,
+	          clearIcon = _props2.clearIcon;
+
+	      return React__default.createElement(Panel, {
+	        clearText: clearText,
+	        prefixCls: prefixCls + '-panel',
+	        ref: this.savePanelRef,
+	        value: this.state.value,
+	        inputReadOnly: inputReadOnly,
+	        onChange: this.onPanelChange,
+	        onClear: this.onPanelClear,
+	        defaultOpenValue: defaultOpenValue,
+	        showHour: showHour,
+	        showMinute: showMinute,
+	        showSecond: showSecond,
+	        onEsc: this.onEsc,
+	        allowEmpty: allowEmpty,
+	        format: this.getFormat(),
+	        placeholder: placeholder,
+	        disabledHours: disabledHours,
+	        disabledMinutes: disabledMinutes,
+	        disabledSeconds: disabledSeconds,
+	        hideDisabledOptions: hideDisabledOptions,
+	        use12Hours: use12Hours,
+	        hourStep: hourStep,
+	        minuteStep: minuteStep,
+	        secondStep: secondStep,
+	        addon: addon,
+	        focusOnOpen: focusOnOpen,
+	        onKeyDown: onKeyDown,
+	        clearIcon: clearIcon
+	      });
+	    }
+	  }, {
+	    key: 'getPopupClassName',
+	    value: function getPopupClassName() {
+	      var _props3 = this.props,
+	          showHour = _props3.showHour,
+	          showMinute = _props3.showMinute,
+	          showSecond = _props3.showSecond,
+	          use12Hours = _props3.use12Hours,
+	          prefixCls = _props3.prefixCls;
+
+	      var popupClassName = this.props.popupClassName;
+	      // Keep it for old compatibility
+	      if ((!showHour || !showMinute || !showSecond) && !use12Hours) {
+	        popupClassName += ' ' + prefixCls + '-panel-narrow';
+	      }
+	      var selectColumnCount = 0;
+	      if (showHour) {
+	        selectColumnCount += 1;
+	      }
+	      if (showMinute) {
+	        selectColumnCount += 1;
+	      }
+	      if (showSecond) {
+	        selectColumnCount += 1;
+	      }
+	      if (use12Hours) {
+	        selectColumnCount += 1;
+	      }
+	      popupClassName += ' ' + prefixCls + '-panel-column-' + selectColumnCount;
+	      return popupClassName;
+	    }
+	  }, {
+	    key: 'setOpen',
+	    value: function setOpen(open) {
+	      var _props4 = this.props,
+	          onOpen = _props4.onOpen,
+	          onClose = _props4.onClose;
+
+	      if (this.state.open !== open) {
+	        if (!('open' in this.props)) {
+	          this.setState({ open: open });
+	        }
+	        if (open) {
+	          onOpen({ open: open });
+	        } else {
+	          onClose({ open: open });
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'focus',
+	    value: function focus() {
+	      this.picker.focus();
+	    }
+	  }, {
+	    key: 'blur',
+	    value: function blur() {
+	      this.picker.blur();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props5 = this.props,
+	          prefixCls = _props5.prefixCls,
+	          placeholder = _props5.placeholder,
+	          placement = _props5.placement,
+	          align = _props5.align,
+	          id = _props5.id,
+	          disabled = _props5.disabled,
+	          transitionName = _props5.transitionName,
+	          style = _props5.style,
+	          className = _props5.className,
+	          getPopupContainer = _props5.getPopupContainer,
+	          name = _props5.name,
+	          autoComplete = _props5.autoComplete,
+	          onFocus = _props5.onFocus,
+	          onBlur = _props5.onBlur,
+	          autoFocus = _props5.autoFocus,
+	          inputReadOnly = _props5.inputReadOnly,
+	          inputIcon = _props5.inputIcon;
+	      var _state = this.state,
+	          open = _state.open,
+	          value = _state.value;
+
+	      var popupClassName = this.getPopupClassName();
+	      return React__default.createElement(
+	        Trigger,
+	        {
+	          prefixCls: prefixCls + '-panel',
+	          popupClassName: popupClassName,
+	          popup: this.getPanelElement(),
+	          popupAlign: align,
+	          builtinPlacements: placements$2,
+	          popupPlacement: placement,
+	          action: disabled ? [] : ['click'],
+	          destroyPopupOnHide: true,
+	          getPopupContainer: getPopupContainer,
+	          popupTransitionName: transitionName,
+	          popupVisible: open,
+	          onPopupVisibleChange: this.onVisibleChange
+	        },
+	        React__default.createElement(
+	          'span',
+	          { className: prefixCls + ' ' + className, style: style },
+	          React__default.createElement('input', {
+	            className: prefixCls + '-input',
+	            ref: this.saveInputRef,
+	            type: 'text',
+	            placeholder: placeholder,
+	            name: name,
+	            onKeyDown: this.onKeyDown,
+	            disabled: disabled,
+	            value: value && value.format(this.getFormat()) || '',
+	            autoComplete: autoComplete,
+	            onFocus: onFocus,
+	            onBlur: onBlur,
+	            autoFocus: autoFocus,
+	            onChange: noop$b,
+	            readOnly: !!inputReadOnly,
+	            id: id
+	          }),
+	          inputIcon || React__default.createElement('span', { className: prefixCls + '-icon' })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Picker;
+	}(React.Component);
+
+	Picker$1.propTypes = {
+	  prefixCls: PropTypes__default.string,
+	  clearText: PropTypes__default.string,
+	  value: PropTypes__default.object,
+	  defaultOpenValue: PropTypes__default.object,
+	  inputReadOnly: PropTypes__default.bool,
+	  disabled: PropTypes__default.bool,
+	  allowEmpty: PropTypes__default.bool,
+	  defaultValue: PropTypes__default.object,
+	  open: PropTypes__default.bool,
+	  defaultOpen: PropTypes__default.bool,
+	  align: PropTypes__default.object,
+	  placement: PropTypes__default.any,
+	  transitionName: PropTypes__default.string,
+	  getPopupContainer: PropTypes__default.func,
+	  placeholder: PropTypes__default.string,
+	  format: PropTypes__default.string,
+	  showHour: PropTypes__default.bool,
+	  showMinute: PropTypes__default.bool,
+	  showSecond: PropTypes__default.bool,
+	  style: PropTypes__default.object,
+	  className: PropTypes__default.string,
+	  popupClassName: PropTypes__default.string,
+	  disabledHours: PropTypes__default.func,
+	  disabledMinutes: PropTypes__default.func,
+	  disabledSeconds: PropTypes__default.func,
+	  hideDisabledOptions: PropTypes__default.bool,
+	  onChange: PropTypes__default.func,
+	  onOpen: PropTypes__default.func,
+	  onClose: PropTypes__default.func,
+	  onFocus: PropTypes__default.func,
+	  onBlur: PropTypes__default.func,
+	  addon: PropTypes__default.func,
+	  name: PropTypes__default.string,
+	  autoComplete: PropTypes__default.string,
+	  use12Hours: PropTypes__default.bool,
+	  hourStep: PropTypes__default.number,
+	  minuteStep: PropTypes__default.number,
+	  secondStep: PropTypes__default.number,
+	  focusOnOpen: PropTypes__default.bool,
+	  onKeyDown: PropTypes__default.func,
+	  autoFocus: PropTypes__default.bool,
+	  id: PropTypes__default.string,
+	  inputIcon: PropTypes__default.node,
+	  clearIcon: PropTypes__default.node
+	};
+	Picker$1.defaultProps = {
+	  clearText: 'clear',
+	  prefixCls: 'rc-time-picker',
+	  defaultOpen: false,
+	  inputReadOnly: false,
+	  style: {},
+	  className: '',
+	  popupClassName: '',
+	  id: '',
+	  align: {},
+	  defaultOpenValue: moment(),
+	  allowEmpty: true,
+	  showHour: true,
+	  showMinute: true,
+	  showSecond: true,
+	  disabledHours: noop$b,
+	  disabledMinutes: noop$b,
+	  disabledSeconds: noop$b,
+	  hideDisabledOptions: false,
+	  placement: 'bottomLeft',
+	  onChange: noop$b,
+	  onOpen: noop$b,
+	  onClose: noop$b,
+	  onFocus: noop$b,
+	  onBlur: noop$b,
+	  addon: noop$b,
+	  use12Hours: false,
+	  focusOnOpen: false,
+	  onKeyDown: noop$b
+	};
+
+	var _initialiseProps$a = function _initialiseProps() {
+	  var _this2 = this;
+
+	  this.onPanelChange = function (value) {
+	    _this2.setValue(value);
+	  };
+
+	  this.onPanelClear = function () {
+	    _this2.setValue(null);
+	    _this2.setOpen(false);
+	  };
+
+	  this.onVisibleChange = function (open) {
+	    _this2.setOpen(open);
+	  };
+
+	  this.onEsc = function () {
+	    _this2.setOpen(false);
+	    _this2.focus();
+	  };
+
+	  this.onKeyDown = function (e) {
+	    if (e.keyCode === 40) {
+	      _this2.setOpen(true);
+	    }
+	  };
+	};
+
+	function generateShowHourMinuteSecond(format) {
+	    // Ref: http://momentjs.com/docs/#/parsing/string-format/
+	    return {
+	        showHour: format.indexOf('H') > -1 || format.indexOf('h') > -1 || format.indexOf('k') > -1,
+	        showMinute: format.indexOf('m') > -1,
+	        showSecond: format.indexOf('s') > -1
+	    };
+	}
+
+	var TimePicker = function (_React$Component) {
+	    _inherits(TimePicker, _React$Component);
+
+	    function TimePicker(props) {
+	        _classCallCheck(this, TimePicker);
+
+	        var _this = _possibleConstructorReturn(this, (TimePicker.__proto__ || Object.getPrototypeOf(TimePicker)).call(this, props));
+
+	        _this.handleChange = function (value) {
+	            if (!('value' in _this.props)) {
+	                _this.setState({ value: value });
+	            }
+	            var _this$props = _this.props,
+	                onChange = _this$props.onChange,
+	                _this$props$format = _this$props.format,
+	                format = _this$props$format === undefined ? 'HH:mm:ss' : _this$props$format;
+
+	            if (onChange) {
+	                onChange(value, value && value.format(format) || '');
+	            }
+	        };
+	        _this.handleOpenClose = function (_ref) {
+	            var open = _ref.open;
+	            var onOpenChange = _this.props.onOpenChange;
+
+	            if (onOpenChange) {
+	                onOpenChange(open);
+	            }
+	        };
+	        _this.saveTimePicker = function (timePickerRef) {
+	            _this.timePickerRef = timePickerRef;
+	        };
+	        _this.renderTimePicker = function (locale$$1) {
+	            var _classNames2;
+
+	            var props = _extends$1({}, _this.props);
+	            delete props.defaultValue;
+	            var format = _this.getDefaultFormat();
+	            var className = classnames(props.className, _defineProperty({}, props.prefixCls + '-' + props.size, !!props.size));
+	            var addon = function addon(panel) {
+	                return props.addon ? React.createElement(
+	                    'div',
+	                    { className: props.prefixCls + '-panel-addon' },
+	                    props.addon(panel)
+	                ) : null;
+	            };
+	            var suffixIcon = props.suffixIcon,
+	                prefixCls = props.prefixCls;
+
+	            var clockIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
+	                className: classnames((_classNames2 = {}, _defineProperty(_classNames2, suffixIcon.props.className, suffixIcon.props.className), _defineProperty(_classNames2, prefixCls + '-clock-icon', true), _classNames2))
+	            }) : React.createElement(
+	                'span',
+	                { className: prefixCls + '-clock-icon' },
+	                suffixIcon
+	            )) || React.createElement(Icon$1, { type: 'clock-circle', className: prefixCls + '-clock-icon', theme: 'outlined' });
+	            var inputIcon = React.createElement(
+	                'span',
+	                { className: prefixCls + '-icon' },
+	                clockIcon
+	            );
+	            var clearIcon = React.createElement(Icon$1, { type: 'close-circle', className: prefixCls + '-panel-clear-btn-icon', theme: 'filled' });
+	            return React.createElement(Picker$1, _extends$1({}, generateShowHourMinuteSecond(format), props, { ref: _this.saveTimePicker, format: format, className: className, value: _this.state.value, placeholder: props.placeholder === undefined ? locale$$1.placeholder : props.placeholder, onChange: _this.handleChange, onOpen: _this.handleOpenClose, onClose: _this.handleOpenClose, addon: addon, inputIcon: inputIcon, clearIcon: clearIcon }));
+	        };
+	        var value = props.value || props.defaultValue;
+	        if (value && !interopDefault(moment$1).isMoment(value)) {
+	            throw new Error('The value/defaultValue of TimePicker must be a moment object after `antd@2.0`, ' + 'see: https://u.ant.design/time-picker-value');
+	        }
+	        _this.state = {
+	            value: value
+	        };
+	        return _this;
+	    }
+
+	    _createClass(TimePicker, [{
+	        key: 'focus',
+	        value: function focus() {
+	            this.timePickerRef.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.timePickerRef.blur();
+	        }
+	    }, {
+	        key: 'getDefaultFormat',
+	        value: function getDefaultFormat() {
+	            var _props = this.props,
+	                format = _props.format,
+	                use12Hours = _props.use12Hours;
+
+	            if (format) {
+	                return format;
+	            } else if (use12Hours) {
+	                return 'h:mm:ss a';
+	            }
+	            return 'HH:mm:ss';
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            return React.createElement(
+	                LocaleReceiver,
+	                { componentName: 'TimePicker', defaultLocale: locale },
+	                this.renderTimePicker
+	            );
+	        }
+	    }], [{
+	        key: 'getDerivedStateFromProps',
+	        value: function getDerivedStateFromProps(nextProps) {
+	            if ('value' in nextProps) {
+	                return { value: nextProps.value };
+	            }
+	            return null;
+	        }
+	    }]);
+
+	    return TimePicker;
+	}(React.Component);
+
+	TimePicker.defaultProps = {
+	    prefixCls: 'ant-time-picker',
+	    align: {
+	        offset: [0, -2]
+	    },
+	    disabled: false,
+	    disabledHours: undefined,
+	    disabledMinutes: undefined,
+	    disabledSeconds: undefined,
+	    hideDisabledOptions: false,
+	    placement: 'bottomLeft',
+	    transitionName: 'slide-up',
+	    focusOnOpen: true
+	};
+	polyfill(TimePicker);
+
+	function getColumns(_ref) {
+	    var showHour = _ref.showHour,
+	        showMinute = _ref.showMinute,
+	        showSecond = _ref.showSecond,
+	        use12Hours = _ref.use12Hours;
+
+	    var column = 0;
+	    if (showHour) {
+	        column += 1;
+	    }
+	    if (showMinute) {
+	        column += 1;
+	    }
+	    if (showSecond) {
+	        column += 1;
+	    }
+	    if (use12Hours) {
+	        column += 1;
+	    }
+	    return column;
+	}
+	function wrapPicker(Picker, defaultFormat) {
+	    var _a;
+	    return _a = function (_React$Component) {
+	        _inherits(PickerWrapper, _React$Component);
+
+	        function PickerWrapper() {
+	            _classCallCheck(this, PickerWrapper);
+
+	            var _this = _possibleConstructorReturn(this, (PickerWrapper.__proto__ || Object.getPrototypeOf(PickerWrapper)).apply(this, arguments));
+
+	            _this.handleOpenChange = function (open) {
+	                var onOpenChange = _this.props.onOpenChange;
+
+	                onOpenChange(open);
+	            };
+	            _this.handleFocus = function (e) {
+	                var onFocus = _this.props.onFocus;
+
+	                if (onFocus) {
+	                    onFocus(e);
+	                }
+	            };
+	            _this.handleBlur = function (e) {
+	                var onBlur = _this.props.onBlur;
+
+	                if (onBlur) {
+	                    onBlur(e);
+	                }
+	            };
+	            _this.handleMouseEnter = function (e) {
+	                var onMouseEnter = _this.props.onMouseEnter;
+
+	                if (onMouseEnter) {
+	                    onMouseEnter(e);
+	                }
+	            };
+	            _this.handleMouseLeave = function (e) {
+	                var onMouseLeave = _this.props.onMouseLeave;
+
+	                if (onMouseLeave) {
+	                    onMouseLeave(e);
+	                }
+	            };
+	            _this.savePicker = function (node) {
+	                _this.picker = node;
+	            };
+	            _this.getDefaultLocale = function () {
+	                var result = _extends$1({}, locale$1, _this.props.locale);
+	                result.lang = _extends$1({}, result.lang, (_this.props.locale || {}).lang);
+	                return result;
+	            };
+	            _this.renderPicker = function (locale, localeCode) {
+	                var _classNames2;
+
+	                var props = _this.props;
+	                var prefixCls = props.prefixCls,
+	                    inputPrefixCls = props.inputPrefixCls;
+
+	                var pickerClass = classnames(prefixCls + '-picker', _defineProperty({}, prefixCls + '-picker-' + props.size, !!props.size));
+	                var pickerInputClass = classnames(prefixCls + '-picker-input', inputPrefixCls, (_classNames2 = {}, _defineProperty(_classNames2, inputPrefixCls + '-lg', props.size === 'large'), _defineProperty(_classNames2, inputPrefixCls + '-sm', props.size === 'small'), _defineProperty(_classNames2, inputPrefixCls + '-disabled', props.disabled), _classNames2));
+	                var timeFormat = props.showTime && props.showTime.format || 'HH:mm:ss';
+	                var rcTimePickerProps = _extends$1({}, generateShowHourMinuteSecond(timeFormat), { format: timeFormat, use12Hours: props.showTime && props.showTime.use12Hours });
+	                var columns = getColumns(rcTimePickerProps);
+	                var timePickerCls = prefixCls + '-time-picker-column-' + columns;
+	                var timePicker = props.showTime ? React.createElement(Panel, _extends$1({}, rcTimePickerProps, props.showTime, { prefixCls: prefixCls + '-time-picker', className: timePickerCls, placeholder: locale.timePickerLocale.placeholder, transitionName: 'slide-up' })) : null;
+	                return React.createElement(Picker, _extends$1({}, props, { ref: _this.savePicker, pickerClass: pickerClass, pickerInputClass: pickerInputClass, locale: locale, localeCode: localeCode, timePicker: timePicker, onOpenChange: _this.handleOpenChange, onFocus: _this.handleFocus, onBlur: _this.handleBlur, onMouseEnter: _this.handleMouseEnter, onMouseLeave: _this.handleMouseLeave }));
+	            };
+	            return _this;
+	        }
+
+	        _createClass(PickerWrapper, [{
+	            key: 'componentDidMount',
+	            value: function componentDidMount() {
+	                var _props = this.props,
+	                    autoFocus = _props.autoFocus,
+	                    disabled = _props.disabled;
+
+	                if (autoFocus && !disabled) {
+	                    this.focus();
+	                }
+	            }
+	        }, {
+	            key: 'focus',
+	            value: function focus() {
+	                this.picker.focus();
+	            }
+	        }, {
+	            key: 'blur',
+	            value: function blur() {
+	                this.picker.blur();
+	            }
+	        }, {
+	            key: 'render',
+	            value: function render() {
+	                return React.createElement(
+	                    LocaleReceiver,
+	                    { componentName: 'DatePicker', defaultLocale: this.getDefaultLocale },
+	                    this.renderPicker
+	                );
+	            }
+	        }]);
+
+	        return PickerWrapper;
+	    }(React.Component), _a.defaultProps = {
+	        format: defaultFormat || 'YYYY-MM-DD',
+	        transitionName: 'slide-up',
+	        popupStyle: {},
+	        onChange: function onChange() {},
+	        onOk: function onOk() {},
+	        onOpenChange: function onOpenChange() {},
+
+	        locale: {},
+	        prefixCls: 'ant-calendar',
+	        inputPrefixCls: 'ant-input'
+	    }, _a;
+	}
+
+	var ITERATOR$4 = _wks('iterator');
+
+	var core_isIterable = _core.isIterable = function (it) {
+	  var O = Object(it);
+	  return O[ITERATOR$4] !== undefined
+	    || '@@iterator' in O
+	    // eslint-disable-next-line no-prototype-builtins
+	    || _iterators.hasOwnProperty(_classof(O));
+	};
+
+	var isIterable = core_isIterable;
+
+	var isIterable$1 = createCommonjsModule(function (module) {
+	module.exports = { "default": isIterable, __esModule: true };
+	});
+
+	unwrapExports(isIterable$1);
+
+	var core_getIterator = _core.getIterator = function (it) {
+	  var iterFn = core_getIteratorMethod(it);
+	  if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
+	  return _anObject(iterFn.call(it));
+	};
+
+	var getIterator = core_getIterator;
+
+	var getIterator$1 = createCommonjsModule(function (module) {
+	module.exports = { "default": getIterator, __esModule: true };
+	});
+
+	unwrapExports(getIterator$1);
+
+	var slicedToArray = createCommonjsModule(function (module, exports) {
+
+	exports.__esModule = true;
+
+
+
+	var _isIterable3 = _interopRequireDefault(isIterable$1);
+
+
+
+	var _getIterator3 = _interopRequireDefault(getIterator$1);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	  function sliceIterator(arr, i) {
+	    var _arr = [];
+	    var _n = true;
+	    var _d = false;
+	    var _e = undefined;
+
+	    try {
+	      for (var _i = (0, _getIterator3.default)(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+	        _arr.push(_s.value);
+
+	        if (i && _arr.length === i) break;
+	      }
+	    } catch (err) {
+	      _d = true;
+	      _e = err;
+	    } finally {
+	      try {
+	        if (!_n && _i["return"]) _i["return"]();
+	      } finally {
+	        if (_d) throw _e;
+	      }
+	    }
+
+	    return _arr;
+	  }
+
+	  return function (arr, i) {
+	    if (Array.isArray(arr)) {
+	      return arr;
+	    } else if ((0, _isIterable3.default)(Object(arr))) {
+	      return sliceIterator(arr, i);
+	    } else {
+	      throw new TypeError("Invalid attempt to destructure non-iterable instance");
+	    }
+	  };
+	}();
+	});
+
+	var _slicedToArray$1 = unwrapExports(slicedToArray);
+
+	var CalendarPart = createReactClass({
+	  displayName: 'CalendarPart',
+
+	  propTypes: {
+	    prefixCls: PropTypes__default.string,
+	    value: PropTypes__default.any,
+	    hoverValue: PropTypes__default.any,
+	    selectedValue: PropTypes__default.any,
+	    direction: PropTypes__default.any,
+	    locale: PropTypes__default.any,
+	    showDateInput: PropTypes__default.bool,
+	    showTimePicker: PropTypes__default.bool,
+	    format: PropTypes__default.any,
+	    placeholder: PropTypes__default.any,
+	    disabledDate: PropTypes__default.any,
+	    timePicker: PropTypes__default.any,
+	    disabledTime: PropTypes__default.any,
+	    onInputSelect: PropTypes__default.func,
+	    timePickerDisabledTime: PropTypes__default.object,
+	    enableNext: PropTypes__default.any,
+	    enablePrev: PropTypes__default.any,
+	    clearIcon: PropTypes__default.node
+	  },
+	  render: function render() {
+	    var props = this.props;
+	    var prefixCls = props.prefixCls,
+	        value = props.value,
+	        hoverValue = props.hoverValue,
+	        selectedValue = props.selectedValue,
+	        mode = props.mode,
+	        direction = props.direction,
+	        locale = props.locale,
+	        format = props.format,
+	        placeholder = props.placeholder,
+	        disabledDate = props.disabledDate,
+	        timePicker = props.timePicker,
+	        disabledTime = props.disabledTime,
+	        timePickerDisabledTime = props.timePickerDisabledTime,
+	        showTimePicker = props.showTimePicker,
+	        onInputSelect = props.onInputSelect,
+	        enablePrev = props.enablePrev,
+	        enableNext = props.enableNext,
+	        clearIcon = props.clearIcon;
+
+	    var shouldShowTimePicker = showTimePicker && timePicker;
+	    var disabledTimeConfig = shouldShowTimePicker && disabledTime ? getTimeConfig(selectedValue, disabledTime) : null;
+	    var rangeClassName = prefixCls + '-range';
+	    var newProps = {
+	      locale: locale,
+	      value: value,
+	      prefixCls: prefixCls,
+	      showTimePicker: showTimePicker
+	    };
+	    var index = direction === 'left' ? 0 : 1;
+	    var timePickerEle = shouldShowTimePicker && React__default.cloneElement(timePicker, _extends$1({
+	      showHour: true,
+	      showMinute: true,
+	      showSecond: true
+	    }, timePicker.props, disabledTimeConfig, timePickerDisabledTime, {
+	      onChange: onInputSelect,
+	      defaultOpenValue: value,
+	      value: selectedValue[index]
+	    }));
+
+	    var dateInputElement = props.showDateInput && React__default.createElement(DateInput, {
+	      format: format,
+	      locale: locale,
+	      prefixCls: prefixCls,
+	      timePicker: timePicker,
+	      disabledDate: disabledDate,
+	      placeholder: placeholder,
+	      disabledTime: disabledTime,
+	      value: value,
+	      showClear: false,
+	      selectedValue: selectedValue[index],
+	      onChange: onInputSelect,
+	      clearIcon: clearIcon
+	    });
+
+	    return React__default.createElement(
+	      'div',
+	      {
+	        className: rangeClassName + '-part ' + rangeClassName + '-' + direction
+	      },
+	      dateInputElement,
+	      React__default.createElement(
+	        'div',
+	        { style: { outline: 'none' } },
+	        React__default.createElement(CalendarHeader, _extends$1({}, newProps, {
+	          mode: mode,
+	          enableNext: enableNext,
+	          enablePrev: enablePrev,
+	          onValueChange: props.onValueChange,
+	          onPanelChange: props.onPanelChange,
+	          disabledMonth: props.disabledMonth
+	        })),
+	        showTimePicker ? React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-time-picker' },
+	          React__default.createElement(
+	            'div',
+	            { className: prefixCls + '-time-picker-panel' },
+	            timePickerEle
+	          )
+	        ) : null,
+	        React__default.createElement(
+	          'div',
+	          { className: prefixCls + '-body' },
+	          React__default.createElement(DateTable, _extends$1({}, newProps, {
+	            hoverValue: hoverValue,
+	            selectedValue: selectedValue,
+	            dateRender: props.dateRender,
+	            onSelect: props.onSelect,
+	            onDayHover: props.onDayHover,
+	            disabledDate: disabledDate,
+	            showWeekNumber: props.showWeekNumber
+	          }))
+	        )
+	      )
+	    );
+	  }
+	});
+
+	function noop$c() {}
+
+	function isEmptyArray(arr) {
+	  return Array.isArray(arr) && (arr.length === 0 || arr.every(function (i) {
+	    return !i;
+	  }));
+	}
+
+	function isArraysEqual(a, b) {
+	  if (a === b) return true;
+	  if (a === null || typeof a === 'undefined' || b === null || typeof b === 'undefined') {
+	    return false;
+	  }
+	  if (a.length !== b.length) return false;
+
+	  for (var i = 0; i < a.length; ++i) {
+	    if (a[i] !== b[i]) return false;
+	  }
+	  return true;
+	}
+
+	function getValueFromSelectedValue(selectedValue) {
+	  var start = selectedValue[0],
+	      end = selectedValue[1];
+
+	  var newEnd = end && end.isSame(start, 'month') ? end.clone().add(1, 'month') : end;
+	  return [start, newEnd];
+	}
+
+	function normalizeAnchor(props, init) {
+	  var selectedValue = props.selectedValue || init && props.defaultSelectedValue;
+	  var value = props.value || init && props.defaultValue;
+	  var normalizedValue = value ? getValueFromSelectedValue(value) : getValueFromSelectedValue(selectedValue);
+	  return !isEmptyArray(normalizedValue) ? normalizedValue : init && [moment(), moment().add(1, 'months')];
+	}
+
+	function generateOptions$1(length, extraOptionGen) {
+	  var arr = extraOptionGen ? extraOptionGen().concat() : [];
+	  for (var value = 0; value < length; value++) {
+	    if (arr.indexOf(value) === -1) {
+	      arr.push(value);
+	    }
+	  }
+	  return arr;
+	}
+
+	function onInputSelect(direction, value) {
+	  if (!value) {
+	    return;
+	  }
+	  var originalValue = this.state.selectedValue;
+	  var selectedValue = originalValue.concat();
+	  var index = direction === 'left' ? 0 : 1;
+	  selectedValue[index] = value;
+	  if (selectedValue[0] && this.compare(selectedValue[0], selectedValue[1]) > 0) {
+	    selectedValue[1 - index] = this.state.showTimePicker ? selectedValue[index] : undefined;
+	  }
+	  this.props.onInputSelect(selectedValue);
+	  this.fireSelectValueChange(selectedValue);
+	}
+
+	var RangeCalendar = createReactClass({
+	  displayName: 'RangeCalendar',
+
+	  propTypes: {
+	    prefixCls: PropTypes__default.string,
+	    dateInputPlaceholder: PropTypes__default.any,
+	    defaultValue: PropTypes__default.any,
+	    value: PropTypes__default.any,
+	    hoverValue: PropTypes__default.any,
+	    mode: PropTypes__default.arrayOf(PropTypes__default.oneOf(['date', 'month', 'year', 'decade'])),
+	    showDateInput: PropTypes__default.bool,
+	    timePicker: PropTypes__default.any,
+	    showOk: PropTypes__default.bool,
+	    showToday: PropTypes__default.bool,
+	    defaultSelectedValue: PropTypes__default.array,
+	    selectedValue: PropTypes__default.array,
+	    onOk: PropTypes__default.func,
+	    showClear: PropTypes__default.bool,
+	    locale: PropTypes__default.object,
+	    onChange: PropTypes__default.func,
+	    onSelect: PropTypes__default.func,
+	    onValueChange: PropTypes__default.func,
+	    onHoverChange: PropTypes__default.func,
+	    onPanelChange: PropTypes__default.func,
+	    format: PropTypes__default.oneOfType([PropTypes__default.object, PropTypes__default.string]),
+	    onClear: PropTypes__default.func,
+	    type: PropTypes__default.any,
+	    disabledDate: PropTypes__default.func,
+	    disabledTime: PropTypes__default.func,
+	    clearIcon: PropTypes__default.node
+	  },
+
+	  mixins: [CommonMixin],
+
+	  getDefaultProps: function getDefaultProps() {
+	    return {
+	      type: 'both',
+	      defaultSelectedValue: [],
+	      onValueChange: noop$c,
+	      onHoverChange: noop$c,
+	      onPanelChange: noop$c,
+	      disabledTime: noop$c,
+	      onInputSelect: noop$c,
+	      showToday: true,
+	      showDateInput: true
+	    };
+	  },
+	  getInitialState: function getInitialState() {
+	    var props = this.props;
+	    var selectedValue = props.selectedValue || props.defaultSelectedValue;
+	    var value = normalizeAnchor(props, 1);
+	    return {
+	      selectedValue: selectedValue,
+	      prevSelectedValue: selectedValue,
+	      firstSelectedValue: null,
+	      hoverValue: props.hoverValue || [],
+	      value: value,
+	      showTimePicker: false,
+	      mode: props.mode || ['date', 'date']
+	    };
+	  },
+	  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	    var state = this.state;
+
+	    var newState = {};
+	    if ('value' in nextProps) {
+	      newState.value = normalizeAnchor(nextProps, 0);
+	      this.setState(newState);
+	    }
+	    if ('hoverValue' in nextProps && !isArraysEqual(state.hoverValue, nextProps.hoverValue)) {
+	      this.setState({ hoverValue: nextProps.hoverValue });
+	    }
+	    if ('selectedValue' in nextProps) {
+	      newState.selectedValue = nextProps.selectedValue;
+	      newState.prevSelectedValue = nextProps.selectedValue;
+	      this.setState(newState);
+	    }
+	    if ('mode' in nextProps && !isArraysEqual(state.mode, nextProps.mode)) {
+	      this.setState({ mode: nextProps.mode });
+	    }
+	  },
+	  onDatePanelEnter: function onDatePanelEnter() {
+	    if (this.hasSelectedValue()) {
+	      this.fireHoverValueChange(this.state.selectedValue.concat());
+	    }
+	  },
+	  onDatePanelLeave: function onDatePanelLeave() {
+	    if (this.hasSelectedValue()) {
+	      this.fireHoverValueChange([]);
+	    }
+	  },
+	  onSelect: function onSelect(value) {
+	    var type = this.props.type;
+	    var _state = this.state,
+	        selectedValue = _state.selectedValue,
+	        prevSelectedValue = _state.prevSelectedValue,
+	        firstSelectedValue = _state.firstSelectedValue;
+
+	    var nextSelectedValue = void 0;
+	    if (type === 'both') {
+	      if (!firstSelectedValue) {
+	        syncTime(prevSelectedValue[0], value);
+	        nextSelectedValue = [value];
+	      } else if (this.compare(firstSelectedValue, value) < 0) {
+	        syncTime(prevSelectedValue[1], value);
+	        nextSelectedValue = [firstSelectedValue, value];
+	      } else {
+	        syncTime(prevSelectedValue[0], value);
+	        syncTime(prevSelectedValue[1], firstSelectedValue);
+	        nextSelectedValue = [value, firstSelectedValue];
+	      }
+	    } else if (type === 'start') {
+	      syncTime(prevSelectedValue[0], value);
+	      var endValue = selectedValue[1];
+	      nextSelectedValue = endValue && this.compare(endValue, value) > 0 ? [value, endValue] : [value];
+	    } else {
+	      // type === 'end'
+	      var startValue = selectedValue[0];
+	      if (startValue && this.compare(startValue, value) <= 0) {
+	        syncTime(prevSelectedValue[1], value);
+	        nextSelectedValue = [startValue, value];
+	      } else {
+	        syncTime(prevSelectedValue[0], value);
+	        nextSelectedValue = [value];
+	      }
+	    }
+
+	    this.fireSelectValueChange(nextSelectedValue);
+	  },
+	  onKeyDown: function onKeyDown(event) {
+	    var _this = this;
+
+	    if (event.target.nodeName.toLowerCase() === 'input') {
+	      return;
+	    }
+
+	    var keyCode = event.keyCode;
+
+	    var ctrlKey = event.ctrlKey || event.metaKey;
+
+	    var _state2 = this.state,
+	        selectedValue = _state2.selectedValue,
+	        hoverValue = _state2.hoverValue,
+	        firstSelectedValue = _state2.firstSelectedValue,
+	        value = _state2.value;
+	    var _props = this.props,
+	        onKeyDown = _props.onKeyDown,
+	        disabledDate = _props.disabledDate;
+
+	    // Update last time of the picker
+
+	    var updateHoverPoint = function updateHoverPoint(func) {
+	      // Change hover to make focus in UI
+	      var currentHoverTime = void 0;
+	      var nextHoverTime = void 0;
+	      var nextHoverValue = void 0;
+
+	      if (!firstSelectedValue) {
+	        currentHoverTime = hoverValue[0] || selectedValue[0] || value[0] || moment();
+	        nextHoverTime = func(currentHoverTime);
+	        nextHoverValue = [nextHoverTime];
+	        _this.fireHoverValueChange(nextHoverValue);
+	      } else {
+	        if (hoverValue.length === 1) {
+	          currentHoverTime = hoverValue[0].clone();
+	          nextHoverTime = func(currentHoverTime);
+	          nextHoverValue = _this.onDayHover(nextHoverTime);
+	        } else {
+	          currentHoverTime = hoverValue[0].isSame(firstSelectedValue, 'day') ? hoverValue[1] : hoverValue[0];
+	          nextHoverTime = func(currentHoverTime);
+	          nextHoverValue = _this.onDayHover(nextHoverTime);
+	        }
+	      }
+
+	      // Find origin hover time on value index
+	      if (nextHoverValue.length >= 2) {
+	        var miss = nextHoverValue.some(function (ht) {
+	          return !includesTime(value, ht, 'month');
+	        });
+	        if (miss) {
+	          var newValue = nextHoverValue.slice().sort(function (t1, t2) {
+	            return t1.valueOf() - t2.valueOf();
+	          });
+	          if (newValue[0].isSame(newValue[1], 'month')) {
+	            newValue[1] = newValue[0].clone().add(1, 'month');
+	          }
+	          _this.fireValueChange(newValue);
+	        }
+	      } else if (nextHoverValue.length === 1) {
+	        // If only one value, let's keep the origin panel
+	        var oriValueIndex = value.findIndex(function (time) {
+	          return time.isSame(currentHoverTime, 'month');
+	        });
+	        if (oriValueIndex === -1) oriValueIndex = 0;
+
+	        if (value.every(function (time) {
+	          return !time.isSame(nextHoverTime, 'month');
+	        })) {
+	          var _newValue = value.slice();
+	          _newValue[oriValueIndex] = nextHoverTime.clone();
+	          _this.fireValueChange(_newValue);
+	        }
+	      }
+
+	      event.preventDefault();
+
+	      return nextHoverTime;
+	    };
+
+	    switch (keyCode) {
+	      case KeyCode.DOWN:
+	        updateHoverPoint(function (time) {
+	          return goTime(time, 1, 'weeks');
+	        });
+	        return;
+	      case KeyCode.UP:
+	        updateHoverPoint(function (time) {
+	          return goTime(time, -1, 'weeks');
+	        });
+	        return;
+	      case KeyCode.LEFT:
+	        if (ctrlKey) {
+	          updateHoverPoint(function (time) {
+	            return goTime(time, -1, 'years');
+	          });
+	        } else {
+	          updateHoverPoint(function (time) {
+	            return goTime(time, -1, 'days');
+	          });
+	        }
+	        return;
+	      case KeyCode.RIGHT:
+	        if (ctrlKey) {
+	          updateHoverPoint(function (time) {
+	            return goTime(time, 1, 'years');
+	          });
+	        } else {
+	          updateHoverPoint(function (time) {
+	            return goTime(time, 1, 'days');
+	          });
+	        }
+	        return;
+	      case KeyCode.HOME:
+	        updateHoverPoint(function (time) {
+	          return goStartMonth(time);
+	        });
+	        return;
+	      case KeyCode.END:
+	        updateHoverPoint(function (time) {
+	          return goEndMonth(time);
+	        });
+	        return;
+	      case KeyCode.PAGE_DOWN:
+	        updateHoverPoint(function (time) {
+	          return goTime(time, 1, 'month');
+	        });
+	        return;
+	      case KeyCode.PAGE_UP:
+	        updateHoverPoint(function (time) {
+	          return goTime(time, -1, 'month');
+	        });
+	        return;
+	      case KeyCode.ENTER:
+	        {
+	          var lastValue = void 0;
+	          if (hoverValue.length === 0) {
+	            lastValue = updateHoverPoint(function (time) {
+	              return time;
+	            });
+	          } else if (hoverValue.length === 1) {
+	            lastValue = hoverValue[0];
+	          } else {
+	            lastValue = hoverValue[0].isSame(firstSelectedValue, 'day') ? hoverValue[1] : hoverValue[0];
+	          }
+	          if (lastValue && (!disabledDate || !disabledDate(lastValue))) {
+	            this.onSelect(lastValue);
+	          }
+	          event.preventDefault();
+	          return;
+	        }
+	      default:
+	        if (onKeyDown) {
+	          onKeyDown(event);
+	        }
+	    }
+	  },
+	  onDayHover: function onDayHover(value) {
+	    var hoverValue = [];
+	    var _state3 = this.state,
+	        selectedValue = _state3.selectedValue,
+	        firstSelectedValue = _state3.firstSelectedValue;
+	    var type = this.props.type;
+
+	    if (type === 'start' && selectedValue[1]) {
+	      hoverValue = this.compare(value, selectedValue[1]) < 0 ? [value, selectedValue[1]] : [value];
+	    } else if (type === 'end' && selectedValue[0]) {
+	      hoverValue = this.compare(value, selectedValue[0]) > 0 ? [selectedValue[0], value] : [];
+	    } else {
+	      if (!firstSelectedValue) {
+	        if (this.state.hoverValue.length) {
+	          this.setState({ hoverValue: [] });
+	        }
+	        return hoverValue;
+	      }
+	      hoverValue = this.compare(value, firstSelectedValue) < 0 ? [value, firstSelectedValue] : [firstSelectedValue, value];
+	    }
+	    this.fireHoverValueChange(hoverValue);
+
+	    return hoverValue;
+	  },
+	  onToday: function onToday() {
+	    var startValue = getTodayTime(this.state.value[0]);
+	    var endValue = startValue.clone().add(1, 'months');
+	    this.setState({ value: [startValue, endValue] });
+	  },
+	  onOpenTimePicker: function onOpenTimePicker() {
+	    this.setState({
+	      showTimePicker: true
+	    });
+	  },
+	  onCloseTimePicker: function onCloseTimePicker() {
+	    this.setState({
+	      showTimePicker: false
+	    });
+	  },
+	  onOk: function onOk() {
+	    var selectedValue = this.state.selectedValue;
+
+	    if (this.isAllowedDateAndTime(selectedValue)) {
+	      this.props.onOk(this.state.selectedValue);
+	    }
+	  },
+	  onStartInputSelect: function onStartInputSelect() {
+	    for (var _len = arguments.length, oargs = Array(_len), _key = 0; _key < _len; _key++) {
+	      oargs[_key] = arguments[_key];
+	    }
+
+	    var args = ['left'].concat(oargs);
+	    return onInputSelect.apply(this, args);
+	  },
+	  onEndInputSelect: function onEndInputSelect() {
+	    for (var _len2 = arguments.length, oargs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	      oargs[_key2] = arguments[_key2];
+	    }
+
+	    var args = ['right'].concat(oargs);
+	    return onInputSelect.apply(this, args);
+	  },
+	  onStartValueChange: function onStartValueChange(leftValue) {
+	    var value = [].concat(this.state.value);
+	    value[0] = leftValue;
+	    return this.fireValueChange(value);
+	  },
+	  onEndValueChange: function onEndValueChange(rightValue) {
+	    var value = [].concat(this.state.value);
+	    value[1] = rightValue;
+	    return this.fireValueChange(value);
+	  },
+	  onStartPanelChange: function onStartPanelChange(value, mode) {
+	    var props = this.props,
+	        state = this.state;
+
+	    var newMode = [mode, state.mode[1]];
+	    if (!('mode' in props)) {
+	      this.setState({
+	        mode: newMode
+	      });
+	    }
+	    var newValue = [value || state.value[0], state.value[1]];
+	    props.onPanelChange(newValue, newMode);
+	  },
+	  onEndPanelChange: function onEndPanelChange(value, mode) {
+	    var props = this.props,
+	        state = this.state;
+
+	    var newMode = [state.mode[0], mode];
+	    if (!('mode' in props)) {
+	      this.setState({
+	        mode: newMode
+	      });
+	    }
+	    var newValue = [state.value[0], value || state.value[1]];
+	    props.onPanelChange(newValue, newMode);
+	  },
+	  getStartValue: function getStartValue() {
+	    var value = this.state.value[0];
+	    var selectedValue = this.state.selectedValue;
+	    // keep selectedTime when select date
+	    if (selectedValue[0] && this.props.timePicker) {
+	      value = value.clone();
+	      syncTime(selectedValue[0], value);
+	    }
+	    if (this.state.showTimePicker && selectedValue[0]) {
+	      return selectedValue[0];
+	    }
+	    return value;
+	  },
+	  getEndValue: function getEndValue() {
+	    var _state4 = this.state,
+	        value = _state4.value,
+	        selectedValue = _state4.selectedValue,
+	        showTimePicker = _state4.showTimePicker;
+
+	    var endValue = value[1] ? value[1].clone() : value[0].clone().add(1, 'month');
+	    // keep selectedTime when select date
+	    if (selectedValue[1] && this.props.timePicker) {
+	      syncTime(selectedValue[1], endValue);
+	    }
+	    if (showTimePicker) {
+	      return selectedValue[1] ? selectedValue[1] : this.getStartValue();
+	    }
+	    return endValue;
+	  },
+
+	  // get disabled hours for second picker
+	  getEndDisableTime: function getEndDisableTime() {
+	    var _state5 = this.state,
+	        selectedValue = _state5.selectedValue,
+	        value = _state5.value;
+	    var disabledTime = this.props.disabledTime;
+
+	    var userSettingDisabledTime = disabledTime(selectedValue, 'end') || {};
+	    var startValue = selectedValue && selectedValue[0] || value[0].clone();
+	    // if startTime and endTime is same day..
+	    // the second time picker will not able to pick time before first time picker
+	    if (!selectedValue[1] || startValue.isSame(selectedValue[1], 'day')) {
+	      var hours = startValue.hour();
+	      var minutes = startValue.minute();
+	      var second = startValue.second();
+	      var _disabledHours = userSettingDisabledTime.disabledHours,
+	          _disabledMinutes = userSettingDisabledTime.disabledMinutes,
+	          _disabledSeconds = userSettingDisabledTime.disabledSeconds;
+
+	      var oldDisabledMinutes = _disabledMinutes ? _disabledMinutes() : [];
+	      var olddisabledSeconds = _disabledSeconds ? _disabledSeconds() : [];
+	      _disabledHours = generateOptions$1(hours, _disabledHours);
+	      _disabledMinutes = generateOptions$1(minutes, _disabledMinutes);
+	      _disabledSeconds = generateOptions$1(second, _disabledSeconds);
+	      return {
+	        disabledHours: function disabledHours() {
+	          return _disabledHours;
+	        },
+	        disabledMinutes: function disabledMinutes(hour) {
+	          if (hour === hours) {
+	            return _disabledMinutes;
+	          }
+	          return oldDisabledMinutes;
+	        },
+	        disabledSeconds: function disabledSeconds(hour, minute) {
+	          if (hour === hours && minute === minutes) {
+	            return _disabledSeconds;
+	          }
+	          return olddisabledSeconds;
+	        }
+	      };
+	    }
+	    return userSettingDisabledTime;
+	  },
+	  isAllowedDateAndTime: function isAllowedDateAndTime(selectedValue) {
+	    return isAllowedDate(selectedValue[0], this.props.disabledDate, this.disabledStartTime) && isAllowedDate(selectedValue[1], this.props.disabledDate, this.disabledEndTime);
+	  },
+	  isMonthYearPanelShow: function isMonthYearPanelShow(mode) {
+	    return ['month', 'year', 'decade'].indexOf(mode) > -1;
+	  },
+	  hasSelectedValue: function hasSelectedValue() {
+	    var selectedValue = this.state.selectedValue;
+
+	    return !!selectedValue[1] && !!selectedValue[0];
+	  },
+	  compare: function compare(v1, v2) {
+	    if (this.props.timePicker) {
+	      return v1.diff(v2);
+	    }
+	    return v1.diff(v2, 'days');
+	  },
+	  fireSelectValueChange: function fireSelectValueChange(selectedValue, direct) {
+	    var timePicker = this.props.timePicker;
+	    var prevSelectedValue = this.state.prevSelectedValue;
+
+	    if (timePicker && timePicker.props.defaultValue) {
+	      var timePickerDefaultValue = timePicker.props.defaultValue;
+	      if (!prevSelectedValue[0] && selectedValue[0]) {
+	        syncTime(timePickerDefaultValue[0], selectedValue[0]);
+	      }
+	      if (!prevSelectedValue[1] && selectedValue[1]) {
+	        syncTime(timePickerDefaultValue[1], selectedValue[1]);
+	      }
+	    }
+
+	    if (!('selectedValue' in this.props)) {
+	      this.setState({
+	        selectedValue: selectedValue
+	      });
+	    }
+
+	    // 尚未选择过时间，直接输入的话
+	    if (!this.state.selectedValue[0] || !this.state.selectedValue[1]) {
+	      var startValue = selectedValue[0] || moment();
+	      var endValue = selectedValue[1] || startValue.clone().add(1, 'months');
+	      this.setState({
+	        selectedValue: selectedValue,
+	        value: getValueFromSelectedValue([startValue, endValue])
+	      });
+	    }
+
+	    if (selectedValue[0] && !selectedValue[1]) {
+	      this.setState({ firstSelectedValue: selectedValue[0] });
+	      this.fireHoverValueChange(selectedValue.concat());
+	    }
+	    this.props.onChange(selectedValue);
+	    if (direct || selectedValue[0] && selectedValue[1]) {
+	      this.setState({
+	        prevSelectedValue: selectedValue,
+	        firstSelectedValue: null
+	      });
+	      this.fireHoverValueChange([]);
+	      this.props.onSelect(selectedValue);
+	    }
+	  },
+	  fireValueChange: function fireValueChange(value) {
+	    var props = this.props;
+	    if (!('value' in props)) {
+	      this.setState({
+	        value: value
+	      });
+	    }
+	    props.onValueChange(value);
+	  },
+	  fireHoverValueChange: function fireHoverValueChange(hoverValue) {
+	    var props = this.props;
+	    if (!('hoverValue' in props)) {
+	      this.setState({ hoverValue: hoverValue });
+	    }
+	    props.onHoverChange(hoverValue);
+	  },
+	  clear: function clear() {
+	    this.fireSelectValueChange([], true);
+	    this.props.onClear();
+	  },
+	  disabledStartTime: function disabledStartTime(time) {
+	    return this.props.disabledTime(time, 'start');
+	  },
+	  disabledEndTime: function disabledEndTime(time) {
+	    return this.props.disabledTime(time, 'end');
+	  },
+	  disabledStartMonth: function disabledStartMonth(month) {
+	    var value = this.state.value;
+
+	    return month.isSameOrAfter(value[1], 'month');
+	  },
+	  disabledEndMonth: function disabledEndMonth(month) {
+	    var value = this.state.value;
+
+	    return month.isSameOrBefore(value[0], 'month');
+	  },
+	  render: function render() {
+	    var _className, _classnames;
+
+	    var props = this.props,
+	        state = this.state;
+	    var prefixCls = props.prefixCls,
+	        dateInputPlaceholder = props.dateInputPlaceholder,
+	        timePicker = props.timePicker,
+	        showOk = props.showOk,
+	        locale = props.locale,
+	        showClear = props.showClear,
+	        showToday = props.showToday,
+	        type = props.type,
+	        clearIcon = props.clearIcon;
+	    var hoverValue = state.hoverValue,
+	        selectedValue = state.selectedValue,
+	        mode = state.mode,
+	        showTimePicker = state.showTimePicker;
+
+	    var className = (_className = {}, _className[props.className] = !!props.className, _className[prefixCls] = 1, _className[prefixCls + '-hidden'] = !props.visible, _className[prefixCls + '-range'] = 1, _className[prefixCls + '-show-time-picker'] = showTimePicker, _className[prefixCls + '-week-number'] = props.showWeekNumber, _className);
+	    var classes = classnames(className);
+	    var newProps = {
+	      selectedValue: state.selectedValue,
+	      onSelect: this.onSelect,
+	      onDayHover: type === 'start' && selectedValue[1] || type === 'end' && selectedValue[0] || !!hoverValue.length ? this.onDayHover : undefined
+	    };
+
+	    var placeholder1 = void 0;
+	    var placeholder2 = void 0;
+
+	    if (dateInputPlaceholder) {
+	      if (Array.isArray(dateInputPlaceholder)) {
+	        placeholder1 = dateInputPlaceholder[0];
+	        placeholder2 = dateInputPlaceholder[1];
+	      } else {
+	        placeholder1 = placeholder2 = dateInputPlaceholder;
+	      }
+	    }
+	    var showOkButton = showOk === true || showOk !== false && !!timePicker;
+	    var cls = classnames((_classnames = {}, _classnames[prefixCls + '-footer'] = true, _classnames[prefixCls + '-range-bottom'] = true, _classnames[prefixCls + '-footer-show-ok'] = showOkButton, _classnames));
+
+	    var startValue = this.getStartValue();
+	    var endValue = this.getEndValue();
+	    var todayTime = getTodayTime(startValue);
+	    var thisMonth = todayTime.month();
+	    var thisYear = todayTime.year();
+	    var isTodayInView = startValue.year() === thisYear && startValue.month() === thisMonth || endValue.year() === thisYear && endValue.month() === thisMonth;
+	    var nextMonthOfStart = startValue.clone().add(1, 'months');
+	    var isClosestMonths = nextMonthOfStart.year() === endValue.year() && nextMonthOfStart.month() === endValue.month();
+
+	    // console.warn('Render:', selectedValue.map(t => t.format('YYYY-MM-DD')).join(', '));
+	    // console.log('start:', startValue.format('YYYY-MM-DD'));
+	    // console.log('end:', endValue.format('YYYY-MM-DD'));
+
+	    var extraFooter = props.renderFooter();
+
+	    return React__default.createElement(
+	      'div',
+	      {
+	        ref: this.saveRoot,
+	        className: classes,
+	        style: props.style,
+	        tabIndex: '0',
+	        onKeyDown: this.onKeyDown
+	      },
+	      props.renderSidebar(),
+	      React__default.createElement(
+	        'div',
+	        { className: prefixCls + '-panel' },
+	        showClear && selectedValue[0] && selectedValue[1] ? React__default.createElement(
+	          'a',
+	          {
+	            role: 'button',
+	            title: locale.clear,
+	            onClick: this.clear
+	          },
+	          clearIcon || React__default.createElement('span', { className: prefixCls + '-clear-btn' })
+	        ) : null,
+	        React__default.createElement(
+	          'div',
+	          {
+	            className: prefixCls + '-date-panel',
+	            onMouseLeave: type !== 'both' ? this.onDatePanelLeave : undefined,
+	            onMouseEnter: type !== 'both' ? this.onDatePanelEnter : undefined
+	          },
+	          React__default.createElement(CalendarPart, _extends$1({}, props, newProps, {
+	            hoverValue: hoverValue,
+	            direction: 'left',
+	            disabledTime: this.disabledStartTime,
+	            disabledMonth: this.disabledStartMonth,
+	            format: this.getFormat(),
+	            value: startValue,
+	            mode: mode[0],
+	            placeholder: placeholder1,
+	            onInputSelect: this.onStartInputSelect,
+	            onValueChange: this.onStartValueChange,
+	            onPanelChange: this.onStartPanelChange,
+	            showDateInput: this.props.showDateInput,
+	            timePicker: timePicker,
+	            showTimePicker: showTimePicker,
+	            enablePrev: true,
+	            enableNext: !isClosestMonths || this.isMonthYearPanelShow(mode[1]),
+	            clearIcon: clearIcon
+	          })),
+	          React__default.createElement(
+	            'span',
+	            { className: prefixCls + '-range-middle' },
+	            '~'
+	          ),
+	          React__default.createElement(CalendarPart, _extends$1({}, props, newProps, {
+	            hoverValue: hoverValue,
+	            direction: 'right',
+	            format: this.getFormat(),
+	            timePickerDisabledTime: this.getEndDisableTime(),
+	            placeholder: placeholder2,
+	            value: endValue,
+	            mode: mode[1],
+	            onInputSelect: this.onEndInputSelect,
+	            onValueChange: this.onEndValueChange,
+	            onPanelChange: this.onEndPanelChange,
+	            showDateInput: this.props.showDateInput,
+	            timePicker: timePicker,
+	            showTimePicker: showTimePicker,
+	            disabledTime: this.disabledEndTime,
+	            disabledMonth: this.disabledEndMonth,
+	            enablePrev: !isClosestMonths || this.isMonthYearPanelShow(mode[0]),
+	            enableNext: true,
+	            clearIcon: clearIcon
+	          }))
+	        ),
+	        React__default.createElement(
+	          'div',
+	          { className: cls },
+	          showToday || props.timePicker || showOkButton || extraFooter ? React__default.createElement(
+	            'div',
+	            { className: prefixCls + '-footer-btn' },
+	            extraFooter,
+	            showToday ? React__default.createElement(TodayButton, _extends$1({}, props, {
+	              disabled: isTodayInView,
+	              value: state.value[0],
+	              onToday: this.onToday,
+	              text: locale.backToToday
+	            })) : null,
+	            props.timePicker ? React__default.createElement(TimePickerButton, _extends$1({}, props, {
+	              showTimePicker: showTimePicker,
+	              onOpenTimePicker: this.onOpenTimePicker,
+	              onCloseTimePicker: this.onCloseTimePicker,
+	              timePickerDisabled: !this.hasSelectedValue() || hoverValue.length
+	            })) : null,
+	            showOkButton ? React__default.createElement(OkButton, _extends$1({}, props, {
+	              onOk: this.onOk,
+	              okDisabled: !this.isAllowedDateAndTime(selectedValue) || !this.hasSelectedValue() || hoverValue.length
+	            })) : null
+	          ) : null
+	        )
+	      )
+	    );
+	  }
+	});
+
+	var __rest$8 = undefined && undefined.__rest || function (s, e) {
+	    var t = {};
+	    for (var p in s) {
+	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+	    }return t;
+	};
+
+	var CheckableTag = function (_React$Component) {
+	    _inherits(CheckableTag, _React$Component);
+
+	    function CheckableTag() {
+	        _classCallCheck(this, CheckableTag);
+
+	        var _this = _possibleConstructorReturn(this, (CheckableTag.__proto__ || Object.getPrototypeOf(CheckableTag)).apply(this, arguments));
+
+	        _this.handleClick = function () {
+	            var _this$props = _this.props,
+	                checked = _this$props.checked,
+	                onChange = _this$props.onChange;
+
+	            if (onChange) {
+	                onChange(!checked);
+	            }
+	        };
+	        return _this;
+	    }
+
+	    _createClass(CheckableTag, [{
+	        key: 'render',
+	        value: function render() {
+	            var _classNames;
+
+	            var _a = this.props,
+	                _a$prefixCls = _a.prefixCls,
+	                prefixCls = _a$prefixCls === undefined ? 'ant-tag' : _a$prefixCls,
+	                className = _a.className,
+	                checked = _a.checked,
+	                restProps = __rest$8(_a, ["prefixCls", "className", "checked"]);
+	            var cls = classnames(prefixCls, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-checkable', true), _defineProperty(_classNames, prefixCls + '-checkable-checked', checked), _classNames), className);
+	            delete restProps.onChange; // TypeScript cannot check delete now.
+	            return React.createElement('div', _extends$1({}, restProps, { className: cls, onClick: this.handleClick }));
+	        }
+	    }]);
+
+	    return CheckableTag;
+	}(React.Component);
+
+	var __rest$9 = undefined && undefined.__rest || function (s, e) {
+	    var t = {};
+	    for (var p in s) {
+	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+	    }return t;
+	};
+
+	var Tag = function (_React$Component) {
+	    _inherits(Tag, _React$Component);
+
+	    function Tag() {
+	        _classCallCheck(this, Tag);
+
+	        var _this = _possibleConstructorReturn(this, (Tag.__proto__ || Object.getPrototypeOf(Tag)).apply(this, arguments));
+
+	        _this.state = {
+	            closing: false,
+	            closed: false,
+	            visible: true,
+	            mounted: false
+	        };
+	        _this.handleIconClick = function (e) {
+	            var onClose = _this.props.onClose;
+	            if (onClose) {
+	                onClose(e);
+	            }
+	            if (e.defaultPrevented || 'visible' in _this.props) {
+	                return;
+	            }
+	            _this.setState({ visible: false });
+	        };
+	        _this.close = function () {
+	            if (_this.state.closing || _this.state.closed) {
+	                return;
+	            }
+	            var dom = ReactDOM.findDOMNode(_this);
+	            dom.style.width = dom.getBoundingClientRect().width + 'px';
+	            // It's Magic Code, don't know why
+	            dom.style.width = dom.getBoundingClientRect().width + 'px';
+	            _this.setState({
+	                closing: true
+	            });
+	        };
+	        _this.show = function () {
+	            _this.setState({
+	                closed: false
+	            });
+	        };
+	        _this.animationEnd = function (_, existed) {
+	            if (!existed && !_this.state.closed) {
+	                _this.setState({
+	                    closed: true,
+	                    closing: false
+	                });
+	                var afterClose = _this.props.afterClose;
+	                if (afterClose) {
+	                    afterClose();
+	                }
+	            } else {
+	                _this.setState({
+	                    closed: false
+	                });
+	            }
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Tag, [{
+	        key: 'componentDidUpdate',
+	        value: function componentDidUpdate(_prevProps, prevState) {
+	            if (prevState.visible && !this.state.visible) {
+	                this.close();
+	            } else if (!prevState.visible && this.state.visible) {
+	                this.show();
+	            }
+	        }
+	    }, {
+	        key: 'isPresetColor',
+	        value: function isPresetColor(color) {
+	            if (!color) {
+	                return false;
+	            }
+	            return (/^(pink|red|yellow|orange|cyan|green|blue|purple|geekblue|magenta|volcano|gold|lime)(-inverse)?$/.test(color)
+	            );
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _classNames;
+
+	            var _a = this.props,
+	                prefixCls = _a.prefixCls,
+	                closable = _a.closable,
+	                color = _a.color,
+	                className = _a.className,
+	                children = _a.children,
+	                style = _a.style,
+	                otherProps = __rest$9(_a, ["prefixCls", "closable", "color", "className", "children", "style"]);
+	            var closeIcon = closable ? React.createElement(Icon$1, { type: 'close', onClick: this.handleIconClick }) : '';
+	            var isPresetColor = this.isPresetColor(color);
+	            var classString = classnames(prefixCls, (_classNames = {}, _defineProperty(_classNames, prefixCls + '-' + color, isPresetColor), _defineProperty(_classNames, prefixCls + '-has-color', color && !isPresetColor), _defineProperty(_classNames, prefixCls + '-close', this.state.closing), _classNames), className);
+	            // fix https://fb.me/react-unknown-prop
+	            var divProps = omit(otherProps, ['onClose', 'afterClose', 'visible']);
+	            var tagStyle = _extends$1({ backgroundColor: color && !isPresetColor ? color : null }, style);
+	            var tag = this.state.closed ? React.createElement('span', null) : React.createElement(
+	                'div',
+	                _extends$1({ 'data-show': !this.state.closing }, divProps, { className: classString, style: tagStyle }),
+	                children,
+	                closeIcon
+	            );
+	            return React.createElement(
+	                Wave,
+	                null,
+	                React.createElement(
+	                    Animate,
+	                    { component: '', showProp: 'data-show', transitionName: prefixCls + '-zoom', transitionAppear: true, onEnd: this.animationEnd },
+	                    tag
+	                )
+	            );
+	        }
+	    }], [{
+	        key: 'getDerivedStateFromProps',
+	        value: function getDerivedStateFromProps(nextProps, state) {
+	            if ('visible' in nextProps) {
+	                var newState = {
+	                    visible: nextProps.visible,
+	                    mounted: true
+	                };
+	                if (!state.mounted) {
+	                    newState = _extends$1({}, newState, { closed: !nextProps.visible });
+	                }
+	                return newState;
+	            }
+	            return null;
+	        }
+	    }]);
+
+	    return Tag;
+	}(React.Component);
+
+	Tag.CheckableTag = CheckableTag;
+	Tag.defaultProps = {
+	    prefixCls: 'ant-tag',
+	    closable: false
+	};
+	polyfill(Tag);
+
+	function getShowDateFromValue(value) {
+	    var _value = _slicedToArray$1(value, 2),
+	        start = _value[0],
+	        end = _value[1];
+	    // value could be an empty array, then we should not reset showDate
+
+
+	    if (!start && !end) {
+	        return;
+	    }
+	    var newEnd = end && end.isSame(start, 'month') ? end.clone().add(1, 'month') : end;
+	    return [start, newEnd];
+	}
+	function formatValue(value, format) {
+	    return value && value.format(format) || '';
+	}
+	function pickerValueAdapter(value) {
+	    if (!value) {
+	        return;
+	    }
+	    if (Array.isArray(value)) {
+	        return value;
+	    }
+	    return [value, value.clone().add(1, 'month')];
+	}
+	function isEmptyArray$1(arr) {
+	    if (Array.isArray(arr)) {
+	        return arr.length === 0 || arr.every(function (i) {
+	            return !i;
+	        });
+	    }
+	    return false;
+	}
+	function fixLocale(value, localeCode) {
+	    if (!localeCode) {
+	        return;
+	    }
+	    if (!value || value.length === 0) {
+	        return;
+	    }
+	    if (value[0]) {
+	        value[0].locale(localeCode);
+	    }
+	    if (value[1]) {
+	        value[1].locale(localeCode);
+	    }
+	}
+
+	var RangePicker = function (_React$Component) {
+	    _inherits(RangePicker, _React$Component);
+
+	    function RangePicker(props) {
+	        _classCallCheck(this, RangePicker);
+
+	        var _this = _possibleConstructorReturn(this, (RangePicker.__proto__ || Object.getPrototypeOf(RangePicker)).call(this, props));
+
+	        _this.clearSelection = function (e) {
+	            e.preventDefault();
+	            e.stopPropagation();
+	            _this.setState({ value: [] });
+	            _this.handleChange([]);
+	        };
+	        _this.clearHoverValue = function () {
+	            return _this.setState({ hoverValue: [] });
+	        };
+	        _this.handleChange = function (value) {
+	            var props = _this.props;
+	            if (!('value' in props)) {
+	                _this.setState(function (_ref) {
+	                    var showDate = _ref.showDate;
+	                    return {
+	                        value: value,
+	                        showDate: getShowDateFromValue(value) || showDate
+	                    };
+	                });
+	            }
+	            props.onChange(value, [formatValue(value[0], props.format), formatValue(value[1], props.format)]);
+	            _this.focus();
+	        };
+	        _this.handleOpenChange = function (open) {
+	            if (!('open' in _this.props)) {
+	                _this.setState({ open: open });
+	            }
+	            if (open === false) {
+	                _this.clearHoverValue();
+	            }
+	            var onOpenChange = _this.props.onOpenChange;
+
+	            if (onOpenChange) {
+	                onOpenChange(open);
+	            }
+	        };
+	        _this.handleShowDateChange = function (showDate) {
+	            return _this.setState({ showDate: showDate });
+	        };
+	        _this.handleHoverChange = function (hoverValue) {
+	            return _this.setState({ hoverValue: hoverValue });
+	        };
+	        _this.handleRangeMouseLeave = function () {
+	            if (_this.state.open) {
+	                _this.clearHoverValue();
+	            }
+	        };
+	        _this.handleCalendarInputSelect = function (value) {
+	            if (!value[0]) {
+	                return;
+	            }
+	            _this.setState(function (_ref2) {
+	                var showDate = _ref2.showDate;
+	                return {
+	                    value: value,
+	                    showDate: getShowDateFromValue(value) || showDate
+	                };
+	            });
+	        };
+	        _this.handleRangeClick = function (value) {
+	            if (typeof value === 'function') {
+	                value = value();
+	            }
+	            _this.setValue(value, true);
+	            var _this$props = _this.props,
+	                onOk = _this$props.onOk,
+	                onOpenChange = _this$props.onOpenChange;
+
+	            if (onOk) {
+	                onOk(value);
+	            }
+	            if (onOpenChange) {
+	                onOpenChange(false);
+	            }
+	        };
+	        _this.savePicker = function (node) {
+	            _this.picker = node;
+	        };
+	        _this.renderFooter = function () {
+	            var _this$props2 = _this.props,
+	                prefixCls = _this$props2.prefixCls,
+	                ranges = _this$props2.ranges,
+	                renderExtraFooter = _this$props2.renderExtraFooter,
+	                tagPrefixCls = _this$props2.tagPrefixCls;
+
+	            if (!ranges && !renderExtraFooter) {
+	                return null;
+	            }
+	            var customFooter = renderExtraFooter ? React.createElement(
+	                'div',
+	                { className: prefixCls + '-footer-extra', key: 'extra' },
+	                renderExtraFooter.apply(undefined, arguments)
+	            ) : null;
+	            var operations = Object.keys(ranges || {}).map(function (range) {
+	                var value = ranges[range];
+	                return React.createElement(
+	                    Tag,
+	                    { key: range, prefixCls: tagPrefixCls, color: 'blue', onClick: function onClick() {
+	                            return _this.handleRangeClick(value);
+	                        }, onMouseEnter: function onMouseEnter() {
+	                            return _this.setState({ hoverValue: value });
+	                        }, onMouseLeave: _this.handleRangeMouseLeave },
+	                    range
+	                );
+	            });
+	            var rangeNode = operations && operations.length > 0 ? React.createElement(
+	                'div',
+	                { className: prefixCls + '-footer-extra ' + prefixCls + '-range-quick-selector', key: 'range' },
+	                operations
+	            ) : null;
+	            return [rangeNode, customFooter];
+	        };
+	        var value = props.value || props.defaultValue || [];
+	        if (value[0] && !interopDefault(moment$1).isMoment(value[0]) || value[1] && !interopDefault(moment$1).isMoment(value[1])) {
+	            throw new Error('The value/defaultValue of RangePicker must be a moment object array after `antd@2.0`, ' + 'see: https://u.ant.design/date-picker-value');
+	        }
+	        var pickerValue = !value || isEmptyArray$1(value) ? props.defaultPickerValue : value;
+	        _this.state = {
+	            value: value,
+	            showDate: pickerValueAdapter(pickerValue || interopDefault(moment$1)()),
+	            open: props.open,
+	            hoverValue: []
+	        };
+	        return _this;
+	    }
+
+	    _createClass(RangePicker, [{
+	        key: 'setValue',
+	        value: function setValue(value, hidePanel) {
+	            this.handleChange(value);
+	            if ((hidePanel || !this.props.showTime) && !('open' in this.props)) {
+	                this.setState({ open: false });
+	            }
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.picker.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.picker.blur();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _classNames,
+	                _this2 = this,
+	                _classNames2;
+
+	            var state = this.state,
+	                props = this.props;
+	            var value = state.value,
+	                showDate = state.showDate,
+	                hoverValue = state.hoverValue,
+	                open = state.open;
+	            var prefixCls = props.prefixCls,
+	                popupStyle = props.popupStyle,
+	                style = props.style,
+	                disabledDate = props.disabledDate,
+	                disabledTime = props.disabledTime,
+	                showTime = props.showTime,
+	                showToday = props.showToday,
+	                ranges = props.ranges,
+	                onOk = props.onOk,
+	                locale = props.locale,
+	                localeCode = props.localeCode,
+	                format = props.format,
+	                dateRender = props.dateRender,
+	                onCalendarChange = props.onCalendarChange,
+	                suffixIcon = props.suffixIcon;
+
+	            fixLocale(value, localeCode);
+	            fixLocale(showDate, localeCode);
+	            warning$1(!('onOK' in props), 'It should be `RangePicker[onOk]`, instead of `onOK`!');
+	            var calendarClassName = classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-time', showTime), _defineProperty(_classNames, prefixCls + '-range-with-ranges', ranges), _classNames));
+	            // 需要选择时间时，点击 ok 时才触发 onChange
+	            var pickerChangeHandler = {
+	                onChange: this.handleChange
+	            };
+	            var calendarProps = {
+	                onOk: this.handleChange
+	            };
+	            if (props.timePicker) {
+	                pickerChangeHandler.onChange = function (changedValue) {
+	                    return _this2.handleChange(changedValue);
+	                };
+	            } else {
+	                calendarProps = {};
+	            }
+	            if ('mode' in props) {
+	                calendarProps.mode = props.mode;
+	            }
+	            var startPlaceholder = 'placeholder' in props ? props.placeholder[0] : locale.lang.rangePlaceholder[0];
+	            var endPlaceholder = 'placeholder' in props ? props.placeholder[1] : locale.lang.rangePlaceholder[1];
+	            var calendar = React.createElement(RangeCalendar, _extends$1({}, calendarProps, { onChange: onCalendarChange, format: format, prefixCls: prefixCls, className: calendarClassName, renderFooter: this.renderFooter, timePicker: props.timePicker, disabledDate: disabledDate, disabledTime: disabledTime, dateInputPlaceholder: [startPlaceholder, endPlaceholder], locale: locale.lang, onOk: onOk, dateRender: dateRender, value: showDate, onValueChange: this.handleShowDateChange, hoverValue: hoverValue, onHoverChange: this.handleHoverChange, onPanelChange: props.onPanelChange, showToday: showToday, onInputSelect: this.handleCalendarInputSelect }));
+	            // default width for showTime
+	            var pickerStyle = {};
+	            if (props.showTime) {
+	                pickerStyle.width = style && style.width || 350;
+	            }
+	            var clearIcon = !props.disabled && props.allowClear && value && (value[0] || value[1]) ? React.createElement(Icon$1, { type: 'close-circle', className: prefixCls + '-picker-clear', onClick: this.clearSelection, theme: 'filled' }) : null;
+	            var inputIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
+	                className: classnames((_classNames2 = {}, _defineProperty(_classNames2, suffixIcon.props.className, suffixIcon.props.className), _defineProperty(_classNames2, prefixCls + '-picker-icon', true), _classNames2))
+	            }) : React.createElement(
+	                'span',
+	                { className: prefixCls + '-picker-icon' },
+	                suffixIcon
+	            )) || React.createElement(Icon$1, { type: 'calendar', className: prefixCls + '-picker-icon' });
+	            var input = function input(_ref3) {
+	                var inputValue = _ref3.value;
+
+	                var start = inputValue[0];
+	                var end = inputValue[1];
+	                return React.createElement(
+	                    'span',
+	                    { className: props.pickerInputClass },
+	                    React.createElement('input', { disabled: props.disabled, readOnly: true, value: start && start.format(props.format) || '', placeholder: startPlaceholder, className: prefixCls + '-range-picker-input', tabIndex: -1 }),
+	                    React.createElement(
+	                        'span',
+	                        { className: prefixCls + '-range-picker-separator' },
+	                        ' ~ '
+	                    ),
+	                    React.createElement('input', { disabled: props.disabled, readOnly: true, value: end && end.format(props.format) || '', placeholder: endPlaceholder, className: prefixCls + '-range-picker-input', tabIndex: -1 }),
+	                    clearIcon,
+	                    inputIcon
+	                );
+	            };
+	            return React.createElement(
+	                'span',
+	                { ref: this.savePicker, id: props.id, className: classnames(props.className, props.pickerClass), style: _extends$1({}, style, pickerStyle), tabIndex: props.disabled ? -1 : 0, onFocus: props.onFocus, onBlur: props.onBlur, onMouseEnter: props.onMouseEnter, onMouseLeave: props.onMouseLeave },
+	                React.createElement(
+	                    Picker,
+	                    _extends$1({}, props, pickerChangeHandler, { calendar: calendar, value: value, open: open, onOpenChange: this.handleOpenChange, prefixCls: prefixCls + '-picker-container', style: popupStyle }),
+	                    input
+	                )
+	            );
+	        }
+	    }], [{
+	        key: 'getDerivedStateFromProps',
+	        value: function getDerivedStateFromProps(nextProps, prevState) {
+	            var state = null;
+	            if ('value' in nextProps) {
+	                var value = nextProps.value || [];
+	                state = {
+	                    value: value
+	                };
+	                if (!shallowequal(nextProps.value, prevState.value)) {
+	                    state = _extends$1({}, state, { showDate: getShowDateFromValue(value) || prevState.showDate });
+	                }
+	            }
+	            if ('open' in nextProps && prevState.open !== nextProps.open) {
+	                state = _extends$1({}, state, { open: nextProps.open });
+	            }
+	            return state;
+	        }
+	    }]);
+
+	    return RangePicker;
+	}(React.Component);
+
+	RangePicker.defaultProps = {
+	    prefixCls: 'ant-calendar',
+	    tagPrefixCls: 'ant-tag',
+	    allowClear: true,
+	    showToday: false
+	};
+	polyfill(RangePicker);
+
+	function formatValue$1(value, format) {
+	    return value && value.format(format) || '';
+	}
+
+	var WeekPicker = function (_React$Component) {
+	    _inherits(WeekPicker, _React$Component);
+
+	    function WeekPicker(props) {
+	        _classCallCheck(this, WeekPicker);
+
+	        var _this = _possibleConstructorReturn(this, (WeekPicker.__proto__ || Object.getPrototypeOf(WeekPicker)).call(this, props));
+
+	        _this.weekDateRender = function (current) {
+	            var selectedValue = _this.state.value;
+	            var prefixCls = _this.props.prefixCls;
+
+	            if (selectedValue && current.year() === selectedValue.year() && current.week() === selectedValue.week()) {
+	                return React.createElement(
+	                    'div',
+	                    { className: prefixCls + '-selected-day' },
+	                    React.createElement(
+	                        'div',
+	                        { className: prefixCls + '-date' },
+	                        current.date()
+	                    )
+	                );
+	            }
+	            return React.createElement(
+	                'div',
+	                { className: prefixCls + '-date' },
+	                current.date()
+	            );
+	        };
+	        _this.handleChange = function (value) {
+	            if (!('value' in _this.props)) {
+	                _this.setState({ value: value });
+	            }
+	            _this.props.onChange(value, formatValue$1(value, _this.props.format));
+	            _this.focus();
+	        };
+	        _this.clearSelection = function (e) {
+	            e.preventDefault();
+	            e.stopPropagation();
+	            _this.handleChange(null);
+	        };
+	        _this.saveInput = function (node) {
+	            _this.input = node;
+	        };
+	        var value = props.value || props.defaultValue;
+	        if (value && !interopDefault(moment$1).isMoment(value)) {
+	            throw new Error('The value/defaultValue of DatePicker or MonthPicker must be ' + 'a moment object after `antd@2.0`, see: https://u.ant.design/date-picker-value');
+	        }
+	        _this.state = {
+	            value: value
+	        };
+	        return _this;
+	    }
+
+	    _createClass(WeekPicker, [{
+	        key: 'focus',
+	        value: function focus() {
+	            this.input.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.input.blur();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _classNames,
+	                _this2 = this;
+
+	            var _props = this.props,
+	                prefixCls = _props.prefixCls,
+	                className = _props.className,
+	                disabled = _props.disabled,
+	                pickerClass = _props.pickerClass,
+	                popupStyle = _props.popupStyle,
+	                pickerInputClass = _props.pickerInputClass,
+	                format = _props.format,
+	                allowClear = _props.allowClear,
+	                locale = _props.locale,
+	                localeCode = _props.localeCode,
+	                disabledDate = _props.disabledDate,
+	                style = _props.style,
+	                onFocus = _props.onFocus,
+	                onBlur = _props.onBlur,
+	                id = _props.id,
+	                suffixIcon = _props.suffixIcon;
+
+	            var pickerValue = this.state.value;
+	            if (pickerValue && localeCode) {
+	                pickerValue.locale(localeCode);
+	            }
+	            var placeholder = 'placeholder' in this.props ? this.props.placeholder : locale.lang.placeholder;
+	            var calendar = React.createElement(Calendar, { showWeekNumber: true, dateRender: this.weekDateRender, prefixCls: prefixCls, format: format, locale: locale.lang, showDateInput: false, showToday: false, disabledDate: disabledDate });
+	            var clearIcon = !disabled && allowClear && this.state.value ? React.createElement(Icon$1, { type: 'close-circle', className: prefixCls + '-picker-clear', onClick: this.clearSelection, theme: 'filled' }) : null;
+	            var inputIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon, {
+	                className: classnames((_classNames = {}, _defineProperty(_classNames, suffixIcon.props.className, suffixIcon.props.className), _defineProperty(_classNames, prefixCls + '-picker-icon', true), _classNames))
+	            }) : React.createElement(
+	                'span',
+	                { className: prefixCls + '-picker-icon' },
+	                suffixIcon
+	            )) || React.createElement(Icon$1, { type: 'calendar', className: prefixCls + '-picker-icon' });
+	            var input = function input(_ref) {
+	                var value = _ref.value;
+
+	                return React.createElement(
+	                    'span',
+	                    null,
+	                    React.createElement('input', { ref: _this2.saveInput, disabled: disabled, readOnly: true, value: value && value.format(format) || '', placeholder: placeholder, className: pickerInputClass, onFocus: onFocus, onBlur: onBlur }),
+	                    clearIcon,
+	                    inputIcon
+	                );
+	            };
+	            return React.createElement(
+	                'span',
+	                { className: classnames(className, pickerClass), style: style, id: id },
+	                React.createElement(
+	                    Picker,
+	                    _extends$1({}, this.props, { calendar: calendar, prefixCls: prefixCls + '-picker-container', value: pickerValue, onChange: this.handleChange, style: popupStyle }),
+	                    input
+	                )
+	            );
+	        }
+	    }], [{
+	        key: 'getDerivedStateFromProps',
+	        value: function getDerivedStateFromProps(nextProps) {
+	            if ('value' in nextProps) {
+	                return { value: nextProps.value };
+	            }
+	            return null;
+	        }
+	    }]);
+
+	    return WeekPicker;
+	}(React.Component);
+
+	WeekPicker.defaultProps = {
+	    format: 'gggg-wo',
+	    allowClear: true
+	};
+	polyfill(WeekPicker);
+
+	var DatePicker = wrapPicker(createPicker(Calendar));
+	var MonthPicker = wrapPicker(createPicker(MonthCalendar), 'YYYY-MM');
+	_extends$1(DatePicker, {
+	    RangePicker: wrapPicker(RangePicker),
+	    MonthPicker: MonthPicker,
+	    WeekPicker: wrapPicker(WeekPicker, 'gggg-wo')
+	});
+
 	var toArray$2 = createCommonjsModule(function (module, exports) {
 
 	exports.__esModule = true;
@@ -30007,7 +35867,7 @@
 	};
 	});
 
-	var _toArray = unwrapExports(toArray$2);
+	var _toArray$1 = unwrapExports(toArray$2);
 
 	// =================== Style ====================
 	var stylePrefixes = ['-webkit-', '-moz-', '-o-', 'ms-', ''];
@@ -30417,7 +36277,7 @@
 	          var cloneQueue = eventQueue.slice();
 	          while (cloneQueue.length) {
 	            var _cloneQueue = cloneQueue,
-	                _cloneQueue2 = _toArray(_cloneQueue),
+	                _cloneQueue2 = _toArray$1(_cloneQueue),
 	                _eventType = _cloneQueue2[0],
 	                restQueue = _cloneQueue2.slice(1);
 
@@ -31084,7 +36944,7 @@
 
 	genCSSMotion$1(supportTransition$1);
 
-	var LazyRenderBox$2 = function (_Component) {
+	var LazyRenderBox$1 = function (_Component) {
 	  _inherits(LazyRenderBox, _Component);
 
 	  function LazyRenderBox() {
@@ -31116,7 +36976,7 @@
 	  return LazyRenderBox;
 	}(React.Component);
 
-	LazyRenderBox$2.propTypes = {
+	LazyRenderBox$1.propTypes = {
 	  children: PropTypes__default.any,
 	  className: PropTypes__default.string,
 	  visible: PropTypes__default.bool,
@@ -31147,7 +37007,7 @@
 	        style: props.style
 	      },
 	      React__default.createElement(
-	        LazyRenderBox$2,
+	        LazyRenderBox$1,
 	        { className: props.prefixCls + '-content', visible: props.visible },
 	        props.children
 	      )
@@ -31202,7 +37062,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
 
-	    _initialiseProps$a.call(_this);
+	    _initialiseProps$b.call(_this);
 
 	    _this.state = {
 	      // Used for stretch
@@ -31401,7 +37261,7 @@
 	    var maskElement = void 0;
 	    if (props.mask) {
 	      var maskTransition = this.getMaskTransitionName();
-	      maskElement = React__default.createElement(LazyRenderBox$2, {
+	      maskElement = React__default.createElement(LazyRenderBox$1, {
 	        style: this.getZIndexStyle(),
 	        key: 'mask',
 	        className: props.prefixCls + '-mask',
@@ -31457,7 +37317,7 @@
 	  })
 	};
 
-	var _initialiseProps$a = function _initialiseProps() {
+	var _initialiseProps$b = function _initialiseProps() {
 	  var _this3 = this;
 
 	  this.onAlign = function (popupDomNode, align) {
@@ -31518,7 +37378,7 @@
 	  };
 	};
 
-	function noop$6() {}
+	function noop$d() {}
 
 	function returnEmptyString$1() {
 	  return '';
@@ -31530,7 +37390,7 @@
 
 	var ALL_HANDLERS$1 = ['onClick', 'onMouseDown', 'onTouchStart', 'onMouseEnter', 'onMouseLeave', 'onFocus', 'onBlur', 'onContextMenu'];
 
-	var IS_REACT_16$3 = !!ReactDOM.createPortal;
+	var IS_REACT_16$1 = !!ReactDOM.createPortal;
 
 	var Trigger$1 = function (_React$Component) {
 	  _inherits(Trigger, _React$Component);
@@ -31540,7 +37400,7 @@
 
 	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
 
-	    _initialiseProps$b.call(_this);
+	    _initialiseProps$c.call(_this);
 
 	    var popupVisible = void 0;
 	    if ('popupVisible' in props) {
@@ -31591,7 +37451,7 @@
 	        props.afterPopupVisibleChange(state.popupVisible);
 	      }
 	    };
-	    if (!IS_REACT_16$3) {
+	    if (!IS_REACT_16$1) {
 	      this.renderComponent(null, triggerAfterPopupVisibleChange);
 	    }
 
@@ -31861,7 +37721,7 @@
 	    }
 	    var trigger = React__default.cloneElement(child, newChildProps);
 
-	    if (!IS_REACT_16$3) {
+	    if (!IS_REACT_16$1) {
 	      return React__default.createElement(
 	        ContainerRender,
 	        {
@@ -31942,9 +37802,9 @@
 	  prefixCls: 'rc-trigger-popup',
 	  getPopupClassNameFromAlign: returnEmptyString$1,
 	  getDocument: returnDocument$1,
-	  onPopupVisibleChange: noop$6,
-	  afterPopupVisibleChange: noop$6,
-	  onPopupAlign: noop$6,
+	  onPopupVisibleChange: noop$d,
+	  afterPopupVisibleChange: noop$d,
+	  onPopupAlign: noop$d,
 	  popupClassName: '',
 	  mouseEnterDelay: 0,
 	  mouseLeaveDelay: 0.1,
@@ -31961,7 +37821,7 @@
 	  hideAction: []
 	};
 
-	var _initialiseProps$b = function _initialiseProps() {
+	var _initialiseProps$c = function _initialiseProps() {
 	  var _this5 = this;
 
 	  this.onMouseEnter = function (e) {
@@ -32655,7 +38515,7 @@
 	          var cloneQueue = eventQueue.slice();
 	          while (cloneQueue.length) {
 	            var _cloneQueue = cloneQueue,
-	                _cloneQueue2 = _toArray(_cloneQueue),
+	                _cloneQueue2 = _toArray$1(_cloneQueue),
 	                _eventType = _cloneQueue2[0],
 	                restQueue = _cloneQueue2.slice(1);
 
@@ -33391,7 +39251,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (TreeNode.__proto__ || Object.getPrototypeOf(TreeNode)).call(this, props));
 
-	    _initialiseProps$c.call(_this);
+	    _initialiseProps$d.call(_this);
 
 	    _this.state = {
 	      dragNodeHighlight: false
@@ -33546,7 +39406,7 @@
 	  title: defaultTitle
 	};
 
-	var _initialiseProps$c = function _initialiseProps() {
+	var _initialiseProps$d = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.onSelectorClick = function (e) {
@@ -35975,7 +41835,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (BasePopup.__proto__ || Object.getPrototypeOf(BasePopup)).call(this));
 
-	    _initialiseProps$d.call(_this);
+	    _initialiseProps$e.call(_this);
 
 	    var treeDefaultExpandAll = props.treeDefaultExpandAll,
 	        treeDefaultExpandedKeys = props.treeDefaultExpandedKeys,
@@ -36179,7 +42039,7 @@
 	  rcTreeSelect: PropTypes__default.shape(_extends$1({}, popupContextTypes))
 	};
 
-	var _initialiseProps$d = function _initialiseProps() {
+	var _initialiseProps$e = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.onTreeExpand = function (expandedKeyList) {
@@ -36789,7 +42649,7 @@
 	  searchPlaceholder: PropTypes__default.string
 	});
 
-	var Select$2 = function (_React$Component) {
+	var Select$3 = function (_React$Component) {
 	  _inherits(Select, _React$Component);
 
 	  function Select(props) {
@@ -36797,7 +42657,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (Select.__proto__ || Object.getPrototypeOf(Select)).call(this, props));
 
-	    _initialiseProps$e.call(_this);
+	    _initialiseProps$f.call(_this);
 
 	    var prefixAria = props.prefixAria,
 	        defaultOpen = props.defaultOpen,
@@ -37175,7 +43035,7 @@
 	  return Select;
 	}(React__default.Component);
 
-	Select$2.propTypes = {
+	Select$3.propTypes = {
 	  prefixCls: PropTypes__default.string,
 	  prefixAria: PropTypes__default.string,
 	  multiple: PropTypes__default.bool,
@@ -37231,14 +43091,14 @@
 	  removeIcon: PropTypes__default.oneOfType([PropTypes__default.node, PropTypes__default.func]),
 	  switcherIcon: PropTypes__default.oneOfType([PropTypes__default.node, PropTypes__default.func])
 	};
-	Select$2.childContextTypes = {
+	Select$3.childContextTypes = {
 	  rcTreeSelect: PropTypes__default.shape(_extends$1({}, selectorContextTypes, multipleSelectorContextTypes, popupContextTypes, {
 
 	    onSearchInputChange: PropTypes__default.func,
 	    onSearchInputKeyDown: PropTypes__default.func
 	  }))
 	};
-	Select$2.defaultProps = {
+	Select$3.defaultProps = {
 	  prefixCls: 'rc-tree-select',
 	  prefixAria: 'rc-tree-select',
 	  showArrow: true,
@@ -37255,7 +43115,7 @@
 	  notFoundContent: 'Not Found'
 	};
 
-	var _initialiseProps$e = function _initialiseProps() {
+	var _initialiseProps$f = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.onSelectorFocus = function () {
@@ -37806,19 +43666,19 @@
 	  };
 	};
 
-	Select$2.TreeNode = SelectNode;
-	Select$2.SHOW_ALL = SHOW_ALL;
-	Select$2.SHOW_PARENT = SHOW_PARENT;
-	Select$2.SHOW_CHILD = SHOW_CHILD;
+	Select$3.TreeNode = SelectNode;
+	Select$3.SHOW_ALL = SHOW_ALL;
+	Select$3.SHOW_PARENT = SHOW_PARENT;
+	Select$3.SHOW_CHILD = SHOW_CHILD;
 
 	// Let warning show correct component name
-	Select$2.displayName = 'TreeSelect';
+	Select$3.displayName = 'TreeSelect';
 
-	polyfill(Select$2);
+	polyfill(Select$3);
 
 	var TreeNode$1 = SelectNode;
 
-	var __rest$b = undefined && undefined.__rest || function (s, e) {
+	var __rest$a = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -37862,7 +43722,7 @@
 	                dropdownStyle = _a.dropdownStyle,
 	                dropdownClassName = _a.dropdownClassName,
 	                suffixIcon = _a.suffixIcon,
-	                restProps = __rest$b(_a, ["prefixCls", "className", "size", "notFoundContent", "dropdownStyle", "dropdownClassName", "suffixIcon"]);
+	                restProps = __rest$a(_a, ["prefixCls", "className", "size", "notFoundContent", "dropdownStyle", "dropdownClassName", "suffixIcon"]);
 	            var rest = omit(restProps, ['inputIcon', 'removeIcon', 'clearIcon', 'switcherIcon']);
 	            var cls = classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty(_classNames, prefixCls + '-sm', size === 'small'), _classNames), className);
 	            var checkable = rest.treeCheckable;
@@ -37872,7 +43732,7 @@
 	            var inputIcon = suffixIcon && (React.isValidElement(suffixIcon) ? React.cloneElement(suffixIcon) : suffixIcon) || React.createElement(Icon$1, { type: 'down', className: prefixCls + '-arrow-icon' });
 	            var removeIcon = React.createElement(Icon$1, { type: 'close', className: prefixCls + '-remove-icon' });
 	            var clearIcon = React.createElement(Icon$1, { type: 'close-circle', className: prefixCls + '-clear-icon', theme: 'filled' });
-	            return React.createElement(Select$2, _extends$1({ switcherIcon: _this.renderSwitcherIcon, inputIcon: inputIcon, removeIcon: removeIcon, clearIcon: clearIcon }, rest, { dropdownClassName: classnames(dropdownClassName, prefixCls + '-tree-dropdown'), prefixCls: prefixCls, className: cls, dropdownStyle: _extends$1({ maxHeight: '100vh', overflow: 'auto' }, dropdownStyle), treeCheckable: checkable, notFoundContent: notFoundContent || locale.notFoundContent, ref: _this.saveTreeSelect }));
+	            return React.createElement(Select$3, _extends$1({ switcherIcon: _this.renderSwitcherIcon, inputIcon: inputIcon, removeIcon: removeIcon, clearIcon: clearIcon }, rest, { dropdownClassName: classnames(dropdownClassName, prefixCls + '-tree-dropdown'), prefixCls: prefixCls, className: cls, dropdownStyle: _extends$1({ maxHeight: '100vh', overflow: 'auto' }, dropdownStyle), treeCheckable: checkable, notFoundContent: notFoundContent || locale.notFoundContent, ref: _this.saveTreeSelect }));
 	        };
 	        warning$1(props.multiple !== false || !props.treeCheckable, '`multiple` will alway be `true` when `treeCheckable` is true');
 	        return _this;
@@ -37929,29 +43789,29 @@
 	 * }, _.now());
 	 * // => Logs the number of milliseconds it took for the deferred invocation.
 	 */
-	var now$3 = function() {
+	var now = function() {
 	  return _root.Date.now();
 	};
 
-	var now_1 = now$3;
+	var now_1 = now;
 
 	/** Used as references for various `Number` constants. */
-	var NAN$2 = 0 / 0;
+	var NAN = 0 / 0;
 
 	/** Used to match leading and trailing whitespace. */
-	var reTrim$2 = /^\s+|\s+$/g;
+	var reTrim = /^\s+|\s+$/g;
 
 	/** Used to detect bad signed hexadecimal string values. */
-	var reIsBadHex$2 = /^[-+]0x[0-9a-f]+$/i;
+	var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
 
 	/** Used to detect binary string values. */
-	var reIsBinary$2 = /^0b[01]+$/i;
+	var reIsBinary = /^0b[01]+$/i;
 
 	/** Used to detect octal string values. */
-	var reIsOctal$2 = /^0o[0-7]+$/i;
+	var reIsOctal = /^0o[0-7]+$/i;
 
 	/** Built-in method references without a dependency on `root`. */
-	var freeParseInt$2 = parseInt;
+	var freeParseInt = parseInt;
 
 	/**
 	 * Converts `value` to a number.
@@ -37976,12 +43836,12 @@
 	 * _.toNumber('3.2');
 	 * // => 3.2
 	 */
-	function toNumber$2(value) {
+	function toNumber(value) {
 	  if (typeof value == 'number') {
 	    return value;
 	  }
 	  if (isSymbol_1(value)) {
-	    return NAN$2;
+	    return NAN;
 	  }
 	  if (isObject_1(value)) {
 	    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
@@ -37990,21 +43850,21 @@
 	  if (typeof value != 'string') {
 	    return value === 0 ? value : +value;
 	  }
-	  value = value.replace(reTrim$2, '');
-	  var isBinary = reIsBinary$2.test(value);
-	  return (isBinary || reIsOctal$2.test(value))
-	    ? freeParseInt$2(value.slice(2), isBinary ? 2 : 8)
-	    : (reIsBadHex$2.test(value) ? NAN$2 : +value);
+	  value = value.replace(reTrim, '');
+	  var isBinary = reIsBinary.test(value);
+	  return (isBinary || reIsOctal.test(value))
+	    ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+	    : (reIsBadHex.test(value) ? NAN : +value);
 	}
 
-	var toNumber_1 = toNumber$2;
+	var toNumber_1 = toNumber;
 
 	/** Error message constants. */
-	var FUNC_ERROR_TEXT$3 = 'Expected a function';
+	var FUNC_ERROR_TEXT$1 = 'Expected a function';
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax$2 = Math.max,
-	    nativeMin$2 = Math.min;
+	var nativeMax = Math.max,
+	    nativeMin = Math.min;
 
 	/**
 	 * Creates a debounced function that delays invoking `func` until after `wait`
@@ -38060,7 +43920,7 @@
 	 * // Cancel the trailing debounced invocation.
 	 * jQuery(window).on('popstate', debounced.cancel);
 	 */
-	function debounce$2(func, wait, options) {
+	function debounce(func, wait, options) {
 	  var lastArgs,
 	      lastThis,
 	      maxWait,
@@ -38073,13 +43933,13 @@
 	      trailing = true;
 
 	  if (typeof func != 'function') {
-	    throw new TypeError(FUNC_ERROR_TEXT$3);
+	    throw new TypeError(FUNC_ERROR_TEXT$1);
 	  }
 	  wait = toNumber_1(wait) || 0;
 	  if (isObject_1(options)) {
 	    leading = !!options.leading;
 	    maxing = 'maxWait' in options;
-	    maxWait = maxing ? nativeMax$2(toNumber_1(options.maxWait) || 0, wait) : maxWait;
+	    maxWait = maxing ? nativeMax(toNumber_1(options.maxWait) || 0, wait) : maxWait;
 	    trailing = 'trailing' in options ? !!options.trailing : trailing;
 	  }
 
@@ -38108,7 +43968,7 @@
 	        timeWaiting = wait - timeSinceLastCall;
 
 	    return maxing
-	      ? nativeMin$2(timeWaiting, maxWait - timeSinceLastInvoke)
+	      ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke)
 	      : timeWaiting;
 	  }
 
@@ -38184,7 +44044,7 @@
 	  return debounced;
 	}
 
-	var debounce_1 = debounce$2;
+	var debounce_1 = debounce;
 
 	var Record;
 	(function (Record) {
@@ -38249,7 +44109,7 @@
 	    return keys;
 	}
 
-	var __rest$c = undefined && undefined.__rest || function (s, e) {
+	var __rest$b = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -38417,7 +44277,7 @@
 	            var _a = this.props,
 	                prefixCls = _a.prefixCls,
 	                className = _a.className,
-	                props = __rest$c(_a, ["prefixCls", "className"]);var _state = this.state,
+	                props = __rest$b(_a, ["prefixCls", "className"]);var _state = this.state,
 	                expandedKeys = _state.expandedKeys,
 	                selectedKeys = _state.selectedKeys;
 
@@ -38546,12 +44406,12 @@
 	    openAnimation: _extends$1({}, animation, { appear: null })
 	};
 
-	var Search$2 = Input.Search;
+	var Search$1 = Input.Search;
 
 	var TreeView =
 	/*#__PURE__*/
 	function (_Component) {
-	  inherits$1(TreeView, _Component);
+	  _inherits$1(TreeView, _Component);
 
 	  // state = {
 	  // 	checkedKeys: [],
@@ -38559,11 +44419,11 @@
 	  function TreeView(props) {
 	    var _this;
 
-	    classCallCheck$1(this, TreeView);
+	    _classCallCheck$1(this, TreeView);
 
-	    _this = possibleConstructorReturn$1(this, getPrototypeOf(TreeView).call(this, props));
+	    _this = _possibleConstructorReturn$1(this, _getPrototypeOf(TreeView).call(this, props));
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this)), "onCheck", function (checkedKeys, e) {
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "onCheck", function (checkedKeys, e) {
 	      _this.setState({
 	        checkedKeys: checkedKeys.checked
 	      }, function () {
@@ -38571,7 +44431,7 @@
 	      });
 	    });
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this)), "onSelect", function (selectedKeys, e, selectedNodes) {
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "onSelect", function (selectedKeys, e, selectedNodes) {
 	      // console.log(selectedKeys,e.node)
 	      var onSelect = _this.props.onSelect;
 
@@ -38590,7 +44450,7 @@
 	    return _this;
 	  }
 
-	  createClass$1(TreeView, [{
+	  _createClass$1(TreeView, [{
 	    key: "componentWillReceiveProps",
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (JSON.stringify(nextProps.value) != JSON.stringify(this.props.value)) {
@@ -38626,7 +44486,7 @@
 	      var checkedKeys = this.state.checkedKeys;
 	      return React__default.createElement("div", {
 	        className: "ant-tree-view"
-	      }, React__default.createElement(Tree$1, _extends_1({
+	      }, React__default.createElement(Tree$1, _extends$2({
 	        defaultExpandAll: true,
 	        defaultSelectedKeys: [checkedKeys],
 	        checkedKeys: checkedKeys
@@ -38644,14 +44504,14 @@
 	var TreeSelectPicker =
 	/*#__PURE__*/
 	function (_Component2) {
-	  inherits$1(TreeSelectPicker, _Component2);
+	  _inherits$1(TreeSelectPicker, _Component2);
 
 	  function TreeSelectPicker(props) {
 	    var _this3;
 
-	    classCallCheck$1(this, TreeSelectPicker);
+	    _classCallCheck$1(this, TreeSelectPicker);
 
-	    _this3 = possibleConstructorReturn$1(this, getPrototypeOf(TreeSelectPicker).call(this, props));
+	    _this3 = _possibleConstructorReturn$1(this, _getPrototypeOf(TreeSelectPicker).call(this, props));
 	    _this3.state = {
 	      value: props.value
 	    };
@@ -38659,7 +44519,7 @@
 	  } //
 
 
-	  createClass$1(TreeSelectPicker, [{
+	  _createClass$1(TreeSelectPicker, [{
 	    key: "onChange",
 	    value: function onChange(value, label) {
 	      var onChange = this.props.onChange; // console.log(value,label)
@@ -38679,11 +44539,11 @@
 	          children = _this$props2.children,
 	          value = _this$props2.value,
 	          allowClear = _this$props2.allowClear,
-	          otherProps = objectWithoutProperties$1(_this$props2, ["onChange", "treeData", "children", "value", "allowClear"]); // console.log(children,this.state.value)
+	          otherProps = _objectWithoutProperties$1(_this$props2, ["onChange", "treeData", "children", "value", "allowClear"]); // console.log(children,this.state.value)
 
 
 	      if (allowClear == true) {
-	        return React__default.createElement(TreeSelect, _extends_1({}, otherProps, {
+	        return React__default.createElement(TreeSelect, _extends$2({}, otherProps, {
 	          defaultValue: this.state.value,
 	          treeData: treeData,
 	          allowClear: allowClear,
@@ -38691,7 +44551,7 @@
 	          onSelect: this.onChange.bind(this)
 	        }));
 	      } else {
-	        return React__default.createElement(TreeSelect, _extends_1({}, otherProps, {
+	        return React__default.createElement(TreeSelect, _extends$2({}, otherProps, {
 	          value: this.state.value,
 	          treeData: treeData,
 	          onSelect: this.onChange.bind(this)
@@ -38705,22 +44565,22 @@
 	var TrewViewPanel =
 	/*#__PURE__*/
 	function (_Component3) {
-	  inherits$1(TrewViewPanel, _Component3);
+	  _inherits$1(TrewViewPanel, _Component3);
 
 	  function TrewViewPanel() {
 	    var _getPrototypeOf2;
 
 	    var _this4;
 
-	    classCallCheck$1(this, TrewViewPanel);
+	    _classCallCheck$1(this, TrewViewPanel);
 
 	    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
 	      args[_key] = arguments[_key];
 	    }
 
-	    _this4 = possibleConstructorReturn$1(this, (_getPrototypeOf2 = getPrototypeOf(TrewViewPanel)).call.apply(_getPrototypeOf2, [this].concat(args)));
+	    _this4 = _possibleConstructorReturn$1(this, (_getPrototypeOf2 = _getPrototypeOf(TrewViewPanel)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this4)), "state", {
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this4)), "state", {
 	      key: '',
 	      inside: false,
 	      label: "",
@@ -38730,7 +44590,7 @@
 	    return _this4;
 	  }
 
-	  createClass$1(TrewViewPanel, [{
+	  _createClass$1(TrewViewPanel, [{
 	    key: "onSearch",
 	    value: function onSearch(value, event) {
 	      this.setState({
@@ -38797,7 +44657,7 @@
 	      } else {
 	        return React__default.createElement("div", {
 	          className: ""
-	        }, React__default.createElement(Search$2, {
+	        }, React__default.createElement(Search$1, {
 	          style: {
 	            marginBottom: 8
 	          },
@@ -38833,143 +44693,25 @@
 	  return TrewViewPanel;
 	}(React.Component);
 
-	var _class, _temp, _dec, _class2;
-	var FormCreate = Form.create; // const Option = Select.Option;
-
-	var BaseForm = (_temp = _class = (_dec = FormCreate({
-	  onValuesChange: function onValuesChange(props, changedValues, values) {
-	    // console.log(props,values)
-	    if (props.autoSubmitForm) {
-	      props.onSubmit(new Event('submit'), values);
-	    }
-	  }
-	}), _dec(_class2 =
-	/*#__PURE__*/
-	function (_Component) {
-	  inherits$1(BaseForm, _Component);
-
-	  function BaseForm() {
-	    classCallCheck$1(this, BaseForm);
-
-	    return possibleConstructorReturn$1(this, getPrototypeOf(BaseForm).apply(this, arguments));
-	  }
-
-	  createClass$1(BaseForm, [{
-	    key: "getChildContext",
-	    value: function getChildContext() {
-	      var _this$props2 = this.props,
-	          form = _this$props2.form,
-	          itemLayout = _this$props2.itemLayout;
-	      console.log(this.props.form);
-	      return {
-	        formRef: form,
-	        formLayout: itemLayout
-	      };
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      var _this$props3 = this.props,
-	          autoSubmitForm = _this$props3.autoSubmitForm,
-	          itemLayout = _this$props3.itemLayout,
-	          otherProps = objectWithoutProperties$1(_this$props3, ["autoSubmitForm", "itemLayout"]);
-
-	      return React__default.createElement(Form, otherProps);
-	    }
-	  }]);
-
-	  return BaseForm;
-	}(React.Component)) || _class2), defineProperty$5(_class, "childContextTypes", {
-	  formRef: PropTypes__default.any,
-	  formLayout: PropTypes__default.object
-	}), defineProperty$5(_class, "propTypes", {
-	  layout: PropTypes__default.oneOf(['horizontal', 'inline', 'vertical']),
-	  itemLayout: PropTypes__default.object
-	}), defineProperty$5(_class, "defaultProps", {
-	  prefixCls: 'ant-form',
-	  layout: 'horizontal',
-	  itemLayout: {
-	    labelCol: {
-	      span: 6
-	    },
-	    wrapperCol: {
-	      span: 18
-	    }
-	  }
-	}), _temp);
-	/**
-	 * [AdvancedForm  高级Form组件带valuesChange特征]
-	 * @extends BaseForm
-	 */
-
-	var AdvancedForm =
-	/*#__PURE__*/
-	function (_BaseForm) {
-	  inherits$1(AdvancedForm, _BaseForm);
-
-	  function AdvancedForm() {
-	    classCallCheck$1(this, AdvancedForm);
-
-	    return possibleConstructorReturn$1(this, getPrototypeOf(AdvancedForm).apply(this, arguments));
-	  }
-
-	  return AdvancedForm;
-	}(BaseForm);
-
-	defineProperty$5(AdvancedForm, "propTypes", {
-	  layout: PropTypes__default.oneOf(['horizontal', 'inline', 'vertical']),
-	  itemLayout: PropTypes__default.object
-	});
-
-	defineProperty$5(AdvancedForm, "defaultProps", {
-	  // containerTo:true,
-	  prefixCls: 'ant-form',
-	  layout: "horizontal",
-	  itemLayout: {
-	    labelCol: {
-	      span: 6
-	    },
-	    wrapperCol: {
-	      span: 18
-	    }
-	  }
-	});
-
-	var AutoSubmitForm =
-	/*#__PURE__*/
-	function (_BaseForm2) {
-	  inherits$1(AutoSubmitForm, _BaseForm2);
-
-	  function AutoSubmitForm() {
-	    classCallCheck$1(this, AutoSubmitForm);
-
-	    return possibleConstructorReturn$1(this, getPrototypeOf(AutoSubmitForm).apply(this, arguments));
-	  }
-
-	  return AutoSubmitForm;
-	}(BaseForm);
-
-	defineProperty$5(AutoSubmitForm, "defaultProps", {
-	  // containerTo:true,
-	  prefixCls: 'ant-form',
-	  layout: "vertical"
-	});
+	var MonthPicker$1 = DatePicker.MonthPicker,
+	    RangePicker$1 = DatePicker.RangePicker,
+	    WeekPicker$1 = DatePicker.WeekPicker;
 
 	var FormItem$1 =
 	/*#__PURE__*/
-	function (_Form$Item) {
-	  inherits$1(FormItem, _Form$Item);
+	function (_Component) {
+	  _inherits$1(FormItem, _Component);
 
 	  function FormItem(props) {
 	    var _this;
 
-	    classCallCheck$1(this, FormItem);
+	    _classCallCheck$1(this, FormItem);
 
-	    _this = possibleConstructorReturn$1(this, getPrototypeOf(FormItem).call(this, props));
+	    _this = _possibleConstructorReturn$1(this, _getPrototypeOf(FormItem).call(this, props));
 
-	    if (props.fetch instanceof Array) {
+	    if (props.children.props.options instanceof Array) {
 	      _this.state = {
-	        childData: props.fetch
+	        childData: props.children.props.options
 	      };
 	    } else {
 	      _this.state = {
@@ -38980,21 +44722,27 @@
 	    return _this;
 	  }
 
-	  createClass$1(FormItem, [{
+	  _createClass$1(FormItem, [{
 	    key: "componentWillReceiveProps",
 	    value: function componentWillReceiveProps(nextProps) {
 	      var children = nextProps.children;
-	      var field = children;
+	      var field = children; //  console.log(JSON.stringify(field.props.options),JSON.stringify(this.props.children.props.options))
 
-	      if (field.props.fetch instanceof Array) {
+	      if (JSON.stringify(field.props.options) !== JSON.stringify(this.props.children.props.options)) {
 	        this.setState({
-	          childData: field.props.fetch
+	          childData: field.props.options
 	        });
-	      }
+	      } // if(field.props.fetch instanceof Array){
+	      //   this.setState({
+	      //     childData:field.props.fetch
+	      //   });
+	      // }
+	      // if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
+	      // {
+	      //     this.fetchData(field.props.fetch,field.props.params)
+	      //     11
+	      // }
 
-	      if (field.props.fetch && typeof field.props.fetch === 'string' && field.props.fetch !== this.props.children.props.fetch) {
-	        this.fetchData(field.props.fetch, field.props.params);
-	      }
 	    }
 	  }, {
 	    key: "componentWillMount",
@@ -39004,10 +44752,6 @@
 
 	      if (typeof field.props.fetch === 'string' && field.props.fetch.length > 0) {
 	        this.fetchData(field.props.fetch, field.props.params);
-	      } else if (field.props.fetch instanceof Array) {
-	        this.setState({
-	          childData: field.props.fetch
-	        });
 	      }
 	    }
 	    /**
@@ -39020,22 +44764,11 @@
 	    key: "fetchData",
 	    value: function fetchData(fetchUrl, params) {
 	      // let body={}
-	      if (params && /\/listJson?$/.test(fetchUrl) ? 'POST' : 'GET') ; // body={body:params}
-	      // new FetchAPI().fetch(fetchUrl,{
-	      //   ...body,
-	      // 	method:/\/listJson?$/.test(fetchUrl)?'POST':'GET' //兼容listJSON 使用POST请求处理
-	      // }).then((json) => {
-	      //     this.setState({
-	      //       childData:json.list|| json ||[]
-	      //     });
-	      // });
-
+	      console.error("xhr还未实现!");
 	    }
 	  }, {
 	    key: "renderField",
 	    value: function renderField() {
-	      var _this2 = this;
-
 	      var _this$props = this.props,
 	          children = _this$props.children,
 	          containerTo = _this$props.containerTo;
@@ -39045,7 +44778,7 @@
 	      var _field$props = field.props,
 	          defaultValue = _field$props.defaultValue,
 	          allowClear = _field$props.allowClear,
-	          otherProps = objectWithoutProperties$1(_field$props, ["defaultValue", "allowClear"]); // console.log(ReactDOM.findDOMNode(this));
+	          otherProps = _objectWithoutProperties$1(_field$props, ["defaultValue", "allowClear"]); // console.log(ReactDOM.findDOMNode(this));
 	      // getPopupContainer
 
 
@@ -39054,29 +44787,27 @@
 
 	      if (containerTo && field.type === Select$1 && !field.props.changeCalendarContainer) {
 	        containerToProp = {
-	          getPopupContainer: function getPopupContainer() {
-	            return ReactDOM__default.findDOMNode(_this2);
+	          getPopupContainer: function getPopupContainer(triggerNode) {
+	            return triggerNode.parentNode;
 	          }
 	        };
-	      } // console.log("TreeSelectPicker",field.type.name)
-
+	      }
 
 	      if (field.type == TreeSelectPicker) {
 	        treeDataProp = {
-	          treeData: this.loopTreeData(childData) //  console.log(treeDataProp)
-
+	          treeData: this.loopTreeData(childData)
 	        };
 	      }
 
 	      if (childData.length === 0) {
 	        return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
 	      } else if (field.props.renderItem) {
-	        return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
+	        /**********有坑 ，待坑**************/
+	        return React__default.createElement(field.type, Object.assign({
+	          key: new Date().valueOf()
+	        }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
 	          return field.props.renderItem && field.props.renderItem(d, idx);
-	        })); // return (
-	        //   <field.type {...otherProps} {...containerToProp} >
-	        //     {childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx))}
-	        //   </field.type>)
+	        }));
 	      } else {
 	        return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
 	      }
@@ -39084,7 +44815,7 @@
 	  }, {
 	    key: "loopTreeData",
 	    value: function loopTreeData(data) {
-	      var _this3 = this;
+	      var _this2 = this;
 
 	      return data.map(function (item) {
 	        if (item.children && item.children.length) {
@@ -39093,7 +44824,7 @@
 	            value: item.id,
 	            key: item.id
 	          }, {
-	            children: _this3.loopTreeData(item.children)
+	            children: _this2.loopTreeData(item.children)
 	          });
 	        } else {
 	          return Object.assign(item, {
@@ -39110,20 +44841,41 @@
 	      var element = this.props.children;
 	      var _element$props = element.props,
 	          name = _element$props.name,
-	          label = _element$props.label;
+	          label = _element$props.label,
+	          format = _element$props.format;
 
 	      var _element$props2 = element.props,
 	          defaultValue = _element$props2.defaultValue,
 	          allowClear = _element$props2.allowClear,
-	          otherProps = objectWithoutProperties$1(_element$props2, ["defaultValue", "allowClear"]); // let {formRef:{getFieldDecorator},formLayout}= this.context
-	      //    console.log(formRef)
+	          otherProps = _objectWithoutProperties$1(_element$props2, ["defaultValue", "allowClear"]);
 
+	      var _this$context = this.context,
+	          getFieldDecorator = _this$context.formRef.getFieldDecorator,
+	          formLayout = _this$context.formLayout;
+	      var styles = {};
+	      var normalizeDefault = {};
 
-	      var styles = {}; // 类型转换
-	      // if(element.type.name=='CalendarPicker'){
-	      //   defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
+	      if (element.type.name == RangePicker$1.name) {
+	        if (defaultValue == Array) {
+	          defaultValue = defaultValue && [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
+	        } else {
+	          defaultValue = defaultValue == "" || !defaultValue ? null : moment(defaultValue);
+	        } // normalizeDefault={
+	        //   normalize:function(values){
+	        //     console.log("normalize",values && [values[0].format(format),values[1].format(format)])
+	        //     return values && [values[0].format(format),values[1].format(format)]
+	        //   }
+	        // }
+
+	      } // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
+	      //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
+	      //    normalizeDefault={
+	      //      normalize:function(values){
+	      //        return values && values.format(format)
+	      //      }
+	      //    }
 	      // }
-	      //  reset antd-form-item  marginBottom value
+
 
 	      if (element.type === Input && element.props.type === "hidden") {
 	        styles = {
@@ -39131,29 +44883,26 @@
 	            marginBottom: 0
 	          }
 	        };
-	      } //console.log(otherProps)
+	      }
 
-	      /*
-	        {getFieldDecorator(name,{...otherProps,initialValue:defaultValue})(this.renderField())}
-	      */
-
-
-	      return React__default.createElement(Form.Item, _extends_1({
+	      return React__default.createElement(Form.Item, _extends$2({
 	        label: label
-	      }, Object.assign({}, {}, this.props), {
+	      }, Object.assign({}, {}, formLayout, this.props), {
 	        colon: false
-	      }, styles), this.renderField());
+	      }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
+	        initialValue: defaultValue
+	      }, normalizeDefault))(this.renderField()));
 	    }
 	  }]);
 
 	  return FormItem;
-	}(Form.Item);
+	}(React.Component);
 
-	defineProperty$5(FormItem$1, "defaultProps", {
+	_defineProperty$1(FormItem$1, "defaultProps", {
 	  containerTo: true
 	});
 
-	defineProperty$5(FormItem$1, "contextTypes", {
+	_defineProperty$1(FormItem$1, "contextTypes", {
 	  formRef: PropTypes__default.object,
 	  formLayout: PropTypes__default.object
 	});
@@ -39161,15 +44910,15 @@
 	var Permission =
 	/*#__PURE__*/
 	function (_React$Component) {
-	  inherits$1(Permission, _React$Component);
+	  _inherits$1(Permission, _React$Component);
 
 	  function Permission() {
-	    classCallCheck$1(this, Permission);
+	    _classCallCheck$1(this, Permission);
 
-	    return possibleConstructorReturn$1(this, getPrototypeOf(Permission).apply(this, arguments));
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(Permission).apply(this, arguments));
 	  }
 
-	  createClass$1(Permission, [{
+	  _createClass$1(Permission, [{
 	    key: "render",
 	    value: function render() {
 	      var expression = this.props.expression;
@@ -39190,113 +44939,19 @@
 	  expression: true
 	};
 
-	//import styles from './AdvancedSearch.less'
-
-	var Option$1 = Select$1.Option;
-
-	var AdvancedSearchConfig =
-	/*#__PURE__*/
-	function (_React$Component) {
-	  inherits$1(AdvancedSearchConfig, _React$Component);
-
-	  function AdvancedSearchConfig(props) {
-	    var _this;
-
-	    classCallCheck$1(this, AdvancedSearchConfig);
-
-	    _this = possibleConstructorReturn$1(this, getPrototypeOf(AdvancedSearchConfig).call(this, props));
-
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this)), "state", {
-	      targetKeys: [],
-	      selectedKeys: [],
-	      show: true
-	    });
-
-	    _this.state.targetKeys = props.selectedKeys;
-	    return _this;
-	  }
-
-	  createClass$1(AdvancedSearchConfig, [{
-	    key: "componentWillReceiveProps",
-	    value: function componentWillReceiveProps(nextProps) {
-	      var selectedKeys = nextProps.selectedKeys;
-	      this.setState({
-	        targetKeys: selectedKeys
-	      });
-	    }
-	  }, {
-	    key: "handleSelectChange",
-	    value: function handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
-	      this.setState({
-	        selectedKeys: toConsumableArray$1(sourceSelectedKeys).concat(toConsumableArray$1(targetSelectedKeys))
-	      });
-	    }
-	  }, {
-	    key: "handleChange",
-	    value: function handleChange(nextTargetKeys, direction, moveKeys) {
-	      if (nextTargetKeys.length >= 1 && nextTargetKeys.length <= 4) {
-	        this.setState({
-	          targetKeys: nextTargetKeys
-	        });
-	      } else {
-	        api.error("最多只能选择4项且最少选择1项");
-	      }
-	    }
-	  }, {
-	    key: "handleOk",
-	    value: function handleOk() {
-	      var handleSure = this.props.handleSure;
-	      var targetKeys = this.state.targetKeys;
-	      handleSure(targetKeys);
-	    }
-	  }, {
-	    key: "handleCancel",
-	    value: function handleCancel() {
-	      var handleClose = this.props.handleClose;
-	      handleClose.call();
-	    }
-	  }, {
-	    key: "render",
-	    value: function render() {
-	      var state = this.state;
-	      var _this$props = this.props,
-	          items = _this$props.items,
-	          show = _this$props.show;
-	      return React__default.createElement(Modal, {
-	        title: "\u67E5\u8BE2\u9879\u914D\u7F6E",
-	        visible: show,
-	        onOk: this.handleOk.bind(this),
-	        onCancel: this.handleCancel.bind(this)
-	      }, React__default.createElement(Transfer, {
-	        dataSource: items,
-	        titles: ['待选查询项', '已选查询项'],
-	        targetKeys: state.targetKeys,
-	        selectedKeys: state.selectedKeys,
-	        onChange: this.handleChange.bind(this),
-	        onSelectChange: this.handleSelectChange.bind(this),
-	        render: function render(item) {
-	          return item.title;
-	        }
-	      }));
-	    }
-	  }]);
-
-	  return AdvancedSearchConfig;
-	}(React__default.Component);
-
 	var AdvancedSearchForm =
 	/*#__PURE__*/
-	function (_React$Component2) {
-	  inherits$1(AdvancedSearchForm, _React$Component2);
+	function (_React$Component) {
+	  _inherits$1(AdvancedSearchForm, _React$Component);
 
 	  function AdvancedSearchForm(props) {
-	    var _this2;
+	    var _this;
 
-	    classCallCheck$1(this, AdvancedSearchForm);
+	    _classCallCheck$1(this, AdvancedSearchForm);
 
-	    _this2 = possibleConstructorReturn$1(this, getPrototypeOf(AdvancedSearchForm).call(this, props));
+	    _this = _possibleConstructorReturn$1(this, _getPrototypeOf(AdvancedSearchForm).call(this, props));
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this2)), "state", {
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
 	      expand: false,
 	      defKeyType: null,
 	      placeHolder: "",
@@ -39305,75 +44960,49 @@
 	      displayItem: []
 	    });
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this2)), "handleSearch", function (e, values) {
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "handleSearch", function (e, values) {
 	      e.preventDefault();
-	      var filterSubmitHandler = _this2.props.filterSubmitHandler;
+	      var filterSubmitHandler = _this.props.filterSubmitHandler;
 
 	      if (values) {
-	        filterSubmitHandler.call(assertThisInitialized(assertThisInitialized(_this2)), values);
+	        filterSubmitHandler.call(_assertThisInitialized(_assertThisInitialized(_this)), values);
 	      } else {
-	        _this2.form.validateFieldsAndScroll(function (err, values) {
+	        _this.form.validateFieldsAndScroll(function (err, values) {
 	          // console.log(this.form.getFieldsValue())
 	          // console.log(values)
-	          filterSubmitHandler.call(assertThisInitialized(assertThisInitialized(_this2)), values);
+	          filterSubmitHandler.call(_assertThisInitialized(_assertThisInitialized(_this)), values);
 	        });
 	      }
 	    });
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this2)), "handleReset", function () {
-	      _this2.form.resetFields();
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "handleReset", function () {
+	      _this.form.resetFields();
 	    });
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this2)), "toggleExpand", function () {
-	      var expand = _this2.state.expand;
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "toggleExpand", function () {
+	      var expand = _this.state.expand;
 
-	      _this2.setState({
+	      _this.setState({
 	        expand: !expand
 	      });
 	    });
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this2)), "saveFormRef", function (form) {
-	      _this2.form = form;
-	    });
-
-	    if (props.keysOption.length) {
-	      var _props$keysOption$rev = props.keysOption.reverse().pop(),
-	          label = _props$keysOption$rev.label,
-	          value = _props$keysOption$rev.value;
-
-	      _this2.state.defKeyType = value;
-	      _this2.state.placeHolder = "\u8BF7\u8F93\u5165".concat(label);
-	    }
-
-	    return _this2;
+	    return _this;
 	  }
 
-	  createClass$1(AdvancedSearchForm, [{
+	  _createClass$1(AdvancedSearchForm, [{
 	    key: "componentWillMount",
-	    value: function componentWillMount() {// let {showConfig}=this.props
-
-	      /*
-	      if(showConfig){
-	        new FetchAPI().fetchGet('/search/getSearchFieldSetJson',{body:{module}}).then((json)=>{
-	        var json = json.map((it)=>{ return{key:it.code,title:it.name,type:it.type,checked:it.checked,id:it.id}})
-	            that.setState({
-	              items:json,
-	              displayItem:json.filter((it)=>it.checked==1).map((it)=>it.key)
-	            })
-	        })
-	      }
-	      */
-	    }
+	    value: function componentWillMount() {}
 	  }, {
 	    key: "getFields",
 	    // To generate mock Form.Item
 	    value: function getFields() {
-	      var _this3 = this;
+	      var _this2 = this;
 
-	      var _this$props2 = this.props,
-	          children = _this$props2.children,
-	          layout = _this$props2.layout,
-	          classNames = _this$props2.classNames;
+	      var _this$props = this.props,
+	          children = _this$props.children,
+	          layout = _this$props.layout,
+	          classNames = _this$props.classNames;
 	      var renderChildren;
 	      var formItemLayout = layout && layout !== 'inline' ? {
 	        labelCol: {
@@ -39395,11 +45024,11 @@
 	        //高级配置后，前三固定 后四配置
 	        renderChildren = React__default.Children.toArray(children).filter(function (ch, idx) {
 	          //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
-	          return _this3.state.displayItem.indexOf(ch.props.name) >= 0 || idx < _this3.props.showExpand;
+	          return _this2.state.displayItem.indexOf(ch.props.name) >= 0 || idx < _this2.props.showExpand;
 	        });
 	      } else {
 	        renderChildren = React__default.Children.toArray(children).filter(function (ch, idx) {
-	          return idx < _this3.props.showExpand + 4;
+	          return idx < _this2.props.showExpand + 4;
 	        });
 	      }
 
@@ -39408,7 +45037,7 @@
 	          return React__default.createElement(Col, {
 	            span: 6,
 	            key: i
-	          }, React__default.createElement(FormItem$1, _extends_1({
+	          }, React__default.createElement(FormItem$1, _extends$2({
 	            colon: true
 	          }, formItemLayout, {
 	            containerTo: false,
@@ -39418,7 +45047,7 @@
 	          return React__default.createElement(Col, {
 	            span: 6,
 	            key: i
-	          }, React__default.createElement(FormItem$1, _extends_1({
+	          }, React__default.createElement(FormItem$1, _extends$2({
 	            colon: true
 	          }, formItemLayout, {
 	            containerTo: false,
@@ -39455,62 +45084,10 @@
 	      });
 	    }
 	  }, {
-	    key: "renderAdvancedConfigModal",
-	    value: function renderAdvancedConfigModal() {
-	      this.setState({
-	        show: true
-	      }); //  return (<AdvancedSearchConfig handleSure={this.handleSure.bind(this)} items={items} selectedKeys={displayItem} />)
-	      //  return ()
-	    } // 此处使用下标留坑
-
-	  }, {
-	    key: "renderKeyCatalog",
-	    value: function renderKeyCatalog() {
-	      var _this$state = this.state,
-	          defKeyType = _this$state.defKeyType,
-	          placeHolder = _this$state.placeHolder;
-	      var keysOption = this.props.keysOption; //  let {label,value}=keysOption[0]
-
-	      if (keysOption.length) {
-	        return React__default.createElement(Col, {
-	          span: 6,
-	          key: "fixhead"
-	        }, React__default.createElement(Input.Group, {
-	          compact: true,
-	          style: {
-	            textAlign: 'right'
-	          }
-	        }, React__default.createElement(FormItem$1, null, React__default.createElement(Select$1, {
-	          defaultActiveFirstOption: true,
-	          name: "keyType",
-	          defaultValue: defKeyType,
-	          onSelect: this.onTypeChange.bind(this),
-	          style: {
-	            width: '105px'
-	          }
-	        }, keysOption.map(function (it) {
-	          return React__default.createElement(Option$1, {
-	            value: it.value,
-	            key: it.value,
-	            placeholder: "请输入" + it.label
-	          }, it.label);
-	        }))), React__default.createElement(FormItem$1, {
-	          labelCol: {
-	            span: 0
-	          },
-	          wrapperCol: {
-	            span: 24
-	          },
-	          style: {
-	            flex: 1
-	          }
-	        }, React__default.createElement(Input, {
-	          placeholder: placeHolder,
-	          name: "keyWord",
-	          style: {}
-	        }))));
-	      } else {
-	        return null;
+	    key: "saveFormRef",
+	    value: function saveFormRef(insta) {
+	      if (insta) {
+	        this.form = insta.props.form;
 	      }
 	    }
 	  }, {
@@ -39521,57 +45098,22 @@
 	      }, this.getFields());
 	    }
 	  }, {
-	    key: "handleSure",
-	    value: function handleSure(value) {// var {module} = this.props
-	      // var data=this.state.items.filter(it=>value.indexOf(it.key)>=0).map(it=>{ return{searchId:it.id}})
-
-	      /*
-	      new FetchAPI().fetchPost('/search/saveSelJson?module='+module,{
-	        body:{items:data}
-	      }).then((json)=>{
-	          this.setState({
-	            displayItem:value,
-	            show:false
-	          })
-	      })
-	      */
-	    }
-	  }, {
-	    key: "renderConfig",
-	    value: function renderConfig() {
-	      var _this$state2 = this.state,
-	          items = _this$state2.items,
-	          displayItem = _this$state2.displayItem,
-	          show = _this$state2.show;
-	      var showConfig = this.props.showConfig;
-
-	      if (showConfig) {
-	        return React__default.createElement(AdvancedSearchConfig, {
-	          handleSure: this.handleSure.bind(this),
-	          handleClose: this.handleClose.bind(this),
-	          items: items,
-	          selectedKeys: displayItem,
-	          show: show
-	        });
-	      }
-	    }
-	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this$props3 = this.props,
-	          showConfig = _this$props3.showConfig,
-	          children = _this$props3.children,
-	          className = _this$props3.className,
-	          autoSubmitForm = _this$props3.autoSubmitForm,
-	          layout = _this$props3.layout;
+	      var _this$props2 = this.props,
+	          showConfig = _this$props2.showConfig,
+	          children = _this$props2.children,
+	          className = _this$props2.className,
+	          autoSubmitForm = _this$props2.autoSubmitForm,
+	          layout = _this$props2.layout;
 	      return React__default.createElement("div", {
 	        className: classnames("advanced-search-panel", className)
-	      }, this.renderConfig(), React__default.createElement(AdvancedForm, {
+	      }, React__default.createElement(SubmitForm, {
 	        layout: layout,
 	        autoSubmitForm: autoSubmitForm,
 	        className: "advanced-search-form",
 	        onSubmit: this.handleSearch.bind(this),
-	        ref: this.saveFormRef.bind(this)
+	        wrappedComponentRef: this.saveFormRef.bind(this)
 	      }, this.renderKeyword(), React__default.createElement("div", {
 	        className: "advanced-search-toolbar"
 	      }, React__default.createElement(Button, {
@@ -39585,21 +45127,12 @@
 	  return AdvancedSearchForm;
 	}(React__default.Component);
 	AdvancedSearchForm.propTypes = {
-	  keysOption: PropTypes__default.array.isRequired,
-	  // keysOption:PropTypes.arrayOf(PropTypes.shape([{
-	  //     label: PropTypes.string.isRequired,
-	  //     value: PropTypes.number.isRequired
-	  // }])),
 	  filterSubmitHandler: PropTypes__default.func,
 	  showConfig: PropTypes__default.bool,
 	  footer: PropTypes__default.element,
 	  showExpand: PropTypes__default.number
 	};
 	AdvancedSearchForm.defaultProps = {
-	  keysOption: [{
-	    label: "name",
-	    value: 0
-	  }],
 	  autoSubmitForm: false,
 	  showConfig: false,
 	  module: "",
@@ -39647,85 +45180,85 @@
 	// fix issue:https://github.com/ant-design/ant-design/issues/8666
 	SubMenu$1.isSubMenu = 1;
 
-	var autoAdjustOverflow$1 = {
+	var autoAdjustOverflow$3 = {
 	  adjustX: 1,
 	  adjustY: 1
 	};
 
-	var targetOffset = [0, 0];
+	var targetOffset$2 = [0, 0];
 
-	var placements$1 = {
+	var placements$3 = {
 	  left: {
 	    points: ['cr', 'cl'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [-4, 0],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  right: {
 	    points: ['cl', 'cr'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [4, 0],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  top: {
 	    points: ['bc', 'tc'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [0, -4],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  bottom: {
 	    points: ['tc', 'bc'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [0, 4],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  topLeft: {
 	    points: ['bl', 'tl'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [0, -4],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  leftTop: {
 	    points: ['tr', 'tl'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [-4, 0],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  topRight: {
 	    points: ['br', 'tr'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [0, -4],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  rightTop: {
 	    points: ['tl', 'tr'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [4, 0],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  bottomRight: {
 	    points: ['tr', 'br'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [0, 4],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  rightBottom: {
 	    points: ['bl', 'br'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [4, 0],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  bottomLeft: {
 	    points: ['tl', 'bl'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [0, 4],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  },
 	  leftBottom: {
 	    points: ['br', 'bl'],
-	    overflow: autoAdjustOverflow$1,
+	    overflow: autoAdjustOverflow$3,
 	    offset: [-4, 0],
-	    targetOffset: targetOffset
+	    targetOffset: targetOffset$2
 	  }
 	};
 
@@ -39840,7 +45373,7 @@
 	        prefixCls: prefixCls,
 	        popup: this.getPopupElement,
 	        action: trigger,
-	        builtinPlacements: placements$1,
+	        builtinPlacements: placements$3,
 	        popupPlacement: placement,
 	        popupAlign: align,
 	        getPopupContainer: getTooltipContainer,
@@ -39902,7 +45435,7 @@
 	    adjustX: 0,
 	    adjustY: 0
 	};
-	var targetOffset$1 = [0, 0];
+	var targetOffset$3 = [0, 0];
 	function getOverflowOptions(autoAdjustOverflow) {
 	    if (typeof autoAdjustOverflow === 'boolean') {
 	        return autoAdjustOverflow ? autoAdjustOverflowEnabled : autoAdjustOverflowDisabled;
@@ -39971,7 +45504,7 @@
 	        }
 	    };
 	    Object.keys(placementMap).forEach(function (key) {
-	        placementMap[key] = config.arrowPointAtCenter ? _extends$1({}, placementMap[key], { overflow: getOverflowOptions(autoAdjustOverflow), targetOffset: targetOffset$1 }) : _extends$1({}, placements$1[key], { overflow: getOverflowOptions(autoAdjustOverflow) });
+	        placementMap[key] = config.arrowPointAtCenter ? _extends$1({}, placementMap[key], { overflow: getOverflowOptions(autoAdjustOverflow), targetOffset: targetOffset$3 }) : _extends$1({}, placements$3[key], { overflow: getOverflowOptions(autoAdjustOverflow) });
 	    });
 	    return placementMap;
 	}
@@ -40407,53 +45940,53 @@
 	    collapsedWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 	};
 
-	var autoAdjustOverflow$2 = {
+	var autoAdjustOverflow$4 = {
 	  adjustX: 1,
 	  adjustY: 1
 	};
 
-	var targetOffset$2 = [0, 0];
+	var targetOffset$4 = [0, 0];
 
-	var placements$2 = {
+	var placements$4 = {
 	  topLeft: {
 	    points: ['bl', 'tl'],
-	    overflow: autoAdjustOverflow$2,
+	    overflow: autoAdjustOverflow$4,
 	    offset: [0, -4],
-	    targetOffset: targetOffset$2
+	    targetOffset: targetOffset$4
 	  },
 	  topCenter: {
 	    points: ['bc', 'tc'],
-	    overflow: autoAdjustOverflow$2,
+	    overflow: autoAdjustOverflow$4,
 	    offset: [0, -4],
-	    targetOffset: targetOffset$2
+	    targetOffset: targetOffset$4
 	  },
 	  topRight: {
 	    points: ['br', 'tr'],
-	    overflow: autoAdjustOverflow$2,
+	    overflow: autoAdjustOverflow$4,
 	    offset: [0, -4],
-	    targetOffset: targetOffset$2
+	    targetOffset: targetOffset$4
 	  },
 	  bottomLeft: {
 	    points: ['tl', 'bl'],
-	    overflow: autoAdjustOverflow$2,
+	    overflow: autoAdjustOverflow$4,
 	    offset: [0, 4],
-	    targetOffset: targetOffset$2
+	    targetOffset: targetOffset$4
 	  },
 	  bottomCenter: {
 	    points: ['tc', 'bc'],
-	    overflow: autoAdjustOverflow$2,
+	    overflow: autoAdjustOverflow$4,
 	    offset: [0, 4],
-	    targetOffset: targetOffset$2
+	    targetOffset: targetOffset$4
 	  },
 	  bottomRight: {
 	    points: ['tr', 'br'],
-	    overflow: autoAdjustOverflow$2,
+	    overflow: autoAdjustOverflow$4,
 	    offset: [0, 4],
-	    targetOffset: targetOffset$2
+	    targetOffset: targetOffset$4
 	  }
 	};
 
-	var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	var _extends$5 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	function _objectWithoutProperties$2(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
@@ -40471,7 +46004,7 @@
 
 	    var _this = _possibleConstructorReturn$2(this, _Component.call(this, props));
 
-	    _initialiseProps$f.call(_this);
+	    _initialiseProps$g.call(_this);
 
 	    if ('visible' in props) {
 	      _this.state = {
@@ -40536,12 +46069,12 @@
 
 	    return React__default.createElement(
 	      Trigger,
-	      _extends$4({}, otherProps, {
+	      _extends$5({}, otherProps, {
 	        prefixCls: prefixCls,
 	        ref: this.saveTrigger,
 	        popupClassName: overlayClassName,
 	        popupStyle: overlayStyle,
-	        builtinPlacements: placements$2,
+	        builtinPlacements: placements$4,
 	        action: trigger,
 	        showAction: showAction,
 	        hideAction: triggerHideAction || [],
@@ -40595,7 +46128,7 @@
 	  placement: 'bottomLeft'
 	};
 
-	var _initialiseProps$f = function _initialiseProps() {
+	var _initialiseProps$g = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.onClick = function (e) {
@@ -40750,7 +46283,7 @@
 	    placement: 'bottomLeft'
 	};
 
-	var __rest$d = undefined && undefined.__rest || function (s, e) {
+	var __rest$c = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -40787,7 +46320,7 @@
 	                onVisibleChange = _a.onVisibleChange,
 	                placement = _a.placement,
 	                getPopupContainer = _a.getPopupContainer,
-	                restProps = __rest$d(_a, ["type", "disabled", "onClick", "htmlType", "children", "prefixCls", "className", "overlay", "trigger", "align", "visible", "onVisibleChange", "placement", "getPopupContainer"]);
+	                restProps = __rest$c(_a, ["type", "disabled", "onClick", "htmlType", "children", "prefixCls", "className", "overlay", "trigger", "align", "visible", "onVisibleChange", "placement", "getPopupContainer"]);
 	            var dropdownProps = {
 	                align: align,
 	                overlay: overlay,
@@ -40828,6 +46361,820 @@
 
 	Dropdown$1.Button = DropdownButton;
 
+	var LazyRenderBox$2 = function (_React$Component) {
+	    _inherits(LazyRenderBox, _React$Component);
+
+	    function LazyRenderBox() {
+	        _classCallCheck(this, LazyRenderBox);
+
+	        return _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+	    }
+
+	    LazyRenderBox.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+	        return !!nextProps.hiddenClassName || !!nextProps.visible;
+	    };
+
+	    LazyRenderBox.prototype.render = function render() {
+	        var className = this.props.className;
+	        if (!!this.props.hiddenClassName && !this.props.visible) {
+	            className += " " + this.props.hiddenClassName;
+	        }
+	        var props = _extends$1({}, this.props);
+	        delete props.hiddenClassName;
+	        delete props.visible;
+	        props.className = className;
+	        return React.createElement("div", _extends$1({}, props));
+	    };
+
+	    return LazyRenderBox;
+	}(React.Component);
+
+	var cached = void 0;
+
+	function getScrollBarSize(fresh) {
+	  if (fresh || cached === undefined) {
+	    var inner = document.createElement('div');
+	    inner.style.width = '100%';
+	    inner.style.height = '200px';
+
+	    var outer = document.createElement('div');
+	    var outerStyle = outer.style;
+
+	    outerStyle.position = 'absolute';
+	    outerStyle.top = 0;
+	    outerStyle.left = 0;
+	    outerStyle.pointerEvents = 'none';
+	    outerStyle.visibility = 'hidden';
+	    outerStyle.width = '200px';
+	    outerStyle.height = '150px';
+	    outerStyle.overflow = 'hidden';
+
+	    outer.appendChild(inner);
+
+	    document.body.appendChild(outer);
+
+	    var widthContained = inner.offsetWidth;
+	    outer.style.overflow = 'scroll';
+	    var widthScroll = inner.offsetWidth;
+
+	    if (widthContained === widthScroll) {
+	      widthScroll = outer.clientWidth;
+	    }
+
+	    document.body.removeChild(outer);
+
+	    cached = widthContained - widthScroll;
+	  }
+	  return cached;
+	}
+
+	var uuid = 0;
+	var openCount = 0;
+	/* eslint react/no-is-mounted:0 */
+	function getScroll$2(w, top) {
+	    var ret = w['page' + (top ? 'Y' : 'X') + 'Offset'];
+	    var method = 'scroll' + (top ? 'Top' : 'Left');
+	    if (typeof ret !== 'number') {
+	        var d = w.document;
+	        ret = d.documentElement[method];
+	        if (typeof ret !== 'number') {
+	            ret = d.body[method];
+	        }
+	    }
+	    return ret;
+	}
+	function setTransformOrigin(node, value) {
+	    var style = node.style;
+	    ['Webkit', 'Moz', 'Ms', 'ms'].forEach(function (prefix) {
+	        style[prefix + 'TransformOrigin'] = value;
+	    });
+	    style['transformOrigin'] = value;
+	}
+	function offset(el) {
+	    var rect = el.getBoundingClientRect();
+	    var pos = {
+	        left: rect.left,
+	        top: rect.top
+	    };
+	    var doc = el.ownerDocument;
+	    var w = doc.defaultView || doc.parentWindow;
+	    pos.left += getScroll$2(w);
+	    pos.top += getScroll$2(w, true);
+	    return pos;
+	}
+
+	var Dialog = function (_React$Component) {
+	    _inherits(Dialog, _React$Component);
+
+	    function Dialog() {
+	        _classCallCheck(this, Dialog);
+
+	        var _this = _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+
+	        _this.onAnimateLeave = function () {
+	            var afterClose = _this.props.afterClose;
+	            // need demo?
+	            // https://github.com/react-component/dialog/pull/28
+
+	            if (_this.wrap) {
+	                _this.wrap.style.display = 'none';
+	            }
+	            _this.inTransition = false;
+	            _this.removeScrollingEffect();
+	            if (afterClose) {
+	                afterClose();
+	            }
+	        };
+	        _this.onMaskClick = function (e) {
+	            // android trigger click on open (fastclick??)
+	            if (Date.now() - _this.openTime < 300) {
+	                return;
+	            }
+	            if (e.target === e.currentTarget) {
+	                _this.close(e);
+	            }
+	        };
+	        _this.onKeyDown = function (e) {
+	            var props = _this.props;
+	            if (props.keyboard && e.keyCode === KeyCode.ESC) {
+	                e.stopPropagation();
+	                _this.close(e);
+	                return;
+	            }
+	            // keep focus inside dialog
+	            if (props.visible) {
+	                if (e.keyCode === KeyCode.TAB) {
+	                    var activeElement = document.activeElement;
+	                    var sentinelStart = _this.sentinelStart;
+	                    if (e.shiftKey) {
+	                        if (activeElement === sentinelStart) {
+	                            _this.sentinelEnd.focus();
+	                        }
+	                    } else if (activeElement === _this.sentinelEnd) {
+	                        sentinelStart.focus();
+	                    }
+	                }
+	            }
+	        };
+	        _this.getDialogElement = function () {
+	            var props = _this.props;
+	            var closable = props.closable;
+	            var prefixCls = props.prefixCls;
+	            var dest = {};
+	            if (props.width !== undefined) {
+	                dest.width = props.width;
+	            }
+	            if (props.height !== undefined) {
+	                dest.height = props.height;
+	            }
+	            var footer = void 0;
+	            if (props.footer) {
+	                footer = React.createElement("div", { className: prefixCls + '-footer', ref: _this.saveRef('footer') }, props.footer);
+	            }
+	            var header = void 0;
+	            if (props.title) {
+	                header = React.createElement("div", { className: prefixCls + '-header', ref: _this.saveRef('header') }, React.createElement("div", { className: prefixCls + '-title', id: _this.titleId }, props.title));
+	            }
+	            var closer = void 0;
+	            if (closable) {
+	                closer = React.createElement("button", { onClick: _this.close, "aria-label": "Close", className: prefixCls + '-close' }, props.closeIcon || React.createElement("span", { className: prefixCls + '-close-x' }));
+	            }
+	            var style = _extends$1({}, props.style, dest);
+	            var sentinelStyle = { width: 0, height: 0, overflow: 'hidden' };
+	            var transitionName = _this.getTransitionName();
+	            var dialogElement = React.createElement(LazyRenderBox$2, { key: "dialog-element", role: "document", ref: _this.saveRef('dialog'), style: style, className: prefixCls + ' ' + (props.className || ''), visible: props.visible }, React.createElement("div", { tabIndex: 0, ref: _this.saveRef('sentinelStart'), style: sentinelStyle }, "sentinelStart"), React.createElement("div", { className: prefixCls + '-content' }, closer, header, React.createElement("div", _extends$1({ className: prefixCls + '-body', style: props.bodyStyle, ref: _this.saveRef('body') }, props.bodyProps), props.children), footer), React.createElement("div", { tabIndex: 0, ref: _this.saveRef('sentinelEnd'), style: sentinelStyle }, "sentinelEnd"));
+	            return React.createElement(Animate, { key: "dialog", showProp: "visible", onLeave: _this.onAnimateLeave, transitionName: transitionName, component: "", transitionAppear: true }, props.visible || !props.destroyOnClose ? dialogElement : null);
+	        };
+	        _this.getZIndexStyle = function () {
+	            var style = {};
+	            var props = _this.props;
+	            if (props.zIndex !== undefined) {
+	                style.zIndex = props.zIndex;
+	            }
+	            return style;
+	        };
+	        _this.getWrapStyle = function () {
+	            return _extends$1({}, _this.getZIndexStyle(), _this.props.wrapStyle);
+	        };
+	        _this.getMaskStyle = function () {
+	            return _extends$1({}, _this.getZIndexStyle(), _this.props.maskStyle);
+	        };
+	        _this.getMaskElement = function () {
+	            var props = _this.props;
+	            var maskElement = void 0;
+	            if (props.mask) {
+	                var maskTransition = _this.getMaskTransitionName();
+	                maskElement = React.createElement(LazyRenderBox$2, _extends$1({ style: _this.getMaskStyle(), key: "mask", className: props.prefixCls + '-mask', hiddenClassName: props.prefixCls + '-mask-hidden', visible: props.visible }, props.maskProps));
+	                if (maskTransition) {
+	                    maskElement = React.createElement(Animate, { key: "mask", showProp: "visible", transitionAppear: true, component: "", transitionName: maskTransition }, maskElement);
+	                }
+	            }
+	            return maskElement;
+	        };
+	        _this.getMaskTransitionName = function () {
+	            var props = _this.props;
+	            var transitionName = props.maskTransitionName;
+	            var animation = props.maskAnimation;
+	            if (!transitionName && animation) {
+	                transitionName = props.prefixCls + '-' + animation;
+	            }
+	            return transitionName;
+	        };
+	        _this.getTransitionName = function () {
+	            var props = _this.props;
+	            var transitionName = props.transitionName;
+	            var animation = props.animation;
+	            if (!transitionName && animation) {
+	                transitionName = props.prefixCls + '-' + animation;
+	            }
+	            return transitionName;
+	        };
+	        _this.setScrollbar = function () {
+	            if (_this.bodyIsOverflowing && _this.scrollbarWidth !== undefined) {
+	                document.body.style.paddingRight = _this.scrollbarWidth + 'px';
+	            }
+	        };
+	        _this.addScrollingEffect = function () {
+	            openCount++;
+	            if (openCount !== 1) {
+	                return;
+	            }
+	            _this.checkScrollbar();
+	            _this.setScrollbar();
+	            document.body.style.overflow = 'hidden';
+	            // this.adjustDialog();
+	        };
+	        _this.removeScrollingEffect = function () {
+	            openCount--;
+	            if (openCount !== 0) {
+	                return;
+	            }
+	            document.body.style.overflow = '';
+	            _this.resetScrollbar();
+	            // this.resetAdjustments();
+	        };
+	        _this.close = function (e) {
+	            var onClose = _this.props.onClose;
+
+	            if (onClose) {
+	                onClose(e);
+	            }
+	        };
+	        _this.checkScrollbar = function () {
+	            var fullWindowWidth = window.innerWidth;
+	            if (!fullWindowWidth) {
+	                // workaround for missing window.innerWidth in IE8
+	                var documentElementRect = document.documentElement.getBoundingClientRect();
+	                fullWindowWidth = documentElementRect.right - Math.abs(documentElementRect.left);
+	            }
+	            _this.bodyIsOverflowing = document.body.clientWidth < fullWindowWidth;
+	            if (_this.bodyIsOverflowing) {
+	                _this.scrollbarWidth = getScrollBarSize();
+	            }
+	        };
+	        _this.resetScrollbar = function () {
+	            document.body.style.paddingRight = '';
+	        };
+	        _this.adjustDialog = function () {
+	            if (_this.wrap && _this.scrollbarWidth !== undefined) {
+	                var modalIsOverflowing = _this.wrap.scrollHeight > document.documentElement.clientHeight;
+	                _this.wrap.style.paddingLeft = (!_this.bodyIsOverflowing && modalIsOverflowing ? _this.scrollbarWidth : '') + 'px';
+	                _this.wrap.style.paddingRight = (_this.bodyIsOverflowing && !modalIsOverflowing ? _this.scrollbarWidth : '') + 'px';
+	            }
+	        };
+	        _this.resetAdjustments = function () {
+	            if (_this.wrap) {
+	                _this.wrap.style.paddingLeft = _this.wrap.style.paddingLeft = '';
+	            }
+	        };
+	        _this.saveRef = function (name) {
+	            return function (node) {
+	                _this[name] = node;
+	            };
+	        };
+	        return _this;
+	    }
+
+	    Dialog.prototype.componentWillMount = function componentWillMount() {
+	        this.inTransition = false;
+	        this.titleId = 'rcDialogTitle' + uuid++;
+	    };
+
+	    Dialog.prototype.componentDidMount = function componentDidMount() {
+	        this.componentDidUpdate({});
+	    };
+
+	    Dialog.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
+	        var props = this.props;
+	        var mousePosition = this.props.mousePosition;
+	        if (props.visible) {
+	            // first show
+	            if (!prevProps.visible) {
+	                this.openTime = Date.now();
+	                this.addScrollingEffect();
+	                this.tryFocus();
+	                var dialogNode = ReactDOM.findDOMNode(this.dialog);
+	                if (mousePosition) {
+	                    var elOffset = offset(dialogNode);
+	                    setTransformOrigin(dialogNode, mousePosition.x - elOffset.left + 'px ' + (mousePosition.y - elOffset.top) + 'px');
+	                } else {
+	                    setTransformOrigin(dialogNode, '');
+	                }
+	            }
+	        } else if (prevProps.visible) {
+	            this.inTransition = true;
+	            if (props.mask && this.lastOutSideFocusNode) {
+	                try {
+	                    this.lastOutSideFocusNode.focus();
+	                } catch (e) {
+	                    this.lastOutSideFocusNode = null;
+	                }
+	                this.lastOutSideFocusNode = null;
+	            }
+	        }
+	    };
+
+	    Dialog.prototype.componentWillUnmount = function componentWillUnmount() {
+	        if (this.props.visible || this.inTransition) {
+	            this.removeScrollingEffect();
+	        }
+	    };
+
+	    Dialog.prototype.tryFocus = function tryFocus() {
+	        if (!contains(this.wrap, document.activeElement)) {
+	            this.lastOutSideFocusNode = document.activeElement;
+	            this.sentinelStart.focus();
+	        }
+	    };
+
+	    Dialog.prototype.render = function render() {
+	        var props = this.props;
+	        var prefixCls = props.prefixCls,
+	            maskClosable = props.maskClosable;
+
+	        var style = this.getWrapStyle();
+	        // clear hide display
+	        // and only set display after async anim, not here for hide
+	        if (props.visible) {
+	            style.display = null;
+	        }
+	        return React.createElement("div", null, this.getMaskElement(), React.createElement("div", _extends$1({ tabIndex: -1, onKeyDown: this.onKeyDown, className: prefixCls + '-wrap ' + (props.wrapClassName || ''), ref: this.saveRef('wrap'), onClick: maskClosable ? this.onMaskClick : undefined, role: "dialog", "aria-labelledby": props.title ? this.titleId : null, style: style }, props.wrapProps), this.getDialogElement()));
+	    };
+
+	    return Dialog;
+	}(React.Component);
+
+	Dialog.defaultProps = {
+	    className: '',
+	    mask: true,
+	    visible: false,
+	    keyboard: true,
+	    closable: true,
+	    maskClosable: true,
+	    destroyOnClose: false,
+	    prefixCls: 'rc-dialog'
+	};
+
+	var IS_REACT_16$2 = 'createPortal' in ReactDOM;
+
+	var DialogWrap = function (_React$Component) {
+	    _inherits(DialogWrap, _React$Component);
+
+	    function DialogWrap() {
+	        _classCallCheck(this, DialogWrap);
+
+	        var _this = _possibleConstructorReturn(this, _React$Component.apply(this, arguments));
+
+	        _this.saveDialog = function (node) {
+	            _this._component = node;
+	        };
+	        _this.getComponent = function () {
+	            var extra = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	            return React.createElement(Dialog, _extends$1({ ref: _this.saveDialog }, _this.props, extra, { key: "dialog" }));
+	        };
+	        // fix issue #10656
+	        /*
+	        * Custom container should not be return, because in the Portal component, it will remove the
+	        * return container element here, if the custom container is the only child of it's component,
+	        * like issue #10656, It will has a conflict with removeChild method in react-dom.
+	        * So here should add a child (div element) to custom container.
+	        * */
+	        _this.getContainer = function () {
+	            var container = document.createElement('div');
+	            if (_this.props.getContainer) {
+	                _this.props.getContainer().appendChild(container);
+	            } else {
+	                document.body.appendChild(container);
+	            }
+	            return container;
+	        };
+	        return _this;
+	    }
+
+	    DialogWrap.prototype.shouldComponentUpdate = function shouldComponentUpdate(_ref) {
+	        var visible = _ref.visible;
+
+	        return !!(this.props.visible || visible);
+	    };
+
+	    DialogWrap.prototype.componentWillUnmount = function componentWillUnmount() {
+	        if (IS_REACT_16$2) {
+	            return;
+	        }
+	        if (this.props.visible) {
+	            this.renderComponent({
+	                afterClose: this.removeContainer,
+	                onClose: function onClose() {},
+
+	                visible: false
+	            });
+	        } else {
+	            this.removeContainer();
+	        }
+	    };
+
+	    DialogWrap.prototype.render = function render() {
+	        var _this2 = this;
+
+	        var visible = this.props.visible;
+
+	        var portal = null;
+	        if (!IS_REACT_16$2) {
+	            return React.createElement(ContainerRender, { parent: this, visible: visible, autoDestroy: false, getComponent: this.getComponent, getContainer: this.getContainer }, function (_ref2) {
+	                var renderComponent = _ref2.renderComponent,
+	                    removeContainer = _ref2.removeContainer;
+
+	                _this2.renderComponent = renderComponent;
+	                _this2.removeContainer = removeContainer;
+	                return null;
+	            });
+	        }
+	        if (visible || this._component) {
+	            portal = React.createElement(Portal, { getContainer: this.getContainer }, this.getComponent());
+	        }
+	        return portal;
+	    };
+
+	    return DialogWrap;
+	}(React.Component);
+
+	DialogWrap.defaultProps = {
+	    visible: false
+	};
+
+	var runtimeLocale = _extends$1({}, defaultLocale.Modal);
+	function getConfirmLocale() {
+	    return runtimeLocale;
+	}
+
+	var __rest$d = undefined && undefined.__rest || function (s, e) {
+	    var t = {};
+	    for (var p in s) {
+	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+	    }return t;
+	};
+	var mousePosition = void 0;
+	var mousePositionEventBinded = void 0;
+
+	var Modal = function (_React$Component) {
+	    _inherits(Modal, _React$Component);
+
+	    function Modal() {
+	        _classCallCheck(this, Modal);
+
+	        var _this = _possibleConstructorReturn(this, (Modal.__proto__ || Object.getPrototypeOf(Modal)).apply(this, arguments));
+
+	        _this.handleCancel = function (e) {
+	            var onCancel = _this.props.onCancel;
+	            if (onCancel) {
+	                onCancel(e);
+	            }
+	        };
+	        _this.handleOk = function (e) {
+	            var onOk = _this.props.onOk;
+	            if (onOk) {
+	                onOk(e);
+	            }
+	        };
+	        _this.renderFooter = function (locale) {
+	            var _this$props = _this.props,
+	                okText = _this$props.okText,
+	                okType = _this$props.okType,
+	                cancelText = _this$props.cancelText,
+	                confirmLoading = _this$props.confirmLoading;
+
+	            return React.createElement(
+	                'div',
+	                null,
+	                React.createElement(
+	                    Button,
+	                    _extends$1({ onClick: _this.handleCancel }, _this.props.cancelButtonProps),
+	                    cancelText || locale.cancelText
+	                ),
+	                React.createElement(
+	                    Button,
+	                    _extends$1({ type: okType, loading: confirmLoading, onClick: _this.handleOk }, _this.props.okButtonProps),
+	                    okText || locale.okText
+	                )
+	            );
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Modal, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            if (mousePositionEventBinded) {
+	                return;
+	            }
+	            // 只有点击事件支持从鼠标位置动画展开
+	            addEventListenerWrap(document.documentElement, 'click', function (e) {
+	                mousePosition = {
+	                    x: e.pageX,
+	                    y: e.pageY
+	                };
+	                // 100ms 内发生过点击事件，则从点击位置动画展示
+	                // 否则直接 zoom 展示
+	                // 这样可以兼容非点击方式展开
+	                setTimeout(function () {
+	                    return mousePosition = null;
+	                }, 100);
+	            });
+	            mousePositionEventBinded = true;
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _a = this.props,
+	                footer = _a.footer,
+	                visible = _a.visible,
+	                wrapClassName = _a.wrapClassName,
+	                centered = _a.centered,
+	                prefixCls = _a.prefixCls,
+	                restProps = __rest$d(_a, ["footer", "visible", "wrapClassName", "centered", "prefixCls"]);
+	            var defaultFooter = React.createElement(
+	                LocaleReceiver,
+	                { componentName: 'Modal', defaultLocale: getConfirmLocale() },
+	                this.renderFooter
+	            );
+	            var closeIcon = React.createElement(
+	                'span',
+	                { className: prefixCls + '-close-x' },
+	                React.createElement(Icon$1, { className: prefixCls + '-close-icon', type: 'close' })
+	            );
+	            return React.createElement(DialogWrap, _extends$1({}, restProps, { prefixCls: prefixCls, wrapClassName: classnames(_defineProperty({}, prefixCls + '-centered', !!centered), wrapClassName), footer: footer === undefined ? defaultFooter : footer, visible: visible, mousePosition: mousePosition, onClose: this.handleCancel, closeIcon: closeIcon }));
+	        }
+	    }]);
+
+	    return Modal;
+	}(React.Component);
+
+	Modal.defaultProps = {
+	    prefixCls: 'ant-modal',
+	    width: 520,
+	    transitionName: 'zoom',
+	    maskTransitionName: 'fade',
+	    confirmLoading: false,
+	    visible: false,
+	    okType: 'primary',
+	    okButtonDisabled: false,
+	    cancelButtonDisabled: false
+	};
+	Modal.propTypes = {
+	    prefixCls: PropTypes.string,
+	    onOk: PropTypes.func,
+	    onCancel: PropTypes.func,
+	    okText: PropTypes.node,
+	    cancelText: PropTypes.node,
+	    centered: PropTypes.bool,
+	    width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	    confirmLoading: PropTypes.bool,
+	    visible: PropTypes.bool,
+	    align: PropTypes.object,
+	    footer: PropTypes.node,
+	    title: PropTypes.node,
+	    closable: PropTypes.bool
+	};
+
+	var ActionButton = function (_React$Component) {
+	    _inherits(ActionButton, _React$Component);
+
+	    function ActionButton(props) {
+	        _classCallCheck(this, ActionButton);
+
+	        var _this = _possibleConstructorReturn(this, (ActionButton.__proto__ || Object.getPrototypeOf(ActionButton)).call(this, props));
+
+	        _this.onClick = function () {
+	            var _this$props = _this.props,
+	                actionFn = _this$props.actionFn,
+	                closeModal = _this$props.closeModal;
+
+	            if (actionFn) {
+	                var ret = void 0;
+	                if (actionFn.length) {
+	                    ret = actionFn(closeModal);
+	                } else {
+	                    ret = actionFn();
+	                    if (!ret) {
+	                        closeModal();
+	                    }
+	                }
+	                if (ret && ret.then) {
+	                    _this.setState({ loading: true });
+	                    ret.then(function () {
+	                        // It's unnecessary to set loading=false, for the Modal will be unmounted after close.
+	                        // this.setState({ loading: false });
+	                        closeModal.apply(undefined, arguments);
+	                    }, function () {
+	                        // See: https://github.com/ant-design/ant-design/issues/6183
+	                        _this.setState({ loading: false });
+	                    });
+	                }
+	            } else {
+	                closeModal();
+	            }
+	        };
+	        _this.state = {
+	            loading: false
+	        };
+	        return _this;
+	    }
+
+	    _createClass(ActionButton, [{
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	            if (this.props.autoFocus) {
+	                var $this = ReactDOM.findDOMNode(this);
+	                this.timeoutId = setTimeout(function () {
+	                    return $this.focus();
+	                });
+	            }
+	        }
+	    }, {
+	        key: 'componentWillUnmount',
+	        value: function componentWillUnmount() {
+	            clearTimeout(this.timeoutId);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props,
+	                type = _props.type,
+	                children = _props.children,
+	                buttonProps = _props.buttonProps;
+
+	            var loading = this.state.loading;
+	            return React.createElement(
+	                Button,
+	                _extends$1({ type: type, onClick: this.onClick, loading: loading }, buttonProps),
+	                children
+	            );
+	        }
+	    }]);
+
+	    return ActionButton;
+	}(React.Component);
+
+	var _this = undefined;
+	var IS_REACT_16$3 = !!ReactDOM.createPortal;
+	var ConfirmDialog = function ConfirmDialog(props) {
+	    var onCancel = props.onCancel,
+	        onOk = props.onOk,
+	        close = props.close,
+	        zIndex = props.zIndex,
+	        afterClose = props.afterClose,
+	        visible = props.visible,
+	        keyboard = props.keyboard,
+	        centered = props.centered,
+	        getContainer = props.getContainer,
+	        okButtonProps = props.okButtonProps,
+	        cancelButtonProps = props.cancelButtonProps;
+
+	    var iconType = props.iconType || 'question-circle';
+	    var okType = props.okType || 'primary';
+	    var prefixCls = props.prefixCls || 'ant-modal';
+	    var contentPrefixCls = prefixCls + '-confirm';
+	    // 默认为 true，保持向下兼容
+	    var okCancel = 'okCancel' in props ? props.okCancel : true;
+	    var width = props.width || 416;
+	    var style = props.style || {};
+	    // 默认为 false，保持旧版默认行为
+	    var maskClosable = props.maskClosable === undefined ? false : props.maskClosable;
+	    var runtimeLocale = getConfirmLocale();
+	    var okText = props.okText || (okCancel ? runtimeLocale.okText : runtimeLocale.justOkText);
+	    var cancelText = props.cancelText || runtimeLocale.cancelText;
+	    var autoFocusButton = props.autoFocusButton === null ? false : props.autoFocusButton || 'ok';
+	    var classString = classnames(contentPrefixCls, contentPrefixCls + '-' + props.type, props.className);
+	    var cancelButton = okCancel && React.createElement(
+	        ActionButton,
+	        { actionFn: onCancel, closeModal: close, autoFocus: autoFocusButton === 'cancel', buttonProps: cancelButtonProps },
+	        cancelText
+	    );
+	    return React.createElement(
+	        Modal,
+	        { prefixCls: prefixCls, className: classString, wrapClassName: classnames(_defineProperty({}, contentPrefixCls + '-centered', !!props.centered)), onCancel: close.bind(_this, { triggerCancel: true }), visible: visible, title: '', transitionName: 'zoom', footer: '', maskTransitionName: 'fade', maskClosable: maskClosable, style: style, width: width, zIndex: zIndex, afterClose: afterClose, keyboard: keyboard, centered: centered, getContainer: getContainer },
+	        React.createElement(
+	            'div',
+	            { className: contentPrefixCls + '-body-wrapper' },
+	            React.createElement(
+	                'div',
+	                { className: contentPrefixCls + '-body' },
+	                React.createElement(Icon$1, { type: iconType }),
+	                React.createElement(
+	                    'span',
+	                    { className: contentPrefixCls + '-title' },
+	                    props.title
+	                ),
+	                React.createElement(
+	                    'div',
+	                    { className: contentPrefixCls + '-content' },
+	                    props.content
+	                )
+	            ),
+	            React.createElement(
+	                'div',
+	                { className: contentPrefixCls + '-btns' },
+	                cancelButton,
+	                React.createElement(
+	                    ActionButton,
+	                    { type: okType, actionFn: onOk, closeModal: close, autoFocus: autoFocusButton === 'ok', buttonProps: okButtonProps },
+	                    okText
+	                )
+	            )
+	        )
+	    );
+	};
+	function confirm(config) {
+	    var div = document.createElement('div');
+	    document.body.appendChild(div);
+	    var currentConfig = _extends$1({}, config, { close: close, visible: true });
+	    function close() {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	            args[_key] = arguments[_key];
+	        }
+
+	        currentConfig = _extends$1({}, currentConfig, { visible: false, afterClose: destroy.bind.apply(destroy, [this].concat(args)) });
+	        if (IS_REACT_16$3) {
+	            render(currentConfig);
+	        } else {
+	            destroy.apply(undefined, args);
+	        }
+	    }
+	    function update(newConfig) {
+	        currentConfig = _extends$1({}, currentConfig, newConfig);
+	        render(currentConfig);
+	    }
+	    function destroy() {
+	        var unmountResult = ReactDOM.unmountComponentAtNode(div);
+	        if (unmountResult && div.parentNode) {
+	            div.parentNode.removeChild(div);
+	        }
+
+	        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	            args[_key2] = arguments[_key2];
+	        }
+
+	        var triggerCancel = args && args.length && args.some(function (param) {
+	            return param && param.triggerCancel;
+	        });
+	        if (config.onCancel && triggerCancel) {
+	            config.onCancel.apply(config, args);
+	        }
+	    }
+	    function render(props) {
+	        ReactDOM.render(React.createElement(ConfirmDialog, props), div);
+	    }
+	    render(currentConfig);
+	    return {
+	        destroy: close,
+	        update: update
+	    };
+	}
+
+	Modal.info = function (props) {
+	    var config = _extends$1({ type: 'info', iconType: 'info-circle', okCancel: false }, props);
+	    return confirm(config);
+	};
+	Modal.success = function (props) {
+	    var config = _extends$1({ type: 'success', iconType: 'check-circle', okCancel: false }, props);
+	    return confirm(config);
+	};
+	Modal.error = function (props) {
+	    var config = _extends$1({ type: 'error', iconType: 'close-circle', okCancel: false }, props);
+	    return confirm(config);
+	};
+	Modal.warning = Modal.warn = function (props) {
+	    var config = _extends$1({ type: 'warning', iconType: 'exclamation-circle', okCancel: false }, props);
+	    return confirm(config);
+	};
+	Modal.confirm = function (props) {
+	    var config = _extends$1({ type: 'confirm', okCancel: true }, props);
+	    return confirm(config);
+	};
+
 	// import {hasPermission} from 'app/utils/ConfigUtils'
 
 	/*
@@ -40837,15 +47184,15 @@
 	var Comfirm =
 	/*#__PURE__*/
 	function (_Component) {
-	  inherits$1(Comfirm, _Component);
+	  _inherits$1(Comfirm, _Component);
 
 	  function Comfirm() {
-	    classCallCheck$1(this, Comfirm);
+	    _classCallCheck$1(this, Comfirm);
 
-	    return possibleConstructorReturn$1(this, getPrototypeOf(Comfirm).apply(this, arguments));
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(Comfirm).apply(this, arguments));
 	  }
 
-	  createClass$1(Comfirm, [{
+	  _createClass$1(Comfirm, [{
 	    key: "onConfirmClick",
 	    value: function onConfirmClick() {
 	      var _this$props = this.props,
@@ -40876,15 +47223,15 @@
 	var ButtonGroups =
 	/*#__PURE__*/
 	function (_Component2) {
-	  inherits$1(ButtonGroups, _Component2);
+	  _inherits$1(ButtonGroups, _Component2);
 
 	  function ButtonGroups() {
-	    classCallCheck$1(this, ButtonGroups);
+	    _classCallCheck$1(this, ButtonGroups);
 
-	    return possibleConstructorReturn$1(this, getPrototypeOf(ButtonGroups).apply(this, arguments));
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(ButtonGroups).apply(this, arguments));
 	  }
 
-	  createClass$1(ButtonGroups, [{
+	  _createClass$1(ButtonGroups, [{
 	    key: "renderButtonOnly",
 	    value: function renderButtonOnly() {
 	      var _this = this;
@@ -40893,10 +47240,13 @@
 	      var childrenArray = React__default.Children.toArray(children); // let {appReducer} = this.context
 	      // console.log(this.context.appReducer)
 
-	      return childrenArray // .filter((it)=>{
-	      //   return it.props.permission==undefined?true:hasPermission(it.props.permission)
-	      // })
-	      .map(function (it, idx) {
+	      return childrenArray.filter(function (it) {
+	        if (it.props.permission == undefined) {
+	          return true;
+	        } else {
+	          return it.props.permission && it.props.permission == true;
+	        }
+	      }).map(function (it, idx) {
 	        return _this.renderReactElement(it, idx);
 	      });
 	    }
@@ -40913,6 +47263,7 @@
 
 	      if (confirm) {
 	        return React__default.createElement(Comfirm, Object.assign({}, {
+	          key: idx,
 	          title: "确认框",
 	          content: confirm,
 	          placement: placement,
@@ -40964,7 +47315,9 @@
 	        return _this2.renderReactElement(it, idx);
 	      }), React__default.createElement(Dropdown$1, {
 	        overlay: this.renderMenuItem(endArray)
-	      }, React__default.createElement(Button, null, "...")));
+	      }, React__default.createElement(Button, null, React__default.createElement(Icon$1, {
+	        type: "ellipsis"
+	      }))));
 	    }
 	  }, {
 	    key: "renderMenuItem",
@@ -41008,7 +47361,7 @@
 	*/
 
 
-	defineProperty$5(ButtonGroups, "contextTypes", {
+	_defineProperty$1(ButtonGroups, "contextTypes", {
 	  appReducer: PropTypes__default.object
 	});
 	ButtonGroups.propTypes = {
@@ -41337,7 +47690,7 @@
 	var _getPrototype = getPrototype;
 
 	/** Used for built-in method references. */
-	var objectProto$e = Object.prototype;
+	var objectProto$8 = Object.prototype;
 
 	/**
 	 * Checks if `value` is likely a prototype object.
@@ -41348,7 +47701,7 @@
 	 */
 	function isPrototype(value) {
 	  var Ctor = value && value.constructor,
-	      proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto$e;
+	      proto = (typeof Ctor == 'function' && Ctor.prototype) || objectProto$8;
 
 	  return value === proto;
 	}
@@ -41395,11 +47748,11 @@
 	 * _.isArrayLike(_.noop);
 	 * // => false
 	 */
-	function isArrayLike$2(value) {
+	function isArrayLike(value) {
 	  return value != null && isLength_1(value.length) && !isFunction_1(value);
 	}
 
-	var isArrayLike_1 = isArrayLike$2;
+	var isArrayLike_1 = isArrayLike;
 
 	/**
 	 * This method is like `_.isArrayLike` except that it also checks if `value`
@@ -41426,11 +47779,11 @@
 	 * _.isArrayLikeObject(_.noop);
 	 * // => false
 	 */
-	function isArrayLikeObject$1(value) {
+	function isArrayLikeObject(value) {
 	  return isObjectLike_1(value) && isArrayLike_1(value);
 	}
 
-	var isArrayLikeObject_1 = isArrayLikeObject$1;
+	var isArrayLikeObject_1 = isArrayLikeObject;
 
 	/**
 	 * This method returns `false`.
@@ -41494,13 +47847,13 @@
 
 	/** Used for built-in method references. */
 	var funcProto$2 = Function.prototype,
-	    objectProto$f = Object.prototype;
+	    objectProto$9 = Object.prototype;
 
 	/** Used to resolve the decompiled source of functions. */
 	var funcToString$2 = funcProto$2.toString;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$d = objectProto$f.hasOwnProperty;
+	var hasOwnProperty$9 = objectProto$9.hasOwnProperty;
 
 	/** Used to infer the `Object` constructor. */
 	var objectCtorString = funcToString$2.call(Object);
@@ -41541,7 +47894,7 @@
 	  if (proto === null) {
 	    return true;
 	  }
-	  var Ctor = hasOwnProperty$d.call(proto, 'constructor') && proto.constructor;
+	  var Ctor = hasOwnProperty$9.call(proto, 'constructor') && proto.constructor;
 	  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
 	    funcToString$2.call(Ctor) == objectCtorString;
 	}
@@ -41549,12 +47902,12 @@
 	var isPlainObject_1 = isPlainObject;
 
 	/** `Object#toString` result references. */
-	var argsTag$2 = '[object Arguments]',
-	    arrayTag$1 = '[object Array]',
+	var argsTag$1 = '[object Arguments]',
+	    arrayTag = '[object Array]',
 	    boolTag = '[object Boolean]',
 	    dateTag = '[object Date]',
 	    errorTag = '[object Error]',
-	    funcTag$4 = '[object Function]',
+	    funcTag$1 = '[object Function]',
 	    mapTag = '[object Map]',
 	    numberTag = '[object Number]',
 	    objectTag$1 = '[object Object]',
@@ -41582,10 +47935,10 @@
 	typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] =
 	typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] =
 	typedArrayTags[uint32Tag] = true;
-	typedArrayTags[argsTag$2] = typedArrayTags[arrayTag$1] =
+	typedArrayTags[argsTag$1] = typedArrayTags[arrayTag] =
 	typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] =
 	typedArrayTags[dataViewTag] = typedArrayTags[dateTag] =
-	typedArrayTags[errorTag] = typedArrayTags[funcTag$4] =
+	typedArrayTags[errorTag] = typedArrayTags[funcTag$1] =
 	typedArrayTags[mapTag] = typedArrayTags[numberTag] =
 	typedArrayTags[objectTag$1] = typedArrayTags[regexpTag] =
 	typedArrayTags[setTag] = typedArrayTags[stringTag] =
@@ -41753,10 +48106,10 @@
 	var _baseTimes = baseTimes;
 
 	/** Used for built-in method references. */
-	var objectProto$g = Object.prototype;
+	var objectProto$a = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$e = objectProto$g.hasOwnProperty;
+	var hasOwnProperty$a = objectProto$a.hasOwnProperty;
 
 	/**
 	 * Creates an array of the enumerable property names of the array-like `value`.
@@ -41776,7 +48129,7 @@
 	      length = result.length;
 
 	  for (var key in value) {
-	    if ((inherited || hasOwnProperty$e.call(value, key)) &&
+	    if ((inherited || hasOwnProperty$a.call(value, key)) &&
 	        !(skipIndexes && (
 	           // Safari 9 has enumerable `arguments.length` in strict mode.
 	           key == 'length' ||
@@ -41817,10 +48170,10 @@
 	var _nativeKeysIn = nativeKeysIn;
 
 	/** Used for built-in method references. */
-	var objectProto$h = Object.prototype;
+	var objectProto$b = Object.prototype;
 
 	/** Used to check objects for own properties. */
-	var hasOwnProperty$f = objectProto$h.hasOwnProperty;
+	var hasOwnProperty$b = objectProto$b.hasOwnProperty;
 
 	/**
 	 * The base implementation of `_.keysIn` which doesn't treat sparse arrays as dense.
@@ -41837,7 +48190,7 @@
 	      result = [];
 
 	  for (var key in object) {
-	    if (!(key == 'constructor' && (isProto || !hasOwnProperty$f.call(object, key)))) {
+	    if (!(key == 'constructor' && (isProto || !hasOwnProperty$b.call(object, key)))) {
 	      result.push(key);
 	    }
 	  }
@@ -41869,11 +48222,11 @@
 	 * _.keysIn(new Foo);
 	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
 	 */
-	function keysIn$1(object) {
+	function keysIn(object) {
 	  return isArrayLike_1(object) ? _arrayLikeKeys(object, true) : _baseKeysIn(object);
 	}
 
-	var keysIn_1 = keysIn$1;
+	var keysIn_1 = keysIn;
 
 	/**
 	 * Converts `value` to a plain object flattening inherited enumerable string
@@ -42064,7 +48417,7 @@
 	var _apply = apply;
 
 	/* Built-in method references for those with the same name as other `lodash` methods. */
-	var nativeMax$3 = Math.max;
+	var nativeMax$1 = Math.max;
 
 	/**
 	 * A specialized version of `baseRest` which transforms the rest array.
@@ -42076,11 +48429,11 @@
 	 * @returns {Function} Returns the new function.
 	 */
 	function overRest(func, start, transform) {
-	  start = nativeMax$3(start === undefined ? (func.length - 1) : start, 0);
+	  start = nativeMax$1(start === undefined ? (func.length - 1) : start, 0);
 	  return function() {
 	    var args = arguments,
 	        index = -1,
-	        length = nativeMax$3(args.length - start, 0),
+	        length = nativeMax$1(args.length - start, 0),
 	        array = Array(length);
 
 	    while (++index < length) {
@@ -42343,7 +48696,7 @@
 	  return scrollbarSize;
 	}
 
-	function debounce$3(func, wait, immediate) {
+	function debounce$1(func, wait, immediate) {
 	  var timeout = void 0;
 	  function debounceFunc() {
 	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
@@ -43842,7 +50195,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (ExpandableTable.__proto__ || Object.getPrototypeOf(ExpandableTable)).call(this, props));
 
-	    _initialiseProps$g.call(_this);
+	    _initialiseProps$h.call(_this);
 
 	    var data = props.data,
 	        childrenColumnName = props.childrenColumnName,
@@ -44006,7 +50359,7 @@
 	  onExpandedRowsChange: function onExpandedRowsChange() {}
 	};
 
-	var _initialiseProps$g = function _initialiseProps() {
+	var _initialiseProps$h = function _initialiseProps() {
 	  var _this3 = this;
 
 	  this.handleExpandChange = function (expanded, record, event, rowKey) {
@@ -44252,7 +50605,7 @@
 
 	    _this.setScrollPosition('left');
 
-	    _this.debouncedWindowResize = debounce$3(_this.handleWindowResize, 150);
+	    _this.debouncedWindowResize = debounce$1(_this.handleWindowResize, 150);
 	    return _this;
 	  }
 
@@ -44918,7 +51271,7 @@
 	  next_3: '向后 3 页'
 	};
 
-	function noop$7() {}
+	function noop$e() {}
 
 	function isInteger(value) {
 	  return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
@@ -44936,9 +51289,9 @@
 
 	    var _this = _possibleConstructorReturn(this, (Pagination.__proto__ || Object.getPrototypeOf(Pagination)).call(this, props));
 
-	    _initialiseProps$h.call(_this);
+	    _initialiseProps$i.call(_this);
 
-	    var hasOnChange = props.onChange !== noop$7;
+	    var hasOnChange = props.onChange !== noop$e;
 	    var hasCurrent = 'current' in props;
 	    if (hasCurrent && !hasOnChange) {
 	      console.warn('Warning: You provided a `current` prop to a Pagination component without an `onChange` handler. This will render a read-only component.'); // eslint-disable-line
@@ -45368,7 +51721,7 @@
 	  defaultCurrent: 1,
 	  total: 0,
 	  defaultPageSize: 10,
-	  onChange: noop$7,
+	  onChange: noop$e,
 	  className: '',
 	  selectPrefixCls: 'rc-select',
 	  prefixCls: 'rc-pagination',
@@ -45379,13 +51732,13 @@
 	  showSizeChanger: false,
 	  showLessItems: false,
 	  showTitle: true,
-	  onShowSizeChange: noop$7,
+	  onShowSizeChange: noop$e,
 	  locale: LOCALE,
 	  style: {},
 	  itemRender: defaultItemRender
 	};
 
-	var _initialiseProps$h = function _initialiseProps() {
+	var _initialiseProps$i = function _initialiseProps() {
 	  var _this2 = this;
 
 	  this.getItemIcon = function (icon) {
@@ -45945,7 +52298,1277 @@
 	  }
 	};
 
+	/**
+	 * lodash 3.9.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** `Object#toString` result references. */
+	var funcTag$2 = '[object Function]';
+
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor$1 = /^\[object .+?Constructor\]$/;
+
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike$1(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	/** Used for native method references. */
+	var objectProto$c = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty$c = objectProto$c.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto$c.toString;
+
+	/** Used to detect if a method is native. */
+	var reIsNative$1 = RegExp('^' +
+	  fnToString.call(hasOwnProperty$c).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative$1(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction$1(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 equivalents which return 'object' for typed array constructors.
+	  return isObject$1(value) && objToString.call(value) == funcTag$2;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject$1(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction$1(value)) {
+	    return reIsNative$1.test(fnToString.call(value));
+	  }
+	  return isObjectLike$1(value) && reIsHostCtor$1.test(value);
+	}
+
+	var lodash__getnative = getNative$1;
+
+	/**
+	 * lodash (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modularize exports="npm" -o ./`
+	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+	 * Released under MIT license <https://lodash.com/license>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 */
+
+	/** Used as references for various `Number` constants. */
+	var MAX_SAFE_INTEGER$2 = 9007199254740991;
+
+	/** `Object#toString` result references. */
+	var argsTag$2 = '[object Arguments]',
+	    funcTag$3 = '[object Function]',
+	    genTag$1 = '[object GeneratorFunction]';
+
+	/** Used for built-in method references. */
+	var objectProto$d = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty$d = objectProto$d.hasOwnProperty;
+
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objectToString$1 = objectProto$d.toString;
+
+	/** Built-in value references. */
+	var propertyIsEnumerable$1 = objectProto$d.propertyIsEnumerable;
+
+	/**
+	 * Checks if `value` is likely an `arguments` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * _.isArguments(function() { return arguments; }());
+	 * // => true
+	 *
+	 * _.isArguments([1, 2, 3]);
+	 * // => false
+	 */
+	function isArguments$1(value) {
+	  // Safari 8.1 makes `arguments.callee` enumerable in strict mode.
+	  return isArrayLikeObject$1(value) && hasOwnProperty$d.call(value, 'callee') &&
+	    (!propertyIsEnumerable$1.call(value, 'callee') || objectToString$1.call(value) == argsTag$2);
+	}
+
+	/**
+	 * Checks if `value` is array-like. A value is considered array-like if it's
+	 * not a function and has a `value.length` that's an integer greater than or
+	 * equal to `0` and less than or equal to `Number.MAX_SAFE_INTEGER`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 * @example
+	 *
+	 * _.isArrayLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLike(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLike('abc');
+	 * // => true
+	 *
+	 * _.isArrayLike(_.noop);
+	 * // => false
+	 */
+	function isArrayLike$1(value) {
+	  return value != null && isLength$1(value.length) && !isFunction$2(value);
+	}
+
+	/**
+	 * This method is like `_.isArrayLike` except that it also checks if `value`
+	 * is an object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an array-like object,
+	 *  else `false`.
+	 * @example
+	 *
+	 * _.isArrayLikeObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject(document.body.children);
+	 * // => true
+	 *
+	 * _.isArrayLikeObject('abc');
+	 * // => false
+	 *
+	 * _.isArrayLikeObject(_.noop);
+	 * // => false
+	 */
+	function isArrayLikeObject$1(value) {
+	  return isObjectLike$2(value) && isArrayLike$1(value);
+	}
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a function, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction$2(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in Safari 8-9 which returns 'object' for typed array and other constructors.
+	  var tag = isObject$2(value) ? objectToString$1.call(value) : '';
+	  return tag == funcTag$3 || tag == genTag$1;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This method is loosely based on
+	 * [`ToLength`](http://ecma-international.org/ecma-262/7.0/#sec-tolength).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 * @example
+	 *
+	 * _.isLength(3);
+	 * // => true
+	 *
+	 * _.isLength(Number.MIN_VALUE);
+	 * // => false
+	 *
+	 * _.isLength(Infinity);
+	 * // => false
+	 *
+	 * _.isLength('3');
+	 * // => false
+	 */
+	function isLength$1(value) {
+	  return typeof value == 'number' &&
+	    value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$2;
+	}
+
+	/**
+	 * Checks if `value` is the
+	 * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+	 * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 0.1.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(_.noop);
+	 * // => true
+	 *
+	 * _.isObject(null);
+	 * // => false
+	 */
+	function isObject$2(value) {
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is object-like. A value is object-like if it's not `null`
+	 * and has a `typeof` result of "object".
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 * @example
+	 *
+	 * _.isObjectLike({});
+	 * // => true
+	 *
+	 * _.isObjectLike([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObjectLike(_.noop);
+	 * // => false
+	 *
+	 * _.isObjectLike(null);
+	 * // => false
+	 */
+	function isObjectLike$2(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	var lodash_isarguments = isArguments$1;
+
+	/**
+	 * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+	/** `Object#toString` result references. */
+	var arrayTag$1 = '[object Array]',
+	    funcTag$4 = '[object Function]';
+
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor$2 = /^\[object .+?Constructor\]$/;
+
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike$3(value) {
+	  return !!value && typeof value == 'object';
+	}
+
+	/** Used for native method references. */
+	var objectProto$e = Object.prototype;
+
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString$1 = Function.prototype.toString;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty$e = objectProto$e.hasOwnProperty;
+
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString$1 = objectProto$e.toString;
+
+	/** Used to detect if a method is native. */
+	var reIsNative$2 = RegExp('^' +
+	  fnToString$1.call(hasOwnProperty$e).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeIsArray = getNative$2(Array, 'isArray');
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER$3 = 9007199254740991;
+
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative$2(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative$1(value) ? value : undefined;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength$2(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$3;
+	}
+
+	/**
+	 * Checks if `value` is classified as an `Array` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArray([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArray(function() { return arguments; }());
+	 * // => false
+	 */
+	var isArray$1 = nativeIsArray || function(value) {
+	  return isObjectLike$3(value) && isLength$2(value.length) && objToString$1.call(value) == arrayTag$1;
+	};
+
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction$3(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 equivalents which return 'object' for typed array constructors.
+	  return isObject$3(value) && objToString$1.call(value) == funcTag$4;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject$3(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative$1(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction$3(value)) {
+	    return reIsNative$2.test(fnToString$1.call(value));
+	  }
+	  return isObjectLike$3(value) && reIsHostCtor$2.test(value);
+	}
+
+	var lodash_isarray = isArray$1;
+
+	/**
+	 * lodash 3.1.2 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+
+
+	/** Used to detect unsigned integer values. */
+	var reIsUint$1 = /^\d+$/;
+
+	/** Used for native method references. */
+	var objectProto$f = Object.prototype;
+
+	/** Used to check objects for own properties. */
+	var hasOwnProperty$f = objectProto$f.hasOwnProperty;
+
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = lodash__getnative(Object, 'keys');
+
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER$4 = 9007199254740991;
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike$2(value) {
+	  return value != null && isLength$3(getLength(value));
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex$1(value, length) {
+	  value = (typeof value == 'number' || reIsUint$1.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER$4 : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength$3(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER$4;
+	}
+
+	/**
+	 * A fallback implementation of `Object.keys` which creates an array of the
+	 * own enumerable property names of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 */
+	function shimKeys(object) {
+	  var props = keysIn$1(object),
+	      propsLength = props.length,
+	      length = propsLength && object.length;
+
+	  var allowIndexes = !!length && isLength$3(length) &&
+	    (lodash_isarray(object) || lodash_isarguments(object));
+
+	  var index = -1,
+	      result = [];
+
+	  while (++index < propsLength) {
+	    var key = props[index];
+	    if ((allowIndexes && isIndex$1(key, length)) || hasOwnProperty$f.call(object, key)) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject$4(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+
+	/**
+	 * Creates an array of the own enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects. See the
+	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * for more details.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keys(new Foo);
+	 * // => ['a', 'b'] (iteration order is not guaranteed)
+	 *
+	 * _.keys('hi');
+	 * // => ['0', '1']
+	 */
+	var keys = !nativeKeys ? shimKeys : function(object) {
+	  var Ctor = object == null ? undefined : object.constructor;
+	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+	      (typeof object != 'function' && isArrayLike$2(object))) {
+	    return shimKeys(object);
+	  }
+	  return isObject$4(object) ? nativeKeys(object) : [];
+	};
+
+	/**
+	 * Creates an array of the own and inherited enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keysIn(new Foo);
+	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+	 */
+	function keysIn$1(object) {
+	  if (object == null) {
+	    return [];
+	  }
+	  if (!isObject$4(object)) {
+	    object = Object(object);
+	  }
+	  var length = object.length;
+	  length = (length && isLength$3(length) &&
+	    (lodash_isarray(object) || lodash_isarguments(object)) && length) || 0;
+
+	  var Ctor = object.constructor,
+	      index = -1,
+	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+	      result = Array(length),
+	      skipIndexes = length > 0;
+
+	  while (++index < length) {
+	    result[index] = (index + '');
+	  }
+	  for (var key in object) {
+	    if (!(skipIndexes && isIndex$1(key, length)) &&
+	        !(key == 'constructor' && (isProto || !hasOwnProperty$f.call(object, key)))) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+
+	var lodash_keys = keys;
+
+	var modules = function shallowEqual(objA, objB, compare, compareContext) {
+
+	    var ret = compare ? compare.call(compareContext, objA, objB) : void 0;
+
+	    if (ret !== void 0) {
+	        return !!ret;
+	    }
+
+	    if (objA === objB) {
+	        return true;
+	    }
+
+	    if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+	        return false;
+	    }
+
+	    var keysA = lodash_keys(objA);
+	    var keysB = lodash_keys(objB);
+
+	    var len = keysA.length;
+	    if (len !== keysB.length) {
+	        return false;
+	    }
+
+	    compareContext = compareContext || null;
+
+	    // Test for A's keys different from B.
+	    var bHasOwnProperty = Object.prototype.hasOwnProperty.bind(objB);
+	    for (var i = 0; i < len; i++) {
+	        var key = keysA[i];
+	        if (!bHasOwnProperty(key)) {
+	            return false;
+	        }
+	        var valueA = objA[key];
+	        var valueB = objB[key];
+
+	        var _ret = compare ? compare.call(compareContext, valueA, valueB, key) : void 0;
+	        if (_ret === false || _ret === void 0 && valueA !== valueB) {
+	            return false;
+	        }
+	    }
+
+	    return true;
+	};
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactComponentWithPureRenderMixin
+	 */
+
+
+
+	function shallowCompare(instance, nextProps, nextState) {
+	  return !modules(instance.props, nextProps) || !modules(instance.state, nextState);
+	}
+
+	/**
+	 * If your React component's render function is "pure", e.g. it will render the
+	 * same result given the same props and state, provide this mixin for a
+	 * considerable performance boost.
+	 *
+	 * Most React components have pure render functions.
+	 *
+	 * Example:
+	 *
+	 *   var ReactComponentWithPureRenderMixin =
+	 *     require('ReactComponentWithPureRenderMixin');
+	 *   React.createClass({
+	 *     mixins: [ReactComponentWithPureRenderMixin],
+	 *
+	 *     render: function() {
+	 *       return <div className={this.props.className}>foo</div>;
+	 *     }
+	 *   });
+	 *
+	 * Note: This only checks shallow equality for props and state. If these contain
+	 * complex data structures this mixin may have false-negatives for deeper
+	 * differences. Only mixin to components which have simple props and state, or
+	 * use `forceUpdate()` when you know deep data structures have changed.
+	 *
+	 * See https://facebook.github.io/react/docs/pure-render-mixin.html
+	 */
+	var ReactComponentWithPureRenderMixin = {
+	  shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	    return shallowCompare(this, nextProps, nextState);
+	  }
+	};
+
+	var PureRenderMixin = ReactComponentWithPureRenderMixin;
+
+	var Checkbox = function (_React$Component) {
+	  _inherits(Checkbox, _React$Component);
+
+	  function Checkbox(props) {
+	    _classCallCheck(this, Checkbox);
+
+	    var _this = _possibleConstructorReturn(this, _React$Component.call(this, props));
+
+	    _initialiseProps$j.call(_this);
+
+	    var checked = 'checked' in props ? props.checked : props.defaultChecked;
+
+	    _this.state = {
+	      checked: checked
+	    };
+	    return _this;
+	  }
+
+	  Checkbox.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+	    if ('checked' in nextProps) {
+	      this.setState({
+	        checked: nextProps.checked
+	      });
+	    }
+	  };
+
+	  Checkbox.prototype.shouldComponentUpdate = function shouldComponentUpdate() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return PureRenderMixin.shouldComponentUpdate.apply(this, args);
+	  };
+
+	  Checkbox.prototype.focus = function focus() {
+	    this.input.focus();
+	  };
+
+	  Checkbox.prototype.blur = function blur() {
+	    this.input.blur();
+	  };
+
+	  Checkbox.prototype.render = function render() {
+	    var _classNames;
+
+	    var _props = this.props,
+	        prefixCls = _props.prefixCls,
+	        className = _props.className,
+	        style = _props.style,
+	        name = _props.name,
+	        id = _props.id,
+	        type = _props.type,
+	        disabled = _props.disabled,
+	        readOnly = _props.readOnly,
+	        tabIndex = _props.tabIndex,
+	        onClick = _props.onClick,
+	        onFocus = _props.onFocus,
+	        onBlur = _props.onBlur,
+	        autoFocus = _props.autoFocus,
+	        value = _props.value,
+	        others = _objectWithoutProperties(_props, ['prefixCls', 'className', 'style', 'name', 'id', 'type', 'disabled', 'readOnly', 'tabIndex', 'onClick', 'onFocus', 'onBlur', 'autoFocus', 'value']);
+
+	    var globalProps = Object.keys(others).reduce(function (prev, key) {
+	      if (key.substr(0, 5) === 'aria-' || key.substr(0, 5) === 'data-' || key === 'role') {
+	        prev[key] = others[key];
+	      }
+	      return prev;
+	    }, {});
+
+	    var checked = this.state.checked;
+
+	    var classString = classnames(prefixCls, className, (_classNames = {}, _classNames[prefixCls + '-checked'] = checked, _classNames[prefixCls + '-disabled'] = disabled, _classNames));
+
+	    return React__default.createElement(
+	      'span',
+	      { className: classString, style: style },
+	      React__default.createElement('input', _extends$1({
+	        name: name,
+	        id: id,
+	        type: type,
+	        readOnly: readOnly,
+	        disabled: disabled,
+	        tabIndex: tabIndex,
+	        className: prefixCls + '-input',
+	        checked: !!checked,
+	        onClick: onClick,
+	        onFocus: onFocus,
+	        onBlur: onBlur,
+	        onChange: this.handleChange,
+	        autoFocus: autoFocus,
+	        ref: this.saveInput,
+	        value: value
+	      }, globalProps)),
+	      React__default.createElement('span', { className: prefixCls + '-inner' })
+	    );
+	  };
+
+	  return Checkbox;
+	}(React__default.Component);
+
+	Checkbox.propTypes = {
+	  prefixCls: PropTypes__default.string,
+	  className: PropTypes__default.string,
+	  style: PropTypes__default.object,
+	  name: PropTypes__default.string,
+	  id: PropTypes__default.string,
+	  type: PropTypes__default.string,
+	  defaultChecked: PropTypes__default.oneOfType([PropTypes__default.number, PropTypes__default.bool]),
+	  checked: PropTypes__default.oneOfType([PropTypes__default.number, PropTypes__default.bool]),
+	  disabled: PropTypes__default.bool,
+	  onFocus: PropTypes__default.func,
+	  onBlur: PropTypes__default.func,
+	  onChange: PropTypes__default.func,
+	  onClick: PropTypes__default.func,
+	  tabIndex: PropTypes__default.string,
+	  readOnly: PropTypes__default.bool,
+	  autoFocus: PropTypes__default.bool,
+	  value: PropTypes__default.any
+	};
+	Checkbox.defaultProps = {
+	  prefixCls: 'rc-checkbox',
+	  className: '',
+	  style: {},
+	  type: 'checkbox',
+	  defaultChecked: false,
+	  onFocus: function onFocus() {},
+	  onBlur: function onBlur() {},
+	  onChange: function onChange() {}
+	};
+
+	var _initialiseProps$j = function _initialiseProps() {
+	  var _this2 = this;
+
+	  this.handleChange = function (e) {
+	    var props = _this2.props;
+
+	    if (props.disabled) {
+	      return;
+	    }
+	    if (!('checked' in props)) {
+	      _this2.setState({
+	        checked: e.target.checked
+	      });
+	    }
+	    props.onChange({
+	      target: _extends$1({}, props, {
+	        checked: e.target.checked
+	      }),
+	      stopPropagation: function stopPropagation() {
+	        e.stopPropagation();
+	      },
+	      preventDefault: function preventDefault() {
+	        e.preventDefault();
+	      },
+
+	      nativeEvent: e.nativeEvent
+	    });
+	  };
+
+	  this.saveInput = function (node) {
+	    _this2.input = node;
+	  };
+	};
+
 	var __rest$g = undefined && undefined.__rest || function (s, e) {
+	    var t = {};
+	    for (var p in s) {
+	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+	    }return t;
+	};
+
+	var Checkbox$1 = function (_React$Component) {
+	    _inherits(Checkbox$$1, _React$Component);
+
+	    function Checkbox$$1() {
+	        _classCallCheck(this, Checkbox$$1);
+
+	        var _this = _possibleConstructorReturn(this, (Checkbox$$1.__proto__ || Object.getPrototypeOf(Checkbox$$1)).apply(this, arguments));
+
+	        _this.saveCheckbox = function (node) {
+	            _this.rcCheckbox = node;
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Checkbox$$1, [{
+	        key: 'shouldComponentUpdate',
+	        value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
+	            return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState) || !shallowequal(this.context.checkboxGroup, nextContext.checkboxGroup);
+	        }
+	    }, {
+	        key: 'focus',
+	        value: function focus() {
+	            this.rcCheckbox.focus();
+	        }
+	    }, {
+	        key: 'blur',
+	        value: function blur() {
+	            this.rcCheckbox.blur();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var props = this.props,
+	                context = this.context;
+
+	            var prefixCls = props.prefixCls,
+	                className = props.className,
+	                children = props.children,
+	                indeterminate = props.indeterminate,
+	                style = props.style,
+	                onMouseEnter = props.onMouseEnter,
+	                onMouseLeave = props.onMouseLeave,
+	                restProps = __rest$g(props, ["prefixCls", "className", "children", "indeterminate", "style", "onMouseEnter", "onMouseLeave"]);
+
+	            var checkboxGroup = context.checkboxGroup;
+
+	            var checkboxProps = _extends$1({}, restProps);
+	            if (checkboxGroup) {
+	                checkboxProps.onChange = function () {
+	                    if (restProps.onChange) {
+	                        restProps.onChange.apply(restProps, arguments);
+	                    }
+	                    checkboxGroup.toggleOption({ label: children, value: props.value });
+	                };
+	                checkboxProps.checked = checkboxGroup.value.indexOf(props.value) !== -1;
+	                checkboxProps.disabled = props.disabled || checkboxGroup.disabled;
+	            }
+	            var classString = classnames(className, _defineProperty({}, prefixCls + '-wrapper', true));
+	            var checkboxClass = classnames(_defineProperty({}, prefixCls + '-indeterminate', indeterminate));
+	            return React.createElement(
+	                'label',
+	                { className: classString, style: style, onMouseEnter: onMouseEnter, onMouseLeave: onMouseLeave },
+	                React.createElement(Checkbox, _extends$1({}, checkboxProps, { prefixCls: prefixCls, className: checkboxClass, ref: this.saveCheckbox })),
+	                children !== undefined ? React.createElement(
+	                    'span',
+	                    null,
+	                    children
+	                ) : null
+	            );
+	        }
+	    }]);
+
+	    return Checkbox$$1;
+	}(React.Component);
+
+	Checkbox$1.defaultProps = {
+	    prefixCls: 'ant-checkbox',
+	    indeterminate: false
+	};
+	Checkbox$1.contextTypes = {
+	    checkboxGroup: PropTypes.any
+	};
+
+	var __rest$h = undefined && undefined.__rest || function (s, e) {
+	    var t = {};
+	    for (var p in s) {
+	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+	    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+	    }return t;
+	};
+
+	var CheckboxGroup = function (_React$Component) {
+	    _inherits(CheckboxGroup, _React$Component);
+
+	    function CheckboxGroup(props) {
+	        _classCallCheck(this, CheckboxGroup);
+
+	        var _this = _possibleConstructorReturn(this, (CheckboxGroup.__proto__ || Object.getPrototypeOf(CheckboxGroup)).call(this, props));
+
+	        _this.toggleOption = function (option) {
+	            var optionIndex = _this.state.value.indexOf(option.value);
+	            var value = [].concat(_toConsumableArray(_this.state.value));
+	            if (optionIndex === -1) {
+	                value.push(option.value);
+	            } else {
+	                value.splice(optionIndex, 1);
+	            }
+	            if (!('value' in _this.props)) {
+	                _this.setState({ value: value });
+	            }
+	            var onChange = _this.props.onChange;
+	            if (onChange) {
+	                onChange(value);
+	            }
+	        };
+	        _this.state = {
+	            value: props.value || props.defaultValue || []
+	        };
+	        return _this;
+	    }
+
+	    _createClass(CheckboxGroup, [{
+	        key: 'getChildContext',
+	        value: function getChildContext() {
+	            return {
+	                checkboxGroup: {
+	                    toggleOption: this.toggleOption,
+	                    value: this.state.value,
+	                    disabled: this.props.disabled
+	                }
+	            };
+	        }
+	    }, {
+	        key: 'shouldComponentUpdate',
+	        value: function shouldComponentUpdate(nextProps, nextState) {
+	            return !shallowequal(this.props, nextProps) || !shallowequal(this.state, nextState);
+	        }
+	    }, {
+	        key: 'getOptions',
+	        value: function getOptions() {
+	            var options = this.props.options;
+	            // https://github.com/Microsoft/TypeScript/issues/7960
+
+	            return options.map(function (option) {
+	                if (typeof option === 'string') {
+	                    return {
+	                        label: option,
+	                        value: option
+	                    };
+	                }
+	                return option;
+	            });
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var props = this.props,
+	                state = this.state;
+
+	            var prefixCls = props.prefixCls,
+	                className = props.className,
+	                style = props.style,
+	                options = props.options,
+	                restProps = __rest$h(props, ["prefixCls", "className", "style", "options"]);
+
+	            var groupPrefixCls = prefixCls + '-group';
+	            var domProps = omit(restProps, ['children', 'defaultValue', 'value', 'onChange', 'disabled']);
+	            var children = props.children;
+	            if (options && options.length > 0) {
+	                children = this.getOptions().map(function (option) {
+	                    return React.createElement(
+	                        Checkbox$1,
+	                        { prefixCls: prefixCls, key: option.value.toString(), disabled: 'disabled' in option ? option.disabled : props.disabled, value: option.value, checked: state.value.indexOf(option.value) !== -1, onChange: option.onChange, className: groupPrefixCls + '-item' },
+	                        option.label
+	                    );
+	                });
+	            }
+	            var classString = classnames(groupPrefixCls, className);
+	            return React.createElement(
+	                'div',
+	                _extends$1({ className: classString, style: style }, domProps),
+	                children
+	            );
+	        }
+	    }], [{
+	        key: 'getDerivedStateFromProps',
+	        value: function getDerivedStateFromProps(nextProps) {
+	            if ('value' in nextProps) {
+	                return {
+	                    value: nextProps.value || []
+	                };
+	            }
+	            return null;
+	        }
+	    }]);
+
+	    return CheckboxGroup;
+	}(React.Component);
+
+	CheckboxGroup.defaultProps = {
+	    options: [],
+	    prefixCls: 'ant-checkbox'
+	};
+	CheckboxGroup.propTypes = {
+	    defaultValue: PropTypes.array,
+	    value: PropTypes.array,
+	    options: PropTypes.array.isRequired,
+	    onChange: PropTypes.func
+	};
+	CheckboxGroup.childContextTypes = {
+	    checkboxGroup: PropTypes.any
+	};
+	polyfill(CheckboxGroup);
+
+	Checkbox$1.Group = CheckboxGroup;
+
+	var __rest$i = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -45995,7 +53618,7 @@
 	                className = props.className,
 	                children = props.children,
 	                style = props.style,
-	                restProps = __rest$g(props, ["prefixCls", "className", "children", "style"]);
+	                restProps = __rest$i(props, ["prefixCls", "className", "children", "style"]);
 
 	            var radioGroup = context.radioGroup;
 
@@ -46518,7 +54141,7 @@
 	    };
 	}
 
-	var __rest$h = undefined && undefined.__rest || function (s, e) {
+	var __rest$j = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -46586,7 +54209,7 @@
 	            var _a = this.props,
 	                type = _a.type,
 	                rowIndex = _a.rowIndex,
-	                rest = __rest$h(_a, ["type", "rowIndex"]);var checked = this.state.checked;
+	                rest = __rest$j(_a, ["type", "rowIndex"]);var checked = this.state.checked;
 
 	            if (type === 'radio') {
 	                return React.createElement(Radio, _extends$1({ checked: checked, value: rowIndex }, rest));
@@ -46940,7 +54563,7 @@
 	    return columns;
 	}
 
-	var __rest$i = undefined && undefined.__rest || function (s, e) {
+	var __rest$k = undefined && undefined.__rest || function (s, e) {
 	    var t = {};
 	    for (var p in s) {
 	        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -46948,7 +54571,7 @@
 	        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
 	    }return t;
 	};
-	function noop$8() {}
+	function noop$f() {}
 	function stopPropagation$1(e) {
 	    e.stopPropagation();
 	    if (e.nativeEvent.stopImmediatePropagation) {
@@ -46959,8 +54582,8 @@
 	    return props.rowSelection || {};
 	}
 	var defaultPagination = {
-	    onChange: noop$8,
-	    onShowSizeChange: noop$8
+	    onChange: noop$f,
+	    onShowSizeChange: noop$f
 	};
 	/**
 	 * Avoid creating new object, so that parent component's shouldComponentUpdate
@@ -47286,7 +54909,7 @@
 	                className = _a.className,
 	                prefixCls = _a.prefixCls,
 	                showHeader = _a.showHeader,
-	                restProps = __rest$i(_a, ["style", "className", "prefixCls", "showHeader"]);
+	                restProps = __rest$k(_a, ["style", "className", "prefixCls", "showHeader"]);
 	            var data = _this.getCurrentPageData();
 	            var expandIconAsCell = _this.props.expandedRowRender && _this.props.expandIconAsCell !== false;
 	            var classString = classnames((_classNames = {}, _defineProperty(_classNames, prefixCls + '-' + _this.props.size, true), _defineProperty(_classNames, prefixCls + '-bordered', _this.props.bordered), _defineProperty(_classNames, prefixCls + '-empty', !data.length), _defineProperty(_classNames, prefixCls + '-without-column-header', !showHeader), _classNames));
@@ -47914,12 +55537,108 @@
 	};
 
 	//import BaseForm,{FormItem} from 'components/BaseForm'
-	var DataTable =
+	var TableMenu =
 	/*#__PURE__*/
 	function (_Component) {
-	  inherits$1(DataTable, _Component);
+	  _inherits$1(TableMenu, _Component);
 
-	  createClass$1(DataTable, [{
+	  function TableMenu() {
+	    var _getPrototypeOf2;
+
+	    var _this;
+
+	    _classCallCheck$1(this, TableMenu);
+
+	    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    _this = _possibleConstructorReturn$1(this, (_getPrototypeOf2 = _getPrototypeOf(TableMenu)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+	      visible: true //请求远程数据接口
+
+	    });
+
+	    return _this;
+	  }
+
+	  _createClass$1(TableMenu, [{
+	    key: "componentWillMount",
+	    value: function componentWillMount() {
+	      var actions = this.props.actions;
+	    } // //处理表格提交后动作
+	    // handleOk(){
+	    //   console.log(this)
+	    //   this.form.onSubmit()
+	    //   let { onClosePopup } = this.props
+	    //   onClosePopup()
+	    // }
+	    // saveFormRef=(form)=>this.form=form
+	    // handleSubmit(values){
+	    //   var {onSelectChange}=this.props
+	    //   console.log(values)
+	    //    // return new API().fetchTableColumns(values).then(json => {
+	    //    //   onSelectChange(values.isShowArr)
+	    //    //   // console.log(json,values)
+	    //    // }).catch(ex => {
+	    //    //   return "error"
+	    //    // })
+	    // }
+
+	  }, {
+	    key: "handleChange",
+	    value: function handleChange(value) {
+	      // console.log(value)
+	      var onSelectChange = this.props.onSelectChange;
+	      onSelectChange(value);
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      var _this$props = this.props,
+	          form = _this$props.form,
+	          initialValues = _this$props.initialValues,
+	          handleSubmit = _this$props.handleSubmit,
+	          children = _this$props.children,
+	          defaultValue = _this$props.defaultValue,
+	          columns = _this$props.columns,
+	          onClosePopup = _this$props.onClosePopup;
+	      var saveFormRef = this.saveFormRef;
+	      return React__default.createElement(Form, {
+	        onSubmit: handleSubmit,
+	        ref: saveFormRef,
+	        layout: "inline"
+	      }, React__default.createElement(Checkbox$1.Group, {
+	        name: "isShowArr",
+	        style: {
+	          width: '100%'
+	        },
+	        defaultValue: defaultValue,
+	        onChange: this.handleChange.bind(this)
+	      }, React__default.createElement(Row, null, columns.filter(function (it) {
+	        return it.title != '操作';
+	      }).map(function (it, idx) {
+	        return React__default.createElement(Col, {
+	          span: 8,
+	          key: idx
+	        }, React__default.createElement(Checkbox$1, {
+	          value: it.key,
+	          disabled: it.isRead == 1 ? true : false
+	        }, it.title));
+	      }))));
+	    }
+	  }]);
+
+	  return TableMenu;
+	}(React.Component);
+
+	var DataTable =
+	/*#__PURE__*/
+	function (_Component2) {
+	  _inherits$1(DataTable, _Component2);
+
+	  _createClass$1(DataTable, [{
 	    key: "showPopover",
 	    value: function showPopover() {
 	      this.setState({
@@ -47929,23 +55648,23 @@
 	  }]);
 
 	  function DataTable(props) {
-	    var _this;
+	    var _this2;
 
-	    classCallCheck$1(this, DataTable);
+	    _classCallCheck$1(this, DataTable);
 
-	    _this = possibleConstructorReturn$1(this, getPrototypeOf(DataTable).call(this, props));
+	    _this2 = _possibleConstructorReturn$1(this, _getPrototypeOf(DataTable).call(this, props));
 
-	    defineProperty$5(assertThisInitialized(assertThisInitialized(_this)), "state", {
+	    _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this2)), "state", {
 	      visible: false,
 	      newColumns: [],
 	      displayColumns: []
 	    });
 
-	    _this.state.columns = props.columns;
-	    return _this;
+	    _this2.state.columns = props.columns;
+	    return _this2;
 	  }
 
-	  createClass$1(DataTable, [{
+	  _createClass$1(DataTable, [{
 	    key: "componentWillReceiveProps",
 	    value: function componentWillReceiveProps(nextProps) {
 	      var columns = nextProps.columns;
@@ -47989,25 +55708,33 @@
 	      // console.log("menu")
 	      var columns = this.state.columns;
 	      var defaultValue = columns.filter(function (col) {
-	        return col.type != 'config' && col.visible == true;
+	        return col.type != 'config' && (col.visible = true || col.visible == undefined);
 	      }).map(function (col) {
 	        return col.key;
-	      }); // return (
-	      //     <div className="" style={{width:400,height:200,padding:'10px',border:'1px solid #cfdae5'}}>
-	      //       <TableMenu defaultValue={defaultValue} columns={columns} onSelectChange={this.onSelectChange.bind(this)} onClosePopup={this.onClosePopup.bind(this)} ></TableMenu>
-	      //     </div>
-	      //   )
-
-	      return null;
+	      });
+	      return React__default.createElement("div", {
+	        className: "",
+	        style: {
+	          width: 400,
+	          height: 200,
+	          padding: '10px',
+	          border: '1px solid #cfdae5'
+	        }
+	      }, React__default.createElement(TableMenu, {
+	        defaultValue: defaultValue,
+	        columns: columns,
+	        onSelectChange: this.onSelectChange.bind(this),
+	        onClosePopup: this.onClosePopup.bind(this)
+	      }));
 	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      var _this$props = this.props,
-	          pagination = _this$props.pagination,
-	          showConfig = _this$props.showConfig,
-	          page = _this$props.page,
-	          otherProps = objectWithoutProperties$1(_this$props, ["pagination", "showConfig", "page"]);
+	      var _this$props2 = this.props,
+	          pagination = _this$props2.pagination,
+	          showConfig = _this$props2.showConfig,
+	          page = _this$props2.page,
+	          otherProps = _objectWithoutProperties$1(_this$props2, ["pagination", "showConfig", "page"]);
 
 	      var _this$state = this.state,
 	          visible = _this$state.visible,
@@ -48015,8 +55742,9 @@
 	      var newColumns;
 
 	      if (showConfig) {
+	        // if(true){
 	        newColumns = columns.filter(function (col) {
-	          return col.visible == true;
+	          return col.visible == true || col.visible == undefined; // return true
 	        }).concat([{
 	          title: " ",
 	          filterDropdown: this.renderTableMenu(),
@@ -48030,7 +55758,7 @@
 	        newColumns = columns;
 	      }
 
-	      return React__default.createElement(Table$1, _extends_1({}, otherProps, {
+	      return React__default.createElement(Table$1, _extends$2({}, otherProps, {
 	        columns: newColumns,
 	        pagination: !pagination ? false : Object.assign({}, pagination, page)
 	      }));
@@ -48040,7 +55768,7 @@
 	  return DataTable;
 	}(React.Component);
 
-	defineProperty$5(DataTable, "defaultProps", {
+	_defineProperty$1(DataTable, "defaultProps", {
 	  page: {},
 	  prefixCls: 'ant-table',
 	  showQuickJumper: true,
@@ -48060,13 +55788,52 @@
 	  columns: []
 	});
 
+	var PropertyTable =
+	/*#__PURE__*/
+	function (_Component) {
+	  _inherits$1(PropertyTable, _Component);
+
+	  function PropertyTable() {
+	    _classCallCheck$1(this, PropertyTable);
+
+	    return _possibleConstructorReturn$1(this, _getPrototypeOf(PropertyTable).apply(this, arguments));
+	  }
+
+	  _createClass$1(PropertyTable, [{
+	    key: "renderItem",
+	    value: function renderItem(ds, idx) {
+	      return React__default.createElement("div", {
+	        key: idx
+	      }, React__default.createElement("th", null, ds.label), React__default.createElement("td", null, ds.value));
+	    }
+	  }, {
+	    key: "renderTableRows",
+	    value: function renderTableRows() {
+	      var dataSource = this.props.dataSource;
+	      return React__default.createElement("tr", null, dataSource.map(this.renderItem));
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return React__default.createElement("table", null, React__default.createElement("tbody", null, this.renderTableRows()));
+	    }
+	  }]);
+
+	  return PropertyTable;
+	}(React.Component);
+	PropertyTable.propsType = {
+	  dataSource: PropTypes__default.array.isRequired,
+	  renderItem: PropTypes__default.func
+	};
+
 	exports.AdvancedSearch = AdvancedSearchForm;
-	exports.BaseForm = BaseForm;
+	exports.BaseForm = SubmitForm;
 	exports.FormItem = FormItem$1;
 	exports.ButtonGroups = ButtonGroups;
 	exports.DataTable = DataTable;
 	exports.Permission = Permission;
 	exports.TreeView = TreeView;
+	exports.PropertyTable = PropertyTable;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
