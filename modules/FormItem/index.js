@@ -140,8 +140,13 @@ export default class FormItem extends Component{
         style:{marginBottom:0}
       }
     }
+    if(element.props.hidden==true){
+      styles={
+        style:{display:"none"}
+      }
+    }
     return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
-      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,...normalizeDefault})(this.renderField())}
+      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false,...normalizeDefault})(this.renderField())}
     </Form.Item>)
   }
 }

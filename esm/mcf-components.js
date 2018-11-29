@@ -762,12 +762,21 @@ function (_Component) {
         };
       }
 
+      if (element.props.hidden == true) {
+        styles = {
+          style: {
+            display: "none"
+          }
+        };
+      }
+
       return React.createElement(_Form.Item, _extends({
         label: label
       }, Object.assign({}, {}, formLayout, this.props), {
         colon: false
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
-        initialValue: defaultValue
+        initialValue: defaultValue,
+        hidden: element.props.hidden || false
       }, normalizeDefault))(this.renderField()));
     }
   }]);
@@ -1029,18 +1038,18 @@ AdvancedSearchForm.defaultProps = {
 *children 1个 多个数据格式处理
 *
 */
-var Comfirm =
+var Confirm =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(Comfirm, _Component);
+  _inherits(Confirm, _Component);
 
-  function Comfirm() {
-    _classCallCheck(this, Comfirm);
+  function Confirm() {
+    _classCallCheck(this, Confirm);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Comfirm).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Confirm).apply(this, arguments));
   }
 
-  _createClass(Comfirm, [{
+  _createClass(Confirm, [{
     key: "onConfirmClick",
     value: function onConfirmClick() {
       var _this$props = this.props,
@@ -1065,7 +1074,7 @@ function (_Component) {
     }
   }]);
 
-  return Comfirm;
+  return Confirm;
 }(Component);
 
 var ButtonGroups =
@@ -1107,10 +1116,11 @@ function (_Component2) {
           confirm = _it$props.confirm,
           placement = _it$props.placement,
           children = _it$props.children,
-          actionkey = _it$props.actionkey;
+          actionkey = _it$props.actionkey,
+          disabled = _it$props.disabled;
 
-      if (confirm) {
-        return React.createElement(Comfirm, Object.assign({}, {
+      if (confirm && !disabled) {
+        return React.createElement(Confirm, Object.assign({}, {
           key: idx,
           title: "确认框",
           content: confirm,
@@ -1126,11 +1136,11 @@ function (_Component2) {
         return React.createElement(_Tooltip, Object.assign({}, {
           key: idx,
           title: tip
-        }), React.cloneElement(it, Object.assign({}, it.props, {
+        }), React.cloneElement(it, Object.assign({}, it.props, !disabled ? {
           onClick: function onClick() {
             handleClick(actionkey);
           }
-        }), children));
+        } : {}), children));
       }
     } // return
 
@@ -1209,13 +1219,12 @@ function (_Component2) {
 */
 
 
-_defineProperty(ButtonGroups, "contextTypes", {
-  appReducer: PropTypes.object
+_defineProperty(ButtonGroups, "contextTypes", {// appReducer:PropTypes.object
 });
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick: PropTypes.func,
-  children: PropTypes.array
+  children: PropTypes.object
 };
 ButtonGroups.defaultProps = {
   showSize: 5
@@ -1241,8 +1250,13 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(TableMenu)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
-      visible: true //请求远程数据接口
+      visible: true,
+      columns: [] //请求远程数据接口
 
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "saveFormRef", function (form) {
+      return _this.form = form;
     });
 
     return _this;
@@ -1253,44 +1267,66 @@ function (_Component) {
     value: function componentWillMount() {
       var actions = this.props.actions;
     } // //处理表格提交后动作
-    // handleOk(){
-    //   console.log(this)
-    //   this.form.onSubmit()
-    //   let { onClosePopup } = this.props
-    //   onClosePopup()
-    // }
-    // saveFormRef=(form)=>this.form=form
-    // handleSubmit(values){
-    //   var {onSelectChange}=this.props
-    //   console.log(values)
-    //    // return new API().fetchTableColumns(values).then(json => {
-    //    //   onSelectChange(values.isShowArr)
-    //    //   // console.log(json,values)
-    //    // }).catch(ex => {
-    //    //   return "error"
-    //    // })
-    // }
 
   }, {
-    key: "handleChange",
-    value: function handleChange(value) {
-      // console.log(value)
+    key: "handleOk",
+    value: function handleOk() {
+      var columns = this.state.columns;
+      var _this$props = this.props,
+          onSelectChange = _this$props.onSelectChange,
+          onClosePopup = _this$props.onClosePopup; //  console.log(columns)
+
+      onSelectChange(columns); //  this.form.onSubmit()
+
+      onClosePopup();
+    }
+  }, {
+    key: "handleSubmit",
+    value: function handleSubmit(values) {
       var onSelectChange = this.props.onSelectChange;
-      onSelectChange(value);
+      this.setState({
+        columns: values
+      }); //  console.log(values)
+      // return new API().fetchTableColumns(values).then(json => {
+      //   onSelectChange(values.isShowArr)
+      //   // console.log(json,values)
+      // }).catch(ex => {
+      //   return "error"
+      // })
+    }
+  }, {
+    key: "handleChange",
+    value: function handleChange(values) {
+      var onSelectChange = this.props.onSelectChange;
+      console.log(values);
+      this.setState({
+        columns: values
+      }); // console.log(value)
+      // const { onSelectChange } =this.props
+      // onSelectChange(value)
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          form = _this$props.form,
-          initialValues = _this$props.initialValues,
-          handleSubmit = _this$props.handleSubmit,
-          children = _this$props.children,
-          defaultValue = _this$props.defaultValue,
-          columns = _this$props.columns,
-          onClosePopup = _this$props.onClosePopup;
+      var _this$props2 = this.props,
+          form = _this$props2.form,
+          initialValues = _this$props2.initialValues,
+          handleSubmit = _this$props2.handleSubmit,
+          children = _this$props2.children,
+          defaultValue = _this$props2.defaultValue,
+          columns = _this$props2.columns,
+          onClosePopup = _this$props2.onClosePopup;
       var saveFormRef = this.saveFormRef;
-      return React.createElement(_Form, {
+      return React.createElement("div", {
+        className: "",
+        style: {
+          width: 400,
+          height: 200,
+          padding: '10px',
+          border: '1px solid #cfdae5',
+          background: '#fff'
+        }
+      }, React.createElement(_Form, {
         onSubmit: handleSubmit,
         ref: saveFormRef,
         layout: "inline"
@@ -1311,7 +1347,21 @@ function (_Component) {
           value: it.key,
           disabled: it.isRead == 1 ? true : false
         }, it.title));
-      }))));
+      }))), React.createElement("div", {
+        style: {
+          textAlign: 'right'
+        }
+      }, React.createElement(_Button, {
+        size: "small",
+        onClick: onClosePopup
+      }, "\u53D6\u6D88"), React.createElement(_Button, {
+        size: "small",
+        type: "primary",
+        onClick: this.handleOk.bind(this),
+        style: {
+          marginLeft: '10px'
+        }
+      }, "\u786E\u5B9A"))));
     }
   }]);
 
@@ -1360,6 +1410,7 @@ function (_Component2) {
   }, {
     key: "onSelectChange",
     value: function onSelectChange(checkedValues) {
+      //console.log(checkedValues)
       this.setState({
         columns: this.state.columns.map(function (col) {
           if (checkedValues.indexOf(col.key) >= 0) {
@@ -1390,36 +1441,27 @@ function (_Component2) {
   }, {
     key: "renderTableMenu",
     value: function renderTableMenu() {
-      // console.log("menu")
       var columns = this.state.columns;
       var defaultValue = columns.filter(function (col) {
-        return col.type != 'config' && (col.visible = true || col.visible == undefined);
+        return col.type != 'config' && (col.visible === true || col.visible === undefined);
       }).map(function (col) {
         return col.key;
       });
-      return React.createElement("div", {
-        className: "",
-        style: {
-          width: 400,
-          height: 200,
-          padding: '10px',
-          border: '1px solid #cfdae5'
-        }
-      }, React.createElement(TableMenu, {
+      return React.createElement(TableMenu, {
         defaultValue: defaultValue,
         columns: columns,
         onSelectChange: this.onSelectChange.bind(this),
         onClosePopup: this.onClosePopup.bind(this)
-      }));
+      });
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props2 = this.props,
-          pagination = _this$props2.pagination,
-          showConfig = _this$props2.showConfig,
-          page = _this$props2.page,
-          otherProps = _objectWithoutProperties(_this$props2, ["pagination", "showConfig", "page"]);
+      var _this$props3 = this.props,
+          pagination = _this$props3.pagination,
+          showConfig = _this$props3.showConfig,
+          page = _this$props3.page,
+          otherProps = _objectWithoutProperties(_this$props3, ["pagination", "showConfig", "page"]);
 
       var _this$state = this.state,
           visible = _this$state.visible,
@@ -1441,7 +1483,8 @@ function (_Component2) {
         }]);
       } else {
         newColumns = columns;
-      }
+      } //console.log(newColumns,columns)
+
 
       return React.createElement(_Table, _extends({}, otherProps, {
         columns: newColumns,

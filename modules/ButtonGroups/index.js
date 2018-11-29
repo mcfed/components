@@ -8,7 +8,7 @@ import {Button,Icon,Tooltip,Menu,Dropdown,Modal} from 'antd'
 *
 */
 
-export class Comfirm extends Component{
+export class Confirm extends Component{
   onConfirmClick(){
     const {onConfirm,title,content}=this.props
     return Modal.confirm({
@@ -28,7 +28,7 @@ export class Comfirm extends Component{
 export default class ButtonGroups extends Component {
 
   static contextTypes = {
-    appReducer:PropTypes.object
+    // appReducer:PropTypes.object
   }
 
 
@@ -52,16 +52,24 @@ export default class ButtonGroups extends Component {
 
   renderReactElement(it,idx){
     let {handleClick} = this.props
-    let {tip,confirm,placement,children,actionkey} = it.props
+    let {tip,confirm,placement,children,actionkey,disabled} = it.props
 
-    if(confirm){
+    if(confirm && !disabled){
       return React.createElement(
-        Comfirm,
+        Confirm,
         Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
         React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props),children))
       )
     }else{
-      return React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props,{onClick:()=>{handleClick(actionkey)}}),children))
+      return React.createElement(
+        Tooltip,
+        Object.assign({},{key:idx,title:tip}),
+        React.cloneElement(
+          it,
+          Object.assign({},it.props,!disabled?{onClick:()=>{handleClick(actionkey)}}:{}),
+          children
+        )
+      )
     }
   }
     // return
@@ -140,7 +148,7 @@ export default class ButtonGroups extends Component {
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
-  children:PropTypes.array,
+  children:PropTypes.object,
 }
 ButtonGroups.defaultProps = {
   showSize:5,
