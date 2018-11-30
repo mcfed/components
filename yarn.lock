@@ -5355,6 +5355,7 @@ rollup-plugin-node-resolve@^3.4.0:
 rollup-plugin-notify@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/rollup-plugin-notify/-/rollup-plugin-notify-1.0.6.tgz#b379c7e541dccf6343773673b41b1c07d26110ed"
+  integrity sha512-MzpHXL9SAxeZq5ha+V5P8YvkvFI4xDb8MIie0qPvx8QcpW9zCi49VxheUrLRDTZAhQEY9xh1lpQzAgKlYZrkAg==
   dependencies:
     node-notifier "^5.2.1"
     strip-ansi "^4.0.0"

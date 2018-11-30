@@ -1,3 +1,15 @@
+function __$styleInject(css) {
+  if (!css) return;
+
+  if (typeof window == 'undefined') return;
+  var style = document.createElement('style');
+  style.setAttribute('media', 'screen');
+
+  style.innerHTML = css;
+  document.head.appendChild(style);
+  return css;
+}
+
 import _Form from 'antd/es/form';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
@@ -825,7 +837,7 @@ Permission.defaultProps = {
   expression: true
 };
 
-//import styles from './AdvancedSearch.less'
+__$styleInject(".advanced-search-panel {\n  position: relative;\n  flex-shrink: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n");
 
 var Option$1 = _Select.Option;
 

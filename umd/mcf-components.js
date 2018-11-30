@@ -4,6 +4,18 @@
 	(factory((global.components = {}),global.React,global.ReactDOM,global.PropTypes,global.canUseDOM));
 }(this, (function (exports,React,ReactDOM,PropTypes,ExecutionEnvironment) { 'use strict';
 
+	function __$styleInject(css) {
+	  if (!css) return;
+
+	  if (typeof window == 'undefined') return;
+	  var style = document.createElement('style');
+	  style.setAttribute('media', 'screen');
+
+	  style.innerHTML = css;
+	  document.head.appendChild(style);
+	  return css;
+	}
+
 	var React__default = 'default' in React ? React['default'] : React;
 	var ReactDOM__default = 'default' in ReactDOM ? ReactDOM['default'] : ReactDOM;
 	var PropTypes__default = 'default' in PropTypes ? PropTypes['default'] : PropTypes;
@@ -44947,6 +44959,8 @@
 	Permission.defaultProps = {
 	  expression: true
 	};
+
+	__$styleInject(".advanced-search-panel {\n  position: relative;\n  flex-shrink: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n");
 
 	var AdvancedSearchForm =
 	/*#__PURE__*/
