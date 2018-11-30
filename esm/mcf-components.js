@@ -7,6 +7,7 @@ import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
 import _DatePicker from 'antd/es/date-picker';
 import _Select from 'antd/es/select';
+import moment from 'moment';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
 import classNames from 'classnames';
@@ -569,6 +570,9 @@ function (_Component3) {
 }(Component);
 
 var Option = _Select.Option;
+var MonthPicker = _DatePicker.MonthPicker,
+    RangePicker = _DatePicker.RangePicker,
+    WeekPicker = _DatePicker.WeekPicker;
 
 var FormItem =
 /*#__PURE__*/
@@ -714,7 +718,8 @@ function (_Component) {
       var element = this.props.children;
       var _element$props = element.props,
           name = _element$props.name,
-          label = _element$props.label;
+          label = _element$props.label,
+          format = _element$props.format;
 
       var _element$props2 = element.props,
           defaultValue = _element$props2.defaultValue,
@@ -725,10 +730,28 @@ function (_Component) {
           getFieldDecorator = _this$context.formRef.getFieldDecorator,
           formLayout = _this$context.formLayout;
       var styles = {};
+      var normalizeDefault = {};
 
-      if (element.type == _DatePicker.RangePicker) {
-        defaultValue = [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
-      } //  reset antd-form-item  marginBottom value
+      if (element.type.name == RangePicker.name) {
+        if (defaultValue == Array) {
+          defaultValue = defaultValue && [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
+        } else {
+          defaultValue = defaultValue == "" || !defaultValue ? null : moment(defaultValue);
+        } // normalizeDefault={
+        //   normalize:function(values){
+        //     console.log("normalize",values && [values[0].format(format),values[1].format(format)])
+        //     return values && [values[0].format(format),values[1].format(format)]
+        //   }
+        // }
+
+      } // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
+      //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
+      //    normalizeDefault={
+      //      normalize:function(values){
+      //        return values && values.format(format)
+      //      }
+      //    }
+      // }
 
 
       if (element.type === _Input && element.props.type === "hidden") {
@@ -754,7 +777,7 @@ function (_Component) {
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
         initialValue: defaultValue,
         hidden: element.props.hidden || false
-      }))(this.renderField()));
+      }, normalizeDefault))(this.renderField()));
     }
   }]);
 
@@ -1015,18 +1038,18 @@ AdvancedSearchForm.defaultProps = {
 *children 1个 多个数据格式处理
 *
 */
-var Comfirm =
+var Confirm =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(Comfirm, _Component);
+  _inherits(Confirm, _Component);
 
-  function Comfirm() {
-    _classCallCheck(this, Comfirm);
+  function Confirm() {
+    _classCallCheck(this, Confirm);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Comfirm).apply(this, arguments));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Confirm).apply(this, arguments));
   }
 
-  _createClass(Comfirm, [{
+  _createClass(Confirm, [{
     key: "onConfirmClick",
     value: function onConfirmClick() {
       var _this$props = this.props,
@@ -1051,7 +1074,7 @@ function (_Component) {
     }
   }]);
 
-  return Comfirm;
+  return Confirm;
 }(Component);
 
 var ButtonGroups =
@@ -1097,7 +1120,7 @@ function (_Component2) {
           disabled = _it$props.disabled;
 
       if (confirm && !disabled) {
-        return React.createElement(Comfirm, Object.assign({}, {
+        return React.createElement(Confirm, Object.assign({}, {
           key: idx,
           title: "确认框",
           content: confirm,
@@ -1113,11 +1136,11 @@ function (_Component2) {
         return React.createElement(_Tooltip, Object.assign({}, {
           key: idx,
           title: tip
-        }), React.cloneElement(it, Object.assign({}, it.props, {
+        }), React.cloneElement(it, Object.assign({}, it.props, !disabled ? {
           onClick: function onClick() {
             handleClick(actionkey);
           }
-        }), children));
+        } : {}), children));
       }
     } // return
 
@@ -1196,13 +1219,12 @@ function (_Component2) {
 */
 
 
-_defineProperty(ButtonGroups, "contextTypes", {
-  appReducer: PropTypes.object
+_defineProperty(ButtonGroups, "contextTypes", {// appReducer:PropTypes.object
 });
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick: PropTypes.func,
-  children: PropTypes.array
+  children: PropTypes.object
 };
 ButtonGroups.defaultProps = {
   showSize: 5

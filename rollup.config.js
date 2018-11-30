@@ -4,6 +4,7 @@ import commonjs from "rollup-plugin-commonjs"
 import less from "rollup-plugin-less-loader"
 import nodeResolve from "rollup-plugin-node-resolve"
 import localResolve from 'rollup-plugin-local-resolve'
+import notify from 'rollup-plugin-notify'
 import { sizeSnapshot } from "rollup-plugin-size-snapshot"
 
 
@@ -29,19 +30,19 @@ const babelOptionsESM = {
 const commonjsOptions = {
   include: /node_modules/
 };
-const external = ['moment']
 
 export default [{
   input,
   output: { file: `esm/${pkg.name}.js`, format: "esm" },
-  external:['moment'],
+  external:['antd'],
   plugins: [
     localResolve(),
     babel(babelOptionsESM),
     less({
       insert:true,
     }),
-    sizeSnapshot()
+    sizeSnapshot(),
+    notify()
   ]
 },{
    input,
@@ -55,6 +56,7 @@ export default [{
     }),
      commonjs(commonjsOptions),
      replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
-     sizeSnapshot()
+     sizeSnapshot(),
+     notify()
    ]
 }]

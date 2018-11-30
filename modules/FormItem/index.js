@@ -1,9 +1,11 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 import {Select,Input,Form,DatePicker} from 'antd'
 import {TreeSelectPicker} from '../TreeView'
 
 const Option=Select.Option
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 export default class FormItem extends Component{
   constructor(props) {
@@ -105,15 +107,34 @@ export default class FormItem extends Component{
   }
   render(){
     let element=this.props.children
-    let {name,label} = element.props
+    let {name,label,format} = element.props
     let {defaultValue,allowClear,...otherProps} =element.props
     let {formRef:{getFieldDecorator},formLayout}= this.context
     let styles={}
-
-    if(element.type==DatePicker.RangePicker){
-       defaultValue=[(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
+    let normalizeDefault={}
+    if(element.type.name==RangePicker.name){
+      if( defaultValue == Array){
+       defaultValue=defaultValue && [(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
+     }else{
+       defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
+     }
+       // normalizeDefault={
+       //   normalize:function(values){
+       //     console.log("normalize",values && [values[0].format(format),values[1].format(format)])
+       //     return values && [values[0].format(format),values[1].format(format)]
+       //   }
+       // }
     }
-    //  reset antd-form-item  marginBottom value
+
+    // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
+    //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
+    //    normalizeDefault={
+    //      normalize:function(values){
+    //        return values && values.format(format)
+    //      }
+    //    }
+    // }
+
     if(element.type===Input && element.props.type==="hidden"){
       styles={
         style:{marginBottom:0}
@@ -125,7 +146,7 @@ export default class FormItem extends Component{
       }
     }
     return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
-      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false})(this.renderField())}
+      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false,...normalizeDefault})(this.renderField())}
     </Form.Item>)
   }
 }
