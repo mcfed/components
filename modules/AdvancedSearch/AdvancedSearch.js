@@ -14,9 +14,8 @@ import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
 import Permission from '../Permission'
-//import FetchAPI from 'utils/FetchAPI'
 
-//import styles from './AdvancedSearch.less'
+import './AdvancedSearch.less'
 
 const Option = Select.Option
 
