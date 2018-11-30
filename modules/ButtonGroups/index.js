@@ -148,7 +148,6 @@ export default class ButtonGroups extends Component {
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
-  children:PropTypes.object,
 }
 ButtonGroups.defaultProps = {
   showSize:5,

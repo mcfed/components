@@ -2,6 +2,7 @@ import babel from "rollup-plugin-babel"
 import replace from "rollup-plugin-replace"
 import commonjs from "rollup-plugin-commonjs"
 import less from "rollup-plugin-less-loader"
+import json from "rollup-plugin-json"
 import nodeResolve from "rollup-plugin-node-resolve"
 import localResolve from 'rollup-plugin-local-resolve'
 import notify from 'rollup-plugin-notify'
@@ -45,18 +46,19 @@ export default [{
     notify()
   ]
 },{
-   input,
-   output: { file: `umd/${pkg.name}.js`, format: "umd", name, globals },
-   external: Object.keys(globals),
-   plugins: [
-     nodeResolve(),
-     babel(babelOptionsESM),
-    less({
-        insert:true,
-    }),
-     commonjs(commonjsOptions),
-     replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
-     sizeSnapshot(),
-     notify()
-   ]
+  input,
+  output: { file: `umd/${pkg.name}.js`, format: "umd", name, globals },
+  external: Object.keys(globals),
+  plugins: [
+   nodeResolve(),
+   babel(babelOptionsESM),
+   less({
+      insert:true,
+   }),
+   json(),
+   commonjs(commonjsOptions),
+   replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
+   sizeSnapshot(),
+   notify()
+  ]
 }]

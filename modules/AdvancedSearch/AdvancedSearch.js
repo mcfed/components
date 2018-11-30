@@ -15,7 +15,7 @@ import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
 import Permission from '../Permission'
 
-import './AdvancedSearch.less'
+// import './AdvancedSearch.less'
 
 const Option = Select.Option
 

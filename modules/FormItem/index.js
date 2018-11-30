@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import {Select,Input,Form,DatePicker} from 'antd'
+import fetch from 'isomorphic-fetch'
 import {TreeSelectPicker} from '../TreeView'
 
 const Option=Select.Option
@@ -10,15 +11,21 @@ const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 export default class FormItem extends Component{
   constructor(props) {
     super(props);
-    if(props.children.props.options instanceof Array){
+    let {children} = props
+    let field=children;
+    if(children.props.options instanceof Array){
       this.state={
-        childData:props.children.props.options
+        childData:children.props.options
       }
     }else{
       this.state={
         childData:[]
       }
     }
+    if(typeof(field.props.fetch)=== 'string' && field.props.fetch.length>-1){
+        this.fetchData(field.props.fetch,field.props.params)
+    }
+
   }
 
   static defaultProps = {
@@ -39,24 +46,12 @@ export default class FormItem extends Component{
       });
     }
 
-    // if(field.props.fetch instanceof Array){
-    //   this.setState({
-    //     childData:field.props.fetch
-    //   });
-    // }
-    // if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
-    // {
-    //     this.fetchData(field.props.fetch,field.props.params)
-    //     11
-    // }
-
+    if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
+    {
+        this.fetchData(field.props.fetch,field.props.fetchCallback)
+    }
   }
   componentWillMount() {
-    let {children} = this.props
-    let field=children;
-    if(typeof(field.props.fetch)=== 'string' && field.props.fetch.length>0){
-        this.fetchData(field.props.fetch,field.props.params)
-    }
   }
   /**
    * [fetchData 获取远程接口数据]
@@ -65,7 +60,18 @@ export default class FormItem extends Component{
    */
   fetchData(fetchUrl,params){
     // let body={}
-    console.error("xhr还未实现!")
+    fetch(fetchUrl,{
+      method:'GET'
+    }).then((json) => {
+      return json.json()
+    }).then(result=>{
+      if(result.code==0){
+        this.setState({
+          childData:result.data.items
+        })
+      }
+    });
+
   }
   renderField(){
     let {children,containerTo} = this.props
@@ -112,19 +118,20 @@ export default class FormItem extends Component{
     let {formRef:{getFieldDecorator},formLayout}= this.context
     let styles={}
     let normalizeDefault={}
-    if(element.type.name==RangePicker.name){
-      if( defaultValue == Array){
-       defaultValue=defaultValue && [(defaultValue[0]==""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]==""|| !defaultValue[1])?null:moment(defaultValue[1])]
-     }else{
-       defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
-     }
-       // normalizeDefault={
-       //   normalize:function(values){
-       //     console.log("normalize",values && [values[0].format(format),values[1].format(format)])
-       //     return values && [values[0].format(format),values[1].format(format)]
-       //   }
-       // }
-    }
+    // if(element.type.name===RangePicker.name){
+    //   if(defaultValue instanceof Array){
+    //     defaultValue=defaultValue && [(defaultValue[0]===""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]===""|| !defaultValue[1])?null:moment(defaultValue[1])]
+    //   }else{
+    //     defaultValue=(defaultValue===""|| !defaultValue) ?null:moment(defaultValue)
+    //   }
+    //    normalizeDefault={
+    //      normalize:function(values){
+    //        // console.log("normalize",values && [values[0].format(format),values[1].format(format)])
+    //        // return values && [values[0].format(format),values[1].format(format)]
+    //         return values && values.format(format)
+    //      }
+    //    }
+    // }
 
     // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
     //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)

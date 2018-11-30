@@ -19,7 +19,8 @@ import _Tree from 'antd/es/tree';
 import _Input from 'antd/es/input';
 import _DatePicker from 'antd/es/date-picker';
 import _Select from 'antd/es/select';
-import moment from 'moment';
+import 'moment';
+import fetch from 'isomorphic-fetch';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
 import classNames from 'classnames';
@@ -597,15 +598,21 @@ function (_Component) {
     _classCallCheck(this, FormItem);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(FormItem).call(this, props));
+    var children = props.children;
+    var field = children;
 
-    if (props.children.props.options instanceof Array) {
+    if (children.props.options instanceof Array) {
       _this.state = {
-        childData: props.children.props.options
+        childData: children.props.options
       };
     } else {
       _this.state = {
         childData: []
       };
+    }
+
+    if (typeof field.props.fetch === 'string' && field.props.fetch.length > -1) {
+      _this.fetchData(field.props.fetch, field.props.params);
     }
 
     return _this;
@@ -621,28 +628,15 @@ function (_Component) {
         this.setState({
           childData: field.props.options
         });
-      } // if(field.props.fetch instanceof Array){
-      //   this.setState({
-      //     childData:field.props.fetch
-      //   });
-      // }
-      // if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
-      // {
-      //     this.fetchData(field.props.fetch,field.props.params)
-      //     11
-      // }
+      }
 
+      if (field.props.fetch && typeof field.props.fetch === 'string' && field.props.fetch !== this.props.children.props.fetch) {
+        this.fetchData(field.props.fetch, field.props.fetchCallback);
+      }
     }
   }, {
     key: "componentWillMount",
-    value: function componentWillMount() {
-      var children = this.props.children;
-      var field = children;
-
-      if (typeof field.props.fetch === 'string' && field.props.fetch.length > 0) {
-        this.fetchData(field.props.fetch, field.props.params);
-      }
-    }
+    value: function componentWillMount() {}
     /**
      * [fetchData 获取远程接口数据]
      * @param  {[type]} fetchUrl [description]
@@ -652,8 +646,20 @@ function (_Component) {
   }, {
     key: "fetchData",
     value: function fetchData(fetchUrl, params) {
+      var _this2 = this;
+
       // let body={}
-      console.error("xhr还未实现!");
+      fetch(fetchUrl, {
+        method: 'GET'
+      }).then(function (json) {
+        return json.json();
+      }).then(function (result) {
+        if (result.code == 0) {
+          _this2.setState({
+            childData: result.data.items
+          });
+        }
+      });
     }
   }, {
     key: "renderField",
@@ -704,7 +710,7 @@ function (_Component) {
   }, {
     key: "loopTreeData",
     value: function loopTreeData(data) {
-      var _this2 = this;
+      var _this3 = this;
 
       return data.map(function (item) {
         if (item.children && item.children.length) {
@@ -713,7 +719,7 @@ function (_Component) {
             value: item.id,
             key: item.id
           }, {
-            children: _this2.loopTreeData(item.children)
+            children: _this3.loopTreeData(item.children)
           });
         } else {
           return Object.assign(item, {
@@ -742,21 +748,21 @@ function (_Component) {
           getFieldDecorator = _this$context.formRef.getFieldDecorator,
           formLayout = _this$context.formLayout;
       var styles = {};
-      var normalizeDefault = {};
-
-      if (element.type.name == RangePicker.name) {
-        if (defaultValue == Array) {
-          defaultValue = defaultValue && [defaultValue[0] == "" || !defaultValue[0] ? null : moment(defaultValue[0]), defaultValue[1] == "" || !defaultValue[1] ? null : moment(defaultValue[1])];
-        } else {
-          defaultValue = defaultValue == "" || !defaultValue ? null : moment(defaultValue);
-        } // normalizeDefault={
-        //   normalize:function(values){
-        //     console.log("normalize",values && [values[0].format(format),values[1].format(format)])
-        //     return values && [values[0].format(format),values[1].format(format)]
-        //   }
-        // }
-
-      } // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
+      var normalizeDefault = {}; // if(element.type.name===RangePicker.name){
+      //   if(defaultValue instanceof Array){
+      //     defaultValue=defaultValue && [(defaultValue[0]===""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]===""|| !defaultValue[1])?null:moment(defaultValue[1])]
+      //   }else{
+      //     defaultValue=(defaultValue===""|| !defaultValue) ?null:moment(defaultValue)
+      //   }
+      //    normalizeDefault={
+      //      normalize:function(values){
+      //        // console.log("normalize",values && [values[0].format(format),values[1].format(format)])
+      //        // return values && [values[0].format(format),values[1].format(format)]
+      //         return values && values.format(format)
+      //      }
+      //    }
+      // }
+      // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
       //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
       //    normalizeDefault={
       //      normalize:function(values){
@@ -764,7 +770,6 @@ function (_Component) {
       //      }
       //    }
       // }
-
 
       if (element.type === _Input && element.props.type === "hidden") {
         styles = {
@@ -836,8 +841,6 @@ Permission.propTypes = {
 Permission.defaultProps = {
   expression: true
 };
-
-__$styleInject(".advanced-search-panel {\n  position: relative;\n  flex-shrink: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n");
 
 var Option$1 = _Select.Option;
 
@@ -1235,8 +1238,7 @@ _defineProperty(ButtonGroups, "contextTypes", {// appReducer:PropTypes.object
 });
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
-  handleClick: PropTypes.func,
-  children: PropTypes.object
+  handleClick: PropTypes.func
 };
 ButtonGroups.defaultProps = {
   showSize: 5
