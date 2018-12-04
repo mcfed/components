@@ -29,7 +29,7 @@ const babelOptionsESM = {
 //  plugins: [["@babel/runtime", { useESModules: true }]]
 };
 const commonjsOptions = {
-  include: /node_modules/
+//  include: /node_modules/
 };
 
 export default [{
@@ -52,12 +52,8 @@ export default [{
   plugins: [
    nodeResolve(),
    babel(babelOptionsESM),
-   less({
-      insert:true,
-   }),
-   json(),
    commonjs(commonjsOptions),
-   replace({ "process.env.NODE_ENV": JSON.stringify("development") }),
+   replace({ "process.env.NODE_ENV": JSON.stringify("production") }),
    sizeSnapshot(),
    notify()
   ]

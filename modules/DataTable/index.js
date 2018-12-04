@@ -1,5 +1,12 @@
-import React,{Component} from "react"
-import {Table,Icon,Checkbox,Button,Row,Col,Form } from 'antd'
+import React,{Component} from 'react'
+
+import Table from 'antd/lib/table'
+import Icon from 'antd/lib/icon'
+import Checkbox from 'antd/lib/checkbox'
+import Button from 'antd/lib/button'
+import Row from 'antd/lib/row'
+import Col from 'antd/lib/col'
+import Form from 'antd/lib/form'
 //import BaseForm,{FormItem} from 'components/BaseForm'
 
 class TableMenu extends Component{
@@ -38,7 +45,6 @@ class TableMenu extends Component{
   handleChange(values){
 
     const {onSelectChange}=this.props
-    console.log(values)
     this.setState({
       columns:values
     })

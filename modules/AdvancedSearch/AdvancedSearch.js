@@ -1,15 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {
-  Row,
-  Col,
-  Input,
-  Modal,
-  Button,
-  Transfer,
-  message,
-  Select,
-} from 'antd'
+
+import Row from 'antd/lib/row'
+import Col from 'antd/lib/col'
+import Input from 'antd/lib/input'
+import Modal from 'antd/lib/modal'
+import Button from 'antd/lib/button'
+// import Transfer from 'antd/lib/Transfer'
+import message from 'antd/lib/message'
+import Select from 'antd/lib/select'
 import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'

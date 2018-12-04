@@ -3,9 +3,9 @@ import React,{Component} from 'react'
 import RcPagination from 'rc-pagination'
 import Pager from 'rc-pagination/es/Pager';
 
-import MiniSelect from 'antd/es/pagination/MiniSelect';
+import MiniSelect from 'antd/lib/pagination/MiniSelect';
 import enUS from 'rc-pagination/es/locale/en_US';
-import LocaleReceiver from 'antd/es/locale-provider/LocaleReceiver';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import Options from 'rc-pagination/es/Options';
 import _extends from 'babel-runtime/helpers/extends';
 import classNames from 'classnames';

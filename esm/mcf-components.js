@@ -10,27 +10,27 @@ function __$styleInject(css) {
   return css;
 }
 
-import _Form from 'antd/es/form';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import _Button from 'antd/es/button';
-import _TreeSelect from 'antd/es/tree-select';
-import _Tree from 'antd/es/tree';
-import _Input from 'antd/es/input';
-import _DatePicker from 'antd/es/date-picker';
-import _Select from 'antd/es/select';
+import Form from 'antd/lib/form';
+import Tree from 'antd/lib/tree';
+import Input from 'antd/lib/input';
+import Button from 'antd/lib/button';
+import TreeSelect from 'antd/lib/tree-select';
 import 'moment';
+import Select from 'antd/lib/select';
 import fetch from 'cross-fetch';
-import _Row from 'antd/es/row';
-import _Col from 'antd/es/col';
+import Row from 'antd/lib/row';
+import Col from 'antd/lib/col';
+import Modal from 'antd/lib/modal';
+import 'antd/lib/message';
 import classNames from 'classnames';
-import _Menu from 'antd/es/menu';
-import _Dropdown from 'antd/es/dropdown';
-import _Icon from 'antd/es/icon';
-import _Tooltip from 'antd/es/tooltip';
-import _Modal from 'antd/es/modal';
-import _Table from 'antd/es/table';
-import _Checkbox from 'antd/es/checkbox';
+import Icon from 'antd/lib/icon';
+import Tooltip from 'antd/lib/tooltip';
+import Menu from 'antd/lib/menu';
+import Dropdown from 'antd/lib/dropdown';
+import Table from 'antd/lib/table';
+import Checkbox from 'antd/lib/checkbox';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -189,7 +189,7 @@ function _possibleConstructorReturn(self, call) {
   return _assertThisInitialized(self);
 }
 
-var FormCreate = _Form.create;
+var FormCreate = Form.create;
 
 var BaseForm =
 /*#__PURE__*/
@@ -224,7 +224,7 @@ function (_Component) {
           otherProps = _objectWithoutProperties(_this$props2, ["autoSubmitForm", "itemLayout", "children"]); // console.log(otherProps.form)
 
 
-      return React.createElement(_Form, otherProps, children);
+      return React.createElement(Form, otherProps, children);
     }
   }]);
 
@@ -293,9 +293,9 @@ _defineProperty(AdvancedForm, "defaultProps", {
   }
 });
 
-var Search = _Input.Search;
-var TreeNode = _Tree.TreeNode,
-    DirectoryTree = _Tree.DirectoryTree;
+var Search = Input.Search;
+var TreeNode = Tree.TreeNode,
+    DirectoryTree = Tree.DirectoryTree;
 
 var TreeView =
 /*#__PURE__*/
@@ -375,7 +375,7 @@ function (_Component) {
       var checkedKeys = this.state.checkedKeys;
       return React.createElement("div", {
         className: "ant-tree-view"
-      }, React.createElement(_Tree, _extends({
+      }, React.createElement(Tree, _extends({
         defaultExpandAll: true,
         defaultSelectedKeys: [checkedKeys],
         checkedKeys: checkedKeys
@@ -432,7 +432,7 @@ function (_Component2) {
 
 
       if (allowClear == true) {
-        return React.createElement(_TreeSelect, _extends({}, otherProps, {
+        return React.createElement(TreeSelect, _extends({}, otherProps, {
           defaultValue: this.state.value,
           treeData: treeData,
           allowClear: allowClear,
@@ -440,7 +440,7 @@ function (_Component2) {
           onSelect: this.onChange.bind(this)
         }));
       } else {
-        return React.createElement(_TreeSelect, _extends({}, otherProps, {
+        return React.createElement(TreeSelect, _extends({}, otherProps, {
           value: this.state.value,
           treeData: treeData,
           onSelect: this.onChange.bind(this)
@@ -573,7 +573,7 @@ function (_Component3) {
           label = _this$state3.label;
       return React.createElement("div", {
         className: ""
-      }, React.createElement(_Button, {
+      }, React.createElement(Button, {
         onClick: this.onMouseHandler.bind(this, inside)
       }, !inside ? "收起" : "展开"), this.renderPanel());
     }
@@ -582,10 +582,7 @@ function (_Component3) {
   return TrewViewPanel;
 }(Component);
 
-var Option = _Select.Option;
-var MonthPicker = _DatePicker.MonthPicker,
-    RangePicker = _DatePicker.RangePicker,
-    WeekPicker = _DatePicker.WeekPicker;
+var Option = Select.Option;
 
 var FormItem =
 /*#__PURE__*/
@@ -680,7 +677,7 @@ function (_Component) {
       var containerToProp = {};
       var treeDataProp = {};
 
-      if (containerTo && field.type === _Select && !field.props.changeCalendarContainer) {
+      if (containerTo && field.type === Select && !field.props.changeCalendarContainer) {
         containerToProp = {
           getPopupContainer: function getPopupContainer(triggerNode) {
             return triggerNode.parentNode;
@@ -771,7 +768,7 @@ function (_Component) {
       //    }
       // }
 
-      if (element.type === _Input && element.props.type === "hidden") {
+      if (element.type === Input && element.props.type === "hidden") {
         styles = {
           style: {
             marginBottom: 0
@@ -787,7 +784,7 @@ function (_Component) {
         };
       }
 
-      return React.createElement(_Form.Item, _extends({
+      return React.createElement(Form.Item, _extends({
         label: label
       }, Object.assign({}, {}, formLayout, this.props), {
         colon: false
@@ -842,7 +839,7 @@ Permission.defaultProps = {
   expression: true
 };
 
-var Option$1 = _Select.Option;
+var Option$1 = Select.Option;
 
 var AdvancedSearchForm =
 /*#__PURE__*/
@@ -939,7 +936,7 @@ function (_React$Component) {
 
       return renderChildren.map(function (it, i) {
         if (it.props.allowClear === false) {
-          return React.createElement(_Col, {
+          return React.createElement(Col, {
             span: 6,
             key: i
           }, React.createElement(FormItem, _extends({
@@ -949,7 +946,7 @@ function (_React$Component) {
             className: classNames$$1
           }), React.cloneElement(it)));
         } else {
-          return React.createElement(_Col, {
+          return React.createElement(Col, {
             span: 6,
             key: i
           }, React.createElement(FormItem, _extends({
@@ -998,7 +995,7 @@ function (_React$Component) {
   }, {
     key: "renderKeyword",
     value: function renderKeyword() {
-      return React.createElement(_Row, {
+      return React.createElement(Row, {
         gutter: 20
       }, this.getFields());
     }
@@ -1021,7 +1018,7 @@ function (_React$Component) {
         wrappedComponentRef: this.saveFormRef.bind(this)
       }, this.renderKeyword(), React.createElement("div", {
         className: "advanced-search-toolbar"
-      }, React.createElement(_Button, {
+      }, React.createElement(Button, {
         htmlType: "submit",
         onClick: this.handleSearch.bind(this),
         type: "primary"
@@ -1047,12 +1044,11 @@ AdvancedSearchForm.defaultProps = {
 
 };
 
-// import {hasPermission} from 'app/utils/ConfigUtils'
-
 /*
 *children 1个 多个数据格式处理
 *
 */
+
 var Confirm =
 /*#__PURE__*/
 function (_Component) {
@@ -1071,7 +1067,7 @@ function (_Component) {
           onConfirm = _this$props.onConfirm,
           title = _this$props.title,
           content = _this$props.content;
-      return _Modal.confirm({
+      return Modal.confirm({
         title: title || "确认框",
         content: content,
         okText: '确认',
@@ -1143,12 +1139,12 @@ function (_Component2) {
           onConfirm: function onConfirm() {
             handleClick(actionkey);
           }
-        }), React.createElement(_Tooltip, Object.assign({}, {
+        }), React.createElement(Tooltip, Object.assign({}, {
           key: idx,
           title: tip
         }), React.cloneElement(it, Object.assign({}, it.props), children)));
       } else {
-        return React.createElement(_Tooltip, Object.assign({}, {
+        return React.createElement(Tooltip, Object.assign({}, {
           key: idx,
           title: tip
         }), React.cloneElement(it, Object.assign({}, it.props, !disabled ? {
@@ -1165,7 +1161,7 @@ function (_Component2) {
       var _it$props2 = it.props,
           tip = _it$props2.tip,
           children = _it$props2.children;
-      return React.createElement(_Tooltip, Object.assign({}, {
+      return React.createElement(Tooltip, Object.assign({}, {
         key: idx,
         title: tip
       }), React.cloneElement(it, Object.assign({}, it.props), children));
@@ -1186,9 +1182,9 @@ function (_Component2) {
       // })
       .map(function (it, idx) {
         return _this2.renderReactElement(it, idx);
-      }), React.createElement(_Dropdown, {
+      }), React.createElement(Dropdown, {
         overlay: this.renderMenuItem(endArray)
-      }, React.createElement(_Button, null, React.createElement(_Icon, {
+      }, React.createElement(Button, null, React.createElement(Icon, {
         type: "ellipsis"
       }))));
     }
@@ -1198,10 +1194,10 @@ function (_Component2) {
       var _this3 = this;
 
       var handleClick = this.props.handleClick;
-      return React.createElement(_Menu, {
+      return React.createElement(Menu, {
         onClick: handleClick
       }, itemList.map(function (it, idx) {
-        return React.createElement(_Menu.Item, {
+        return React.createElement(Menu.Item, {
           key: idx
         }, _this3.renderMenuReactElement(it, idx));
       }));
@@ -1213,7 +1209,7 @@ function (_Component2) {
           children = _this$props3.children,
           showSize = _this$props3.showSize;
       var childrenArray = React.Children.toArray(children);
-      return React.createElement(_Button.Group, null, childrenArray.length > showSize ? this.renderMixButtonMenu() : this.renderButtonOnly());
+      return React.createElement(Button.Group, null, childrenArray.length > showSize ? this.renderMixButtonMenu() : this.renderButtonOnly());
     }
   }, {
     key: "render",
@@ -1244,7 +1240,6 @@ ButtonGroups.defaultProps = {
   showSize: 5
 };
 
-//import BaseForm,{FormItem} from 'components/BaseForm'
 var TableMenu =
 /*#__PURE__*/
 function (_Component) {
@@ -1312,7 +1307,6 @@ function (_Component) {
     key: "handleChange",
     value: function handleChange(values) {
       var onSelectChange = this.props.onSelectChange;
-      console.log(values);
       this.setState({
         columns: values
       }); // console.log(value)
@@ -1340,24 +1334,24 @@ function (_Component) {
           border: '1px solid #cfdae5',
           background: '#fff'
         }
-      }, React.createElement(_Form, {
+      }, React.createElement(Form, {
         onSubmit: handleSubmit,
         ref: saveFormRef,
         layout: "inline"
-      }, React.createElement(_Checkbox.Group, {
+      }, React.createElement(Checkbox.Group, {
         name: "isShowArr",
         style: {
           width: '100%'
         },
         defaultValue: defaultValue,
         onChange: this.handleChange.bind(this)
-      }, React.createElement(_Row, null, columns.filter(function (it) {
+      }, React.createElement(Row, null, columns.filter(function (it) {
         return it.title != '操作';
       }).map(function (it, idx) {
-        return React.createElement(_Col, {
+        return React.createElement(Col, {
           span: 8,
           key: idx
-        }, React.createElement(_Checkbox, {
+        }, React.createElement(Checkbox, {
           value: it.key,
           disabled: it.isRead == 1 ? true : false
         }, it.title));
@@ -1365,10 +1359,10 @@ function (_Component) {
         style: {
           textAlign: 'right'
         }
-      }, React.createElement(_Button, {
+      }, React.createElement(Button, {
         size: "small",
         onClick: onClosePopup
-      }, "\u53D6\u6D88"), React.createElement(_Button, {
+      }, "\u53D6\u6D88"), React.createElement(Button, {
         size: "small",
         type: "primary",
         onClick: this.handleOk.bind(this),
@@ -1500,7 +1494,7 @@ function (_Component2) {
       } //console.log(newColumns,columns)
 
 
-      return React.createElement(_Table, _extends({}, otherProps, {
+      return React.createElement(Table, _extends({}, otherProps, {
         columns: newColumns,
         pagination: !pagination ? false : Object.assign({}, pagination, page)
       }));

@@ -1,12 +1,13 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import {Select,Input,Form,DatePicker} from 'antd'
+import Select from 'antd/lib/select'
+import Input from 'antd/lib/input'
+import Form from 'antd/lib/form'
 import fetch from 'cross-fetch'
 import {TreeSelectPicker} from '../TreeView'
 
 const Option=Select.Option
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 
 export default class FormItem extends Component{
   constructor(props) {

@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
-import { Tree,Input,Button,TreeSelect } from 'antd'
+import Tree from 'antd/lib/tree'
+import Input from 'antd/lib/input'
+import Button from 'antd/lib/button'
+import TreeSelect from 'antd/lib/tree-select'
+
 const Search = Input.Search;
 const { TreeNode,DirectoryTree } = Tree
 
