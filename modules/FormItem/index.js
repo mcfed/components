@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import {Select,Input,Form,DatePicker} from 'antd'
-import fetch from 'isomorphic-fetch'
+import fetch from 'cross-fetch'
 import {TreeSelectPicker} from '../TreeView'
 
 const Option=Select.Option

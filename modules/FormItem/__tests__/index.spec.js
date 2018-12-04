@@ -66,7 +66,7 @@ describe('FormItem shallow render with Select', () => {
   it('FormItem render SELECT 带 fetch', (done) => {
 
     const { wrapper, props } = setup(<Select name="select" label="select" fetch={"http://192.168.200.178:3000/mock/20/db-audit/svc_search_biz/backup/fileServers"}  />);
-    console.log(wrapper.state('childData'))
+  //  console.log(wrapper.state('childData'))
     //expect(wrapper.state('childData').length).toBe(10)
     // expect(wrapper.find(Option).length).toBe(10)
     done()
@@ -74,7 +74,7 @@ describe('FormItem shallow render with Select', () => {
 
   it('FormItem render DatePicker', (done) => {
     const { wrapper, props } = setup(<DatePicker name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
-    console.log(wrapper.prop('children'))
+   // console.log(wrapper.prop('children'))
     done()
   })
 //  不能使用shallow 模式

@@ -44,8 +44,8 @@
     "rollup-plugin-size-snapshot": "^0.7.0"
   },
   "dependencies": {
-    "antd": "^3.10.3",
-    "isomorphic-fetch": "^2.2.1",
+    "antd": "^3.5.0",
+    "cross-fetch": "^2.2.3",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "16.0.0",

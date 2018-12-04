@@ -20,7 +20,7 @@ import _Input from 'antd/es/input';
 import _DatePicker from 'antd/es/date-picker';
 import _Select from 'antd/es/select';
 import 'moment';
-import fetch from 'isomorphic-fetch';
+import fetch from 'cross-fetch';
 import _Row from 'antd/es/row';
 import _Col from 'antd/es/col';
 import classNames from 'classnames';
