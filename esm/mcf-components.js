@@ -207,8 +207,7 @@ function (_Component) {
     value: function getChildContext() {
       var _this$props = this.props,
           form = _this$props.form,
-          itemLayout = _this$props.itemLayout; //  console.log("getChildContext",form)
-
+          itemLayout = _this$props.itemLayout;
       return {
         formRef: form,
         formLayout: itemLayout
@@ -221,8 +220,7 @@ function (_Component) {
           autoSubmitForm = _this$props2.autoSubmitForm,
           itemLayout = _this$props2.itemLayout,
           children = _this$props2.children,
-          otherProps = _objectWithoutProperties(_this$props2, ["autoSubmitForm", "itemLayout", "children"]); // console.log(otherProps.form)
-
+          otherProps = _objectWithoutProperties(_this$props2, ["autoSubmitForm", "itemLayout", "children"]);
 
       return React.createElement(Form, otherProps, children);
     }

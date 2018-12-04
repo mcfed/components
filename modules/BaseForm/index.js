@@ -28,7 +28,6 @@ class BaseForm extends Component{
   }
   getChildContext(){
      var { form,itemLayout } =this.props;
-    //  console.log("getChildContext",form)
      return {
          formRef:form,
          formLayout:itemLayout
@@ -36,7 +35,6 @@ class BaseForm extends Component{
   }
   render(){
     const {autoSubmitForm,itemLayout,children,...otherProps} = this.props
-    // console.log(otherProps.form)
   	return React.createElement(Form,otherProps,children)
   }
 }
@@ -45,8 +43,8 @@ const SubmitForm =FormCreate()(BaseForm)
 
 export default SubmitForm
 /**
+
  * [AdvancedForm  高级Form组件带valuesChange特征]
- * @extends BaseForm
  */
 
 class AdvancedForm extends SubmitForm{

@@ -14,9 +14,10 @@ const name = "components";
 const input = "./modules/index"
 
 const globals = {
-  react: "React",
+  "react": "React",
   "prop-types":"PropTypes",
   "react-dom":"ReactDOM",
+  "moment":"moment",
   "fbjs/lib/ExecutionEnvironment":"canUseDOM"
 };
 
@@ -35,7 +36,7 @@ const commonjsOptions = {
 export default [{
   input,
   output: { file: `esm/${pkg.name}.js`, format: "esm" },
-  external:['antd'],
+  external:Object.keys(globals),
   plugins: [
     localResolve(),
     babel(babelOptionsESM),
