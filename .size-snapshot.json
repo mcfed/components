@@ -1,6 +1,6 @@
 {
   "esm/mcf-components.js": {
-    "bundled": 43997,
+    "bundled": 43977,
     "minified": 22203,
     "gzipped": 5600,
     "treeshaked": {
@@ -14,7 +14,7 @@
     }
   },
   "umd/mcf-components.js": {
-    "bundled": 2061931,
+    "bundled": 2113880,
     "minified": 1066922,
     "gzipped": 305664
   }

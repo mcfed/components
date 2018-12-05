@@ -254,8 +254,8 @@ _defineProperty(BaseForm, "defaultProps", {
 
 var SubmitForm = FormCreate()(BaseForm);
 /**
+
  * [AdvancedForm  高级Form组件带valuesChange特征]
- * @extends BaseForm
  */
 
 var AdvancedForm =
