@@ -667,8 +667,7 @@ function (_Component) {
 
       var _field$props = field.props,
           defaultValue = _field$props.defaultValue,
-          allowClear = _field$props.allowClear,
-          otherProps = _objectWithoutProperties(_field$props, ["defaultValue", "allowClear"]); // console.log(ReactDOM.findDOMNode(this));
+          otherProps = _objectWithoutProperties(_field$props, ["defaultValue"]); // console.log(ReactDOM.findDOMNode(this));
       // getPopupContainer
 
 
@@ -933,29 +932,15 @@ function (_React$Component) {
       }
 
       return renderChildren.map(function (it, i) {
-        if (it.props.allowClear === false) {
-          return React.createElement(Col, {
-            span: 6,
-            key: i
-          }, React.createElement(FormItem, _extends({
-            colon: true
-          }, formItemLayout, {
-            containerTo: false,
-            className: classNames$$1
-          }), React.cloneElement(it)));
-        } else {
-          return React.createElement(Col, {
-            span: 6,
-            key: i
-          }, React.createElement(FormItem, _extends({
-            colon: true
-          }, formItemLayout, {
-            containerTo: false,
-            className: classNames$$1
-          }), React.cloneElement(it, {
-            allowClear: true
-          })));
-        }
+        return React.createElement(Col, {
+          span: 6,
+          key: i
+        }, React.createElement(FormItem, _extends({
+          colon: true
+        }, formItemLayout, {
+          containerTo: false,
+          className: classNames$$1
+        }), React.cloneElement(it)));
       }); //return children;
     }
   }, {
@@ -1020,7 +1005,10 @@ function (_React$Component) {
         htmlType: "submit",
         onClick: this.handleSearch.bind(this),
         type: "primary"
-      }, "\u67E5\u8BE2"))));
+      }, "\u641C\u7D22"), React.createElement(Button, {
+        htmlType: "reset",
+        onClick: this.handleReset.bind(this)
+      }, "\u91CD\u7F6E"))));
     }
   }]);
 
@@ -1107,10 +1095,10 @@ function (_Component2) {
       // console.log(this.context.appReducer)
 
       return childrenArray.filter(function (it) {
-        if (it.props.permission == undefined) {
+        if (it.props.permission === undefined) {
           return true;
         } else {
-          return it.props.permission && it.props.permission == true;
+          return it.props.permission && it.props.permission === true;
         }
       }).map(function (it, idx) {
         return _this.renderReactElement(it, idx);
@@ -1120,13 +1108,16 @@ function (_Component2) {
     key: "renderReactElement",
     value: function renderReactElement(it, idx) {
       var handleClick = this.props.handleClick;
+
       var _it$props = it.props,
           tip = _it$props.tip,
           confirm = _it$props.confirm,
           placement = _it$props.placement,
           children = _it$props.children,
           actionkey = _it$props.actionkey,
-          disabled = _it$props.disabled;
+          disabled = _it$props.disabled,
+          permission = _it$props.permission,
+          otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "actionkey", "disabled", "permission"]);
 
       if (confirm && !disabled) {
         return React.createElement(Confirm, Object.assign({}, {
@@ -1140,12 +1131,18 @@ function (_Component2) {
         }), React.createElement(Tooltip, Object.assign({}, {
           key: idx,
           title: tip
-        }), React.cloneElement(it, Object.assign({}, it.props), children)));
+        }), React.createElement(Button, Object.assign({
+          actionkey: actionkey,
+          disabled: disabled
+        }, otherProps), children)));
       } else {
         return React.createElement(Tooltip, Object.assign({}, {
           key: idx,
           title: tip
-        }), React.cloneElement(it, Object.assign({}, it.props, !disabled ? {
+        }), React.createElement(Button, Object.assign({
+          actionkey: actionkey,
+          disabled: disabled
+        }, otherProps, !disabled ? {
           onClick: function onClick() {
             handleClick(actionkey);
           }

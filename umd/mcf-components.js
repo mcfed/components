@@ -39863,8 +39863,7 @@
 
         var _field$props = field.props,
             defaultValue = _field$props.defaultValue,
-            allowClear = _field$props.allowClear,
-            otherProps = _objectWithoutProperties(_field$props, ["defaultValue", "allowClear"]); // console.log(ReactDOM.findDOMNode(this));
+            otherProps = _objectWithoutProperties(_field$props, ["defaultValue"]); // console.log(ReactDOM.findDOMNode(this));
         // getPopupContainer
 
 
@@ -40129,29 +40128,15 @@
         }
 
         return renderChildren.map(function (it, i) {
-          if (it.props.allowClear === false) {
-            return React__default.createElement(Col, {
-              span: 6,
-              key: i
-            }, React__default.createElement(FormItem$1, _extends({
-              colon: true
-            }, formItemLayout, {
-              containerTo: false,
-              className: classNames
-            }), React__default.cloneElement(it)));
-          } else {
-            return React__default.createElement(Col, {
-              span: 6,
-              key: i
-            }, React__default.createElement(FormItem$1, _extends({
-              colon: true
-            }, formItemLayout, {
-              containerTo: false,
-              className: classNames
-            }), React__default.cloneElement(it, {
-              allowClear: true
-            })));
-          }
+          return React__default.createElement(Col, {
+            span: 6,
+            key: i
+          }, React__default.createElement(FormItem$1, _extends({
+            colon: true
+          }, formItemLayout, {
+            containerTo: false,
+            className: classNames
+          }), React__default.cloneElement(it)));
         }); //return children;
       }
     }, {
@@ -40216,7 +40201,10 @@
           htmlType: "submit",
           onClick: this.handleSearch.bind(this),
           type: "primary"
-        }, "\u67E5\u8BE2"))));
+        }, "\u641C\u7D22"), React__default.createElement(Button, {
+          htmlType: "reset",
+          onClick: this.handleReset.bind(this)
+        }, "\u91CD\u7F6E"))));
       }
     }]);
 
@@ -42049,10 +42037,10 @@
         // console.log(this.context.appReducer)
 
         return childrenArray.filter(function (it) {
-          if (it.props.permission == undefined) {
+          if (it.props.permission === undefined) {
             return true;
           } else {
-            return it.props.permission && it.props.permission == true;
+            return it.props.permission && it.props.permission === true;
           }
         }).map(function (it, idx) {
           return _this.renderReactElement(it, idx);
@@ -42062,13 +42050,16 @@
       key: "renderReactElement",
       value: function renderReactElement(it, idx) {
         var handleClick = this.props.handleClick;
+
         var _it$props = it.props,
             tip = _it$props.tip,
             confirm = _it$props.confirm,
             placement = _it$props.placement,
             children = _it$props.children,
             actionkey = _it$props.actionkey,
-            disabled = _it$props.disabled;
+            disabled = _it$props.disabled,
+            permission = _it$props.permission,
+            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "actionkey", "disabled", "permission"]);
 
         if (confirm && !disabled) {
           return React__default.createElement(Confirm, Object.assign({}, {
@@ -42082,12 +42073,18 @@
           }), React__default.createElement(Tooltip$1, Object.assign({}, {
             key: idx,
             title: tip
-          }), React__default.cloneElement(it, Object.assign({}, it.props), children)));
+          }), React__default.createElement(Button, Object.assign({
+            actionkey: actionkey,
+            disabled: disabled
+          }, otherProps), children)));
         } else {
           return React__default.createElement(Tooltip$1, Object.assign({}, {
             key: idx,
             title: tip
-          }), React__default.cloneElement(it, Object.assign({}, it.props, !disabled ? {
+          }), React__default.createElement(Button, Object.assign({
+            actionkey: actionkey,
+            disabled: disabled
+          }, otherProps, !disabled ? {
             onClick: function onClick() {
               handleClick(actionkey);
             }

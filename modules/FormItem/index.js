@@ -78,7 +78,7 @@ export default class FormItem extends Component{
     let {children,containerTo} = this.props
     let {childData} = this.state;
     let field=children;
-    let {defaultValue,allowClear,...otherProps}= field.props
+    let {defaultValue,...otherProps}= field.props
     // console.log(ReactDOM.findDOMNode(this));
     // getPopupContainer
     let containerToProp={}

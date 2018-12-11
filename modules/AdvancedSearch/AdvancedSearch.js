@@ -88,23 +88,13 @@ export default class AdvancedSearchForm extends React.Component {
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
-        if(it.props.allowClear===false){
-          return (
-            <Col span={6} key={i}>
-              <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-                {React.cloneElement(it)}
-              </FormItem>
-            </Col>
-          )
-        }else{
-          return (
-            <Col span={6} key={i}>
-              <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-                {React.cloneElement(it,{allowClear:true}) }
-              </FormItem>
-            </Col>
-          )
-        }
+      return (
+        <Col span={6} key={i}>
+          <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+            {React.cloneElement(it) }
+          </FormItem>
+        </Col>
+      )
     })
     //return children;
   }
@@ -150,7 +140,8 @@ export default class AdvancedSearchForm extends React.Component {
         <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
           { this.renderKeyword() }
           <div className="advanced-search-toolbar">
-							{<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">查询</Button>}
+							<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">搜索</Button>
+							<Button htmlType="reset" onClick={this.handleReset.bind(this)}>重置</Button>
           </div>
         </SubmitForm>
       </div>

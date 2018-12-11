@@ -44,10 +44,10 @@ export default class ButtonGroups extends Component {
     // console.log(this.context.appReducer)
     return childrenArray
       .filter((it)=>{
-        if(it.props.permission == undefined){
+        if(it.props.permission === undefined){
           return true
         }else{
-          return it.props.permission && it.props.permission==true
+          return it.props.permission && it.props.permission===true
         }
      })
     .map((it,idx)=>{
@@ -57,21 +57,21 @@ export default class ButtonGroups extends Component {
 
   renderReactElement(it,idx){
     let {handleClick} = this.props
-    let {tip,confirm,placement,children,actionkey,disabled} = it.props
+    let {tip,confirm,placement,children,actionkey,disabled,permission,...otherProps} = it.props
 
     if(confirm && !disabled){
       return React.createElement(
         Confirm,
         Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
-        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.cloneElement(it,Object.assign({},it.props),children))
+        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.createElement(Button,Object.assign({actionkey:actionkey,disabled:disabled},otherProps),children))
       )
     }else{
       return React.createElement(
         Tooltip,
         Object.assign({},{key:idx,title:tip}),
-        React.cloneElement(
-          it,
-          Object.assign({},it.props,!disabled?{onClick:()=>{handleClick(actionkey)}}:{}),
+        React.createElement(
+          Button,
+          Object.assign({actionkey:actionkey,disabled:disabled},otherProps,!disabled?{onClick:()=>{handleClick(actionkey)}}:{}),
           children
         )
       )
