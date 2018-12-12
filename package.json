@@ -43,8 +43,11 @@
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-size-snapshot": "^0.7.0"
   },
+  "peerDependencies": {
+    "antd": "3.5.1"
+  },
   "dependencies": {
-    "antd": "^3.5.0",
+    "antd": "3.5.1",
     "cross-fetch": "^2.2.3",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
