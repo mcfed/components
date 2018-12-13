@@ -13,7 +13,6 @@ import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
 import Permission from '../Permission'
-
 // import './AdvancedSearch.less'
 
 const Option = Select.Option
@@ -31,8 +30,6 @@ export default class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
-  }
-  componentWillMount(){
   }
 
   handleSearch = (e,values) => {
@@ -72,7 +69,6 @@ export default class AdvancedSearchForm extends React.Component {
         span: 18
       }
     }:{};
-    // console.log(formItemLayout)
     if(React.Children.count(children)===0){
       return (null)
     }
@@ -89,7 +85,7 @@ export default class AdvancedSearchForm extends React.Component {
     }
     return renderChildren.map((it, i) => {
       return (
-        <Col span={6} key={i}>
+        <Col span={8} key={i}>
           <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
             {React.cloneElement(it) }
           </FormItem>
@@ -159,7 +155,6 @@ AdvancedSearchForm.propTypes = {
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm:false,
   showConfig:false,
-  module:"",
   filterSubmitHandler: function() {},
 	showExpand:3,
 	layout:'horizontal'

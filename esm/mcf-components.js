@@ -890,9 +890,6 @@ function (_React$Component) {
   }
 
   _createClass(AdvancedSearchForm, [{
-    key: "componentWillMount",
-    value: function componentWillMount() {}
-  }, {
     key: "getFields",
     // To generate mock Form.Item
     value: function getFields() {
@@ -910,7 +907,7 @@ function (_React$Component) {
         wrapperCol: {
           span: 18
         }
-      } : {}; // console.log(formItemLayout)
+      } : {};
 
       if (React.Children.count(children) === 0) {
         return null;
@@ -933,7 +930,7 @@ function (_React$Component) {
 
       return renderChildren.map(function (it, i) {
         return React.createElement(Col, {
-          span: 6,
+          span: 8,
           key: i
         }, React.createElement(FormItem, _extends({
           colon: true
@@ -1023,7 +1020,6 @@ AdvancedSearchForm.propTypes = {
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
-  module: "",
   filterSubmitHandler: function filterSubmitHandler() {},
   showExpand: 3,
   layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)
