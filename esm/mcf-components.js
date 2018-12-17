@@ -24,7 +24,7 @@ import fetch from 'cross-fetch';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Modal from 'antd/lib/modal';
-import 'antd/lib/message';
+import message from 'antd/lib/message';
 import classNames from 'classnames';
 import Icon from 'antd/lib/icon';
 import Tooltip from 'antd/lib/tooltip';
@@ -32,6 +32,7 @@ import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import Table from 'antd/lib/table';
 import Checkbox from 'antd/lib/checkbox';
+import Popconfirm from 'antd/lib/popconfirm';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -188,6 +189,26 @@ function _possibleConstructorReturn(self, call) {
   }
 
   return _assertThisInitialized(self);
+}
+
+function _toConsumableArray(arr) {
+  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+}
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  }
+}
+
+function _iterableToArray(iter) {
+  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+}
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance");
 }
 
 var FormCreate = Form.create;
@@ -1655,4 +1676,315 @@ PropertyTable.propsType = {
   renderItem: PropTypes.func
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, ModalAndView, TreeView, PropertyTable };
+var FormItem$1 = Form.Item;
+var EditableContext = React.createContext();
+
+var EditableRow = function EditableRow(_ref) {
+  var form = _ref.form,
+      index = _ref.index,
+      props = _objectWithoutProperties(_ref, ["form", "index"]);
+
+  return React.createElement(EditableContext.Provider, {
+    value: form
+  }, React.createElement("tr", props));
+};
+
+var EditableFormRow = Form.create()(EditableRow);
+
+var EditableCell =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(EditableCell, _React$Component);
+
+  function EditableCell() {
+    _classCallCheck(this, EditableCell);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(EditableCell).apply(this, arguments));
+  }
+
+  _createClass(EditableCell, [{
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          editing = _this$props.editing,
+          dataIndex = _this$props.dataIndex,
+          title = _this$props.title,
+          record = _this$props.record,
+          index = _this$props.index,
+          editDom = _this$props.editDom,
+          editConfig = _this$props.editConfig,
+          restProps = _objectWithoutProperties(_this$props, ["editing", "dataIndex", "title", "record", "index", "editDom", "editConfig"]);
+
+      return React.createElement(EditableContext.Consumer, null, function (form) {
+        var getFieldDecorator = form.getFieldDecorator;
+        return React.createElement("td", restProps, editing ? React.createElement(FormItem$1, {
+          style: {
+            margin: 0
+          }
+        }, getFieldDecorator(dataIndex, _objectSpread({}, editConfig, {
+          initialValue: record[dataIndex] === '' ? editConfig.initialValue : record[dataIndex]
+        }))(editDom())) : restProps.children);
+      });
+    }
+  }]);
+
+  return EditableCell;
+}(React.Component);
+
+var EditTable =
+/*#__PURE__*/
+function (_React$Component2) {
+  _inherits(EditTable, _React$Component2);
+
+  function EditTable(props) {
+    var _this;
+
+    _classCallCheck(this, EditTable);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(EditTable).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "isEditing", function (record) {
+      return record.key === _this.state.editingKey;
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "cancel", function (form, key) {
+      var obj = _this.state.data.filter(function (d) {
+        return d.key === key;
+      })[0];
+
+      var Bdelete = false;
+
+      for (var b in obj) {
+        if (obj[b] === '') {
+          Bdelete = true;
+          break;
+        }
+      }
+
+      if (Bdelete) {
+        _this.delete(key);
+      }
+
+      _this.setState({
+        editingKey: ''
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "addNew", function () {
+      if (_this.state.editingKey !== '') {
+        message.error('请先保存编辑项再进行添加操作！');
+        return false;
+      }
+
+      var key = new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
+      var obj = {
+        key: key
+      };
+
+      var keyList = _toConsumableArray(_this.state.keyList);
+
+      if (keyList.length > 1) {
+        keyList.length = keyList.length - 1;
+      }
+
+      keyList.forEach(function (d) {
+        obj[d] = '';
+      });
+
+      var data = _toConsumableArray(_this.state.data);
+
+      data.push(obj);
+
+      _this.setState({
+        data: data,
+        editingKey: key
+      });
+    });
+
+    _this.state = {
+      data: [],
+      editingKey: '',
+      keyList: [],
+      columns: [{
+        title: '操作',
+        dataIndex: '操作',
+        render: function render(text, record) {
+          var editable = _this.isEditing(record);
+
+          return React.createElement("div", null, editable ? React.createElement("span", null, React.createElement(EditableContext.Consumer, null, function (form) {
+            return React.createElement("a", {
+              onClick: function onClick() {
+                return _this.save(form, record.key);
+              },
+              style: {
+                marginRight: 8
+              }
+            }, "\u4FDD\u5B58");
+          }), React.createElement(EditableContext.Consumer, null, function (form) {
+            return React.createElement(Popconfirm, {
+              title: "\u786E\u8BA4\u53D6\u6D88?",
+              onConfirm: function onConfirm() {
+                return _this.cancel(form, record.key);
+              }
+            }, React.createElement("a", null, "\u53D6\u6D88"));
+          })) : React.createElement("span", null, React.createElement("a", {
+            style: {
+              marginRight: 8
+            },
+            onClick: function onClick() {
+              return _this.edit(record.key);
+            }
+          }, "\u7F16\u8F91"), React.createElement(Popconfirm, {
+            title: "\u786E\u8BA4\u5220\u9664?",
+            onConfirm: function onConfirm() {
+              return _this.delete(record.key);
+            }
+          }, React.createElement("a", null, "\u5220\u9664"))));
+        }
+      }]
+    };
+    return _this;
+  }
+
+  _createClass(EditTable, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      if (this.props.columns && this.props.columns.length > 0) {
+        this.setState({
+          data: this.props.data === undefined ? [] : this.props.data,
+          columns: _toConsumableArray(this.props.columns).concat(_toConsumableArray(this.state.columns))
+        }, function () {
+          var keyList = _this2.state.columns.map(function (c) {
+            return c.dataIndex;
+          });
+
+          _this2.setState({
+            keyList: keyList
+          });
+        });
+      }
+    }
+  }, {
+    key: "edit",
+    value: function edit(key) {
+      if (this.state.editingKey !== '') {
+        message.error('请先保存编辑项再进行其他编辑操作！');
+        return false;
+      }
+
+      this.setState({
+        editingKey: key
+      });
+    }
+  }, {
+    key: "delete",
+    value: function _delete(key) {
+      var _this3 = this;
+
+      var newData = _toConsumableArray(this.state.data);
+
+      this.setState({
+        data: newData.filter(function (c) {
+          return c.key !== key;
+        }),
+        editingKey: ''
+      }, function () {
+        _this3.props.onChange(_this3.state.data);
+      });
+    }
+  }, {
+    key: "save",
+    value: function save(form, key) {
+      var _this4 = this;
+
+      form.validateFields(function (error, row) {
+        if (error) {
+          return;
+        }
+
+        var newData = _toConsumableArray(_this4.state.data);
+
+        var index = newData.findIndex(function (item) {
+          return key === item.key;
+        });
+
+        if (index > -1) {
+          var item = newData[index];
+          newData.splice(index, 1, _objectSpread({}, item, row));
+
+          _this4.setState({
+            data: newData,
+            editingKey: ''
+          }, function () {
+            _this4.props.onChange(newData);
+          });
+        } else {
+          newData.push(row);
+
+          _this4.setState({
+            data: newData,
+            editingKey: ''
+          }, function () {
+            _this4.props.onChange(newData);
+          });
+        }
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this5 = this;
+
+      var components = {
+        body: {
+          row: EditableFormRow,
+          cell: EditableCell
+        }
+      };
+      var columns = this.state.columns.map(function (col) {
+        if (!col.editComponent) {
+          return col;
+        }
+
+        return _objectSpread({}, col, {
+          onCell: function onCell(record) {
+            return {
+              record: record,
+              editConfig: col.editConfig,
+              editDom: col.editComponent,
+              dataIndex: col.dataIndex,
+              title: col.title,
+              editing: _this5.isEditing(record)
+            };
+          }
+        });
+      });
+      return React.createElement(Table, {
+        components: components,
+        bordered: true,
+        dataSource: this.state.data,
+        columns: columns,
+        rowClassName: "editable-row",
+        footer: function footer() {
+          return React.createElement(Button, {
+            icon: "plus",
+            onClick: _this5.addNew,
+            style: {
+              width: '100%'
+            }
+          }, "\u65B0\u589E");
+        }
+      });
+    }
+  }]);
+
+  return EditTable;
+}(React.Component);
+
+EditTable.propTypes = {
+  columns: PropTypes.array.isRequired
+};
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, ModalAndView, TreeView, PropertyTable, EditTable };

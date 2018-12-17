@@ -11,3 +11,5 @@ export ModalAndView from './ModalAndView'
 //import SmartLink from './SmartLink'
 export TreeView from './TreeView'
 export PropertyTable from './PropertyTable'
+
+export EditTable from './EditTable'
