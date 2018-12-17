@@ -483,7 +483,7 @@
     return store[key] || (store[key] = value !== undefined ? value : {});
   })('versions', []).push({
     version: _core.version,
-    mode: 'pure',
+    mode: _library ? 'pure' : 'global',
     copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
   });
   });
@@ -21588,6 +21588,9129 @@
     }
   });
 
+  var DateConstants = {
+    DATE_ROW_COUNT: 6,
+    DATE_COL_COUNT: 7
+  };
+
+  var DateTHead = function (_React$Component) {
+    _inherits$1(DateTHead, _React$Component);
+
+    function DateTHead() {
+      _classCallCheck$1(this, DateTHead);
+
+      return _possibleConstructorReturn$1(this, _React$Component.apply(this, arguments));
+    }
+
+    DateTHead.prototype.render = function render() {
+      var props = this.props;
+      var value = props.value;
+      var localeData = value.localeData();
+      var prefixCls = props.prefixCls;
+      var veryShortWeekdays = [];
+      var weekDays = [];
+      var firstDayOfWeek = localeData.firstDayOfWeek();
+      var showWeekNumberEl = void 0;
+      var now = moment();
+      for (var dateColIndex = 0; dateColIndex < DateConstants.DATE_COL_COUNT; dateColIndex++) {
+        var index = (firstDayOfWeek + dateColIndex) % DateConstants.DATE_COL_COUNT;
+        now.day(index);
+        veryShortWeekdays[dateColIndex] = localeData.weekdaysMin(now);
+        weekDays[dateColIndex] = localeData.weekdaysShort(now);
+      }
+
+      if (props.showWeekNumber) {
+        showWeekNumberEl = React__default.createElement(
+          'th',
+          {
+            role: 'columnheader',
+            className: prefixCls + '-column-header ' + prefixCls + '-week-number-header'
+          },
+          React__default.createElement(
+            'span',
+            { className: prefixCls + '-column-header-inner' },
+            'x'
+          )
+        );
+      }
+      var weekDaysEls = weekDays.map(function (day, xindex) {
+        return React__default.createElement(
+          'th',
+          {
+            key: xindex,
+            role: 'columnheader',
+            title: day,
+            className: prefixCls + '-column-header'
+          },
+          React__default.createElement(
+            'span',
+            { className: prefixCls + '-column-header-inner' },
+            veryShortWeekdays[xindex]
+          )
+        );
+      });
+      return React__default.createElement(
+        'thead',
+        null,
+        React__default.createElement(
+          'tr',
+          { role: 'row' },
+          showWeekNumberEl,
+          weekDaysEls
+        )
+      );
+    };
+
+    return DateTHead;
+  }(React__default.Component);
+
+  var defaultDisabledTime = {
+    disabledHours: function disabledHours() {
+      return [];
+    },
+    disabledMinutes: function disabledMinutes() {
+      return [];
+    },
+    disabledSeconds: function disabledSeconds() {
+      return [];
+    }
+  };
+
+  function getTodayTime(value) {
+    var today = moment();
+    today.locale(value.locale()).utcOffset(value.utcOffset());
+    return today;
+  }
+
+  function getTitleString(value) {
+    return value.format('LL');
+  }
+
+  function getTodayTimeStr(value) {
+    var today = getTodayTime(value);
+    return getTitleString(today);
+  }
+
+  function getMonthName(month) {
+    var locale = month.locale();
+    var localeData = month.localeData();
+    return localeData[locale === 'zh-cn' ? 'months' : 'monthsShort'](month);
+  }
+
+  function syncTime(from, to) {
+    if (!moment.isMoment(from) || !moment.isMoment(to)) return;
+    to.hour(from.hour());
+    to.minute(from.minute());
+    to.second(from.second());
+  }
+
+  function getTimeConfig(value, disabledTime) {
+    var disabledTimeConfig = disabledTime ? disabledTime(value) : {};
+    disabledTimeConfig = _extends$2({}, defaultDisabledTime, disabledTimeConfig);
+    return disabledTimeConfig;
+  }
+
+  function isTimeValidByConfig(value, disabledTimeConfig) {
+    var invalidTime = false;
+    if (value) {
+      var hour = value.hour();
+      var minutes = value.minute();
+      var seconds = value.second();
+      var disabledHours = disabledTimeConfig.disabledHours();
+      if (disabledHours.indexOf(hour) === -1) {
+        var disabledMinutes = disabledTimeConfig.disabledMinutes(hour);
+        if (disabledMinutes.indexOf(minutes) === -1) {
+          var disabledSeconds = disabledTimeConfig.disabledSeconds(hour, minutes);
+          invalidTime = disabledSeconds.indexOf(seconds) !== -1;
+        } else {
+          invalidTime = true;
+        }
+      } else {
+        invalidTime = true;
+      }
+    }
+    return !invalidTime;
+  }
+
+  function isTimeValid(value, disabledTime) {
+    var disabledTimeConfig = getTimeConfig(value, disabledTime);
+    return isTimeValidByConfig(value, disabledTimeConfig);
+  }
+
+  function isAllowedDate(value, disabledDate, disabledTime) {
+    if (disabledDate) {
+      if (disabledDate(value)) {
+        return false;
+      }
+    }
+    if (disabledTime) {
+      if (!isTimeValid(value, disabledTime)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function isSameDay(one, two) {
+    return one && two && one.isSame(two, 'day');
+  }
+
+  function beforeCurrentMonthYear(current, today) {
+    if (current.year() < today.year()) {
+      return 1;
+    }
+    return current.year() === today.year() && current.month() < today.month();
+  }
+
+  function afterCurrentMonthYear(current, today) {
+    if (current.year() > today.year()) {
+      return 1;
+    }
+    return current.year() === today.year() && current.month() > today.month();
+  }
+
+  function getIdFromDate(date) {
+    return 'rc-calendar-' + date.year() + '-' + date.month() + '-' + date.date();
+  }
+
+  var DateTBody = createReactClass({
+    displayName: 'DateTBody',
+
+    propTypes: {
+      contentRender: PropTypes.func,
+      dateRender: PropTypes.func,
+      disabledDate: PropTypes.func,
+      prefixCls: PropTypes.string,
+      selectedValue: PropTypes.oneOfType([PropTypes.object, PropTypes.arrayOf(PropTypes.object)]),
+      value: PropTypes.object,
+      hoverValue: PropTypes.any,
+      showWeekNumber: PropTypes.bool
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        hoverValue: []
+      };
+    },
+    render: function render() {
+      var props = this.props;
+      var contentRender = props.contentRender,
+          prefixCls = props.prefixCls,
+          selectedValue = props.selectedValue,
+          value = props.value,
+          showWeekNumber = props.showWeekNumber,
+          dateRender = props.dateRender,
+          disabledDate = props.disabledDate,
+          hoverValue = props.hoverValue;
+
+      var iIndex = void 0;
+      var jIndex = void 0;
+      var current = void 0;
+      var dateTable = [];
+      var today = getTodayTime(value);
+      var cellClass = prefixCls + '-cell';
+      var weekNumberCellClass = prefixCls + '-week-number-cell';
+      var dateClass = prefixCls + '-date';
+      var todayClass = prefixCls + '-today';
+      var selectedClass = prefixCls + '-selected-day';
+      var selectedDateClass = prefixCls + '-selected-date'; // do not move with mouse operation
+      var selectedStartDateClass = prefixCls + '-selected-start-date';
+      var selectedEndDateClass = prefixCls + '-selected-end-date';
+      var inRangeClass = prefixCls + '-in-range-cell';
+      var lastMonthDayClass = prefixCls + '-last-month-cell';
+      var nextMonthDayClass = prefixCls + '-next-month-btn-day';
+      var disabledClass = prefixCls + '-disabled-cell';
+      var firstDisableClass = prefixCls + '-disabled-cell-first-of-row';
+      var lastDisableClass = prefixCls + '-disabled-cell-last-of-row';
+      var lastDayOfMonthClass = prefixCls + '-last-day-of-month';
+      var month1 = value.clone();
+      month1.date(1);
+      var day = month1.day();
+      var lastMonthDiffDay = (day + 7 - value.localeData().firstDayOfWeek()) % 7;
+      // calculate last month
+      var lastMonth1 = month1.clone();
+      lastMonth1.add(0 - lastMonthDiffDay, 'days');
+      var passed = 0;
+
+      for (iIndex = 0; iIndex < DateConstants.DATE_ROW_COUNT; iIndex++) {
+        for (jIndex = 0; jIndex < DateConstants.DATE_COL_COUNT; jIndex++) {
+          current = lastMonth1;
+          if (passed) {
+            current = current.clone();
+            current.add(passed, 'days');
+          }
+          dateTable.push(current);
+          passed++;
+        }
+      }
+      var tableHtml = [];
+      passed = 0;
+
+      for (iIndex = 0; iIndex < DateConstants.DATE_ROW_COUNT; iIndex++) {
+        var _cx;
+
+        var isCurrentWeek = void 0;
+        var weekNumberCell = void 0;
+        var isActiveWeek = false;
+        var dateCells = [];
+        if (showWeekNumber) {
+          weekNumberCell = React__default.createElement(
+            'td',
+            {
+              key: dateTable[passed].week(),
+              role: 'gridcell',
+              className: weekNumberCellClass
+            },
+            dateTable[passed].week()
+          );
+        }
+        for (jIndex = 0; jIndex < DateConstants.DATE_COL_COUNT; jIndex++) {
+          var next = null;
+          var last = null;
+          current = dateTable[passed];
+          if (jIndex < DateConstants.DATE_COL_COUNT - 1) {
+            next = dateTable[passed + 1];
+          }
+          if (jIndex > 0) {
+            last = dateTable[passed - 1];
+          }
+          var cls = cellClass;
+          var disabled = false;
+          var selected = false;
+
+          if (isSameDay(current, today)) {
+            cls += ' ' + todayClass;
+            isCurrentWeek = true;
+          }
+
+          var isBeforeCurrentMonthYear = beforeCurrentMonthYear(current, value);
+          var isAfterCurrentMonthYear = afterCurrentMonthYear(current, value);
+
+          if (selectedValue && Array.isArray(selectedValue)) {
+            var rangeValue = hoverValue.length ? hoverValue : selectedValue;
+            if (!isBeforeCurrentMonthYear && !isAfterCurrentMonthYear) {
+              var startValue = rangeValue[0];
+              var endValue = rangeValue[1];
+              if (startValue) {
+                if (isSameDay(current, startValue)) {
+                  selected = true;
+                  isActiveWeek = true;
+                  cls += ' ' + selectedStartDateClass;
+                }
+              }
+              if (startValue && endValue) {
+                if (isSameDay(current, endValue)) {
+                  selected = true;
+                  isActiveWeek = true;
+                  cls += ' ' + selectedEndDateClass;
+                } else if (current.isAfter(startValue, 'day') && current.isBefore(endValue, 'day')) {
+                  cls += ' ' + inRangeClass;
+                }
+              }
+            }
+          } else if (isSameDay(current, value)) {
+            // keyboard change value, highlight works
+            selected = true;
+            isActiveWeek = true;
+          }
+
+          if (isSameDay(current, selectedValue)) {
+            cls += ' ' + selectedDateClass;
+          }
+
+          if (isBeforeCurrentMonthYear) {
+            cls += ' ' + lastMonthDayClass;
+          }
+
+          if (isAfterCurrentMonthYear) {
+            cls += ' ' + nextMonthDayClass;
+          }
+
+          if (current.clone().endOf('month').date() === current.date()) {
+            cls += ' ' + lastDayOfMonthClass;
+          }
+
+          if (disabledDate) {
+            if (disabledDate(current, value)) {
+              disabled = true;
+
+              if (!last || !disabledDate(last, value)) {
+                cls += ' ' + firstDisableClass;
+              }
+
+              if (!next || !disabledDate(next, value)) {
+                cls += ' ' + lastDisableClass;
+              }
+            }
+          }
+
+          if (selected) {
+            cls += ' ' + selectedClass;
+          }
+
+          if (disabled) {
+            cls += ' ' + disabledClass;
+          }
+
+          var dateHtml = void 0;
+          if (dateRender) {
+            dateHtml = dateRender(current, value);
+          } else {
+            var content = contentRender ? contentRender(current, value) : current.date();
+            dateHtml = React__default.createElement(
+              'div',
+              {
+                key: getIdFromDate(current),
+                className: dateClass,
+                'aria-selected': selected,
+                'aria-disabled': disabled
+              },
+              content
+            );
+          }
+
+          dateCells.push(React__default.createElement(
+            'td',
+            {
+              key: passed,
+              onClick: disabled ? undefined : props.onSelect.bind(null, current),
+              onMouseEnter: disabled ? undefined : props.onDayHover && props.onDayHover.bind(null, current) || undefined,
+              role: 'gridcell',
+              title: getTitleString(current),
+              className: cls
+            },
+            dateHtml
+          ));
+
+          passed++;
+        }
+
+        tableHtml.push(React__default.createElement(
+          'tr',
+          {
+            key: iIndex,
+            role: 'row',
+            className: classnames((_cx = {}, _cx[prefixCls + '-current-week'] = isCurrentWeek, _cx[prefixCls + '-active-week'] = isActiveWeek, _cx))
+          },
+          weekNumberCell,
+          dateCells
+        ));
+      }
+      return React__default.createElement(
+        'tbody',
+        { className: prefixCls + '-tbody' },
+        tableHtml
+      );
+    }
+  });
+
+  var DateTable = function (_React$Component) {
+    _inherits$1(DateTable, _React$Component);
+
+    function DateTable() {
+      _classCallCheck$1(this, DateTable);
+
+      return _possibleConstructorReturn$1(this, _React$Component.apply(this, arguments));
+    }
+
+    DateTable.prototype.render = function render() {
+      var props = this.props;
+      var prefixCls = props.prefixCls;
+      return React__default.createElement(
+        'table',
+        { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+        React__default.createElement(DateTHead, props),
+        React__default.createElement(DateTBody, props)
+      );
+    };
+
+    return DateTable;
+  }(React__default.Component);
+
+  function mirror(o) {
+    return o;
+  }
+
+  function mapSelf(children) {
+    // return ReactFragment
+    return React__default.Children.map(children, mirror);
+  }
+
+  var ROW = 4;
+  var COL = 3;
+
+  function chooseMonth(month) {
+    var next = this.state.value.clone();
+    next.month(month);
+    this.setAndSelectValue(next);
+  }
+
+  function noop$4() {}
+
+  var MonthTable = function (_Component) {
+    _inherits$1(MonthTable, _Component);
+
+    function MonthTable(props) {
+      _classCallCheck$1(this, MonthTable);
+
+      var _this = _possibleConstructorReturn$1(this, _Component.call(this, props));
+
+      _this.state = {
+        value: props.value
+      };
+      return _this;
+    }
+
+    MonthTable.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      if ('value' in nextProps) {
+        this.setState({
+          value: nextProps.value
+        });
+      }
+    };
+
+    MonthTable.prototype.setAndSelectValue = function setAndSelectValue(value) {
+      this.setState({
+        value: value
+      });
+      this.props.onSelect(value);
+    };
+
+    MonthTable.prototype.months = function months() {
+      var value = this.state.value;
+      var current = value.clone();
+      var months = [];
+      var index = 0;
+      for (var rowIndex = 0; rowIndex < ROW; rowIndex++) {
+        months[rowIndex] = [];
+        for (var colIndex = 0; colIndex < COL; colIndex++) {
+          current.month(index);
+          var content = getMonthName(current);
+          months[rowIndex][colIndex] = {
+            value: index,
+            content: content,
+            title: content
+          };
+          index++;
+        }
+      }
+      return months;
+    };
+
+    MonthTable.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = this.props;
+      var value = this.state.value;
+      var today = getTodayTime(value);
+      var months = this.months();
+      var currentMonth = value.month();
+      var prefixCls = props.prefixCls,
+          locale = props.locale,
+          contentRender = props.contentRender,
+          cellRender = props.cellRender;
+
+      var monthsEls = months.map(function (month, index) {
+        var tds = month.map(function (monthData) {
+          var _classNameMap;
+
+          var disabled = false;
+          if (props.disabledDate) {
+            var testValue = value.clone();
+            testValue.month(monthData.value);
+            disabled = props.disabledDate(testValue);
+          }
+          var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-cell-disabled'] = disabled, _classNameMap[prefixCls + '-selected-cell'] = monthData.value === currentMonth, _classNameMap[prefixCls + '-current-cell'] = today.year() === value.year() && monthData.value === today.month(), _classNameMap);
+          var cellEl = void 0;
+          if (cellRender) {
+            var currentValue = value.clone();
+            currentValue.month(monthData.value);
+            cellEl = cellRender(currentValue, locale);
+          } else {
+            var content = void 0;
+            if (contentRender) {
+              var _currentValue = value.clone();
+              _currentValue.month(monthData.value);
+              content = contentRender(_currentValue, locale);
+            } else {
+              content = monthData.content;
+            }
+            cellEl = React__default.createElement(
+              'a',
+              { className: prefixCls + '-month' },
+              content
+            );
+          }
+          return React__default.createElement(
+            'td',
+            {
+              role: 'gridcell',
+              key: monthData.value,
+              onClick: disabled ? null : chooseMonth.bind(_this2, monthData.value),
+              title: monthData.title,
+              className: classnames(classNameMap)
+            },
+            cellEl
+          );
+        });
+        return React__default.createElement(
+          'tr',
+          { key: index, role: 'row' },
+          tds
+        );
+      });
+
+      return React__default.createElement(
+        'table',
+        { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+        React__default.createElement(
+          'tbody',
+          { className: prefixCls + '-tbody' },
+          monthsEls
+        )
+      );
+    };
+
+    return MonthTable;
+  }(React.Component);
+
+  MonthTable.defaultProps = {
+    onSelect: noop$4
+  };
+  MonthTable.propTypes = {
+    onSelect: PropTypes.func,
+    cellRender: PropTypes.func,
+    prefixCls: PropTypes.string,
+    value: PropTypes.object
+  };
+
+  function goYear(direction) {
+    var next = this.state.value.clone();
+    next.add(direction, 'year');
+    this.setAndChangeValue(next);
+  }
+
+  function noop$5() {}
+
+  var MonthPanel = createReactClass({
+    displayName: 'MonthPanel',
+
+    propTypes: {
+      onChange: PropTypes.func,
+      disabledDate: PropTypes.func,
+      onSelect: PropTypes.func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        onChange: noop$5,
+        onSelect: noop$5
+      };
+    },
+    getInitialState: function getInitialState() {
+      var props = this.props;
+      // bind methods
+      this.nextYear = goYear.bind(this, 1);
+      this.previousYear = goYear.bind(this, -1);
+      this.prefixCls = props.rootPrefixCls + '-month-panel';
+      return {
+        value: props.value || props.defaultValue
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      if ('value' in nextProps) {
+        this.setState({
+          value: nextProps.value
+        });
+      }
+    },
+    setAndChangeValue: function setAndChangeValue(value) {
+      this.setValue(value);
+      this.props.onChange(value);
+    },
+    setAndSelectValue: function setAndSelectValue(value) {
+      this.setValue(value);
+      this.props.onSelect(value);
+    },
+    setValue: function setValue(value) {
+      if (!('value' in this.props)) {
+        this.setState({
+          value: value
+        });
+      }
+    },
+    render: function render() {
+      var props = this.props;
+      var value = this.state.value;
+      var cellRender = props.cellRender;
+      var contentRender = props.contentRender;
+      var locale = props.locale;
+      var year = value.year();
+      var prefixCls = this.prefixCls;
+      return React__default.createElement(
+        'div',
+        { className: prefixCls, style: props.style },
+        React__default.createElement(
+          'div',
+          null,
+          React__default.createElement(
+            'div',
+            { className: prefixCls + '-header' },
+            React__default.createElement('a', {
+              className: prefixCls + '-prev-year-btn',
+              role: 'button',
+              onClick: this.previousYear,
+              title: locale.previousYear
+            }),
+            React__default.createElement(
+              'a',
+              {
+                className: prefixCls + '-year-select',
+                role: 'button',
+                onClick: props.onYearPanelShow,
+                title: locale.yearSelect
+              },
+              React__default.createElement(
+                'span',
+                { className: prefixCls + '-year-select-content' },
+                year
+              ),
+              React__default.createElement(
+                'span',
+                { className: prefixCls + '-year-select-arrow' },
+                'x'
+              )
+            ),
+            React__default.createElement('a', {
+              className: prefixCls + '-next-year-btn',
+              role: 'button',
+              onClick: this.nextYear,
+              title: locale.nextYear
+            })
+          ),
+          React__default.createElement(
+            'div',
+            { className: prefixCls + '-body' },
+            React__default.createElement(MonthTable, {
+              disabledDate: props.disabledDate,
+              onSelect: this.setAndSelectValue,
+              locale: locale,
+              value: value,
+              cellRender: cellRender,
+              contentRender: contentRender,
+              prefixCls: prefixCls
+            })
+          )
+        )
+      );
+    }
+  });
+
+  var ROW$1 = 4;
+  var COL$1 = 3;
+
+  function goYear$1(direction) {
+    var value = this.state.value.clone();
+    value.add(direction, 'year');
+    this.setState({
+      value: value
+    });
+  }
+
+  function chooseYear(year) {
+    var value = this.state.value.clone();
+    value.year(year);
+    value.month(this.state.value.month());
+    this.props.onSelect(value);
+  }
+
+  var YearPanel = function (_React$Component) {
+    _inherits$1(YearPanel, _React$Component);
+
+    function YearPanel(props) {
+      _classCallCheck$1(this, YearPanel);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _this.prefixCls = props.rootPrefixCls + '-year-panel';
+      _this.state = {
+        value: props.value || props.defaultValue
+      };
+      _this.nextDecade = goYear$1.bind(_this, 10);
+      _this.previousDecade = goYear$1.bind(_this, -10);
+      return _this;
+    }
+
+    YearPanel.prototype.years = function years() {
+      var value = this.state.value;
+      var currentYear = value.year();
+      var startYear = parseInt(currentYear / 10, 10) * 10;
+      var previousYear = startYear - 1;
+      var years = [];
+      var index = 0;
+      for (var rowIndex = 0; rowIndex < ROW$1; rowIndex++) {
+        years[rowIndex] = [];
+        for (var colIndex = 0; colIndex < COL$1; colIndex++) {
+          var year = previousYear + index;
+          var content = String(year);
+          years[rowIndex][colIndex] = {
+            content: content,
+            year: year,
+            title: content
+          };
+          index++;
+        }
+      }
+      return years;
+    };
+
+    YearPanel.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = this.props;
+      var value = this.state.value;
+      var locale = props.locale;
+      var years = this.years();
+      var currentYear = value.year();
+      var startYear = parseInt(currentYear / 10, 10) * 10;
+      var endYear = startYear + 9;
+      var prefixCls = this.prefixCls;
+
+      var yeasEls = years.map(function (row, index) {
+        var tds = row.map(function (yearData) {
+          var _classNameMap;
+
+          var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-selected-cell'] = yearData.year === currentYear, _classNameMap[prefixCls + '-last-decade-cell'] = yearData.year < startYear, _classNameMap[prefixCls + '-next-decade-cell'] = yearData.year > endYear, _classNameMap);
+          var clickHandler = void 0;
+          if (yearData.year < startYear) {
+            clickHandler = _this2.previousDecade;
+          } else if (yearData.year > endYear) {
+            clickHandler = _this2.nextDecade;
+          } else {
+            clickHandler = chooseYear.bind(_this2, yearData.year);
+          }
+          return React__default.createElement(
+            'td',
+            {
+              role: 'gridcell',
+              title: yearData.title,
+              key: yearData.content,
+              onClick: clickHandler,
+              className: classnames(classNameMap)
+            },
+            React__default.createElement(
+              'a',
+              {
+                className: prefixCls + '-year'
+              },
+              yearData.content
+            )
+          );
+        });
+        return React__default.createElement(
+          'tr',
+          { key: index, role: 'row' },
+          tds
+        );
+      });
+
+      return React__default.createElement(
+        'div',
+        { className: this.prefixCls },
+        React__default.createElement(
+          'div',
+          null,
+          React__default.createElement(
+            'div',
+            { className: prefixCls + '-header' },
+            React__default.createElement('a', {
+              className: prefixCls + '-prev-decade-btn',
+              role: 'button',
+              onClick: this.previousDecade,
+              title: locale.previousDecade
+            }),
+            React__default.createElement(
+              'a',
+              {
+                className: prefixCls + '-decade-select',
+                role: 'button',
+                onClick: props.onDecadePanelShow,
+                title: locale.decadeSelect
+              },
+              React__default.createElement(
+                'span',
+                { className: prefixCls + '-decade-select-content' },
+                startYear,
+                '-',
+                endYear
+              ),
+              React__default.createElement(
+                'span',
+                { className: prefixCls + '-decade-select-arrow' },
+                'x'
+              )
+            ),
+            React__default.createElement('a', {
+              className: prefixCls + '-next-decade-btn',
+              role: 'button',
+              onClick: this.nextDecade,
+              title: locale.nextDecade
+            })
+          ),
+          React__default.createElement(
+            'div',
+            { className: prefixCls + '-body' },
+            React__default.createElement(
+              'table',
+              { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+              React__default.createElement(
+                'tbody',
+                { className: prefixCls + '-tbody' },
+                yeasEls
+              )
+            )
+          )
+        )
+      );
+    };
+
+    return YearPanel;
+  }(React__default.Component);
+
+
+  YearPanel.propTypes = {
+    rootPrefixCls: PropTypes.string,
+    value: PropTypes.object,
+    defaultValue: PropTypes.object
+  };
+
+  YearPanel.defaultProps = {
+    onSelect: function onSelect() {}
+  };
+
+  var ROW$2 = 4;
+  var COL$2 = 3;
+
+  function goYear$2(direction) {
+    var next = this.state.value.clone();
+    next.add(direction, 'years');
+    this.setState({
+      value: next
+    });
+  }
+
+  function chooseDecade(year, event) {
+    var next = this.state.value.clone();
+    next.year(year);
+    next.month(this.state.value.month());
+    this.props.onSelect(next);
+    event.preventDefault();
+  }
+
+  var DecadePanel = function (_React$Component) {
+    _inherits$1(DecadePanel, _React$Component);
+
+    function DecadePanel(props) {
+      _classCallCheck$1(this, DecadePanel);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _this.state = {
+        value: props.value || props.defaultValue
+      };
+
+      // bind methods
+      _this.prefixCls = props.rootPrefixCls + '-decade-panel';
+      _this.nextCentury = goYear$2.bind(_this, 100);
+      _this.previousCentury = goYear$2.bind(_this, -100);
+      return _this;
+    }
+
+    DecadePanel.prototype.render = function render() {
+      var _this2 = this;
+
+      var value = this.state.value;
+      var locale = this.props.locale;
+      var currentYear = value.year();
+      var startYear = parseInt(currentYear / 100, 10) * 100;
+      var preYear = startYear - 10;
+      var endYear = startYear + 99;
+      var decades = [];
+      var index = 0;
+      var prefixCls = this.prefixCls;
+
+      for (var rowIndex = 0; rowIndex < ROW$2; rowIndex++) {
+        decades[rowIndex] = [];
+        for (var colIndex = 0; colIndex < COL$2; colIndex++) {
+          var startDecade = preYear + index * 10;
+          var endDecade = preYear + index * 10 + 9;
+          decades[rowIndex][colIndex] = {
+            startDecade: startDecade,
+            endDecade: endDecade
+          };
+          index++;
+        }
+      }
+
+      var decadesEls = decades.map(function (row, decadeIndex) {
+        var tds = row.map(function (decadeData) {
+          var _classNameMap;
+
+          var dStartDecade = decadeData.startDecade;
+          var dEndDecade = decadeData.endDecade;
+          var isLast = dStartDecade < startYear;
+          var isNext = dEndDecade > endYear;
+          var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-selected-cell'] = dStartDecade <= currentYear && currentYear <= dEndDecade, _classNameMap[prefixCls + '-last-century-cell'] = isLast, _classNameMap[prefixCls + '-next-century-cell'] = isNext, _classNameMap);
+          var content = dStartDecade + '-' + dEndDecade;
+          var clickHandler = void 0;
+          if (isLast) {
+            clickHandler = _this2.previousCentury;
+          } else if (isNext) {
+            clickHandler = _this2.nextCentury;
+          } else {
+            clickHandler = chooseDecade.bind(_this2, dStartDecade);
+          }
+          return React__default.createElement(
+            'td',
+            {
+              key: dStartDecade,
+              onClick: clickHandler,
+              role: 'gridcell',
+              className: classnames(classNameMap)
+            },
+            React__default.createElement(
+              'a',
+              {
+                className: prefixCls + '-decade'
+              },
+              content
+            )
+          );
+        });
+        return React__default.createElement(
+          'tr',
+          { key: decadeIndex, role: 'row' },
+          tds
+        );
+      });
+
+      return React__default.createElement(
+        'div',
+        { className: this.prefixCls },
+        React__default.createElement(
+          'div',
+          { className: prefixCls + '-header' },
+          React__default.createElement('a', {
+            className: prefixCls + '-prev-century-btn',
+            role: 'button',
+            onClick: this.previousCentury,
+            title: locale.previousCentury
+          }),
+          React__default.createElement(
+            'div',
+            { className: prefixCls + '-century' },
+            startYear,
+            '-',
+            endYear
+          ),
+          React__default.createElement('a', {
+            className: prefixCls + '-next-century-btn',
+            role: 'button',
+            onClick: this.nextCentury,
+            title: locale.nextCentury
+          })
+        ),
+        React__default.createElement(
+          'div',
+          { className: prefixCls + '-body' },
+          React__default.createElement(
+            'table',
+            { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+            React__default.createElement(
+              'tbody',
+              { className: prefixCls + '-tbody' },
+              decadesEls
+            )
+          )
+        )
+      );
+    };
+
+    return DecadePanel;
+  }(React__default.Component);
+
+
+  DecadePanel.propTypes = {
+    locale: PropTypes.object,
+    value: PropTypes.object,
+    defaultValue: PropTypes.object,
+    rootPrefixCls: PropTypes.string
+  };
+
+  DecadePanel.defaultProps = {
+    onSelect: function onSelect() {}
+  };
+
+  function goMonth(direction) {
+    var next = this.props.value.clone();
+    next.add(direction, 'months');
+    this.props.onValueChange(next);
+  }
+
+  function goYear$3(direction) {
+    var next = this.props.value.clone();
+    next.add(direction, 'years');
+    this.props.onValueChange(next);
+  }
+
+  function showIf(condition, el) {
+    return condition ? el : null;
+  }
+
+  var CalendarHeader = createReactClass({
+    displayName: 'CalendarHeader',
+
+    propTypes: {
+      prefixCls: PropTypes.string,
+      value: PropTypes.object,
+      onValueChange: PropTypes.func,
+      showTimePicker: PropTypes.bool,
+      onPanelChange: PropTypes.func,
+      locale: PropTypes.object,
+      enablePrev: PropTypes.any,
+      enableNext: PropTypes.any,
+      disabledMonth: PropTypes.func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        enableNext: 1,
+        enablePrev: 1,
+        onPanelChange: function onPanelChange() {},
+        onValueChange: function onValueChange() {}
+      };
+    },
+    getInitialState: function getInitialState() {
+      this.nextMonth = goMonth.bind(this, 1);
+      this.previousMonth = goMonth.bind(this, -1);
+      this.nextYear = goYear$3.bind(this, 1);
+      this.previousYear = goYear$3.bind(this, -1);
+      return { yearPanelReferer: null };
+    },
+    onMonthSelect: function onMonthSelect(value) {
+      this.props.onPanelChange(value, 'date');
+      if (this.props.onMonthSelect) {
+        this.props.onMonthSelect(value);
+      } else {
+        this.props.onValueChange(value);
+      }
+    },
+    onYearSelect: function onYearSelect(value) {
+      var referer = this.state.yearPanelReferer;
+      this.setState({ yearPanelReferer: null });
+      this.props.onPanelChange(value, referer);
+      this.props.onValueChange(value);
+    },
+    onDecadeSelect: function onDecadeSelect(value) {
+      this.props.onPanelChange(value, 'year');
+      this.props.onValueChange(value);
+    },
+    monthYearElement: function monthYearElement(showTimePicker) {
+      var _this = this;
+
+      var props = this.props;
+      var prefixCls = props.prefixCls;
+      var locale = props.locale;
+      var value = props.value;
+      var localeData = value.localeData();
+      var monthBeforeYear = locale.monthBeforeYear;
+      var selectClassName = prefixCls + '-' + (monthBeforeYear ? 'my-select' : 'ym-select');
+      var year = React__default.createElement(
+        'a',
+        {
+          className: prefixCls + '-year-select',
+          role: 'button',
+          onClick: showTimePicker ? null : function () {
+            return _this.showYearPanel('date');
+          },
+          title: locale.yearSelect
+        },
+        value.format(locale.yearFormat)
+      );
+      var month = React__default.createElement(
+        'a',
+        {
+          className: prefixCls + '-month-select',
+          role: 'button',
+          onClick: showTimePicker ? null : this.showMonthPanel,
+          title: locale.monthSelect
+        },
+        locale.monthFormat ? value.format(locale.monthFormat) : localeData.monthsShort(value)
+      );
+      var day = void 0;
+      if (showTimePicker) {
+        day = React__default.createElement(
+          'a',
+          {
+            className: prefixCls + '-day-select',
+            role: 'button'
+          },
+          value.format(locale.dayFormat)
+        );
+      }
+      var my = [];
+      if (monthBeforeYear) {
+        my = [month, day, year];
+      } else {
+        my = [year, month, day];
+      }
+      return React__default.createElement(
+        'span',
+        { className: selectClassName },
+        mapSelf(my)
+      );
+    },
+    showMonthPanel: function showMonthPanel() {
+      // null means that users' interaction doesn't change value
+      this.props.onPanelChange(null, 'month');
+    },
+    showYearPanel: function showYearPanel(referer) {
+      this.setState({ yearPanelReferer: referer });
+      this.props.onPanelChange(null, 'year');
+    },
+    showDecadePanel: function showDecadePanel() {
+      this.props.onPanelChange(null, 'decade');
+    },
+    render: function render() {
+      var _this2 = this;
+
+      var props = this.props;
+      var prefixCls = props.prefixCls,
+          locale = props.locale,
+          mode = props.mode,
+          value = props.value,
+          showTimePicker = props.showTimePicker,
+          enableNext = props.enableNext,
+          enablePrev = props.enablePrev,
+          disabledMonth = props.disabledMonth;
+
+
+      var panel = null;
+      if (mode === 'month') {
+        panel = React__default.createElement(MonthPanel, {
+          locale: locale,
+          defaultValue: value,
+          rootPrefixCls: prefixCls,
+          onSelect: this.onMonthSelect,
+          onYearPanelShow: function onYearPanelShow() {
+            return _this2.showYearPanel('month');
+          },
+          disabledDate: disabledMonth,
+          cellRender: props.monthCellRender,
+          contentRender: props.monthCellContentRender
+        });
+      }
+      if (mode === 'year') {
+        panel = React__default.createElement(YearPanel, {
+          locale: locale,
+          defaultValue: value,
+          rootPrefixCls: prefixCls,
+          onSelect: this.onYearSelect,
+          onDecadePanelShow: this.showDecadePanel
+        });
+      }
+      if (mode === 'decade') {
+        panel = React__default.createElement(DecadePanel, {
+          locale: locale,
+          defaultValue: value,
+          rootPrefixCls: prefixCls,
+          onSelect: this.onDecadeSelect
+        });
+      }
+
+      return React__default.createElement(
+        'div',
+        { className: prefixCls + '-header' },
+        React__default.createElement(
+          'div',
+          { style: { position: 'relative' } },
+          showIf(enablePrev && !showTimePicker, React__default.createElement('a', {
+            className: prefixCls + '-prev-year-btn',
+            role: 'button',
+            onClick: this.previousYear,
+            title: locale.previousYear
+          })),
+          showIf(enablePrev && !showTimePicker, React__default.createElement('a', {
+            className: prefixCls + '-prev-month-btn',
+            role: 'button',
+            onClick: this.previousMonth,
+            title: locale.previousMonth
+          })),
+          this.monthYearElement(showTimePicker),
+          showIf(enableNext && !showTimePicker, React__default.createElement('a', {
+            className: prefixCls + '-next-month-btn',
+            onClick: this.nextMonth,
+            title: locale.nextMonth
+          })),
+          showIf(enableNext && !showTimePicker, React__default.createElement('a', {
+            className: prefixCls + '-next-year-btn',
+            onClick: this.nextYear,
+            title: locale.nextYear
+          }))
+        ),
+        panel
+      );
+    }
+  });
+
+  function TodayButton(_ref) {
+    var prefixCls = _ref.prefixCls,
+        locale = _ref.locale,
+        value = _ref.value,
+        timePicker = _ref.timePicker,
+        disabled = _ref.disabled,
+        disabledDate = _ref.disabledDate,
+        onToday = _ref.onToday,
+        text = _ref.text;
+
+    var localeNow = (!text && timePicker ? locale.now : text) || locale.today;
+    var disabledToday = disabledDate && !isAllowedDate(getTodayTime(value), disabledDate);
+    var isDisabled = disabledToday || disabled;
+    var disabledTodayClass = isDisabled ? prefixCls + '-today-btn-disabled' : '';
+    return React__default.createElement(
+      'a',
+      {
+        className: prefixCls + '-today-btn ' + disabledTodayClass,
+        role: 'button',
+        onClick: isDisabled ? null : onToday,
+        title: getTodayTimeStr(value)
+      },
+      localeNow
+    );
+  }
+
+  function OkButton(_ref) {
+    var prefixCls = _ref.prefixCls,
+        locale = _ref.locale,
+        okDisabled = _ref.okDisabled,
+        onOk = _ref.onOk;
+
+    var className = prefixCls + "-ok-btn";
+    if (okDisabled) {
+      className += " " + prefixCls + "-ok-btn-disabled";
+    }
+    return React__default.createElement(
+      "a",
+      {
+        className: className,
+        role: "button",
+        onClick: okDisabled ? null : onOk
+      },
+      locale.ok
+    );
+  }
+
+  function TimePickerButton(_ref) {
+    var _classnames;
+
+    var prefixCls = _ref.prefixCls,
+        locale = _ref.locale,
+        showTimePicker = _ref.showTimePicker,
+        onOpenTimePicker = _ref.onOpenTimePicker,
+        onCloseTimePicker = _ref.onCloseTimePicker,
+        timePickerDisabled = _ref.timePickerDisabled;
+
+    var className = classnames((_classnames = {}, _classnames[prefixCls + '-time-picker-btn'] = true, _classnames[prefixCls + '-time-picker-btn-disabled'] = timePickerDisabled, _classnames));
+    var onClick = null;
+    if (!timePickerDisabled) {
+      onClick = showTimePicker ? onCloseTimePicker : onOpenTimePicker;
+    }
+    return React__default.createElement(
+      'a',
+      {
+        className: className,
+        role: 'button',
+        onClick: onClick
+      },
+      showTimePicker ? locale.dateSelect : locale.timeSelect
+    );
+  }
+
+  var CalendarFooter = createReactClass({
+    displayName: 'CalendarFooter',
+
+    propTypes: {
+      prefixCls: PropTypes.string,
+      showDateInput: PropTypes.bool,
+      disabledTime: PropTypes.any,
+      timePicker: PropTypes.element,
+      selectedValue: PropTypes.any,
+      showOk: PropTypes.bool,
+      onSelect: PropTypes.func,
+      value: PropTypes.object,
+      renderFooter: PropTypes.func,
+      defaultValue: PropTypes.object
+    },
+
+    onSelect: function onSelect(value) {
+      this.props.onSelect(value);
+    },
+    getRootDOMNode: function getRootDOMNode() {
+      return ReactDOM__default.findDOMNode(this);
+    },
+    render: function render() {
+      var props = this.props;
+      var value = props.value,
+          prefixCls = props.prefixCls,
+          showOk = props.showOk,
+          timePicker = props.timePicker,
+          renderFooter = props.renderFooter;
+
+      var footerEl = null;
+      var extraFooter = renderFooter();
+      if (props.showToday || timePicker || extraFooter) {
+        var _cx;
+
+        var nowEl = void 0;
+        if (props.showToday) {
+          nowEl = React__default.createElement(TodayButton, _extends$2({}, props, { value: value }));
+        }
+        var okBtn = void 0;
+        if (showOk === true || showOk !== false && !!props.timePicker) {
+          okBtn = React__default.createElement(OkButton, props);
+        }
+        var timePickerBtn = void 0;
+        if (!!props.timePicker) {
+          timePickerBtn = React__default.createElement(TimePickerButton, props);
+        }
+
+        var footerBtn = void 0;
+        if (nowEl || timePickerBtn || okBtn) {
+          footerBtn = React__default.createElement(
+            'span',
+            { className: prefixCls + '-footer-btn' },
+            mapSelf([nowEl, timePickerBtn, okBtn])
+          );
+        }
+        var cls = classnames((_cx = {}, _cx[prefixCls + '-footer'] = true, _cx[prefixCls + '-footer-show-ok'] = okBtn, _cx));
+        footerEl = React__default.createElement(
+          'div',
+          { className: cls },
+          extraFooter,
+          footerBtn
+        );
+      }
+      return footerEl;
+    }
+  });
+
+  function noop$6() {}
+
+  function getNow() {
+    return moment();
+  }
+
+  function getNowByCurrentStateValue(value) {
+    var ret = void 0;
+    if (value) {
+      ret = getTodayTime(value);
+    } else {
+      ret = getNow();
+    }
+    return ret;
+  }
+
+  var CalendarMixin = {
+    propTypes: {
+      value: PropTypes.object,
+      defaultValue: PropTypes.object,
+      onKeyDown: PropTypes.func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        onKeyDown: noop$6
+      };
+    },
+    getInitialState: function getInitialState() {
+      var props = this.props;
+      var value = props.value || props.defaultValue || getNow();
+      return {
+        value: value,
+        selectedValue: props.selectedValue || props.defaultSelectedValue
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      var value = nextProps.value;
+      var selectedValue = nextProps.selectedValue;
+
+      if ('value' in nextProps) {
+        value = value || nextProps.defaultValue || getNowByCurrentStateValue(this.state.value);
+        this.setState({
+          value: value
+        });
+      }
+      if ('selectedValue' in nextProps) {
+        this.setState({
+          selectedValue: selectedValue
+        });
+      }
+    },
+    onSelect: function onSelect(value, cause) {
+      if (value) {
+        this.setValue(value);
+      }
+      this.setSelectedValue(value, cause);
+    },
+    renderRoot: function renderRoot(newProps) {
+      var _className;
+
+      var props = this.props;
+      var prefixCls = props.prefixCls;
+
+      var className = (_className = {}, _className[prefixCls] = 1, _className[prefixCls + '-hidden'] = !props.visible, _className[props.className] = !!props.className, _className[newProps.className] = !!newProps.className, _className);
+
+      return React__default.createElement(
+        'div',
+        {
+          ref: this.saveRoot,
+          className: '' + classnames(className),
+          style: this.props.style,
+          tabIndex: '0',
+          onKeyDown: this.onKeyDown
+        },
+        newProps.children
+      );
+    },
+    setSelectedValue: function setSelectedValue(selectedValue, cause) {
+      // if (this.isAllowedDate(selectedValue)) {
+      if (!('selectedValue' in this.props)) {
+        this.setState({
+          selectedValue: selectedValue
+        });
+      }
+      this.props.onSelect(selectedValue, cause);
+      // }
+    },
+    setValue: function setValue(value) {
+      var originalValue = this.state.value;
+      if (!('value' in this.props)) {
+        this.setState({
+          value: value
+        });
+      }
+      if (originalValue && value && !originalValue.isSame(value) || !originalValue && value || originalValue && !value) {
+        this.props.onChange(value);
+      }
+    },
+    isAllowedDate: function isAllowedDate$$1(value) {
+      var disabledDate = this.props.disabledDate;
+      var disabledTime = this.props.disabledTime;
+      return isAllowedDate(value, disabledDate, disabledTime);
+    }
+  };
+
+  var enUs = {
+    today: 'Today',
+    now: 'Now',
+    backToToday: 'Back to today',
+    ok: 'Ok',
+    clear: 'Clear',
+    month: 'Month',
+    year: 'Year',
+    timeSelect: 'select time',
+    dateSelect: 'select date',
+    weekSelect: 'Choose a week',
+    monthSelect: 'Choose a month',
+    yearSelect: 'Choose a year',
+    decadeSelect: 'Choose a decade',
+    yearFormat: 'YYYY',
+    dateFormat: 'M/D/YYYY',
+    dayFormat: 'D',
+    dateTimeFormat: 'M/D/YYYY HH:mm:ss',
+    monthBeforeYear: true,
+    previousMonth: 'Previous month (PageUp)',
+    nextMonth: 'Next month (PageDown)',
+    previousYear: 'Last year (Control + left)',
+    nextYear: 'Next year (Control + right)',
+    previousDecade: 'Last decade',
+    nextDecade: 'Next decade',
+    previousCentury: 'Last century',
+    nextCentury: 'Next century'
+  };
+
+  function noop$7() {}
+
+  var CommonMixin = {
+    propTypes: {
+      className: PropTypes.string,
+      locale: PropTypes.object,
+      style: PropTypes.object,
+      visible: PropTypes.bool,
+      onSelect: PropTypes.func,
+      prefixCls: PropTypes.string,
+      onChange: PropTypes.func,
+      onOk: PropTypes.func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        locale: enUs,
+        style: {},
+        visible: true,
+        prefixCls: 'rc-calendar',
+        className: '',
+        onSelect: noop$7,
+        onChange: noop$7,
+        onClear: noop$7,
+        renderFooter: function renderFooter() {
+          return null;
+        },
+        renderSidebar: function renderSidebar() {
+          return null;
+        }
+      };
+    },
+    shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
+      return this.props.visible || nextProps.visible;
+    },
+    getFormat: function getFormat() {
+      var format = this.props.format;
+      var _props = this.props,
+          locale = _props.locale,
+          timePicker = _props.timePicker;
+
+      if (!format) {
+        if (timePicker) {
+          format = locale.dateTimeFormat;
+        } else {
+          format = locale.dateFormat;
+        }
+      }
+      return format;
+    },
+    focus: function focus() {
+      if (this.rootInstance) {
+        this.rootInstance.focus();
+      }
+    },
+    saveRoot: function saveRoot(root) {
+      this.rootInstance = root;
+    }
+  };
+
+  var DateInput = createReactClass({
+    displayName: 'DateInput',
+
+    propTypes: {
+      prefixCls: PropTypes.string,
+      timePicker: PropTypes.object,
+      value: PropTypes.object,
+      disabledTime: PropTypes.any,
+      format: PropTypes.string,
+      locale: PropTypes.object,
+      disabledDate: PropTypes.func,
+      onChange: PropTypes.func,
+      onClear: PropTypes.func,
+      placeholder: PropTypes.string,
+      onSelect: PropTypes.func,
+      selectedValue: PropTypes.object
+    },
+
+    getInitialState: function getInitialState() {
+      var selectedValue = this.props.selectedValue;
+      return {
+        str: selectedValue && selectedValue.format(this.props.format) || '',
+        invalid: false
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      this.cachedSelectionStart = this.dateInputInstance.selectionStart;
+      this.cachedSelectionEnd = this.dateInputInstance.selectionEnd;
+      // when popup show, click body will call this, bug!
+      var selectedValue = nextProps.selectedValue;
+      this.setState({
+        str: selectedValue && selectedValue.format(nextProps.format) || '',
+        invalid: false
+      });
+    },
+    componentDidUpdate: function componentDidUpdate() {
+      if (!this.state.invalid) {
+        this.dateInputInstance.setSelectionRange(this.cachedSelectionStart, this.cachedSelectionEnd);
+      }
+    },
+    onInputChange: function onInputChange(event) {
+      var str = event.target.value;
+      this.setState({
+        str: str
+      });
+      var value = void 0;
+      var _props = this.props,
+          disabledDate = _props.disabledDate,
+          format = _props.format,
+          onChange = _props.onChange;
+
+      if (str) {
+        var parsed = moment(str, format, true);
+        if (!parsed.isValid()) {
+          this.setState({
+            invalid: true
+          });
+          return;
+        }
+        value = this.props.value.clone();
+        value.year(parsed.year()).month(parsed.month()).date(parsed.date()).hour(parsed.hour()).minute(parsed.minute()).second(parsed.second());
+
+        if (value && (!disabledDate || !disabledDate(value))) {
+          var originalValue = this.props.selectedValue;
+          if (originalValue && value) {
+            if (!originalValue.isSame(value)) {
+              onChange(value);
+            }
+          } else if (originalValue !== value) {
+            onChange(value);
+          }
+        } else {
+          this.setState({
+            invalid: true
+          });
+          return;
+        }
+      } else {
+        onChange(null);
+      }
+      this.setState({
+        invalid: false
+      });
+    },
+    onClear: function onClear() {
+      this.setState({
+        str: ''
+      });
+      this.props.onClear(null);
+    },
+    getRootDOMNode: function getRootDOMNode() {
+      return ReactDOM__default.findDOMNode(this);
+    },
+    focus: function focus() {
+      if (this.dateInputInstance) {
+        this.dateInputInstance.focus();
+      }
+    },
+    saveDateInput: function saveDateInput(dateInput) {
+      this.dateInputInstance = dateInput;
+    },
+    render: function render() {
+      var props = this.props;
+      var _state = this.state,
+          invalid = _state.invalid,
+          str = _state.str;
+      var locale = props.locale,
+          prefixCls = props.prefixCls,
+          placeholder = props.placeholder;
+
+      var invalidClass = invalid ? prefixCls + '-input-invalid' : '';
+      return React__default.createElement(
+        'div',
+        { className: prefixCls + '-input-wrap' },
+        React__default.createElement(
+          'div',
+          { className: prefixCls + '-date-input-wrap' },
+          React__default.createElement('input', {
+            ref: this.saveDateInput,
+            className: prefixCls + '-input ' + invalidClass,
+            value: str,
+            disabled: props.disabled,
+            placeholder: placeholder,
+            onChange: this.onInputChange
+          })
+        ),
+        props.showClear ? React__default.createElement('a', {
+          className: prefixCls + '-clear-btn',
+          role: 'button',
+          title: locale.clear,
+          onClick: this.onClear
+        }) : null
+      );
+    }
+  });
+
+  function goStartMonth(time) {
+    return time.clone().startOf('month');
+  }
+
+  function goEndMonth(time) {
+    return time.clone().endOf('month');
+  }
+
+  function goTime(time, direction, unit) {
+    return time.clone().add(direction, unit);
+  }
+
+  function noop$8() {}
+
+  var Calendar = createReactClass({
+    displayName: 'Calendar',
+
+    propTypes: {
+      prefixCls: PropTypes.string,
+      className: PropTypes.string,
+      style: PropTypes.object,
+      defaultValue: PropTypes.object,
+      value: PropTypes.object,
+      selectedValue: PropTypes.object,
+      mode: PropTypes.oneOf(['time', 'date', 'month', 'year', 'decade']),
+      locale: PropTypes.object,
+      showDateInput: PropTypes.bool,
+      showWeekNumber: PropTypes.bool,
+      showToday: PropTypes.bool,
+      showOk: PropTypes.bool,
+      onSelect: PropTypes.func,
+      onOk: PropTypes.func,
+      onKeyDown: PropTypes.func,
+      timePicker: PropTypes.element,
+      dateInputPlaceholder: PropTypes.any,
+      onClear: PropTypes.func,
+      onChange: PropTypes.func,
+      onPanelChange: PropTypes.func,
+      disabledDate: PropTypes.func,
+      disabledTime: PropTypes.any,
+      renderFooter: PropTypes.func,
+      renderSidebar: PropTypes.func
+    },
+
+    mixins: [CommonMixin, CalendarMixin],
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        showToday: true,
+        showDateInput: true,
+        timePicker: null,
+        onOk: noop$8,
+        onPanelChange: noop$8
+      };
+    },
+    getInitialState: function getInitialState() {
+      return {
+        mode: this.props.mode || 'date'
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      if ('mode' in nextProps && this.state.mode !== nextProps.mode) {
+        this.setState({ mode: nextProps.mode });
+      }
+    },
+    onKeyDown: function onKeyDown(event) {
+      if (event.target.nodeName.toLowerCase() === 'input') {
+        return undefined;
+      }
+      var keyCode = event.keyCode;
+      // mac
+      var ctrlKey = event.ctrlKey || event.metaKey;
+      var disabledDate = this.props.disabledDate;
+      var value = this.state.value;
+
+      switch (keyCode) {
+        case KeyCode.DOWN:
+          this.goTime(1, 'weeks');
+          event.preventDefault();
+          return 1;
+        case KeyCode.UP:
+          this.goTime(-1, 'weeks');
+          event.preventDefault();
+          return 1;
+        case KeyCode.LEFT:
+          if (ctrlKey) {
+            this.goTime(-1, 'years');
+          } else {
+            this.goTime(-1, 'days');
+          }
+          event.preventDefault();
+          return 1;
+        case KeyCode.RIGHT:
+          if (ctrlKey) {
+            this.goTime(1, 'years');
+          } else {
+            this.goTime(1, 'days');
+          }
+          event.preventDefault();
+          return 1;
+        case KeyCode.HOME:
+          this.setValue(goStartMonth(this.state.value));
+          event.preventDefault();
+          return 1;
+        case KeyCode.END:
+          this.setValue(goEndMonth(this.state.value));
+          event.preventDefault();
+          return 1;
+        case KeyCode.PAGE_DOWN:
+          this.goTime(1, 'month');
+          event.preventDefault();
+          return 1;
+        case KeyCode.PAGE_UP:
+          this.goTime(-1, 'month');
+          event.preventDefault();
+          return 1;
+        case KeyCode.ENTER:
+          if (!disabledDate || !disabledDate(value)) {
+            this.onSelect(value, {
+              source: 'keyboard'
+            });
+          }
+          event.preventDefault();
+          return 1;
+        default:
+          this.props.onKeyDown(event);
+          return 1;
+      }
+    },
+    onClear: function onClear() {
+      this.onSelect(null);
+      this.props.onClear();
+    },
+    onOk: function onOk() {
+      var selectedValue = this.state.selectedValue;
+
+      if (this.isAllowedDate(selectedValue)) {
+        this.props.onOk(selectedValue);
+      }
+    },
+    onDateInputChange: function onDateInputChange(value) {
+      this.onSelect(value, {
+        source: 'dateInput'
+      });
+    },
+    onDateTableSelect: function onDateTableSelect(value) {
+      var timePicker = this.props.timePicker;
+      var selectedValue = this.state.selectedValue;
+
+      if (!selectedValue && timePicker) {
+        var timePickerDefaultValue = timePicker.props.defaultValue;
+        if (timePickerDefaultValue) {
+          syncTime(timePickerDefaultValue, value);
+        }
+      }
+      this.onSelect(value);
+    },
+    onToday: function onToday() {
+      var value = this.state.value;
+
+      var now = getTodayTime(value);
+      this.onSelect(now, {
+        source: 'todayButton'
+      });
+    },
+    onPanelChange: function onPanelChange(value, mode) {
+      var props = this.props,
+          state = this.state;
+
+      if (!('mode' in props)) {
+        this.setState({ mode: mode });
+      }
+      props.onPanelChange(value || state.value, mode);
+    },
+    getRootDOMNode: function getRootDOMNode() {
+      return ReactDOM__default.findDOMNode(this);
+    },
+    openTimePicker: function openTimePicker() {
+      this.onPanelChange(null, 'time');
+    },
+    closeTimePicker: function closeTimePicker() {
+      this.onPanelChange(null, 'date');
+    },
+    goTime: function goTime$$1(direction, unit) {
+      this.setValue(goTime(this.state.value, direction, unit));
+    },
+    render: function render() {
+      var props = this.props,
+          state = this.state;
+      var locale = props.locale,
+          prefixCls = props.prefixCls,
+          disabledDate = props.disabledDate,
+          dateInputPlaceholder = props.dateInputPlaceholder,
+          timePicker = props.timePicker,
+          disabledTime = props.disabledTime;
+      var value = state.value,
+          selectedValue = state.selectedValue,
+          mode = state.mode;
+
+      var showTimePicker = mode === 'time';
+      var disabledTimeConfig = showTimePicker && disabledTime && timePicker ? getTimeConfig(selectedValue, disabledTime) : null;
+
+      var timePickerEle = null;
+
+      if (timePicker && showTimePicker) {
+        var timePickerProps = _extends$2({
+          showHour: true,
+          showSecond: true,
+          showMinute: true
+        }, timePicker.props, disabledTimeConfig, {
+          onChange: this.onDateInputChange,
+          value: selectedValue,
+          disabledTime: disabledTime
+        });
+
+        if (timePicker.props.defaultValue !== undefined) {
+          timePickerProps.defaultOpenValue = timePicker.props.defaultValue;
+        }
+
+        timePickerEle = React__default.cloneElement(timePicker, timePickerProps);
+      }
+
+      var dateInputElement = props.showDateInput ? React__default.createElement(DateInput, {
+        format: this.getFormat(),
+        key: 'date-input',
+        value: value,
+        locale: locale,
+        placeholder: dateInputPlaceholder,
+        showClear: true,
+        disabledTime: disabledTime,
+        disabledDate: disabledDate,
+        onClear: this.onClear,
+        prefixCls: prefixCls,
+        selectedValue: selectedValue,
+        onChange: this.onDateInputChange
+      }) : null;
+      var children = [props.renderSidebar(), React__default.createElement(
+        'div',
+        { className: prefixCls + '-panel', key: 'panel' },
+        dateInputElement,
+        React__default.createElement(
+          'div',
+          { className: prefixCls + '-date-panel' },
+          React__default.createElement(CalendarHeader, {
+            locale: locale,
+            mode: mode,
+            value: value,
+            onValueChange: this.setValue,
+            onPanelChange: this.onPanelChange,
+            showTimePicker: showTimePicker,
+            prefixCls: prefixCls
+          }),
+          timePicker && showTimePicker ? React__default.createElement(
+            'div',
+            { className: prefixCls + '-time-picker' },
+            React__default.createElement(
+              'div',
+              { className: prefixCls + '-time-picker-panel' },
+              timePickerEle
+            )
+          ) : null,
+          React__default.createElement(
+            'div',
+            { className: prefixCls + '-body' },
+            React__default.createElement(DateTable, {
+              locale: locale,
+              value: value,
+              selectedValue: selectedValue,
+              prefixCls: prefixCls,
+              dateRender: props.dateRender,
+              onSelect: this.onDateTableSelect,
+              disabledDate: disabledDate,
+              showWeekNumber: props.showWeekNumber
+            })
+          ),
+          React__default.createElement(CalendarFooter, {
+            showOk: props.showOk,
+            renderFooter: props.renderFooter,
+            locale: locale,
+            prefixCls: prefixCls,
+            showToday: props.showToday,
+            disabledTime: disabledTime,
+            showTimePicker: showTimePicker,
+            showDateInput: props.showDateInput,
+            timePicker: timePicker,
+            selectedValue: selectedValue,
+            value: value,
+            disabledDate: disabledDate,
+            okDisabled: !this.isAllowedDate(selectedValue),
+            onOk: this.onOk,
+            onSelect: this.onSelect,
+            onToday: this.onToday,
+            onOpenTimePicker: this.openTimePicker,
+            onCloseTimePicker: this.closeTimePicker
+          })
+        )
+      )];
+
+      return this.renderRoot({
+        children: children,
+        className: props.showWeekNumber ? prefixCls + '-week-number' : ''
+      });
+    }
+  });
+
+  var KeyCode_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  /**
+   * @ignore
+   * some key-codes definition and utils from closure-library
+   * @author yiminghe@gmail.com
+   */
+
+  var KeyCode = {
+    /**
+     * MAC_ENTER
+     */
+    MAC_ENTER: 3,
+    /**
+     * BACKSPACE
+     */
+    BACKSPACE: 8,
+    /**
+     * TAB
+     */
+    TAB: 9,
+    /**
+     * NUMLOCK on FF/Safari Mac
+     */
+    NUM_CENTER: 12, // NUMLOCK on FF/Safari Mac
+    /**
+     * ENTER
+     */
+    ENTER: 13,
+    /**
+     * SHIFT
+     */
+    SHIFT: 16,
+    /**
+     * CTRL
+     */
+    CTRL: 17,
+    /**
+     * ALT
+     */
+    ALT: 18,
+    /**
+     * PAUSE
+     */
+    PAUSE: 19,
+    /**
+     * CAPS_LOCK
+     */
+    CAPS_LOCK: 20,
+    /**
+     * ESC
+     */
+    ESC: 27,
+    /**
+     * SPACE
+     */
+    SPACE: 32,
+    /**
+     * PAGE_UP
+     */
+    PAGE_UP: 33, // also NUM_NORTH_EAST
+    /**
+     * PAGE_DOWN
+     */
+    PAGE_DOWN: 34, // also NUM_SOUTH_EAST
+    /**
+     * END
+     */
+    END: 35, // also NUM_SOUTH_WEST
+    /**
+     * HOME
+     */
+    HOME: 36, // also NUM_NORTH_WEST
+    /**
+     * LEFT
+     */
+    LEFT: 37, // also NUM_WEST
+    /**
+     * UP
+     */
+    UP: 38, // also NUM_NORTH
+    /**
+     * RIGHT
+     */
+    RIGHT: 39, // also NUM_EAST
+    /**
+     * DOWN
+     */
+    DOWN: 40, // also NUM_SOUTH
+    /**
+     * PRINT_SCREEN
+     */
+    PRINT_SCREEN: 44,
+    /**
+     * INSERT
+     */
+    INSERT: 45, // also NUM_INSERT
+    /**
+     * DELETE
+     */
+    DELETE: 46, // also NUM_DELETE
+    /**
+     * ZERO
+     */
+    ZERO: 48,
+    /**
+     * ONE
+     */
+    ONE: 49,
+    /**
+     * TWO
+     */
+    TWO: 50,
+    /**
+     * THREE
+     */
+    THREE: 51,
+    /**
+     * FOUR
+     */
+    FOUR: 52,
+    /**
+     * FIVE
+     */
+    FIVE: 53,
+    /**
+     * SIX
+     */
+    SIX: 54,
+    /**
+     * SEVEN
+     */
+    SEVEN: 55,
+    /**
+     * EIGHT
+     */
+    EIGHT: 56,
+    /**
+     * NINE
+     */
+    NINE: 57,
+    /**
+     * QUESTION_MARK
+     */
+    QUESTION_MARK: 63, // needs localization
+    /**
+     * A
+     */
+    A: 65,
+    /**
+     * B
+     */
+    B: 66,
+    /**
+     * C
+     */
+    C: 67,
+    /**
+     * D
+     */
+    D: 68,
+    /**
+     * E
+     */
+    E: 69,
+    /**
+     * F
+     */
+    F: 70,
+    /**
+     * G
+     */
+    G: 71,
+    /**
+     * H
+     */
+    H: 72,
+    /**
+     * I
+     */
+    I: 73,
+    /**
+     * J
+     */
+    J: 74,
+    /**
+     * K
+     */
+    K: 75,
+    /**
+     * L
+     */
+    L: 76,
+    /**
+     * M
+     */
+    M: 77,
+    /**
+     * N
+     */
+    N: 78,
+    /**
+     * O
+     */
+    O: 79,
+    /**
+     * P
+     */
+    P: 80,
+    /**
+     * Q
+     */
+    Q: 81,
+    /**
+     * R
+     */
+    R: 82,
+    /**
+     * S
+     */
+    S: 83,
+    /**
+     * T
+     */
+    T: 84,
+    /**
+     * U
+     */
+    U: 85,
+    /**
+     * V
+     */
+    V: 86,
+    /**
+     * W
+     */
+    W: 87,
+    /**
+     * X
+     */
+    X: 88,
+    /**
+     * Y
+     */
+    Y: 89,
+    /**
+     * Z
+     */
+    Z: 90,
+    /**
+     * META
+     */
+    META: 91, // WIN_KEY_LEFT
+    /**
+     * WIN_KEY_RIGHT
+     */
+    WIN_KEY_RIGHT: 92,
+    /**
+     * CONTEXT_MENU
+     */
+    CONTEXT_MENU: 93,
+    /**
+     * NUM_ZERO
+     */
+    NUM_ZERO: 96,
+    /**
+     * NUM_ONE
+     */
+    NUM_ONE: 97,
+    /**
+     * NUM_TWO
+     */
+    NUM_TWO: 98,
+    /**
+     * NUM_THREE
+     */
+    NUM_THREE: 99,
+    /**
+     * NUM_FOUR
+     */
+    NUM_FOUR: 100,
+    /**
+     * NUM_FIVE
+     */
+    NUM_FIVE: 101,
+    /**
+     * NUM_SIX
+     */
+    NUM_SIX: 102,
+    /**
+     * NUM_SEVEN
+     */
+    NUM_SEVEN: 103,
+    /**
+     * NUM_EIGHT
+     */
+    NUM_EIGHT: 104,
+    /**
+     * NUM_NINE
+     */
+    NUM_NINE: 105,
+    /**
+     * NUM_MULTIPLY
+     */
+    NUM_MULTIPLY: 106,
+    /**
+     * NUM_PLUS
+     */
+    NUM_PLUS: 107,
+    /**
+     * NUM_MINUS
+     */
+    NUM_MINUS: 109,
+    /**
+     * NUM_PERIOD
+     */
+    NUM_PERIOD: 110,
+    /**
+     * NUM_DIVISION
+     */
+    NUM_DIVISION: 111,
+    /**
+     * F1
+     */
+    F1: 112,
+    /**
+     * F2
+     */
+    F2: 113,
+    /**
+     * F3
+     */
+    F3: 114,
+    /**
+     * F4
+     */
+    F4: 115,
+    /**
+     * F5
+     */
+    F5: 116,
+    /**
+     * F6
+     */
+    F6: 117,
+    /**
+     * F7
+     */
+    F7: 118,
+    /**
+     * F8
+     */
+    F8: 119,
+    /**
+     * F9
+     */
+    F9: 120,
+    /**
+     * F10
+     */
+    F10: 121,
+    /**
+     * F11
+     */
+    F11: 122,
+    /**
+     * F12
+     */
+    F12: 123,
+    /**
+     * NUMLOCK
+     */
+    NUMLOCK: 144,
+    /**
+     * SEMICOLON
+     */
+    SEMICOLON: 186, // needs localization
+    /**
+     * DASH
+     */
+    DASH: 189, // needs localization
+    /**
+     * EQUALS
+     */
+    EQUALS: 187, // needs localization
+    /**
+     * COMMA
+     */
+    COMMA: 188, // needs localization
+    /**
+     * PERIOD
+     */
+    PERIOD: 190, // needs localization
+    /**
+     * SLASH
+     */
+    SLASH: 191, // needs localization
+    /**
+     * APOSTROPHE
+     */
+    APOSTROPHE: 192, // needs localization
+    /**
+     * SINGLE_QUOTE
+     */
+    SINGLE_QUOTE: 222, // needs localization
+    /**
+     * OPEN_SQUARE_BRACKET
+     */
+    OPEN_SQUARE_BRACKET: 219, // needs localization
+    /**
+     * BACKSLASH
+     */
+    BACKSLASH: 220, // needs localization
+    /**
+     * CLOSE_SQUARE_BRACKET
+     */
+    CLOSE_SQUARE_BRACKET: 221, // needs localization
+    /**
+     * WIN_KEY
+     */
+    WIN_KEY: 224,
+    /**
+     * MAC_FF_META
+     */
+    MAC_FF_META: 224, // Firefox (Gecko) fires this for the meta key instead of 91
+    /**
+     * WIN_IME
+     */
+    WIN_IME: 229
+  };
+
+  /*
+   whether text and modified key is entered at the same time.
+   */
+  KeyCode.isTextModifyingKeyEvent = function isTextModifyingKeyEvent(e) {
+    var keyCode = e.keyCode;
+    if (e.altKey && !e.ctrlKey || e.metaKey ||
+    // Function keys don't generate text
+    keyCode >= KeyCode.F1 && keyCode <= KeyCode.F12) {
+      return false;
+    }
+
+    // The following keys are quite harmless, even in combination with
+    // CTRL, ALT or SHIFT.
+    switch (keyCode) {
+      case KeyCode.ALT:
+      case KeyCode.CAPS_LOCK:
+      case KeyCode.CONTEXT_MENU:
+      case KeyCode.CTRL:
+      case KeyCode.DOWN:
+      case KeyCode.END:
+      case KeyCode.ESC:
+      case KeyCode.HOME:
+      case KeyCode.INSERT:
+      case KeyCode.LEFT:
+      case KeyCode.MAC_FF_META:
+      case KeyCode.META:
+      case KeyCode.NUMLOCK:
+      case KeyCode.NUM_CENTER:
+      case KeyCode.PAGE_DOWN:
+      case KeyCode.PAGE_UP:
+      case KeyCode.PAUSE:
+      case KeyCode.PRINT_SCREEN:
+      case KeyCode.RIGHT:
+      case KeyCode.SHIFT:
+      case KeyCode.UP:
+      case KeyCode.WIN_KEY:
+      case KeyCode.WIN_KEY_RIGHT:
+        return false;
+      default:
+        return true;
+    }
+  };
+
+  /*
+   whether character is entered.
+   */
+  KeyCode.isCharacterKey = function isCharacterKey(keyCode) {
+    if (keyCode >= KeyCode.ZERO && keyCode <= KeyCode.NINE) {
+      return true;
+    }
+
+    if (keyCode >= KeyCode.NUM_ZERO && keyCode <= KeyCode.NUM_MULTIPLY) {
+      return true;
+    }
+
+    if (keyCode >= KeyCode.A && keyCode <= KeyCode.Z) {
+      return true;
+    }
+
+    // Safari sends zero key code for non-latin characters.
+    if (window.navigation.userAgent.indexOf('WebKit') !== -1 && keyCode === 0) {
+      return true;
+    }
+
+    switch (keyCode) {
+      case KeyCode.SPACE:
+      case KeyCode.QUESTION_MARK:
+      case KeyCode.NUM_PLUS:
+      case KeyCode.NUM_MINUS:
+      case KeyCode.NUM_PERIOD:
+      case KeyCode.NUM_DIVISION:
+      case KeyCode.SEMICOLON:
+      case KeyCode.DASH:
+      case KeyCode.EQUALS:
+      case KeyCode.COMMA:
+      case KeyCode.PERIOD:
+      case KeyCode.SLASH:
+      case KeyCode.APOSTROPHE:
+      case KeyCode.SINGLE_QUOTE:
+      case KeyCode.OPEN_SQUARE_BRACKET:
+      case KeyCode.BACKSLASH:
+      case KeyCode.CLOSE_SQUARE_BRACKET:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  exports['default'] = KeyCode;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(KeyCode_1);
+
+  var mapSelf_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports['default'] = mapSelf;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function mirror(o) {
+    return o;
+  }
+
+  function mapSelf(children) {
+    // return ReactFragment
+    return _react2['default'].Children.map(children, mirror);
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(mapSelf_1);
+
+  var util$2 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+  exports.getTodayTime = getTodayTime;
+  exports.getTitleString = getTitleString;
+  exports.getTodayTimeStr = getTodayTimeStr;
+  exports.getMonthName = getMonthName;
+  exports.syncTime = syncTime;
+  exports.getTimeConfig = getTimeConfig;
+  exports.isTimeValidByConfig = isTimeValidByConfig;
+  exports.isTimeValid = isTimeValid;
+  exports.isAllowedDate = isAllowedDate;
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var defaultDisabledTime = {
+    disabledHours: function disabledHours() {
+      return [];
+    },
+    disabledMinutes: function disabledMinutes() {
+      return [];
+    },
+    disabledSeconds: function disabledSeconds() {
+      return [];
+    }
+  };
+
+  function getTodayTime(value) {
+    var today = (0, _moment2['default'])();
+    today.locale(value.locale()).utcOffset(value.utcOffset());
+    return today;
+  }
+
+  function getTitleString(value) {
+    return value.format('LL');
+  }
+
+  function getTodayTimeStr(value) {
+    var today = getTodayTime(value);
+    return getTitleString(today);
+  }
+
+  function getMonthName(month) {
+    var locale = month.locale();
+    var localeData = month.localeData();
+    return localeData[locale === 'zh-cn' ? 'months' : 'monthsShort'](month);
+  }
+
+  function syncTime(from, to) {
+    if (!_moment2['default'].isMoment(from) || !_moment2['default'].isMoment(to)) return;
+    to.hour(from.hour());
+    to.minute(from.minute());
+    to.second(from.second());
+  }
+
+  function getTimeConfig(value, disabledTime) {
+    var disabledTimeConfig = disabledTime ? disabledTime(value) : {};
+    disabledTimeConfig = (0, _extends3['default'])({}, defaultDisabledTime, disabledTimeConfig);
+    return disabledTimeConfig;
+  }
+
+  function isTimeValidByConfig(value, disabledTimeConfig) {
+    var invalidTime = false;
+    if (value) {
+      var hour = value.hour();
+      var minutes = value.minute();
+      var seconds = value.second();
+      var disabledHours = disabledTimeConfig.disabledHours();
+      if (disabledHours.indexOf(hour) === -1) {
+        var disabledMinutes = disabledTimeConfig.disabledMinutes(hour);
+        if (disabledMinutes.indexOf(minutes) === -1) {
+          var disabledSeconds = disabledTimeConfig.disabledSeconds(hour, minutes);
+          invalidTime = disabledSeconds.indexOf(seconds) !== -1;
+        } else {
+          invalidTime = true;
+        }
+      } else {
+        invalidTime = true;
+      }
+    }
+    return !invalidTime;
+  }
+
+  function isTimeValid(value, disabledTime) {
+    var disabledTimeConfig = getTimeConfig(value, disabledTime);
+    return isTimeValidByConfig(value, disabledTimeConfig);
+  }
+
+  function isAllowedDate(value, disabledDate, disabledTime) {
+    if (disabledDate) {
+      if (disabledDate(value)) {
+        return false;
+      }
+    }
+    if (disabledTime) {
+      if (!isTimeValid(value, disabledTime)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  });
+
+  unwrapExports(util$2);
+  var util_1 = util$2.getTodayTime;
+  var util_2 = util$2.getTitleString;
+  var util_3 = util$2.getTodayTimeStr;
+  var util_4 = util$2.getMonthName;
+  var util_5 = util$2.syncTime;
+  var util_6 = util$2.getTimeConfig;
+  var util_7 = util$2.isTimeValidByConfig;
+  var util_8 = util$2.isTimeValid;
+  var util_9 = util$2.isAllowedDate;
+
+  var MonthTable_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var ROW = 4;
+  var COL = 3;
+
+  function chooseMonth(month) {
+    var next = this.state.value.clone();
+    next.month(month);
+    this.setAndSelectValue(next);
+  }
+
+  function noop() {}
+
+  var MonthTable = function (_Component) {
+    (0, _inherits3['default'])(MonthTable, _Component);
+
+    function MonthTable(props) {
+      (0, _classCallCheck3['default'])(this, MonthTable);
+
+      var _this = (0, _possibleConstructorReturn3['default'])(this, _Component.call(this, props));
+
+      _this.state = {
+        value: props.value
+      };
+      return _this;
+    }
+
+    MonthTable.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      if ('value' in nextProps) {
+        this.setState({
+          value: nextProps.value
+        });
+      }
+    };
+
+    MonthTable.prototype.setAndSelectValue = function setAndSelectValue(value) {
+      this.setState({
+        value: value
+      });
+      this.props.onSelect(value);
+    };
+
+    MonthTable.prototype.months = function months() {
+      var value = this.state.value;
+      var current = value.clone();
+      var months = [];
+      var index = 0;
+      for (var rowIndex = 0; rowIndex < ROW; rowIndex++) {
+        months[rowIndex] = [];
+        for (var colIndex = 0; colIndex < COL; colIndex++) {
+          current.month(index);
+          var content = (0, util$2.getMonthName)(current);
+          months[rowIndex][colIndex] = {
+            value: index,
+            content: content,
+            title: content
+          };
+          index++;
+        }
+      }
+      return months;
+    };
+
+    MonthTable.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = this.props;
+      var value = this.state.value;
+      var today = (0, util$2.getTodayTime)(value);
+      var months = this.months();
+      var currentMonth = value.month();
+      var prefixCls = props.prefixCls,
+          locale = props.locale,
+          contentRender = props.contentRender,
+          cellRender = props.cellRender;
+
+      var monthsEls = months.map(function (month, index) {
+        var tds = month.map(function (monthData) {
+          var _classNameMap;
+
+          var disabled = false;
+          if (props.disabledDate) {
+            var testValue = value.clone();
+            testValue.month(monthData.value);
+            disabled = props.disabledDate(testValue);
+          }
+          var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-cell-disabled'] = disabled, _classNameMap[prefixCls + '-selected-cell'] = monthData.value === currentMonth, _classNameMap[prefixCls + '-current-cell'] = today.year() === value.year() && monthData.value === today.month(), _classNameMap);
+          var cellEl = void 0;
+          if (cellRender) {
+            var currentValue = value.clone();
+            currentValue.month(monthData.value);
+            cellEl = cellRender(currentValue, locale);
+          } else {
+            var content = void 0;
+            if (contentRender) {
+              var _currentValue = value.clone();
+              _currentValue.month(monthData.value);
+              content = contentRender(_currentValue, locale);
+            } else {
+              content = monthData.content;
+            }
+            cellEl = _react2['default'].createElement(
+              'a',
+              { className: prefixCls + '-month' },
+              content
+            );
+          }
+          return _react2['default'].createElement(
+            'td',
+            {
+              role: 'gridcell',
+              key: monthData.value,
+              onClick: disabled ? null : chooseMonth.bind(_this2, monthData.value),
+              title: monthData.title,
+              className: (0, _classnames2['default'])(classNameMap)
+            },
+            cellEl
+          );
+        });
+        return _react2['default'].createElement(
+          'tr',
+          { key: index, role: 'row' },
+          tds
+        );
+      });
+
+      return _react2['default'].createElement(
+        'table',
+        { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+        _react2['default'].createElement(
+          'tbody',
+          { className: prefixCls + '-tbody' },
+          monthsEls
+        )
+      );
+    };
+
+    return MonthTable;
+  }(React__default.Component);
+
+  MonthTable.defaultProps = {
+    onSelect: noop
+  };
+  MonthTable.propTypes = {
+    onSelect: _propTypes2['default'].func,
+    cellRender: _propTypes2['default'].func,
+    prefixCls: _propTypes2['default'].string,
+    value: _propTypes2['default'].object
+  };
+  exports['default'] = MonthTable;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(MonthTable_1);
+
+  var MonthPanel_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _MonthTable2 = _interopRequireDefault(MonthTable_1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function goYear(direction) {
+    var next = this.state.value.clone();
+    next.add(direction, 'year');
+    this.setAndChangeValue(next);
+  }
+
+  function noop() {}
+
+  var MonthPanel = (0, _createReactClass2['default'])({
+    displayName: 'MonthPanel',
+
+    propTypes: {
+      onChange: _propTypes2['default'].func,
+      disabledDate: _propTypes2['default'].func,
+      onSelect: _propTypes2['default'].func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        onChange: noop,
+        onSelect: noop
+      };
+    },
+    getInitialState: function getInitialState() {
+      var props = this.props;
+      // bind methods
+      this.nextYear = goYear.bind(this, 1);
+      this.previousYear = goYear.bind(this, -1);
+      this.prefixCls = props.rootPrefixCls + '-month-panel';
+      return {
+        value: props.value || props.defaultValue
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      if ('value' in nextProps) {
+        this.setState({
+          value: nextProps.value
+        });
+      }
+    },
+    setAndChangeValue: function setAndChangeValue(value) {
+      this.setValue(value);
+      this.props.onChange(value);
+    },
+    setAndSelectValue: function setAndSelectValue(value) {
+      this.setValue(value);
+      this.props.onSelect(value);
+    },
+    setValue: function setValue(value) {
+      if (!('value' in this.props)) {
+        this.setState({
+          value: value
+        });
+      }
+    },
+    render: function render() {
+      var props = this.props;
+      var value = this.state.value;
+      var cellRender = props.cellRender;
+      var contentRender = props.contentRender;
+      var locale = props.locale;
+      var year = value.year();
+      var prefixCls = this.prefixCls;
+      return _react2['default'].createElement(
+        'div',
+        { className: prefixCls, style: props.style },
+        _react2['default'].createElement(
+          'div',
+          null,
+          _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-header' },
+            _react2['default'].createElement('a', {
+              className: prefixCls + '-prev-year-btn',
+              role: 'button',
+              onClick: this.previousYear,
+              title: locale.previousYear
+            }),
+            _react2['default'].createElement(
+              'a',
+              {
+                className: prefixCls + '-year-select',
+                role: 'button',
+                onClick: props.onYearPanelShow,
+                title: locale.yearSelect
+              },
+              _react2['default'].createElement(
+                'span',
+                { className: prefixCls + '-year-select-content' },
+                year
+              ),
+              _react2['default'].createElement(
+                'span',
+                { className: prefixCls + '-year-select-arrow' },
+                'x'
+              )
+            ),
+            _react2['default'].createElement('a', {
+              className: prefixCls + '-next-year-btn',
+              role: 'button',
+              onClick: this.nextYear,
+              title: locale.nextYear
+            })
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-body' },
+            _react2['default'].createElement(_MonthTable2['default'], {
+              disabledDate: props.disabledDate,
+              onSelect: this.setAndSelectValue,
+              locale: locale,
+              value: value,
+              cellRender: cellRender,
+              contentRender: contentRender,
+              prefixCls: prefixCls
+            })
+          )
+        )
+      );
+    }
+  });
+
+  exports['default'] = MonthPanel;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(MonthPanel_1);
+
+  var YearPanel_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var ROW = 4;
+  var COL = 3;
+
+  function goYear(direction) {
+    var value = this.state.value.clone();
+    value.add(direction, 'year');
+    this.setState({
+      value: value
+    });
+  }
+
+  function chooseYear(year) {
+    var value = this.state.value.clone();
+    value.year(year);
+    value.month(this.state.value.month());
+    this.props.onSelect(value);
+  }
+
+  var YearPanel = function (_React$Component) {
+    (0, _inherits3['default'])(YearPanel, _React$Component);
+
+    function YearPanel(props) {
+      (0, _classCallCheck3['default'])(this, YearPanel);
+
+      var _this = (0, _possibleConstructorReturn3['default'])(this, _React$Component.call(this, props));
+
+      _this.prefixCls = props.rootPrefixCls + '-year-panel';
+      _this.state = {
+        value: props.value || props.defaultValue
+      };
+      _this.nextDecade = goYear.bind(_this, 10);
+      _this.previousDecade = goYear.bind(_this, -10);
+      return _this;
+    }
+
+    YearPanel.prototype.years = function years() {
+      var value = this.state.value;
+      var currentYear = value.year();
+      var startYear = parseInt(currentYear / 10, 10) * 10;
+      var previousYear = startYear - 1;
+      var years = [];
+      var index = 0;
+      for (var rowIndex = 0; rowIndex < ROW; rowIndex++) {
+        years[rowIndex] = [];
+        for (var colIndex = 0; colIndex < COL; colIndex++) {
+          var year = previousYear + index;
+          var content = String(year);
+          years[rowIndex][colIndex] = {
+            content: content,
+            year: year,
+            title: content
+          };
+          index++;
+        }
+      }
+      return years;
+    };
+
+    YearPanel.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = this.props;
+      var value = this.state.value;
+      var locale = props.locale;
+      var years = this.years();
+      var currentYear = value.year();
+      var startYear = parseInt(currentYear / 10, 10) * 10;
+      var endYear = startYear + 9;
+      var prefixCls = this.prefixCls;
+
+      var yeasEls = years.map(function (row, index) {
+        var tds = row.map(function (yearData) {
+          var _classNameMap;
+
+          var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-selected-cell'] = yearData.year === currentYear, _classNameMap[prefixCls + '-last-decade-cell'] = yearData.year < startYear, _classNameMap[prefixCls + '-next-decade-cell'] = yearData.year > endYear, _classNameMap);
+          var clickHandler = void 0;
+          if (yearData.year < startYear) {
+            clickHandler = _this2.previousDecade;
+          } else if (yearData.year > endYear) {
+            clickHandler = _this2.nextDecade;
+          } else {
+            clickHandler = chooseYear.bind(_this2, yearData.year);
+          }
+          return _react2['default'].createElement(
+            'td',
+            {
+              role: 'gridcell',
+              title: yearData.title,
+              key: yearData.content,
+              onClick: clickHandler,
+              className: (0, _classnames2['default'])(classNameMap)
+            },
+            _react2['default'].createElement(
+              'a',
+              {
+                className: prefixCls + '-year'
+              },
+              yearData.content
+            )
+          );
+        });
+        return _react2['default'].createElement(
+          'tr',
+          { key: index, role: 'row' },
+          tds
+        );
+      });
+
+      return _react2['default'].createElement(
+        'div',
+        { className: this.prefixCls },
+        _react2['default'].createElement(
+          'div',
+          null,
+          _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-header' },
+            _react2['default'].createElement('a', {
+              className: prefixCls + '-prev-decade-btn',
+              role: 'button',
+              onClick: this.previousDecade,
+              title: locale.previousDecade
+            }),
+            _react2['default'].createElement(
+              'a',
+              {
+                className: prefixCls + '-decade-select',
+                role: 'button',
+                onClick: props.onDecadePanelShow,
+                title: locale.decadeSelect
+              },
+              _react2['default'].createElement(
+                'span',
+                { className: prefixCls + '-decade-select-content' },
+                startYear,
+                '-',
+                endYear
+              ),
+              _react2['default'].createElement(
+                'span',
+                { className: prefixCls + '-decade-select-arrow' },
+                'x'
+              )
+            ),
+            _react2['default'].createElement('a', {
+              className: prefixCls + '-next-decade-btn',
+              role: 'button',
+              onClick: this.nextDecade,
+              title: locale.nextDecade
+            })
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-body' },
+            _react2['default'].createElement(
+              'table',
+              { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+              _react2['default'].createElement(
+                'tbody',
+                { className: prefixCls + '-tbody' },
+                yeasEls
+              )
+            )
+          )
+        )
+      );
+    };
+
+    return YearPanel;
+  }(_react2['default'].Component);
+
+  exports['default'] = YearPanel;
+
+
+  YearPanel.propTypes = {
+    rootPrefixCls: _propTypes2['default'].string,
+    value: _propTypes2['default'].object,
+    defaultValue: _propTypes2['default'].object
+  };
+
+  YearPanel.defaultProps = {
+    onSelect: function onSelect() {}
+  };
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(YearPanel_1);
+
+  var DecadePanel_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var ROW = 4;
+  var COL = 3;
+
+
+  function goYear(direction) {
+    var next = this.state.value.clone();
+    next.add(direction, 'years');
+    this.setState({
+      value: next
+    });
+  }
+
+  function chooseDecade(year, event) {
+    var next = this.state.value.clone();
+    next.year(year);
+    next.month(this.state.value.month());
+    this.props.onSelect(next);
+    event.preventDefault();
+  }
+
+  var DecadePanel = function (_React$Component) {
+    (0, _inherits3['default'])(DecadePanel, _React$Component);
+
+    function DecadePanel(props) {
+      (0, _classCallCheck3['default'])(this, DecadePanel);
+
+      var _this = (0, _possibleConstructorReturn3['default'])(this, _React$Component.call(this, props));
+
+      _this.state = {
+        value: props.value || props.defaultValue
+      };
+
+      // bind methods
+      _this.prefixCls = props.rootPrefixCls + '-decade-panel';
+      _this.nextCentury = goYear.bind(_this, 100);
+      _this.previousCentury = goYear.bind(_this, -100);
+      return _this;
+    }
+
+    DecadePanel.prototype.render = function render() {
+      var _this2 = this;
+
+      var value = this.state.value;
+      var locale = this.props.locale;
+      var currentYear = value.year();
+      var startYear = parseInt(currentYear / 100, 10) * 100;
+      var preYear = startYear - 10;
+      var endYear = startYear + 99;
+      var decades = [];
+      var index = 0;
+      var prefixCls = this.prefixCls;
+
+      for (var rowIndex = 0; rowIndex < ROW; rowIndex++) {
+        decades[rowIndex] = [];
+        for (var colIndex = 0; colIndex < COL; colIndex++) {
+          var startDecade = preYear + index * 10;
+          var endDecade = preYear + index * 10 + 9;
+          decades[rowIndex][colIndex] = {
+            startDecade: startDecade,
+            endDecade: endDecade
+          };
+          index++;
+        }
+      }
+
+      var decadesEls = decades.map(function (row, decadeIndex) {
+        var tds = row.map(function (decadeData) {
+          var _classNameMap;
+
+          var dStartDecade = decadeData.startDecade;
+          var dEndDecade = decadeData.endDecade;
+          var isLast = dStartDecade < startYear;
+          var isNext = dEndDecade > endYear;
+          var classNameMap = (_classNameMap = {}, _classNameMap[prefixCls + '-cell'] = 1, _classNameMap[prefixCls + '-selected-cell'] = dStartDecade <= currentYear && currentYear <= dEndDecade, _classNameMap[prefixCls + '-last-century-cell'] = isLast, _classNameMap[prefixCls + '-next-century-cell'] = isNext, _classNameMap);
+          var content = dStartDecade + '-' + dEndDecade;
+          var clickHandler = void 0;
+          if (isLast) {
+            clickHandler = _this2.previousCentury;
+          } else if (isNext) {
+            clickHandler = _this2.nextCentury;
+          } else {
+            clickHandler = chooseDecade.bind(_this2, dStartDecade);
+          }
+          return _react2['default'].createElement(
+            'td',
+            {
+              key: dStartDecade,
+              onClick: clickHandler,
+              role: 'gridcell',
+              className: (0, _classnames2['default'])(classNameMap)
+            },
+            _react2['default'].createElement(
+              'a',
+              {
+                className: prefixCls + '-decade'
+              },
+              content
+            )
+          );
+        });
+        return _react2['default'].createElement(
+          'tr',
+          { key: decadeIndex, role: 'row' },
+          tds
+        );
+      });
+
+      return _react2['default'].createElement(
+        'div',
+        { className: this.prefixCls },
+        _react2['default'].createElement(
+          'div',
+          { className: prefixCls + '-header' },
+          _react2['default'].createElement('a', {
+            className: prefixCls + '-prev-century-btn',
+            role: 'button',
+            onClick: this.previousCentury,
+            title: locale.previousCentury
+          }),
+          _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-century' },
+            startYear,
+            '-',
+            endYear
+          ),
+          _react2['default'].createElement('a', {
+            className: prefixCls + '-next-century-btn',
+            role: 'button',
+            onClick: this.nextCentury,
+            title: locale.nextCentury
+          })
+        ),
+        _react2['default'].createElement(
+          'div',
+          { className: prefixCls + '-body' },
+          _react2['default'].createElement(
+            'table',
+            { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+            _react2['default'].createElement(
+              'tbody',
+              { className: prefixCls + '-tbody' },
+              decadesEls
+            )
+          )
+        )
+      );
+    };
+
+    return DecadePanel;
+  }(_react2['default'].Component);
+
+  exports['default'] = DecadePanel;
+
+
+  DecadePanel.propTypes = {
+    locale: _propTypes2['default'].object,
+    value: _propTypes2['default'].object,
+    defaultValue: _propTypes2['default'].object,
+    rootPrefixCls: _propTypes2['default'].string
+  };
+
+  DecadePanel.defaultProps = {
+    onSelect: function onSelect() {}
+  };
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(DecadePanel_1);
+
+  var CalendarHeader_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _mapSelf2 = _interopRequireDefault(mapSelf_1);
+
+
+
+  var _MonthPanel2 = _interopRequireDefault(MonthPanel_1);
+
+
+
+  var _YearPanel2 = _interopRequireDefault(YearPanel_1);
+
+
+
+  var _DecadePanel2 = _interopRequireDefault(DecadePanel_1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function goMonth(direction) {
+    var next = this.props.value.clone();
+    next.add(direction, 'months');
+    this.props.onValueChange(next);
+  }
+
+  function goYear(direction) {
+    var next = this.props.value.clone();
+    next.add(direction, 'years');
+    this.props.onValueChange(next);
+  }
+
+  function showIf(condition, el) {
+    return condition ? el : null;
+  }
+
+  var CalendarHeader = (0, _createReactClass2['default'])({
+    displayName: 'CalendarHeader',
+
+    propTypes: {
+      prefixCls: _propTypes2['default'].string,
+      value: _propTypes2['default'].object,
+      onValueChange: _propTypes2['default'].func,
+      showTimePicker: _propTypes2['default'].bool,
+      onPanelChange: _propTypes2['default'].func,
+      locale: _propTypes2['default'].object,
+      enablePrev: _propTypes2['default'].any,
+      enableNext: _propTypes2['default'].any,
+      disabledMonth: _propTypes2['default'].func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        enableNext: 1,
+        enablePrev: 1,
+        onPanelChange: function onPanelChange() {},
+        onValueChange: function onValueChange() {}
+      };
+    },
+    getInitialState: function getInitialState() {
+      this.nextMonth = goMonth.bind(this, 1);
+      this.previousMonth = goMonth.bind(this, -1);
+      this.nextYear = goYear.bind(this, 1);
+      this.previousYear = goYear.bind(this, -1);
+      return { yearPanelReferer: null };
+    },
+    onMonthSelect: function onMonthSelect(value) {
+      this.props.onPanelChange(value, 'date');
+      if (this.props.onMonthSelect) {
+        this.props.onMonthSelect(value);
+      } else {
+        this.props.onValueChange(value);
+      }
+    },
+    onYearSelect: function onYearSelect(value) {
+      var referer = this.state.yearPanelReferer;
+      this.setState({ yearPanelReferer: null });
+      this.props.onPanelChange(value, referer);
+      this.props.onValueChange(value);
+    },
+    onDecadeSelect: function onDecadeSelect(value) {
+      this.props.onPanelChange(value, 'year');
+      this.props.onValueChange(value);
+    },
+    monthYearElement: function monthYearElement(showTimePicker) {
+      var _this = this;
+
+      var props = this.props;
+      var prefixCls = props.prefixCls;
+      var locale = props.locale;
+      var value = props.value;
+      var localeData = value.localeData();
+      var monthBeforeYear = locale.monthBeforeYear;
+      var selectClassName = prefixCls + '-' + (monthBeforeYear ? 'my-select' : 'ym-select');
+      var year = _react2['default'].createElement(
+        'a',
+        {
+          className: prefixCls + '-year-select',
+          role: 'button',
+          onClick: showTimePicker ? null : function () {
+            return _this.showYearPanel('date');
+          },
+          title: locale.yearSelect
+        },
+        value.format(locale.yearFormat)
+      );
+      var month = _react2['default'].createElement(
+        'a',
+        {
+          className: prefixCls + '-month-select',
+          role: 'button',
+          onClick: showTimePicker ? null : this.showMonthPanel,
+          title: locale.monthSelect
+        },
+        locale.monthFormat ? value.format(locale.monthFormat) : localeData.monthsShort(value)
+      );
+      var day = void 0;
+      if (showTimePicker) {
+        day = _react2['default'].createElement(
+          'a',
+          {
+            className: prefixCls + '-day-select',
+            role: 'button'
+          },
+          value.format(locale.dayFormat)
+        );
+      }
+      var my = [];
+      if (monthBeforeYear) {
+        my = [month, day, year];
+      } else {
+        my = [year, month, day];
+      }
+      return _react2['default'].createElement(
+        'span',
+        { className: selectClassName },
+        (0, _mapSelf2['default'])(my)
+      );
+    },
+    showMonthPanel: function showMonthPanel() {
+      // null means that users' interaction doesn't change value
+      this.props.onPanelChange(null, 'month');
+    },
+    showYearPanel: function showYearPanel(referer) {
+      this.setState({ yearPanelReferer: referer });
+      this.props.onPanelChange(null, 'year');
+    },
+    showDecadePanel: function showDecadePanel() {
+      this.props.onPanelChange(null, 'decade');
+    },
+    render: function render() {
+      var _this2 = this;
+
+      var props = this.props;
+      var prefixCls = props.prefixCls,
+          locale = props.locale,
+          mode = props.mode,
+          value = props.value,
+          showTimePicker = props.showTimePicker,
+          enableNext = props.enableNext,
+          enablePrev = props.enablePrev,
+          disabledMonth = props.disabledMonth;
+
+
+      var panel = null;
+      if (mode === 'month') {
+        panel = _react2['default'].createElement(_MonthPanel2['default'], {
+          locale: locale,
+          defaultValue: value,
+          rootPrefixCls: prefixCls,
+          onSelect: this.onMonthSelect,
+          onYearPanelShow: function onYearPanelShow() {
+            return _this2.showYearPanel('month');
+          },
+          disabledDate: disabledMonth,
+          cellRender: props.monthCellRender,
+          contentRender: props.monthCellContentRender
+        });
+      }
+      if (mode === 'year') {
+        panel = _react2['default'].createElement(_YearPanel2['default'], {
+          locale: locale,
+          defaultValue: value,
+          rootPrefixCls: prefixCls,
+          onSelect: this.onYearSelect,
+          onDecadePanelShow: this.showDecadePanel
+        });
+      }
+      if (mode === 'decade') {
+        panel = _react2['default'].createElement(_DecadePanel2['default'], {
+          locale: locale,
+          defaultValue: value,
+          rootPrefixCls: prefixCls,
+          onSelect: this.onDecadeSelect
+        });
+      }
+
+      return _react2['default'].createElement(
+        'div',
+        { className: prefixCls + '-header' },
+        _react2['default'].createElement(
+          'div',
+          { style: { position: 'relative' } },
+          showIf(enablePrev && !showTimePicker, _react2['default'].createElement('a', {
+            className: prefixCls + '-prev-year-btn',
+            role: 'button',
+            onClick: this.previousYear,
+            title: locale.previousYear
+          })),
+          showIf(enablePrev && !showTimePicker, _react2['default'].createElement('a', {
+            className: prefixCls + '-prev-month-btn',
+            role: 'button',
+            onClick: this.previousMonth,
+            title: locale.previousMonth
+          })),
+          this.monthYearElement(showTimePicker),
+          showIf(enableNext && !showTimePicker, _react2['default'].createElement('a', {
+            className: prefixCls + '-next-month-btn',
+            onClick: this.nextMonth,
+            title: locale.nextMonth
+          })),
+          showIf(enableNext && !showTimePicker, _react2['default'].createElement('a', {
+            className: prefixCls + '-next-year-btn',
+            onClick: this.nextYear,
+            title: locale.nextYear
+          }))
+        ),
+        panel
+      );
+    }
+  });
+
+  exports['default'] = CalendarHeader;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(CalendarHeader_1);
+
+  var TodayButton_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+  exports['default'] = TodayButton;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function TodayButton(_ref) {
+    var prefixCls = _ref.prefixCls,
+        locale = _ref.locale,
+        value = _ref.value,
+        timePicker = _ref.timePicker,
+        disabled = _ref.disabled,
+        disabledDate = _ref.disabledDate,
+        onToday = _ref.onToday,
+        text = _ref.text;
+
+    var localeNow = (!text && timePicker ? locale.now : text) || locale.today;
+    var disabledToday = disabledDate && !(0, util$2.isAllowedDate)((0, util$2.getTodayTime)(value), disabledDate);
+    var isDisabled = disabledToday || disabled;
+    var disabledTodayClass = isDisabled ? prefixCls + '-today-btn-disabled' : '';
+    return _react2['default'].createElement(
+      'a',
+      {
+        className: prefixCls + '-today-btn ' + disabledTodayClass,
+        role: 'button',
+        onClick: isDisabled ? null : onToday,
+        title: (0, util$2.getTodayTimeStr)(value)
+      },
+      localeNow
+    );
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(TodayButton_1);
+
+  var OkButton_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+  exports["default"] = OkButton;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+  function OkButton(_ref) {
+    var prefixCls = _ref.prefixCls,
+        locale = _ref.locale,
+        okDisabled = _ref.okDisabled,
+        onOk = _ref.onOk;
+
+    var className = prefixCls + "-ok-btn";
+    if (okDisabled) {
+      className += " " + prefixCls + "-ok-btn-disabled";
+    }
+    return _react2["default"].createElement(
+      "a",
+      {
+        className: className,
+        role: "button",
+        onClick: okDisabled ? null : onOk
+      },
+      locale.ok
+    );
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(OkButton_1);
+
+  var TimePickerButton_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+  exports['default'] = TimePickerButton;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _classnames3 = _interopRequireDefault(classnames);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function TimePickerButton(_ref) {
+    var _classnames;
+
+    var prefixCls = _ref.prefixCls,
+        locale = _ref.locale,
+        showTimePicker = _ref.showTimePicker,
+        onOpenTimePicker = _ref.onOpenTimePicker,
+        onCloseTimePicker = _ref.onCloseTimePicker,
+        timePickerDisabled = _ref.timePickerDisabled;
+
+    var className = (0, _classnames3['default'])((_classnames = {}, _classnames[prefixCls + '-time-picker-btn'] = true, _classnames[prefixCls + '-time-picker-btn-disabled'] = timePickerDisabled, _classnames));
+    var onClick = null;
+    if (!timePickerDisabled) {
+      onClick = showTimePicker ? onCloseTimePicker : onOpenTimePicker;
+    }
+    return _react2['default'].createElement(
+      'a',
+      {
+        className: className,
+        role: 'button',
+        onClick: onClick
+      },
+      showTimePicker ? locale.dateSelect : locale.timeSelect
+    );
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(TimePickerButton_1);
+
+  var CalendarFooter_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _reactDom2 = _interopRequireDefault(ReactDOM__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _mapSelf2 = _interopRequireDefault(mapSelf_1);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _TodayButton2 = _interopRequireDefault(TodayButton_1);
+
+
+
+  var _OkButton2 = _interopRequireDefault(OkButton_1);
+
+
+
+  var _TimePickerButton2 = _interopRequireDefault(TimePickerButton_1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var CalendarFooter = (0, _createReactClass2['default'])({
+    displayName: 'CalendarFooter',
+
+    propTypes: {
+      prefixCls: _propTypes2['default'].string,
+      showDateInput: _propTypes2['default'].bool,
+      disabledTime: _propTypes2['default'].any,
+      timePicker: _propTypes2['default'].element,
+      selectedValue: _propTypes2['default'].any,
+      showOk: _propTypes2['default'].bool,
+      onSelect: _propTypes2['default'].func,
+      value: _propTypes2['default'].object,
+      renderFooter: _propTypes2['default'].func,
+      defaultValue: _propTypes2['default'].object
+    },
+
+    onSelect: function onSelect(value) {
+      this.props.onSelect(value);
+    },
+    getRootDOMNode: function getRootDOMNode() {
+      return _reactDom2['default'].findDOMNode(this);
+    },
+    render: function render() {
+      var props = this.props;
+      var value = props.value,
+          prefixCls = props.prefixCls,
+          showOk = props.showOk,
+          timePicker = props.timePicker,
+          renderFooter = props.renderFooter;
+
+      var footerEl = null;
+      var extraFooter = renderFooter();
+      if (props.showToday || timePicker || extraFooter) {
+        var _cx;
+
+        var nowEl = void 0;
+        if (props.showToday) {
+          nowEl = _react2['default'].createElement(_TodayButton2['default'], (0, _extends3['default'])({}, props, { value: value }));
+        }
+        var okBtn = void 0;
+        if (showOk === true || showOk !== false && !!props.timePicker) {
+          okBtn = _react2['default'].createElement(_OkButton2['default'], props);
+        }
+        var timePickerBtn = void 0;
+        if (!!props.timePicker) {
+          timePickerBtn = _react2['default'].createElement(_TimePickerButton2['default'], props);
+        }
+
+        var footerBtn = void 0;
+        if (nowEl || timePickerBtn || okBtn) {
+          footerBtn = _react2['default'].createElement(
+            'span',
+            { className: prefixCls + '-footer-btn' },
+            (0, _mapSelf2['default'])([nowEl, timePickerBtn, okBtn])
+          );
+        }
+        var cls = (0, _classnames2['default'])((_cx = {}, _cx[prefixCls + '-footer'] = true, _cx[prefixCls + '-footer-show-ok'] = okBtn, _cx));
+        footerEl = _react2['default'].createElement(
+          'div',
+          { className: cls },
+          extraFooter,
+          footerBtn
+        );
+      }
+      return footerEl;
+    }
+  });
+
+  exports['default'] = CalendarFooter;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(CalendarFooter_1);
+
+  var CalendarMixin_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function noop() {}
+
+  function getNow() {
+    return (0, _moment2['default'])();
+  }
+
+  function getNowByCurrentStateValue(value) {
+    var ret = void 0;
+    if (value) {
+      ret = (0, util$2.getTodayTime)(value);
+    } else {
+      ret = getNow();
+    }
+    return ret;
+  }
+
+  var CalendarMixin = {
+    propTypes: {
+      value: _propTypes2['default'].object,
+      defaultValue: _propTypes2['default'].object,
+      onKeyDown: _propTypes2['default'].func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        onKeyDown: noop
+      };
+    },
+    getInitialState: function getInitialState() {
+      var props = this.props;
+      var value = props.value || props.defaultValue || getNow();
+      return {
+        value: value,
+        selectedValue: props.selectedValue || props.defaultSelectedValue
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      var value = nextProps.value;
+      var selectedValue = nextProps.selectedValue;
+
+      if ('value' in nextProps) {
+        value = value || nextProps.defaultValue || getNowByCurrentStateValue(this.state.value);
+        this.setState({
+          value: value
+        });
+      }
+      if ('selectedValue' in nextProps) {
+        this.setState({
+          selectedValue: selectedValue
+        });
+      }
+    },
+    onSelect: function onSelect(value, cause) {
+      if (value) {
+        this.setValue(value);
+      }
+      this.setSelectedValue(value, cause);
+    },
+    renderRoot: function renderRoot(newProps) {
+      var _className;
+
+      var props = this.props;
+      var prefixCls = props.prefixCls;
+
+      var className = (_className = {}, _className[prefixCls] = 1, _className[prefixCls + '-hidden'] = !props.visible, _className[props.className] = !!props.className, _className[newProps.className] = !!newProps.className, _className);
+
+      return _react2['default'].createElement(
+        'div',
+        {
+          ref: this.saveRoot,
+          className: '' + (0, _classnames2['default'])(className),
+          style: this.props.style,
+          tabIndex: '0',
+          onKeyDown: this.onKeyDown
+        },
+        newProps.children
+      );
+    },
+    setSelectedValue: function setSelectedValue(selectedValue, cause) {
+      // if (this.isAllowedDate(selectedValue)) {
+      if (!('selectedValue' in this.props)) {
+        this.setState({
+          selectedValue: selectedValue
+        });
+      }
+      this.props.onSelect(selectedValue, cause);
+      // }
+    },
+    setValue: function setValue(value) {
+      var originalValue = this.state.value;
+      if (!('value' in this.props)) {
+        this.setState({
+          value: value
+        });
+      }
+      if (originalValue && value && !originalValue.isSame(value) || !originalValue && value || originalValue && !value) {
+        this.props.onChange(value);
+      }
+    },
+    isAllowedDate: function isAllowedDate(value) {
+      var disabledDate = this.props.disabledDate;
+      var disabledTime = this.props.disabledTime;
+      return (0, util$2.isAllowedDate)(value, disabledDate, disabledTime);
+    }
+  };
+
+  exports['default'] = CalendarMixin;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(CalendarMixin_1);
+
+  var CommonMixin$1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _en_US2 = _interopRequireDefault(en_US$2);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function noop() {}
+
+  exports['default'] = {
+    propTypes: {
+      className: _propTypes2['default'].string,
+      locale: _propTypes2['default'].object,
+      style: _propTypes2['default'].object,
+      visible: _propTypes2['default'].bool,
+      onSelect: _propTypes2['default'].func,
+      prefixCls: _propTypes2['default'].string,
+      onChange: _propTypes2['default'].func,
+      onOk: _propTypes2['default'].func
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        locale: _en_US2['default'],
+        style: {},
+        visible: true,
+        prefixCls: 'rc-calendar',
+        className: '',
+        onSelect: noop,
+        onChange: noop,
+        onClear: noop,
+        renderFooter: function renderFooter() {
+          return null;
+        },
+        renderSidebar: function renderSidebar() {
+          return null;
+        }
+      };
+    },
+    shouldComponentUpdate: function shouldComponentUpdate(nextProps) {
+      return this.props.visible || nextProps.visible;
+    },
+    getFormat: function getFormat() {
+      var format = this.props.format;
+      var _props = this.props,
+          locale = _props.locale,
+          timePicker = _props.timePicker;
+
+      if (!format) {
+        if (timePicker) {
+          format = locale.dateTimeFormat;
+        } else {
+          format = locale.dateFormat;
+        }
+      }
+      return format;
+    },
+    focus: function focus() {
+      if (this.rootInstance) {
+        this.rootInstance.focus();
+      }
+    },
+    saveRoot: function saveRoot(root) {
+      this.rootInstance = root;
+    }
+  };
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(CommonMixin$1);
+
+  var MonthCalendar_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _KeyCode2 = _interopRequireDefault(KeyCode_1);
+
+
+
+  var _CalendarHeader2 = _interopRequireDefault(CalendarHeader_1);
+
+
+
+  var _CalendarFooter2 = _interopRequireDefault(CalendarFooter_1);
+
+
+
+  var _CalendarMixin2 = _interopRequireDefault(CalendarMixin_1);
+
+
+
+  var _CommonMixin2 = _interopRequireDefault(CommonMixin$1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var MonthCalendar = (0, _createReactClass2['default'])({
+    displayName: 'MonthCalendar',
+
+    propTypes: {
+      monthCellRender: _propTypes2['default'].func,
+      dateCellRender: _propTypes2['default'].func
+    },
+    mixins: [_CommonMixin2['default'], _CalendarMixin2['default']],
+
+    getInitialState: function getInitialState() {
+      return { mode: 'month' };
+    },
+    onKeyDown: function onKeyDown(event) {
+      var keyCode = event.keyCode;
+      var ctrlKey = event.ctrlKey || event.metaKey;
+      var stateValue = this.state.value;
+      var disabledDate = this.props.disabledDate;
+
+      var value = stateValue;
+      switch (keyCode) {
+        case _KeyCode2['default'].DOWN:
+          value = stateValue.clone();
+          value.add(3, 'months');
+          break;
+        case _KeyCode2['default'].UP:
+          value = stateValue.clone();
+          value.add(-3, 'months');
+          break;
+        case _KeyCode2['default'].LEFT:
+          value = stateValue.clone();
+          if (ctrlKey) {
+            value.add(-1, 'years');
+          } else {
+            value.add(-1, 'months');
+          }
+          break;
+        case _KeyCode2['default'].RIGHT:
+          value = stateValue.clone();
+          if (ctrlKey) {
+            value.add(1, 'years');
+          } else {
+            value.add(1, 'months');
+          }
+          break;
+        case _KeyCode2['default'].ENTER:
+          if (!disabledDate || !disabledDate(stateValue)) {
+            this.onSelect(stateValue);
+          }
+          event.preventDefault();
+          return 1;
+        default:
+          return undefined;
+      }
+      if (value !== stateValue) {
+        this.setValue(value);
+        event.preventDefault();
+        return 1;
+      }
+    },
+    handlePanelChange: function handlePanelChange(_, mode) {
+      if (mode !== 'date') {
+        this.setState({ mode: mode });
+      }
+    },
+    render: function render() {
+      var props = this.props,
+          state = this.state;
+      var mode = state.mode,
+          value = state.value;
+
+      var children = _react2['default'].createElement(
+        'div',
+        { className: props.prefixCls + '-month-calendar-content' },
+        _react2['default'].createElement(
+          'div',
+          { className: props.prefixCls + '-month-header-wrap' },
+          _react2['default'].createElement(_CalendarHeader2['default'], {
+            prefixCls: props.prefixCls,
+            mode: mode,
+            value: value,
+            locale: props.locale,
+            disabledMonth: props.disabledDate,
+            monthCellRender: props.monthCellRender,
+            monthCellContentRender: props.monthCellContentRender,
+            onMonthSelect: this.onSelect,
+            onValueChange: this.setValue,
+            onPanelChange: this.handlePanelChange
+          })
+        ),
+        _react2['default'].createElement(_CalendarFooter2['default'], {
+          prefixCls: props.prefixCls,
+          renderFooter: props.renderFooter
+        })
+      );
+      return this.renderRoot({
+        className: props.prefixCls + '-month-calendar',
+        children: children
+      });
+    }
+  });
+
+  exports['default'] = MonthCalendar;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(MonthCalendar_1);
+
+  var createChainedFunction_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports["default"] = createChainedFunction;
+  /**
+   * Safe chained function
+   *
+   * Will only create a new function if needed,
+   * otherwise will pass back existing functions or null.
+   *
+   * @returns {function|null}
+   */
+  function createChainedFunction() {
+    var args = [].slice.call(arguments, 0);
+    if (args.length === 1) {
+      return args[0];
+    }
+
+    return function chainedFunction() {
+      for (var i = 0; i < args.length; i++) {
+        if (args[i] && args[i].apply) {
+          args[i].apply(this, arguments);
+        }
+      }
+    };
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(createChainedFunction_1);
+
+  var placements_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+  var autoAdjustOverflow = {
+    adjustX: 1,
+    adjustY: 1
+  };
+
+  var targetOffset = [0, 0];
+
+  var placements = {
+    bottomLeft: {
+      points: ['tl', 'tl'],
+      overflow: autoAdjustOverflow,
+      offset: [0, -3],
+      targetOffset: targetOffset
+    },
+    bottomRight: {
+      points: ['tr', 'tr'],
+      overflow: autoAdjustOverflow,
+      offset: [0, -3],
+      targetOffset: targetOffset
+    },
+    topRight: {
+      points: ['br', 'br'],
+      overflow: autoAdjustOverflow,
+      offset: [0, 3],
+      targetOffset: targetOffset
+    },
+    topLeft: {
+      points: ['bl', 'bl'],
+      overflow: autoAdjustOverflow,
+      offset: [0, 3],
+      targetOffset: targetOffset
+    }
+  };
+
+  exports['default'] = placements;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(placements_1);
+
+  var Picker_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _reactDom2 = _interopRequireDefault(ReactDOM__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _createChainedFunction2 = _interopRequireDefault(createChainedFunction_1);
+
+
+
+  var _KeyCode2 = _interopRequireDefault(KeyCode_1);
+
+
+
+  var _placements2 = _interopRequireDefault(placements_1);
+
+
+
+  var _rcTrigger2 = _interopRequireDefault(Trigger);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function noop() {}
+
+  function refFn(field, component) {
+    this[field] = component;
+  }
+
+  var Picker = (0, _createReactClass2['default'])({
+    displayName: 'Picker',
+
+    propTypes: {
+      animation: _propTypes2['default'].oneOfType([_propTypes2['default'].func, _propTypes2['default'].string]),
+      disabled: _propTypes2['default'].bool,
+      transitionName: _propTypes2['default'].string,
+      onChange: _propTypes2['default'].func,
+      onOpenChange: _propTypes2['default'].func,
+      children: _propTypes2['default'].func,
+      getCalendarContainer: _propTypes2['default'].func,
+      calendar: _propTypes2['default'].element,
+      style: _propTypes2['default'].object,
+      open: _propTypes2['default'].bool,
+      defaultOpen: _propTypes2['default'].bool,
+      prefixCls: _propTypes2['default'].string,
+      placement: _propTypes2['default'].any,
+      value: _propTypes2['default'].oneOfType([_propTypes2['default'].object, _propTypes2['default'].array]),
+      defaultValue: _propTypes2['default'].oneOfType([_propTypes2['default'].object, _propTypes2['default'].array]),
+      align: _propTypes2['default'].object
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        prefixCls: 'rc-calendar-picker',
+        style: {},
+        align: {},
+        placement: 'bottomLeft',
+        defaultOpen: false,
+        onChange: noop,
+        onOpenChange: noop
+      };
+    },
+    getInitialState: function getInitialState() {
+      var props = this.props;
+      var open = void 0;
+      if ('open' in props) {
+        open = props.open;
+      } else {
+        open = props.defaultOpen;
+      }
+      var value = props.value || props.defaultValue;
+      this.saveCalendarRef = refFn.bind(this, 'calendarInstance');
+      return {
+        open: open,
+        value: value
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      var value = nextProps.value,
+          open = nextProps.open;
+
+      if ('value' in nextProps) {
+        this.setState({
+          value: value
+        });
+      }
+      if (open !== undefined) {
+        this.setState({
+          open: open
+        });
+      }
+    },
+    componentDidUpdate: function componentDidUpdate(_, prevState) {
+      if (!prevState.open && this.state.open) {
+        // setTimeout is for making sure saveCalendarRef happen before focusCalendar
+        this.focusTimeout = setTimeout(this.focusCalendar, 0, this);
+      }
+    },
+    componentWillUnmount: function componentWillUnmount() {
+      clearTimeout(this.focusTimeout);
+    },
+    onCalendarKeyDown: function onCalendarKeyDown(event) {
+      if (event.keyCode === _KeyCode2['default'].ESC) {
+        event.stopPropagation();
+        this.close(this.focus);
+      }
+    },
+    onCalendarSelect: function onCalendarSelect(value) {
+      var cause = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+      var props = this.props;
+      if (!('value' in props)) {
+        this.setState({
+          value: value
+        });
+      }
+      if (cause.source === 'keyboard' || !props.calendar.props.timePicker && cause.source !== 'dateInput' || cause.source === 'todayButton') {
+        this.close(this.focus);
+      }
+      props.onChange(value);
+    },
+    onKeyDown: function onKeyDown(event) {
+      if (event.keyCode === _KeyCode2['default'].DOWN && !this.state.open) {
+        this.open();
+        event.preventDefault();
+      }
+    },
+    onCalendarOk: function onCalendarOk() {
+      this.close(this.focus);
+    },
+    onCalendarClear: function onCalendarClear() {
+      this.close(this.focus);
+    },
+    onVisibleChange: function onVisibleChange(open) {
+      this.setOpen(open);
+    },
+    getCalendarElement: function getCalendarElement() {
+      var props = this.props;
+      var state = this.state;
+      var calendarProps = props.calendar.props;
+      var value = state.value;
+
+      var defaultValue = value;
+      var extraProps = {
+        ref: this.saveCalendarRef,
+        defaultValue: defaultValue || calendarProps.defaultValue,
+        selectedValue: value,
+        onKeyDown: this.onCalendarKeyDown,
+        onOk: (0, _createChainedFunction2['default'])(calendarProps.onOk, this.onCalendarOk),
+        onSelect: (0, _createChainedFunction2['default'])(calendarProps.onSelect, this.onCalendarSelect),
+        onClear: (0, _createChainedFunction2['default'])(calendarProps.onClear, this.onCalendarClear)
+      };
+
+      return _react2['default'].cloneElement(props.calendar, extraProps);
+    },
+    setOpen: function setOpen(open, callback) {
+      var onOpenChange = this.props.onOpenChange;
+
+      if (this.state.open !== open) {
+        if (!('open' in this.props)) {
+          this.setState({
+            open: open
+          }, callback);
+        }
+        onOpenChange(open);
+      }
+    },
+    open: function open(callback) {
+      this.setOpen(true, callback);
+    },
+    close: function close(callback) {
+      this.setOpen(false, callback);
+    },
+    focus: function focus() {
+      if (!this.state.open) {
+        _reactDom2['default'].findDOMNode(this).focus();
+      }
+    },
+    focusCalendar: function focusCalendar() {
+      if (this.state.open && !!this.calendarInstance) {
+        this.calendarInstance.focus();
+      }
+    },
+    render: function render() {
+      var props = this.props;
+      var prefixCls = props.prefixCls,
+          placement = props.placement,
+          style = props.style,
+          getCalendarContainer = props.getCalendarContainer,
+          align = props.align,
+          animation = props.animation,
+          disabled = props.disabled,
+          dropdownClassName = props.dropdownClassName,
+          transitionName = props.transitionName,
+          children = props.children;
+
+      var state = this.state;
+      return _react2['default'].createElement(
+        _rcTrigger2['default'],
+        {
+          popup: this.getCalendarElement(),
+          popupAlign: align,
+          builtinPlacements: _placements2['default'],
+          popupPlacement: placement,
+          action: disabled && !state.open ? [] : ['click'],
+          destroyPopupOnHide: true,
+          getPopupContainer: getCalendarContainer,
+          popupStyle: style,
+          popupAnimation: animation,
+          popupTransitionName: transitionName,
+          popupVisible: state.open,
+          onPopupVisibleChange: this.onVisibleChange,
+          prefixCls: prefixCls,
+          popupClassName: dropdownClassName
+        },
+        _react2['default'].cloneElement(children(state, props), { onKeyDown: this.onKeyDown })
+      );
+    }
+  });
+
+  exports['default'] = Picker;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(Picker_1);
+
+  var interopDefault_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+  exports["default"] = interopDefault;
+  // https://github.com/moment/moment/issues/3650
+  function interopDefault(m) {
+      return m["default"] || m;
+  }
+  module.exports = exports["default"];
+  });
+
+  unwrapExports(interopDefault_1);
+
+  var createPicker_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+  exports['default'] = createPicker;
+
+
+
+  var React$$1 = _interopRequireWildcard(React__default);
+
+
+
+  var moment$$1 = _interopRequireWildcard(moment);
+
+
+
+  var _MonthCalendar2 = _interopRequireDefault(MonthCalendar_1);
+
+
+
+  var _Picker2 = _interopRequireDefault(Picker_1);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _omit2 = _interopRequireDefault(omit);
+
+
+
+  var _icon2 = _interopRequireDefault(icon);
+
+
+
+  var _warning2 = _interopRequireDefault(warning$4);
+
+
+
+  var _interopDefault2 = _interopRequireDefault(interopDefault_1);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function createPicker(TheCalendar) {
+      return _a = function (_React$Component) {
+          (0, _inherits3['default'])(CalenderWrapper, _React$Component);
+
+          function CalenderWrapper(props) {
+              (0, _classCallCheck3['default'])(this, CalenderWrapper);
+
+              var _this = (0, _possibleConstructorReturn3['default'])(this, (CalenderWrapper.__proto__ || Object.getPrototypeOf(CalenderWrapper)).call(this, props));
+
+              _this.renderFooter = function () {
+                  var _this$props = _this.props,
+                      prefixCls = _this$props.prefixCls,
+                      renderExtraFooter = _this$props.renderExtraFooter;
+
+                  return renderExtraFooter ? React$$1.createElement(
+                      'div',
+                      { className: prefixCls + '-footer-extra' },
+                      renderExtraFooter.apply(undefined, arguments)
+                  ) : null;
+              };
+              _this.clearSelection = function (e) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  _this.handleChange(null);
+              };
+              _this.handleChange = function (value) {
+                  var props = _this.props;
+                  if (!('value' in props)) {
+                      _this.setState({
+                          value: value,
+                          showDate: value
+                      });
+                  }
+                  props.onChange(value, value && value.format(props.format) || '');
+              };
+              _this.handleCalendarChange = function (value) {
+                  _this.setState({ showDate: value });
+              };
+              _this.saveInput = function (node) {
+                  _this.input = node;
+              };
+              var value = props.value || props.defaultValue;
+              if (value && !(0, _interopDefault2['default'])(moment$$1).isMoment(value)) {
+                  throw new Error('The value/defaultValue of DatePicker or MonthPicker must be ' + 'a moment object after `antd@2.0`, see: https://u.ant.design/date-picker-value');
+              }
+              _this.state = {
+                  value: value,
+                  showDate: value
+              };
+              return _this;
+          }
+
+          (0, _createClass3['default'])(CalenderWrapper, [{
+              key: 'componentWillReceiveProps',
+              value: function componentWillReceiveProps(nextProps) {
+                  if ('value' in nextProps) {
+                      this.setState({
+                          value: nextProps.value,
+                          showDate: nextProps.value
+                      });
+                  }
+              }
+          }, {
+              key: 'focus',
+              value: function focus() {
+                  this.input.focus();
+              }
+          }, {
+              key: 'blur',
+              value: function blur() {
+                  this.input.blur();
+              }
+          }, {
+              key: 'render',
+              value: function render() {
+                  var _classNames,
+                      _this2 = this;
+
+                  var _state = this.state,
+                      value = _state.value,
+                      showDate = _state.showDate;
+
+                  var props = (0, _omit2['default'])(this.props, ['onChange']);
+                  var prefixCls = props.prefixCls,
+                      locale = props.locale,
+                      localeCode = props.localeCode;
+
+                  var placeholder = 'placeholder' in props ? props.placeholder : locale.lang.placeholder;
+                  var disabledTime = props.showTime ? props.disabledTime : null;
+                  var calendarClassName = (0, _classnames2['default'])((_classNames = {}, (0, _defineProperty3['default'])(_classNames, prefixCls + '-time', props.showTime), (0, _defineProperty3['default'])(_classNames, prefixCls + '-month', _MonthCalendar2['default'] === TheCalendar), _classNames));
+                  if (value && localeCode) {
+                      value.locale(localeCode);
+                  }
+                  var pickerProps = {};
+                  var calendarProps = {};
+                  if (props.showTime) {
+                      calendarProps = {
+                          // fix https://github.com/ant-design/ant-design/issues/1902
+                          onSelect: this.handleChange
+                      };
+                  } else {
+                      pickerProps = {
+                          onChange: this.handleChange
+                      };
+                  }
+                  if ('mode' in props) {
+                      calendarProps.mode = props.mode;
+                  }
+                  (0, _warning2['default'])(!('onOK' in props), 'It should be `DatePicker[onOk]` or `MonthPicker[onOk]`, instead of `onOK`!');
+                  var calendar = React$$1.createElement(TheCalendar, (0, _extends3['default'])({}, calendarProps, { disabledDate: props.disabledDate, disabledTime: disabledTime, locale: locale.lang, timePicker: props.timePicker, defaultValue: props.defaultPickerValue || (0, _interopDefault2['default'])(moment$$1)(), dateInputPlaceholder: placeholder, prefixCls: prefixCls, className: calendarClassName, onOk: props.onOk, dateRender: props.dateRender, format: props.format, showToday: props.showToday, monthCellContentRender: props.monthCellContentRender, renderFooter: this.renderFooter, onPanelChange: props.onPanelChange, onChange: this.handleCalendarChange, value: showDate }));
+                  var clearIcon = !props.disabled && props.allowClear && value ? React$$1.createElement(_icon2['default'], { type: 'cross-circle', className: prefixCls + '-picker-clear', onClick: this.clearSelection }) : null;
+                  var input = function input(_ref) {
+                      var inputValue = _ref.value;
+                      return React$$1.createElement(
+                          'div',
+                          null,
+                          React$$1.createElement('input', { ref: _this2.saveInput, disabled: props.disabled, readOnly: true, value: inputValue && inputValue.format(props.format) || '', placeholder: placeholder, className: props.pickerInputClass }),
+                          clearIcon,
+                          React$$1.createElement('span', { className: prefixCls + '-picker-icon' })
+                      );
+                  };
+                  return React$$1.createElement(
+                      'span',
+                      { id: props.id, className: (0, _classnames2['default'])(props.className, props.pickerClass), style: props.style, onFocus: props.onFocus, onBlur: props.onBlur },
+                      React$$1.createElement(
+                          _Picker2['default'],
+                          (0, _extends3['default'])({}, props, pickerProps, { calendar: calendar, value: value, prefixCls: prefixCls + '-picker-container', style: props.popupStyle }),
+                          input
+                      )
+                  );
+              }
+          }]);
+          return CalenderWrapper;
+      }(React$$1.Component), _a.defaultProps = {
+          prefixCls: 'ant-calendar',
+          allowClear: true,
+          showToday: true
+      }, _a;
+      var _a;
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(createPicker_1);
+
+  var Header_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var Header = function (_Component) {
+    (0, _inherits3['default'])(Header, _Component);
+
+    function Header(props) {
+      (0, _classCallCheck3['default'])(this, Header);
+
+      var _this = (0, _possibleConstructorReturn3['default'])(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
+
+      _initialiseProps.call(_this);
+
+      var value = props.value,
+          format = props.format;
+
+      _this.state = {
+        str: value && value.format(format) || '',
+        invalid: false
+      };
+      return _this;
+    }
+
+    (0, _createClass3['default'])(Header, [{
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        var _this2 = this;
+
+        if (this.props.focusOnOpen) {
+          // Wait one frame for the panel to be positioned before focusing
+          var requestAnimationFrame = window.requestAnimationFrame || window.setTimeout;
+          requestAnimationFrame(function () {
+            _this2.refs.input.focus();
+            _this2.refs.input.select();
+          });
+        }
+      }
+    }, {
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        var value = nextProps.value,
+            format = nextProps.format;
+
+        this.setState({
+          str: value && value.format(format) || '',
+          invalid: false
+        });
+      }
+    }, {
+      key: 'getClearButton',
+      value: function getClearButton() {
+        var _props = this.props,
+            prefixCls = _props.prefixCls,
+            allowEmpty = _props.allowEmpty;
+
+        if (!allowEmpty) {
+          return null;
+        }
+        return _react2['default'].createElement('a', {
+          className: prefixCls + '-clear-btn',
+          role: 'button',
+          title: this.props.clearText,
+          onMouseDown: this.onClear
+        });
+      }
+    }, {
+      key: 'getProtoValue',
+      value: function getProtoValue() {
+        return this.props.value || this.props.defaultOpenValue;
+      }
+    }, {
+      key: 'getInput',
+      value: function getInput() {
+        var _props2 = this.props,
+            prefixCls = _props2.prefixCls,
+            placeholder = _props2.placeholder,
+            inputReadOnly = _props2.inputReadOnly;
+        var _state = this.state,
+            invalid = _state.invalid,
+            str = _state.str;
+
+        var invalidClass = invalid ? prefixCls + '-input-invalid' : '';
+        return _react2['default'].createElement('input', {
+          className: prefixCls + '-input  ' + invalidClass,
+          ref: 'input',
+          onKeyDown: this.onKeyDown,
+          value: str,
+          placeholder: placeholder,
+          onChange: this.onInputChange,
+          readOnly: !!inputReadOnly
+        });
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        var prefixCls = this.props.prefixCls;
+
+        return _react2['default'].createElement(
+          'div',
+          { className: prefixCls + '-input-wrap' },
+          this.getInput(),
+          this.getClearButton()
+        );
+      }
+    }]);
+    return Header;
+  }(React__default.Component);
+
+  Header.propTypes = {
+    format: _propTypes2['default'].string,
+    prefixCls: _propTypes2['default'].string,
+    disabledDate: _propTypes2['default'].func,
+    placeholder: _propTypes2['default'].string,
+    clearText: _propTypes2['default'].string,
+    value: _propTypes2['default'].object,
+    inputReadOnly: _propTypes2['default'].bool,
+    hourOptions: _propTypes2['default'].array,
+    minuteOptions: _propTypes2['default'].array,
+    secondOptions: _propTypes2['default'].array,
+    disabledHours: _propTypes2['default'].func,
+    disabledMinutes: _propTypes2['default'].func,
+    disabledSeconds: _propTypes2['default'].func,
+    onChange: _propTypes2['default'].func,
+    onClear: _propTypes2['default'].func,
+    onEsc: _propTypes2['default'].func,
+    allowEmpty: _propTypes2['default'].bool,
+    defaultOpenValue: _propTypes2['default'].object,
+    currentSelectPanel: _propTypes2['default'].string,
+    focusOnOpen: _propTypes2['default'].bool,
+    onKeyDown: _propTypes2['default'].func
+  };
+  Header.defaultProps = {
+    inputReadOnly: false
+  };
+
+  var _initialiseProps = function _initialiseProps() {
+    var _this3 = this;
+
+    this.onInputChange = function (event) {
+      var str = event.target.value;
+      _this3.setState({
+        str: str
+      });
+      var _props3 = _this3.props,
+          format = _props3.format,
+          hourOptions = _props3.hourOptions,
+          minuteOptions = _props3.minuteOptions,
+          secondOptions = _props3.secondOptions,
+          disabledHours = _props3.disabledHours,
+          disabledMinutes = _props3.disabledMinutes,
+          disabledSeconds = _props3.disabledSeconds,
+          onChange = _props3.onChange,
+          allowEmpty = _props3.allowEmpty;
+
+
+      if (str) {
+        var originalValue = _this3.props.value;
+        var value = _this3.getProtoValue().clone();
+        var parsed = (0, _moment2['default'])(str, format, true);
+        if (!parsed.isValid()) {
+          _this3.setState({
+            invalid: true
+          });
+          return;
+        }
+        value.hour(parsed.hour()).minute(parsed.minute()).second(parsed.second());
+
+        // if time value not allowed, response warning.
+        if (hourOptions.indexOf(value.hour()) < 0 || minuteOptions.indexOf(value.minute()) < 0 || secondOptions.indexOf(value.second()) < 0) {
+          _this3.setState({
+            invalid: true
+          });
+          return;
+        }
+
+        // if time value is disabled, response warning.
+        var disabledHourOptions = disabledHours();
+        var disabledMinuteOptions = disabledMinutes(value.hour());
+        var disabledSecondOptions = disabledSeconds(value.hour(), value.minute());
+        if (disabledHourOptions && disabledHourOptions.indexOf(value.hour()) >= 0 || disabledMinuteOptions && disabledMinuteOptions.indexOf(value.minute()) >= 0 || disabledSecondOptions && disabledSecondOptions.indexOf(value.second()) >= 0) {
+          _this3.setState({
+            invalid: true
+          });
+          return;
+        }
+
+        if (originalValue) {
+          if (originalValue.hour() !== value.hour() || originalValue.minute() !== value.minute() || originalValue.second() !== value.second()) {
+            // keep other fields for rc-calendar
+            var changedValue = originalValue.clone();
+            changedValue.hour(value.hour());
+            changedValue.minute(value.minute());
+            changedValue.second(value.second());
+            onChange(changedValue);
+          }
+        } else if (originalValue !== value) {
+          onChange(value);
+        }
+      } else if (allowEmpty) {
+        onChange(null);
+      } else {
+        _this3.setState({
+          invalid: true
+        });
+        return;
+      }
+
+      _this3.setState({
+        invalid: false
+      });
+    };
+
+    this.onKeyDown = function (e) {
+      var _props4 = _this3.props,
+          onEsc = _props4.onEsc,
+          onKeyDown = _props4.onKeyDown;
+
+      if (e.keyCode === 27) {
+        onEsc();
+      }
+
+      onKeyDown(e);
+    };
+
+    this.onClear = function () {
+      _this3.setState({ str: '' });
+      _this3.props.onClear();
+    };
+  };
+
+  exports['default'] = Header;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(Header_1);
+
+  var Select_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _reactDom2 = _interopRequireDefault(ReactDOM__default);
+
+
+
+  var _classnames4 = _interopRequireDefault(classnames);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var scrollTo = function scrollTo(element, to, duration) {
+    var requestAnimationFrame = window.requestAnimationFrame || function requestAnimationFrameTimeout() {
+      return setTimeout(arguments[0], 10);
+    };
+    // jump to target if duration zero
+    if (duration <= 0) {
+      element.scrollTop = to;
+      return;
+    }
+    var difference = to - element.scrollTop;
+    var perTick = difference / duration * 10;
+
+    requestAnimationFrame(function () {
+      element.scrollTop = element.scrollTop + perTick;
+      if (element.scrollTop === to) return;
+      scrollTo(element, to, duration - 10);
+    });
+  };
+
+  var Select = function (_Component) {
+    (0, _inherits3['default'])(Select, _Component);
+
+    function Select() {
+      var _ref;
+
+      var _temp, _this, _ret;
+
+      (0, _classCallCheck3['default'])(this, Select);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = (0, _possibleConstructorReturn3['default'])(this, (_ref = Select.__proto__ || Object.getPrototypeOf(Select)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+        active: false
+      }, _this.onSelect = function (value) {
+        var _this$props = _this.props,
+            onSelect = _this$props.onSelect,
+            type = _this$props.type;
+
+        onSelect(type, value);
+      }, _this.handleMouseEnter = function (e) {
+        _this.setState({ active: true });
+        _this.props.onMouseEnter(e);
+      }, _this.handleMouseLeave = function () {
+        _this.setState({ active: false });
+      }, _this.saveList = function (node) {
+        _this.list = node;
+      }, _temp), (0, _possibleConstructorReturn3['default'])(_this, _ret);
+    }
+
+    (0, _createClass3['default'])(Select, [{
+      key: 'componentDidMount',
+      value: function componentDidMount() {
+        // jump to selected option
+        this.scrollToSelected(0);
+      }
+    }, {
+      key: 'componentDidUpdate',
+      value: function componentDidUpdate(prevProps) {
+        // smooth scroll to selected option
+        if (prevProps.selectedIndex !== this.props.selectedIndex) {
+          this.scrollToSelected(120);
+        }
+      }
+    }, {
+      key: 'getOptions',
+      value: function getOptions() {
+        var _this2 = this;
+
+        var _props = this.props,
+            options = _props.options,
+            selectedIndex = _props.selectedIndex,
+            prefixCls = _props.prefixCls;
+
+        return options.map(function (item, index) {
+          var _classnames;
+
+          var cls = (0, _classnames4['default'])((_classnames = {}, (0, _defineProperty3['default'])(_classnames, prefixCls + '-select-option-selected', selectedIndex === index), (0, _defineProperty3['default'])(_classnames, prefixCls + '-select-option-disabled', item.disabled), _classnames));
+          var onclick = null;
+          if (!item.disabled) {
+            onclick = _this2.onSelect.bind(_this2, item.value);
+          }
+          return _react2['default'].createElement(
+            'li',
+            {
+              className: cls,
+              key: index,
+              onClick: onclick,
+              disabled: item.disabled
+            },
+            item.value
+          );
+        });
+      }
+    }, {
+      key: 'scrollToSelected',
+      value: function scrollToSelected(duration) {
+        // move to selected item
+        var select = _reactDom2['default'].findDOMNode(this);
+        var list = _reactDom2['default'].findDOMNode(this.list);
+        if (!list) {
+          return;
+        }
+        var index = this.props.selectedIndex;
+        if (index < 0) {
+          index = 0;
+        }
+        var topOption = list.children[index];
+        var to = topOption.offsetTop;
+        scrollTo(select, to, duration);
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        var _classnames2;
+
+        if (this.props.options.length === 0) {
+          return null;
+        }
+
+        var prefixCls = this.props.prefixCls;
+
+        var cls = (0, _classnames4['default'])((_classnames2 = {}, (0, _defineProperty3['default'])(_classnames2, prefixCls + '-select', 1), (0, _defineProperty3['default'])(_classnames2, prefixCls + '-select-active', this.state.active), _classnames2));
+
+        return _react2['default'].createElement(
+          'div',
+          {
+            className: cls,
+            onMouseEnter: this.handleMouseEnter,
+            onMouseLeave: this.handleMouseLeave
+          },
+          _react2['default'].createElement(
+            'ul',
+            { ref: this.saveList },
+            this.getOptions()
+          )
+        );
+      }
+    }]);
+    return Select;
+  }(React__default.Component);
+
+  Select.propTypes = {
+    prefixCls: _propTypes2['default'].string,
+    options: _propTypes2['default'].array,
+    selectedIndex: _propTypes2['default'].number,
+    type: _propTypes2['default'].string,
+    onSelect: _propTypes2['default'].func,
+    onMouseEnter: _propTypes2['default'].func
+  };
+  exports['default'] = Select;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(Select_1);
+
+  var Combobox_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _Select2 = _interopRequireDefault(Select_1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var formatOption = function formatOption(option, disabledOptions) {
+    var value = '' + option;
+    if (option < 10) {
+      value = '0' + option;
+    }
+
+    var disabled = false;
+    if (disabledOptions && disabledOptions.indexOf(option) >= 0) {
+      disabled = true;
+    }
+
+    return {
+      value: value,
+      disabled: disabled
+    };
+  };
+
+  var Combobox = function (_Component) {
+    (0, _inherits3['default'])(Combobox, _Component);
+
+    function Combobox() {
+      var _ref;
+
+      var _temp, _this, _ret;
+
+      (0, _classCallCheck3['default'])(this, Combobox);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = (0, _possibleConstructorReturn3['default'])(this, (_ref = Combobox.__proto__ || Object.getPrototypeOf(Combobox)).call.apply(_ref, [this].concat(args))), _this), _this.onItemChange = function (type, itemValue) {
+        var _this$props = _this.props,
+            onChange = _this$props.onChange,
+            defaultOpenValue = _this$props.defaultOpenValue,
+            use12Hours = _this$props.use12Hours;
+
+        var value = (_this.props.value || defaultOpenValue).clone();
+
+        if (type === 'hour') {
+          if (use12Hours) {
+            if (_this.props.isAM) {
+              value.hour(+itemValue % 12);
+            } else {
+              value.hour(+itemValue % 12 + 12);
+            }
+          } else {
+            value.hour(+itemValue);
+          }
+        } else if (type === 'minute') {
+          value.minute(+itemValue);
+        } else if (type === 'ampm') {
+          var ampm = itemValue.toUpperCase();
+          if (use12Hours) {
+            if (ampm === 'PM' && value.hour() < 12) {
+              value.hour(value.hour() % 12 + 12);
+            }
+
+            if (ampm === 'AM') {
+              if (value.hour() >= 12) {
+                value.hour(value.hour() - 12);
+              }
+            }
+          }
+        } else {
+          value.second(+itemValue);
+        }
+        onChange(value);
+      }, _this.onEnterSelectPanel = function (range) {
+        _this.props.onCurrentSelectPanelChange(range);
+      }, _temp), (0, _possibleConstructorReturn3['default'])(_this, _ret);
+    }
+
+    (0, _createClass3['default'])(Combobox, [{
+      key: 'getHourSelect',
+      value: function getHourSelect(hour) {
+        var _props = this.props,
+            prefixCls = _props.prefixCls,
+            hourOptions = _props.hourOptions,
+            disabledHours = _props.disabledHours,
+            showHour = _props.showHour,
+            use12Hours = _props.use12Hours;
+
+        if (!showHour) {
+          return null;
+        }
+        var disabledOptions = disabledHours();
+        var hourOptionsAdj = void 0;
+        var hourAdj = void 0;
+        if (use12Hours) {
+          hourOptionsAdj = [12].concat(hourOptions.filter(function (h) {
+            return h < 12 && h > 0;
+          }));
+          hourAdj = hour % 12 || 12;
+        } else {
+          hourOptionsAdj = hourOptions;
+          hourAdj = hour;
+        }
+
+        return _react2['default'].createElement(_Select2['default'], {
+          prefixCls: prefixCls,
+          options: hourOptionsAdj.map(function (option) {
+            return formatOption(option, disabledOptions);
+          }),
+          selectedIndex: hourOptionsAdj.indexOf(hourAdj),
+          type: 'hour',
+          onSelect: this.onItemChange,
+          onMouseEnter: this.onEnterSelectPanel.bind(this, 'hour')
+        });
+      }
+    }, {
+      key: 'getMinuteSelect',
+      value: function getMinuteSelect(minute) {
+        var _props2 = this.props,
+            prefixCls = _props2.prefixCls,
+            minuteOptions = _props2.minuteOptions,
+            disabledMinutes = _props2.disabledMinutes,
+            defaultOpenValue = _props2.defaultOpenValue,
+            showMinute = _props2.showMinute;
+
+        if (!showMinute) {
+          return null;
+        }
+        var value = this.props.value || defaultOpenValue;
+        var disabledOptions = disabledMinutes(value.hour());
+
+        return _react2['default'].createElement(_Select2['default'], {
+          prefixCls: prefixCls,
+          options: minuteOptions.map(function (option) {
+            return formatOption(option, disabledOptions);
+          }),
+          selectedIndex: minuteOptions.indexOf(minute),
+          type: 'minute',
+          onSelect: this.onItemChange,
+          onMouseEnter: this.onEnterSelectPanel.bind(this, 'minute')
+        });
+      }
+    }, {
+      key: 'getSecondSelect',
+      value: function getSecondSelect(second) {
+        var _props3 = this.props,
+            prefixCls = _props3.prefixCls,
+            secondOptions = _props3.secondOptions,
+            disabledSeconds = _props3.disabledSeconds,
+            showSecond = _props3.showSecond,
+            defaultOpenValue = _props3.defaultOpenValue;
+
+        if (!showSecond) {
+          return null;
+        }
+        var value = this.props.value || defaultOpenValue;
+        var disabledOptions = disabledSeconds(value.hour(), value.minute());
+
+        return _react2['default'].createElement(_Select2['default'], {
+          prefixCls: prefixCls,
+          options: secondOptions.map(function (option) {
+            return formatOption(option, disabledOptions);
+          }),
+          selectedIndex: secondOptions.indexOf(second),
+          type: 'second',
+          onSelect: this.onItemChange,
+          onMouseEnter: this.onEnterSelectPanel.bind(this, 'second')
+        });
+      }
+    }, {
+      key: 'getAMPMSelect',
+      value: function getAMPMSelect() {
+        var _props4 = this.props,
+            prefixCls = _props4.prefixCls,
+            use12Hours = _props4.use12Hours,
+            format = _props4.format;
+
+        if (!use12Hours) {
+          return null;
+        }
+
+        var AMPMOptions = ['am', 'pm'] // If format has A char, then we should uppercase AM/PM
+        .map(function (c) {
+          return format.match(/\sA/) ? c.toUpperCase() : c;
+        }).map(function (c) {
+          return { value: c };
+        });
+
+        var selected = this.props.isAM ? 0 : 1;
+
+        return _react2['default'].createElement(_Select2['default'], {
+          prefixCls: prefixCls,
+          options: AMPMOptions,
+          selectedIndex: selected,
+          type: 'ampm',
+          onSelect: this.onItemChange,
+          onMouseEnter: this.onEnterSelectPanel.bind(this, 'ampm')
+        });
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        var _props5 = this.props,
+            prefixCls = _props5.prefixCls,
+            defaultOpenValue = _props5.defaultOpenValue;
+
+        var value = this.props.value || defaultOpenValue;
+        return _react2['default'].createElement(
+          'div',
+          { className: prefixCls + '-combobox' },
+          this.getHourSelect(value.hour()),
+          this.getMinuteSelect(value.minute()),
+          this.getSecondSelect(value.second()),
+          this.getAMPMSelect(value.hour())
+        );
+      }
+    }]);
+    return Combobox;
+  }(React__default.Component);
+
+  Combobox.propTypes = {
+    format: _propTypes2['default'].string,
+    defaultOpenValue: _propTypes2['default'].object,
+    prefixCls: _propTypes2['default'].string,
+    value: _propTypes2['default'].object,
+    onChange: _propTypes2['default'].func,
+    showHour: _propTypes2['default'].bool,
+    showMinute: _propTypes2['default'].bool,
+    showSecond: _propTypes2['default'].bool,
+    hourOptions: _propTypes2['default'].array,
+    minuteOptions: _propTypes2['default'].array,
+    secondOptions: _propTypes2['default'].array,
+    disabledHours: _propTypes2['default'].func,
+    disabledMinutes: _propTypes2['default'].func,
+    disabledSeconds: _propTypes2['default'].func,
+    onCurrentSelectPanelChange: _propTypes2['default'].func,
+    use12Hours: _propTypes2['default'].bool,
+    isAM: _propTypes2['default'].bool
+  };
+  exports['default'] = Combobox;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(Combobox_1);
+
+  var Panel_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _Header2 = _interopRequireDefault(Header_1);
+
+
+
+  var _Combobox2 = _interopRequireDefault(Combobox_1);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function noop() {}
+
+  function generateOptions(length, disabledOptions, hideDisabledOptions) {
+    var step = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 1;
+
+    var arr = [];
+    for (var value = 0; value < length; value += step) {
+      if (!disabledOptions || disabledOptions.indexOf(value) < 0 || !hideDisabledOptions) {
+        arr.push(value);
+      }
+    }
+    return arr;
+  }
+
+  var Panel = function (_Component) {
+    (0, _inherits3['default'])(Panel, _Component);
+
+    function Panel(props) {
+      (0, _classCallCheck3['default'])(this, Panel);
+
+      var _this = (0, _possibleConstructorReturn3['default'])(this, (Panel.__proto__ || Object.getPrototypeOf(Panel)).call(this, props));
+
+      _this.onChange = function (newValue) {
+        _this.setState({ value: newValue });
+        _this.props.onChange(newValue);
+      };
+
+      _this.onCurrentSelectPanelChange = function (currentSelectPanel) {
+        _this.setState({ currentSelectPanel: currentSelectPanel });
+      };
+
+      _this.disabledHours = function () {
+        var _this$props = _this.props,
+            use12Hours = _this$props.use12Hours,
+            disabledHours = _this$props.disabledHours;
+
+        var disabledOptions = disabledHours();
+        if (use12Hours && Array.isArray(disabledOptions)) {
+          if (_this.isAM()) {
+            disabledOptions = disabledOptions.filter(function (h) {
+              return h < 12;
+            }).map(function (h) {
+              return h === 0 ? 12 : h;
+            });
+          } else {
+            disabledOptions = disabledOptions.map(function (h) {
+              return h === 12 ? 12 : h - 12;
+            });
+          }
+        }
+        return disabledOptions;
+      };
+
+      _this.state = {
+        value: props.value,
+        selectionRange: []
+      };
+      return _this;
+    }
+
+    (0, _createClass3['default'])(Panel, [{
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        var value = nextProps.value;
+        if (value) {
+          this.setState({
+            value: value
+          });
+        }
+      }
+    }, {
+      key: 'close',
+
+
+      // https://github.com/ant-design/ant-design/issues/5829
+      value: function close() {
+        this.props.onEsc();
+      }
+    }, {
+      key: 'isAM',
+      value: function isAM() {
+        var value = this.state.value || this.props.defaultOpenValue;
+        return value.hour() >= 0 && value.hour() < 12;
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        var _classNames;
+
+        var _props = this.props,
+            prefixCls = _props.prefixCls,
+            className = _props.className,
+            placeholder = _props.placeholder,
+            disabledMinutes = _props.disabledMinutes,
+            disabledSeconds = _props.disabledSeconds,
+            hideDisabledOptions = _props.hideDisabledOptions,
+            allowEmpty = _props.allowEmpty,
+            showHour = _props.showHour,
+            showMinute = _props.showMinute,
+            showSecond = _props.showSecond,
+            format = _props.format,
+            defaultOpenValue = _props.defaultOpenValue,
+            clearText = _props.clearText,
+            onEsc = _props.onEsc,
+            addon = _props.addon,
+            use12Hours = _props.use12Hours,
+            onClear = _props.onClear,
+            focusOnOpen = _props.focusOnOpen,
+            onKeyDown = _props.onKeyDown,
+            hourStep = _props.hourStep,
+            minuteStep = _props.minuteStep,
+            secondStep = _props.secondStep,
+            inputReadOnly = _props.inputReadOnly;
+        var _state = this.state,
+            value = _state.value,
+            currentSelectPanel = _state.currentSelectPanel;
+
+        var disabledHourOptions = this.disabledHours();
+        var disabledMinuteOptions = disabledMinutes(value ? value.hour() : null);
+        var disabledSecondOptions = disabledSeconds(value ? value.hour() : null, value ? value.minute() : null);
+        var hourOptions = generateOptions(24, disabledHourOptions, hideDisabledOptions, hourStep);
+        var minuteOptions = generateOptions(60, disabledMinuteOptions, hideDisabledOptions, minuteStep);
+        var secondOptions = generateOptions(60, disabledSecondOptions, hideDisabledOptions, secondStep);
+
+        return _react2['default'].createElement(
+          'div',
+          { className: (0, _classnames2['default'])((_classNames = {}, (0, _defineProperty3['default'])(_classNames, prefixCls + '-inner', true), (0, _defineProperty3['default'])(_classNames, className, !!className), _classNames)) },
+          _react2['default'].createElement(_Header2['default'], {
+            clearText: clearText,
+            prefixCls: prefixCls,
+            defaultOpenValue: defaultOpenValue,
+            value: value,
+            currentSelectPanel: currentSelectPanel,
+            onEsc: onEsc,
+            format: format,
+            placeholder: placeholder,
+            hourOptions: hourOptions,
+            minuteOptions: minuteOptions,
+            secondOptions: secondOptions,
+            disabledHours: this.disabledHours,
+            disabledMinutes: disabledMinutes,
+            disabledSeconds: disabledSeconds,
+            onChange: this.onChange,
+            onClear: onClear,
+            allowEmpty: allowEmpty,
+            focusOnOpen: focusOnOpen,
+            onKeyDown: onKeyDown,
+            inputReadOnly: inputReadOnly
+          }),
+          _react2['default'].createElement(_Combobox2['default'], {
+            prefixCls: prefixCls,
+            value: value,
+            defaultOpenValue: defaultOpenValue,
+            format: format,
+            onChange: this.onChange,
+            showHour: showHour,
+            showMinute: showMinute,
+            showSecond: showSecond,
+            hourOptions: hourOptions,
+            minuteOptions: minuteOptions,
+            secondOptions: secondOptions,
+            disabledHours: this.disabledHours,
+            disabledMinutes: disabledMinutes,
+            disabledSeconds: disabledSeconds,
+            onCurrentSelectPanelChange: this.onCurrentSelectPanelChange,
+            use12Hours: use12Hours,
+            isAM: this.isAM()
+          }),
+          addon(this)
+        );
+      }
+    }]);
+    return Panel;
+  }(React__default.Component);
+
+  Panel.propTypes = {
+    clearText: _propTypes2['default'].string,
+    prefixCls: _propTypes2['default'].string,
+    className: _propTypes2['default'].string,
+    defaultOpenValue: _propTypes2['default'].object,
+    value: _propTypes2['default'].object,
+    placeholder: _propTypes2['default'].string,
+    format: _propTypes2['default'].string,
+    inputReadOnly: _propTypes2['default'].bool,
+    disabledHours: _propTypes2['default'].func,
+    disabledMinutes: _propTypes2['default'].func,
+    disabledSeconds: _propTypes2['default'].func,
+    hideDisabledOptions: _propTypes2['default'].bool,
+    onChange: _propTypes2['default'].func,
+    onEsc: _propTypes2['default'].func,
+    allowEmpty: _propTypes2['default'].bool,
+    showHour: _propTypes2['default'].bool,
+    showMinute: _propTypes2['default'].bool,
+    showSecond: _propTypes2['default'].bool,
+    onClear: _propTypes2['default'].func,
+    use12Hours: _propTypes2['default'].bool,
+    hourStep: _propTypes2['default'].number,
+    minuteStep: _propTypes2['default'].number,
+    secondStep: _propTypes2['default'].number,
+    addon: _propTypes2['default'].func,
+    focusOnOpen: _propTypes2['default'].bool,
+    onKeyDown: _propTypes2['default'].func
+  };
+  Panel.defaultProps = {
+    prefixCls: 'rc-time-picker-panel',
+    onChange: noop,
+    onClear: noop,
+    disabledHours: noop,
+    disabledMinutes: noop,
+    disabledSeconds: noop,
+    defaultOpenValue: (0, _moment2['default'])(),
+    use12Hours: false,
+    addon: noop,
+    onKeyDown: noop,
+    inputReadOnly: false
+  };
+  exports['default'] = Panel;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(Panel_1);
+
+  var placements_1$1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var autoAdjustOverflow = {
+    adjustX: 1,
+    adjustY: 1
+  };
+
+  var targetOffset = [0, 0];
+
+  var placements = {
+    bottomLeft: {
+      points: ['tl', 'tl'],
+      overflow: autoAdjustOverflow,
+      offset: [0, -3],
+      targetOffset: targetOffset
+    },
+    bottomRight: {
+      points: ['tr', 'tr'],
+      overflow: autoAdjustOverflow,
+      offset: [0, -3],
+      targetOffset: targetOffset
+    },
+    topRight: {
+      points: ['br', 'br'],
+      overflow: autoAdjustOverflow,
+      offset: [0, 3],
+      targetOffset: targetOffset
+    },
+    topLeft: {
+      points: ['bl', 'bl'],
+      overflow: autoAdjustOverflow,
+      offset: [0, 3],
+      targetOffset: targetOffset
+    }
+  };
+
+  exports['default'] = placements;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(placements_1$1);
+
+  var TimePicker = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _rcTrigger2 = _interopRequireDefault(Trigger);
+
+
+
+  var _Panel2 = _interopRequireDefault(Panel_1);
+
+
+
+  var _placements2 = _interopRequireDefault(placements_1$1);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function noop() {}
+
+  function refFn(field, component) {
+    this[field] = component;
+  }
+
+  var Picker = function (_Component) {
+    (0, _inherits3['default'])(Picker, _Component);
+
+    function Picker(props) {
+      (0, _classCallCheck3['default'])(this, Picker);
+
+      var _this = (0, _possibleConstructorReturn3['default'])(this, (Picker.__proto__ || Object.getPrototypeOf(Picker)).call(this, props));
+
+      _initialiseProps.call(_this);
+
+      _this.saveInputRef = refFn.bind(_this, 'picker');
+      _this.savePanelRef = refFn.bind(_this, 'panelInstance');
+      var defaultOpen = props.defaultOpen,
+          defaultValue = props.defaultValue,
+          _props$open = props.open,
+          open = _props$open === undefined ? defaultOpen : _props$open,
+          _props$value = props.value,
+          value = _props$value === undefined ? defaultValue : _props$value;
+
+      _this.state = {
+        open: open,
+        value: value
+      };
+      return _this;
+    }
+
+    (0, _createClass3['default'])(Picker, [{
+      key: 'componentWillReceiveProps',
+      value: function componentWillReceiveProps(nextProps) {
+        var value = nextProps.value,
+            open = nextProps.open;
+
+        if ('value' in nextProps) {
+          this.setState({
+            value: value
+          });
+        }
+        if (open !== undefined) {
+          this.setState({ open: open });
+        }
+      }
+    }, {
+      key: 'setValue',
+      value: function setValue(value) {
+        if (!('value' in this.props)) {
+          this.setState({
+            value: value
+          });
+        }
+        this.props.onChange(value);
+      }
+    }, {
+      key: 'getFormat',
+      value: function getFormat() {
+        var _props = this.props,
+            format = _props.format,
+            showHour = _props.showHour,
+            showMinute = _props.showMinute,
+            showSecond = _props.showSecond,
+            use12Hours = _props.use12Hours;
+
+        if (format) {
+          return format;
+        }
+
+        if (use12Hours) {
+          var fmtString = [showHour ? 'h' : '', showMinute ? 'mm' : '', showSecond ? 'ss' : ''].filter(function (item) {
+            return !!item;
+          }).join(':');
+
+          return fmtString.concat(' a');
+        }
+
+        return [showHour ? 'HH' : '', showMinute ? 'mm' : '', showSecond ? 'ss' : ''].filter(function (item) {
+          return !!item;
+        }).join(':');
+      }
+    }, {
+      key: 'getPanelElement',
+      value: function getPanelElement() {
+        var _props2 = this.props,
+            prefixCls = _props2.prefixCls,
+            placeholder = _props2.placeholder,
+            disabledHours = _props2.disabledHours,
+            disabledMinutes = _props2.disabledMinutes,
+            disabledSeconds = _props2.disabledSeconds,
+            hideDisabledOptions = _props2.hideDisabledOptions,
+            inputReadOnly = _props2.inputReadOnly,
+            allowEmpty = _props2.allowEmpty,
+            showHour = _props2.showHour,
+            showMinute = _props2.showMinute,
+            showSecond = _props2.showSecond,
+            defaultOpenValue = _props2.defaultOpenValue,
+            clearText = _props2.clearText,
+            addon = _props2.addon,
+            use12Hours = _props2.use12Hours,
+            focusOnOpen = _props2.focusOnOpen,
+            onKeyDown = _props2.onKeyDown,
+            hourStep = _props2.hourStep,
+            minuteStep = _props2.minuteStep,
+            secondStep = _props2.secondStep;
+
+        return _react2['default'].createElement(_Panel2['default'], {
+          clearText: clearText,
+          prefixCls: prefixCls + '-panel',
+          ref: this.savePanelRef,
+          value: this.state.value,
+          inputReadOnly: inputReadOnly,
+          onChange: this.onPanelChange,
+          onClear: this.onPanelClear,
+          defaultOpenValue: defaultOpenValue,
+          showHour: showHour,
+          showMinute: showMinute,
+          showSecond: showSecond,
+          onEsc: this.onEsc,
+          allowEmpty: allowEmpty,
+          format: this.getFormat(),
+          placeholder: placeholder,
+          disabledHours: disabledHours,
+          disabledMinutes: disabledMinutes,
+          disabledSeconds: disabledSeconds,
+          hideDisabledOptions: hideDisabledOptions,
+          use12Hours: use12Hours,
+          hourStep: hourStep,
+          minuteStep: minuteStep,
+          secondStep: secondStep,
+          addon: addon,
+          focusOnOpen: focusOnOpen,
+          onKeyDown: onKeyDown
+        });
+      }
+    }, {
+      key: 'getPopupClassName',
+      value: function getPopupClassName() {
+        var _props3 = this.props,
+            showHour = _props3.showHour,
+            showMinute = _props3.showMinute,
+            showSecond = _props3.showSecond,
+            use12Hours = _props3.use12Hours,
+            prefixCls = _props3.prefixCls;
+
+        var popupClassName = this.props.popupClassName;
+        // Keep it for old compatibility
+        if ((!showHour || !showMinute || !showSecond) && !use12Hours) {
+          popupClassName += ' ' + prefixCls + '-panel-narrow';
+        }
+        var selectColumnCount = 0;
+        if (showHour) {
+          selectColumnCount += 1;
+        }
+        if (showMinute) {
+          selectColumnCount += 1;
+        }
+        if (showSecond) {
+          selectColumnCount += 1;
+        }
+        if (use12Hours) {
+          selectColumnCount += 1;
+        }
+        popupClassName += ' ' + prefixCls + '-panel-column-' + selectColumnCount;
+        return popupClassName;
+      }
+    }, {
+      key: 'setOpen',
+      value: function setOpen(open) {
+        var _props4 = this.props,
+            onOpen = _props4.onOpen,
+            onClose = _props4.onClose;
+
+        if (this.state.open !== open) {
+          if (!('open' in this.props)) {
+            this.setState({ open: open });
+          }
+          if (open) {
+            onOpen({ open: open });
+          } else {
+            onClose({ open: open });
+          }
+        }
+      }
+    }, {
+      key: 'focus',
+      value: function focus() {
+        this.picker.focus();
+      }
+    }, {
+      key: 'blur',
+      value: function blur() {
+        this.picker.blur();
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        var _props5 = this.props,
+            prefixCls = _props5.prefixCls,
+            placeholder = _props5.placeholder,
+            placement = _props5.placement,
+            align = _props5.align,
+            disabled = _props5.disabled,
+            transitionName = _props5.transitionName,
+            style = _props5.style,
+            className = _props5.className,
+            getPopupContainer = _props5.getPopupContainer,
+            name = _props5.name,
+            autoComplete = _props5.autoComplete,
+            onFocus = _props5.onFocus,
+            onBlur = _props5.onBlur,
+            autoFocus = _props5.autoFocus,
+            inputReadOnly = _props5.inputReadOnly;
+        var _state = this.state,
+            open = _state.open,
+            value = _state.value;
+
+        var popupClassName = this.getPopupClassName();
+        return _react2['default'].createElement(
+          _rcTrigger2['default'],
+          {
+            prefixCls: prefixCls + '-panel',
+            popupClassName: popupClassName,
+            popup: this.getPanelElement(),
+            popupAlign: align,
+            builtinPlacements: _placements2['default'],
+            popupPlacement: placement,
+            action: disabled ? [] : ['click'],
+            destroyPopupOnHide: true,
+            getPopupContainer: getPopupContainer,
+            popupTransitionName: transitionName,
+            popupVisible: open,
+            onPopupVisibleChange: this.onVisibleChange
+          },
+          _react2['default'].createElement(
+            'span',
+            { className: prefixCls + ' ' + className, style: style },
+            _react2['default'].createElement('input', {
+              className: prefixCls + '-input',
+              ref: this.saveInputRef,
+              type: 'text',
+              placeholder: placeholder,
+              name: name,
+              onKeyDown: this.onKeyDown,
+              disabled: disabled,
+              value: value && value.format(this.getFormat()) || '',
+              autoComplete: autoComplete,
+              onFocus: onFocus,
+              onBlur: onBlur,
+              autoFocus: autoFocus,
+              onChange: noop,
+              readOnly: !!inputReadOnly
+            }),
+            _react2['default'].createElement('span', { className: prefixCls + '-icon' })
+          )
+        );
+      }
+    }]);
+    return Picker;
+  }(React__default.Component);
+
+  Picker.propTypes = {
+    prefixCls: _propTypes2['default'].string,
+    clearText: _propTypes2['default'].string,
+    value: _propTypes2['default'].object,
+    defaultOpenValue: _propTypes2['default'].object,
+    inputReadOnly: _propTypes2['default'].bool,
+    disabled: _propTypes2['default'].bool,
+    allowEmpty: _propTypes2['default'].bool,
+    defaultValue: _propTypes2['default'].object,
+    open: _propTypes2['default'].bool,
+    defaultOpen: _propTypes2['default'].bool,
+    align: _propTypes2['default'].object,
+    placement: _propTypes2['default'].any,
+    transitionName: _propTypes2['default'].string,
+    getPopupContainer: _propTypes2['default'].func,
+    placeholder: _propTypes2['default'].string,
+    format: _propTypes2['default'].string,
+    showHour: _propTypes2['default'].bool,
+    showMinute: _propTypes2['default'].bool,
+    showSecond: _propTypes2['default'].bool,
+    style: _propTypes2['default'].object,
+    className: _propTypes2['default'].string,
+    popupClassName: _propTypes2['default'].string,
+    disabledHours: _propTypes2['default'].func,
+    disabledMinutes: _propTypes2['default'].func,
+    disabledSeconds: _propTypes2['default'].func,
+    hideDisabledOptions: _propTypes2['default'].bool,
+    onChange: _propTypes2['default'].func,
+    onOpen: _propTypes2['default'].func,
+    onClose: _propTypes2['default'].func,
+    onFocus: _propTypes2['default'].func,
+    onBlur: _propTypes2['default'].func,
+    addon: _propTypes2['default'].func,
+    name: _propTypes2['default'].string,
+    autoComplete: _propTypes2['default'].string,
+    use12Hours: _propTypes2['default'].bool,
+    hourStep: _propTypes2['default'].number,
+    minuteStep: _propTypes2['default'].number,
+    secondStep: _propTypes2['default'].number,
+    focusOnOpen: _propTypes2['default'].bool,
+    onKeyDown: _propTypes2['default'].func,
+    autoFocus: _propTypes2['default'].bool
+  };
+  Picker.defaultProps = {
+    clearText: 'clear',
+    prefixCls: 'rc-time-picker',
+    defaultOpen: false,
+    inputReadOnly: false,
+    style: {},
+    className: '',
+    popupClassName: '',
+    align: {},
+    defaultOpenValue: (0, _moment2['default'])(),
+    allowEmpty: true,
+    showHour: true,
+    showMinute: true,
+    showSecond: true,
+    disabledHours: noop,
+    disabledMinutes: noop,
+    disabledSeconds: noop,
+    hideDisabledOptions: false,
+    placement: 'bottomLeft',
+    onChange: noop,
+    onOpen: noop,
+    onClose: noop,
+    onFocus: noop,
+    onBlur: noop,
+    addon: noop,
+    use12Hours: false,
+    focusOnOpen: false,
+    onKeyDown: noop
+  };
+
+  var _initialiseProps = function _initialiseProps() {
+    var _this2 = this;
+
+    this.onPanelChange = function (value) {
+      _this2.setValue(value);
+    };
+
+    this.onPanelClear = function () {
+      _this2.setValue(null);
+      _this2.setOpen(false);
+    };
+
+    this.onVisibleChange = function (open) {
+      _this2.setOpen(open);
+    };
+
+    this.onEsc = function () {
+      _this2.setOpen(false);
+      _this2.focus();
+    };
+
+    this.onKeyDown = function (e) {
+      if (e.keyCode === 40) {
+        _this2.setOpen(true);
+      }
+    };
+  };
+
+  exports['default'] = Picker;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(TimePicker);
+
+  var timePicker = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+  exports.generateShowHourMinuteSecond = generateShowHourMinuteSecond;
+
+
+
+  var React$$1 = _interopRequireWildcard(React__default);
+
+
+
+  var moment$$1 = _interopRequireWildcard(moment);
+
+
+
+  var _TimePicker2 = _interopRequireDefault(TimePicker);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _LocaleReceiver2 = _interopRequireDefault(LocaleReceiver_1);
+
+
+
+  var _en_US2 = _interopRequireDefault(en_US$4);
+
+
+
+  var _interopDefault2 = _interopRequireDefault(interopDefault_1);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function generateShowHourMinuteSecond(format) {
+      // Ref: http://momentjs.com/docs/#/parsing/string-format/
+      return {
+          showHour: format.indexOf('H') > -1 || format.indexOf('h') > -1 || format.indexOf('k') > -1,
+          showMinute: format.indexOf('m') > -1,
+          showSecond: format.indexOf('s') > -1
+      };
+  }
+
+  var TimePicker$$1 = function (_React$Component) {
+      (0, _inherits3['default'])(TimePicker$$1, _React$Component);
+
+      function TimePicker$$1(props) {
+          (0, _classCallCheck3['default'])(this, TimePicker$$1);
+
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (TimePicker$$1.__proto__ || Object.getPrototypeOf(TimePicker$$1)).call(this, props));
+
+          _this.handleChange = function (value) {
+              if (!('value' in _this.props)) {
+                  _this.setState({ value: value });
+              }
+              var _this$props = _this.props,
+                  onChange = _this$props.onChange,
+                  _this$props$format = _this$props.format,
+                  format = _this$props$format === undefined ? 'HH:mm:ss' : _this$props$format;
+
+              if (onChange) {
+                  onChange(value, value && value.format(format) || '');
+              }
+          };
+          _this.handleOpenClose = function (_ref) {
+              var open = _ref.open;
+              var onOpenChange = _this.props.onOpenChange;
+
+              if (onOpenChange) {
+                  onOpenChange(open);
+              }
+          };
+          _this.saveTimePicker = function (timePickerRef) {
+              _this.timePickerRef = timePickerRef;
+          };
+          _this.renderTimePicker = function (locale) {
+              var props = (0, _extends3['default'])({}, _this.props);
+              delete props.defaultValue;
+              var format = _this.getDefaultFormat();
+              var className = (0, _classnames2['default'])(props.className, (0, _defineProperty3['default'])({}, props.prefixCls + '-' + props.size, !!props.size));
+              var addon = function addon(panel) {
+                  return props.addon ? React$$1.createElement(
+                      'div',
+                      { className: props.prefixCls + '-panel-addon' },
+                      props.addon(panel)
+                  ) : null;
+              };
+              return React$$1.createElement(_TimePicker2['default'], (0, _extends3['default'])({}, generateShowHourMinuteSecond(format), props, { ref: _this.saveTimePicker, format: format, className: className, value: _this.state.value, placeholder: props.placeholder === undefined ? locale.placeholder : props.placeholder, onChange: _this.handleChange, onOpen: _this.handleOpenClose, onClose: _this.handleOpenClose, addon: addon }));
+          };
+          var value = props.value || props.defaultValue;
+          if (value && !(0, _interopDefault2['default'])(moment$$1).isMoment(value)) {
+              throw new Error('The value/defaultValue of TimePicker must be a moment object after `antd@2.0`, ' + 'see: https://u.ant.design/time-picker-value');
+          }
+          _this.state = {
+              value: value
+          };
+          return _this;
+      }
+
+      (0, _createClass3['default'])(TimePicker$$1, [{
+          key: 'componentWillReceiveProps',
+          value: function componentWillReceiveProps(nextProps) {
+              if ('value' in nextProps) {
+                  this.setState({ value: nextProps.value });
+              }
+          }
+      }, {
+          key: 'focus',
+          value: function focus() {
+              this.timePickerRef.focus();
+          }
+      }, {
+          key: 'blur',
+          value: function blur() {
+              this.timePickerRef.blur();
+          }
+      }, {
+          key: 'getDefaultFormat',
+          value: function getDefaultFormat() {
+              var _props = this.props,
+                  format = _props.format,
+                  use12Hours = _props.use12Hours;
+
+              if (format) {
+                  return format;
+              } else if (use12Hours) {
+                  return 'h:mm:ss a';
+              }
+              return 'HH:mm:ss';
+          }
+      }, {
+          key: 'render',
+          value: function render() {
+              return React$$1.createElement(
+                  _LocaleReceiver2['default'],
+                  { componentName: 'TimePicker', defaultLocale: _en_US2['default'] },
+                  this.renderTimePicker
+              );
+          }
+      }]);
+      return TimePicker$$1;
+  }(React$$1.Component);
+
+  exports['default'] = TimePicker$$1;
+
+  TimePicker$$1.defaultProps = {
+      prefixCls: 'ant-time-picker',
+      align: {
+          offset: [0, -2]
+      },
+      disabled: false,
+      disabledHours: undefined,
+      disabledMinutes: undefined,
+      disabledSeconds: undefined,
+      hideDisabledOptions: false,
+      placement: 'bottomLeft',
+      transitionName: 'slide-up',
+      focusOnOpen: true
+  };
+  });
+
+  unwrapExports(timePicker);
+  var timePicker_1 = timePicker.generateShowHourMinuteSecond;
+
+  var wrapPicker_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+  exports['default'] = wrapPicker;
+
+
+
+  var React$$1 = _interopRequireWildcard(React__default);
+
+
+
+  var _Panel2 = _interopRequireDefault(Panel_1);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _LocaleReceiver2 = _interopRequireDefault(LocaleReceiver_1);
+
+
+
+
+
+  var _en_US2 = _interopRequireDefault(en_US$6);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function getColumns(_ref) {
+      var showHour = _ref.showHour,
+          showMinute = _ref.showMinute,
+          showSecond = _ref.showSecond,
+          use12Hours = _ref.use12Hours;
+
+      var column = 0;
+      if (showHour) {
+          column += 1;
+      }
+      if (showMinute) {
+          column += 1;
+      }
+      if (showSecond) {
+          column += 1;
+      }
+      if (use12Hours) {
+          column += 1;
+      }
+      return column;
+  }
+  function wrapPicker(Picker, defaultFormat) {
+      return _a = function (_React$Component) {
+          (0, _inherits3['default'])(PickerWrapper, _React$Component);
+
+          function PickerWrapper() {
+              (0, _classCallCheck3['default'])(this, PickerWrapper);
+
+              var _this = (0, _possibleConstructorReturn3['default'])(this, (PickerWrapper.__proto__ || Object.getPrototypeOf(PickerWrapper)).apply(this, arguments));
+
+              _this.handleOpenChange = function (open) {
+                  var onOpenChange = _this.props.onOpenChange;
+
+                  onOpenChange(open);
+              };
+              _this.handleFocus = function (e) {
+                  var onFocus = _this.props.onFocus;
+
+                  if (onFocus) {
+                      onFocus(e);
+                  }
+              };
+              _this.handleBlur = function (e) {
+                  var onBlur = _this.props.onBlur;
+
+                  if (onBlur) {
+                      onBlur(e);
+                  }
+              };
+              _this.savePicker = function (node) {
+                  _this.picker = node;
+              };
+              _this.getDefaultLocale = function () {
+                  var result = (0, _extends3['default'])({}, _en_US2['default'], _this.props.locale);
+                  result.lang = (0, _extends3['default'])({}, result.lang, (_this.props.locale || {}).lang);
+                  return result;
+              };
+              _this.renderPicker = function (locale, localeCode) {
+                  var _classNames2;
+
+                  var props = _this.props;
+                  var prefixCls = props.prefixCls,
+                      inputPrefixCls = props.inputPrefixCls;
+
+                  var pickerClass = (0, _classnames2['default'])(prefixCls + '-picker', (0, _defineProperty3['default'])({}, prefixCls + '-picker-' + props.size, !!props.size));
+                  var pickerInputClass = (0, _classnames2['default'])(prefixCls + '-picker-input', inputPrefixCls, (_classNames2 = {}, (0, _defineProperty3['default'])(_classNames2, inputPrefixCls + '-lg', props.size === 'large'), (0, _defineProperty3['default'])(_classNames2, inputPrefixCls + '-sm', props.size === 'small'), (0, _defineProperty3['default'])(_classNames2, inputPrefixCls + '-disabled', props.disabled), _classNames2));
+                  var timeFormat = props.showTime && props.showTime.format || 'HH:mm:ss';
+                  var rcTimePickerProps = (0, _extends3['default'])({}, (0, timePicker.generateShowHourMinuteSecond)(timeFormat), { format: timeFormat, use12Hours: props.showTime && props.showTime.use12Hours });
+                  var columns = getColumns(rcTimePickerProps);
+                  var timePickerCls = prefixCls + '-time-picker-column-' + columns;
+                  var timePicker$$1 = props.showTime ? React$$1.createElement(_Panel2['default'], (0, _extends3['default'])({}, rcTimePickerProps, props.showTime, { prefixCls: prefixCls + '-time-picker', className: timePickerCls, placeholder: locale.timePickerLocale.placeholder, transitionName: 'slide-up' })) : null;
+                  return React$$1.createElement(Picker, (0, _extends3['default'])({}, props, { ref: _this.savePicker, pickerClass: pickerClass, pickerInputClass: pickerInputClass, locale: locale, localeCode: localeCode, timePicker: timePicker$$1, onOpenChange: _this.handleOpenChange, onFocus: _this.handleFocus, onBlur: _this.handleBlur }));
+              };
+              return _this;
+          }
+
+          (0, _createClass3['default'])(PickerWrapper, [{
+              key: 'componentDidMount',
+              value: function componentDidMount() {
+                  var _props = this.props,
+                      autoFocus = _props.autoFocus,
+                      disabled = _props.disabled;
+
+                  if (autoFocus && !disabled) {
+                      this.focus();
+                  }
+              }
+          }, {
+              key: 'focus',
+              value: function focus() {
+                  this.picker.focus();
+              }
+          }, {
+              key: 'blur',
+              value: function blur() {
+                  this.picker.blur();
+              }
+          }, {
+              key: 'render',
+              value: function render() {
+                  return React$$1.createElement(
+                      _LocaleReceiver2['default'],
+                      { componentName: 'DatePicker', defaultLocale: this.getDefaultLocale },
+                      this.renderPicker
+                  );
+              }
+          }]);
+          return PickerWrapper;
+      }(React$$1.Component), _a.defaultProps = {
+          format: defaultFormat || 'YYYY-MM-DD',
+          transitionName: 'slide-up',
+          popupStyle: {},
+          onChange: function onChange() {},
+          onOk: function onOk() {},
+          onOpenChange: function onOpenChange() {},
+
+          locale: {},
+          prefixCls: 'ant-calendar',
+          inputPrefixCls: 'ant-input'
+      }, _a;
+      var _a;
+  }
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(wrapPicker_1);
+
+  var ITERATOR$4 = _wks('iterator');
+
+  var core_isIterable = _core.isIterable = function (it) {
+    var O = Object(it);
+    return O[ITERATOR$4] !== undefined
+      || '@@iterator' in O
+      // eslint-disable-next-line no-prototype-builtins
+      || _iterators.hasOwnProperty(_classof(O));
+  };
+
+  var isIterable = core_isIterable;
+
+  var isIterable$1 = createCommonjsModule(function (module) {
+  module.exports = { "default": isIterable, __esModule: true };
+  });
+
+  unwrapExports(isIterable$1);
+
+  var core_getIterator = _core.getIterator = function (it) {
+    var iterFn = core_getIteratorMethod(it);
+    if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
+    return _anObject(iterFn.call(it));
+  };
+
+  var getIterator = core_getIterator;
+
+  var getIterator$1 = createCommonjsModule(function (module) {
+  module.exports = { "default": getIterator, __esModule: true };
+  });
+
+  unwrapExports(getIterator$1);
+
+  var slicedToArray = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _isIterable3 = _interopRequireDefault(isIterable$1);
+
+
+
+  var _getIterator3 = _interopRequireDefault(getIterator$1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  exports.default = function () {
+    function sliceIterator(arr, i) {
+      var _arr = [];
+      var _n = true;
+      var _d = false;
+      var _e = undefined;
+
+      try {
+        for (var _i = (0, _getIterator3.default)(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+          _arr.push(_s.value);
+
+          if (i && _arr.length === i) break;
+        }
+      } catch (err) {
+        _d = true;
+        _e = err;
+      } finally {
+        try {
+          if (!_n && _i["return"]) _i["return"]();
+        } finally {
+          if (_d) throw _e;
+        }
+      }
+
+      return _arr;
+    }
+
+    return function (arr, i) {
+      if (Array.isArray(arr)) {
+        return arr;
+      } else if ((0, _isIterable3.default)(Object(arr))) {
+        return sliceIterator(arr, i);
+      } else {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance");
+      }
+    };
+  }();
+  });
+
+  unwrapExports(slicedToArray);
+
+  var DateConstants$1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+  exports["default"] = {
+    DATE_ROW_COUNT: 6,
+    DATE_COL_COUNT: 7
+  };
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(DateConstants$1);
+
+  var DateTHead_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _DateConstants2 = _interopRequireDefault(DateConstants$1);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var DateTHead = function (_React$Component) {
+    (0, _inherits3['default'])(DateTHead, _React$Component);
+
+    function DateTHead() {
+      (0, _classCallCheck3['default'])(this, DateTHead);
+      return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+    }
+
+    DateTHead.prototype.render = function render() {
+      var props = this.props;
+      var value = props.value;
+      var localeData = value.localeData();
+      var prefixCls = props.prefixCls;
+      var veryShortWeekdays = [];
+      var weekDays = [];
+      var firstDayOfWeek = localeData.firstDayOfWeek();
+      var showWeekNumberEl = void 0;
+      var now = (0, _moment2['default'])();
+      for (var dateColIndex = 0; dateColIndex < _DateConstants2['default'].DATE_COL_COUNT; dateColIndex++) {
+        var index = (firstDayOfWeek + dateColIndex) % _DateConstants2['default'].DATE_COL_COUNT;
+        now.day(index);
+        veryShortWeekdays[dateColIndex] = localeData.weekdaysMin(now);
+        weekDays[dateColIndex] = localeData.weekdaysShort(now);
+      }
+
+      if (props.showWeekNumber) {
+        showWeekNumberEl = _react2['default'].createElement(
+          'th',
+          {
+            role: 'columnheader',
+            className: prefixCls + '-column-header ' + prefixCls + '-week-number-header'
+          },
+          _react2['default'].createElement(
+            'span',
+            { className: prefixCls + '-column-header-inner' },
+            'x'
+          )
+        );
+      }
+      var weekDaysEls = weekDays.map(function (day, xindex) {
+        return _react2['default'].createElement(
+          'th',
+          {
+            key: xindex,
+            role: 'columnheader',
+            title: day,
+            className: prefixCls + '-column-header'
+          },
+          _react2['default'].createElement(
+            'span',
+            { className: prefixCls + '-column-header-inner' },
+            veryShortWeekdays[xindex]
+          )
+        );
+      });
+      return _react2['default'].createElement(
+        'thead',
+        null,
+        _react2['default'].createElement(
+          'tr',
+          { role: 'row' },
+          showWeekNumberEl,
+          weekDaysEls
+        )
+      );
+    };
+
+    return DateTHead;
+  }(_react2['default'].Component);
+
+  exports['default'] = DateTHead;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(DateTHead_1);
+
+  var DateTBody_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _DateConstants2 = _interopRequireDefault(DateConstants$1);
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function isSameDay(one, two) {
+    return one && two && one.isSame(two, 'day');
+  }
+
+  function beforeCurrentMonthYear(current, today) {
+    if (current.year() < today.year()) {
+      return 1;
+    }
+    return current.year() === today.year() && current.month() < today.month();
+  }
+
+  function afterCurrentMonthYear(current, today) {
+    if (current.year() > today.year()) {
+      return 1;
+    }
+    return current.year() === today.year() && current.month() > today.month();
+  }
+
+  function getIdFromDate(date) {
+    return 'rc-calendar-' + date.year() + '-' + date.month() + '-' + date.date();
+  }
+
+  var DateTBody = (0, _createReactClass2['default'])({
+    displayName: 'DateTBody',
+
+    propTypes: {
+      contentRender: _propTypes2['default'].func,
+      dateRender: _propTypes2['default'].func,
+      disabledDate: _propTypes2['default'].func,
+      prefixCls: _propTypes2['default'].string,
+      selectedValue: _propTypes2['default'].oneOfType([_propTypes2['default'].object, _propTypes2['default'].arrayOf(_propTypes2['default'].object)]),
+      value: _propTypes2['default'].object,
+      hoverValue: _propTypes2['default'].any,
+      showWeekNumber: _propTypes2['default'].bool
+    },
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        hoverValue: []
+      };
+    },
+    render: function render() {
+      var props = this.props;
+      var contentRender = props.contentRender,
+          prefixCls = props.prefixCls,
+          selectedValue = props.selectedValue,
+          value = props.value,
+          showWeekNumber = props.showWeekNumber,
+          dateRender = props.dateRender,
+          disabledDate = props.disabledDate,
+          hoverValue = props.hoverValue;
+
+      var iIndex = void 0;
+      var jIndex = void 0;
+      var current = void 0;
+      var dateTable = [];
+      var today = (0, util$2.getTodayTime)(value);
+      var cellClass = prefixCls + '-cell';
+      var weekNumberCellClass = prefixCls + '-week-number-cell';
+      var dateClass = prefixCls + '-date';
+      var todayClass = prefixCls + '-today';
+      var selectedClass = prefixCls + '-selected-day';
+      var selectedDateClass = prefixCls + '-selected-date'; // do not move with mouse operation
+      var selectedStartDateClass = prefixCls + '-selected-start-date';
+      var selectedEndDateClass = prefixCls + '-selected-end-date';
+      var inRangeClass = prefixCls + '-in-range-cell';
+      var lastMonthDayClass = prefixCls + '-last-month-cell';
+      var nextMonthDayClass = prefixCls + '-next-month-btn-day';
+      var disabledClass = prefixCls + '-disabled-cell';
+      var firstDisableClass = prefixCls + '-disabled-cell-first-of-row';
+      var lastDisableClass = prefixCls + '-disabled-cell-last-of-row';
+      var lastDayOfMonthClass = prefixCls + '-last-day-of-month';
+      var month1 = value.clone();
+      month1.date(1);
+      var day = month1.day();
+      var lastMonthDiffDay = (day + 7 - value.localeData().firstDayOfWeek()) % 7;
+      // calculate last month
+      var lastMonth1 = month1.clone();
+      lastMonth1.add(0 - lastMonthDiffDay, 'days');
+      var passed = 0;
+
+      for (iIndex = 0; iIndex < _DateConstants2['default'].DATE_ROW_COUNT; iIndex++) {
+        for (jIndex = 0; jIndex < _DateConstants2['default'].DATE_COL_COUNT; jIndex++) {
+          current = lastMonth1;
+          if (passed) {
+            current = current.clone();
+            current.add(passed, 'days');
+          }
+          dateTable.push(current);
+          passed++;
+        }
+      }
+      var tableHtml = [];
+      passed = 0;
+
+      for (iIndex = 0; iIndex < _DateConstants2['default'].DATE_ROW_COUNT; iIndex++) {
+        var _cx;
+
+        var isCurrentWeek = void 0;
+        var weekNumberCell = void 0;
+        var isActiveWeek = false;
+        var dateCells = [];
+        if (showWeekNumber) {
+          weekNumberCell = _react2['default'].createElement(
+            'td',
+            {
+              key: dateTable[passed].week(),
+              role: 'gridcell',
+              className: weekNumberCellClass
+            },
+            dateTable[passed].week()
+          );
+        }
+        for (jIndex = 0; jIndex < _DateConstants2['default'].DATE_COL_COUNT; jIndex++) {
+          var next = null;
+          var last = null;
+          current = dateTable[passed];
+          if (jIndex < _DateConstants2['default'].DATE_COL_COUNT - 1) {
+            next = dateTable[passed + 1];
+          }
+          if (jIndex > 0) {
+            last = dateTable[passed - 1];
+          }
+          var cls = cellClass;
+          var disabled = false;
+          var selected = false;
+
+          if (isSameDay(current, today)) {
+            cls += ' ' + todayClass;
+            isCurrentWeek = true;
+          }
+
+          var isBeforeCurrentMonthYear = beforeCurrentMonthYear(current, value);
+          var isAfterCurrentMonthYear = afterCurrentMonthYear(current, value);
+
+          if (selectedValue && Array.isArray(selectedValue)) {
+            var rangeValue = hoverValue.length ? hoverValue : selectedValue;
+            if (!isBeforeCurrentMonthYear && !isAfterCurrentMonthYear) {
+              var startValue = rangeValue[0];
+              var endValue = rangeValue[1];
+              if (startValue) {
+                if (isSameDay(current, startValue)) {
+                  selected = true;
+                  isActiveWeek = true;
+                  cls += ' ' + selectedStartDateClass;
+                }
+              }
+              if (startValue && endValue) {
+                if (isSameDay(current, endValue)) {
+                  selected = true;
+                  isActiveWeek = true;
+                  cls += ' ' + selectedEndDateClass;
+                } else if (current.isAfter(startValue, 'day') && current.isBefore(endValue, 'day')) {
+                  cls += ' ' + inRangeClass;
+                }
+              }
+            }
+          } else if (isSameDay(current, value)) {
+            // keyboard change value, highlight works
+            selected = true;
+            isActiveWeek = true;
+          }
+
+          if (isSameDay(current, selectedValue)) {
+            cls += ' ' + selectedDateClass;
+          }
+
+          if (isBeforeCurrentMonthYear) {
+            cls += ' ' + lastMonthDayClass;
+          }
+
+          if (isAfterCurrentMonthYear) {
+            cls += ' ' + nextMonthDayClass;
+          }
+
+          if (current.clone().endOf('month').date() === current.date()) {
+            cls += ' ' + lastDayOfMonthClass;
+          }
+
+          if (disabledDate) {
+            if (disabledDate(current, value)) {
+              disabled = true;
+
+              if (!last || !disabledDate(last, value)) {
+                cls += ' ' + firstDisableClass;
+              }
+
+              if (!next || !disabledDate(next, value)) {
+                cls += ' ' + lastDisableClass;
+              }
+            }
+          }
+
+          if (selected) {
+            cls += ' ' + selectedClass;
+          }
+
+          if (disabled) {
+            cls += ' ' + disabledClass;
+          }
+
+          var dateHtml = void 0;
+          if (dateRender) {
+            dateHtml = dateRender(current, value);
+          } else {
+            var content = contentRender ? contentRender(current, value) : current.date();
+            dateHtml = _react2['default'].createElement(
+              'div',
+              {
+                key: getIdFromDate(current),
+                className: dateClass,
+                'aria-selected': selected,
+                'aria-disabled': disabled
+              },
+              content
+            );
+          }
+
+          dateCells.push(_react2['default'].createElement(
+            'td',
+            {
+              key: passed,
+              onClick: disabled ? undefined : props.onSelect.bind(null, current),
+              onMouseEnter: disabled ? undefined : props.onDayHover && props.onDayHover.bind(null, current) || undefined,
+              role: 'gridcell',
+              title: (0, util$2.getTitleString)(current),
+              className: cls
+            },
+            dateHtml
+          ));
+
+          passed++;
+        }
+
+        tableHtml.push(_react2['default'].createElement(
+          'tr',
+          {
+            key: iIndex,
+            role: 'row',
+            className: (0, _classnames2['default'])((_cx = {}, _cx[prefixCls + '-current-week'] = isCurrentWeek, _cx[prefixCls + '-active-week'] = isActiveWeek, _cx))
+          },
+          weekNumberCell,
+          dateCells
+        ));
+      }
+      return _react2['default'].createElement(
+        'tbody',
+        { className: prefixCls + '-tbody' },
+        tableHtml
+      );
+    }
+  });
+
+  exports['default'] = DateTBody;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(DateTBody_1);
+
+  var DateTable_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _DateTHead2 = _interopRequireDefault(DateTHead_1);
+
+
+
+  var _DateTBody2 = _interopRequireDefault(DateTBody_1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var DateTable = function (_React$Component) {
+    (0, _inherits3['default'])(DateTable, _React$Component);
+
+    function DateTable() {
+      (0, _classCallCheck3['default'])(this, DateTable);
+      return (0, _possibleConstructorReturn3['default'])(this, _React$Component.apply(this, arguments));
+    }
+
+    DateTable.prototype.render = function render() {
+      var props = this.props;
+      var prefixCls = props.prefixCls;
+      return _react2['default'].createElement(
+        'table',
+        { className: prefixCls + '-table', cellSpacing: '0', role: 'grid' },
+        _react2['default'].createElement(_DateTHead2['default'], props),
+        _react2['default'].createElement(_DateTBody2['default'], props)
+      );
+    };
+
+    return DateTable;
+  }(_react2['default'].Component);
+
+  exports['default'] = DateTable;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(DateTable_1);
+
+  var DateInput_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _reactDom2 = _interopRequireDefault(ReactDOM__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var DateInput = (0, _createReactClass2['default'])({
+    displayName: 'DateInput',
+
+    propTypes: {
+      prefixCls: _propTypes2['default'].string,
+      timePicker: _propTypes2['default'].object,
+      value: _propTypes2['default'].object,
+      disabledTime: _propTypes2['default'].any,
+      format: _propTypes2['default'].string,
+      locale: _propTypes2['default'].object,
+      disabledDate: _propTypes2['default'].func,
+      onChange: _propTypes2['default'].func,
+      onClear: _propTypes2['default'].func,
+      placeholder: _propTypes2['default'].string,
+      onSelect: _propTypes2['default'].func,
+      selectedValue: _propTypes2['default'].object
+    },
+
+    getInitialState: function getInitialState() {
+      var selectedValue = this.props.selectedValue;
+      return {
+        str: selectedValue && selectedValue.format(this.props.format) || '',
+        invalid: false
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      this.cachedSelectionStart = this.dateInputInstance.selectionStart;
+      this.cachedSelectionEnd = this.dateInputInstance.selectionEnd;
+      // when popup show, click body will call this, bug!
+      var selectedValue = nextProps.selectedValue;
+      this.setState({
+        str: selectedValue && selectedValue.format(nextProps.format) || '',
+        invalid: false
+      });
+    },
+    componentDidUpdate: function componentDidUpdate() {
+      if (!this.state.invalid) {
+        this.dateInputInstance.setSelectionRange(this.cachedSelectionStart, this.cachedSelectionEnd);
+      }
+    },
+    onInputChange: function onInputChange(event) {
+      var str = event.target.value;
+      this.setState({
+        str: str
+      });
+      var value = void 0;
+      var _props = this.props,
+          disabledDate = _props.disabledDate,
+          format = _props.format,
+          onChange = _props.onChange;
+
+      if (str) {
+        var parsed = (0, _moment2['default'])(str, format, true);
+        if (!parsed.isValid()) {
+          this.setState({
+            invalid: true
+          });
+          return;
+        }
+        value = this.props.value.clone();
+        value.year(parsed.year()).month(parsed.month()).date(parsed.date()).hour(parsed.hour()).minute(parsed.minute()).second(parsed.second());
+
+        if (value && (!disabledDate || !disabledDate(value))) {
+          var originalValue = this.props.selectedValue;
+          if (originalValue && value) {
+            if (!originalValue.isSame(value)) {
+              onChange(value);
+            }
+          } else if (originalValue !== value) {
+            onChange(value);
+          }
+        } else {
+          this.setState({
+            invalid: true
+          });
+          return;
+        }
+      } else {
+        onChange(null);
+      }
+      this.setState({
+        invalid: false
+      });
+    },
+    onClear: function onClear() {
+      this.setState({
+        str: ''
+      });
+      this.props.onClear(null);
+    },
+    getRootDOMNode: function getRootDOMNode() {
+      return _reactDom2['default'].findDOMNode(this);
+    },
+    focus: function focus() {
+      if (this.dateInputInstance) {
+        this.dateInputInstance.focus();
+      }
+    },
+    saveDateInput: function saveDateInput(dateInput) {
+      this.dateInputInstance = dateInput;
+    },
+    render: function render() {
+      var props = this.props;
+      var _state = this.state,
+          invalid = _state.invalid,
+          str = _state.str;
+      var locale = props.locale,
+          prefixCls = props.prefixCls,
+          placeholder = props.placeholder;
+
+      var invalidClass = invalid ? prefixCls + '-input-invalid' : '';
+      return _react2['default'].createElement(
+        'div',
+        { className: prefixCls + '-input-wrap' },
+        _react2['default'].createElement(
+          'div',
+          { className: prefixCls + '-date-input-wrap' },
+          _react2['default'].createElement('input', {
+            ref: this.saveDateInput,
+            className: prefixCls + '-input ' + invalidClass,
+            value: str,
+            disabled: props.disabled,
+            placeholder: placeholder,
+            onChange: this.onInputChange
+          })
+        ),
+        props.showClear ? _react2['default'].createElement('a', {
+          className: prefixCls + '-clear-btn',
+          role: 'button',
+          title: locale.clear,
+          onClick: this.onClear
+        }) : null
+      );
+    }
+  });
+
+  exports['default'] = DateInput;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(DateInput_1);
+
+  var CalendarPart_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _CalendarHeader2 = _interopRequireDefault(CalendarHeader_1);
+
+
+
+  var _DateTable2 = _interopRequireDefault(DateTable_1);
+
+
+
+  var _DateInput2 = _interopRequireDefault(DateInput_1);
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var CalendarPart = (0, _createReactClass2['default'])({
+    displayName: 'CalendarPart',
+
+    propTypes: {
+      prefixCls: _propTypes2['default'].string,
+      value: _propTypes2['default'].any,
+      hoverValue: _propTypes2['default'].any,
+      selectedValue: _propTypes2['default'].any,
+      direction: _propTypes2['default'].any,
+      locale: _propTypes2['default'].any,
+      showDateInput: _propTypes2['default'].bool,
+      showTimePicker: _propTypes2['default'].bool,
+      format: _propTypes2['default'].any,
+      placeholder: _propTypes2['default'].any,
+      disabledDate: _propTypes2['default'].any,
+      timePicker: _propTypes2['default'].any,
+      disabledTime: _propTypes2['default'].any,
+      onInputSelect: _propTypes2['default'].func,
+      timePickerDisabledTime: _propTypes2['default'].object,
+      enableNext: _propTypes2['default'].any,
+      enablePrev: _propTypes2['default'].any
+    },
+    render: function render() {
+      var props = this.props;
+      var prefixCls = props.prefixCls,
+          value = props.value,
+          hoverValue = props.hoverValue,
+          selectedValue = props.selectedValue,
+          mode = props.mode,
+          direction = props.direction,
+          locale = props.locale,
+          format = props.format,
+          placeholder = props.placeholder,
+          disabledDate = props.disabledDate,
+          timePicker = props.timePicker,
+          disabledTime = props.disabledTime,
+          timePickerDisabledTime = props.timePickerDisabledTime,
+          showTimePicker = props.showTimePicker,
+          onInputSelect = props.onInputSelect,
+          enablePrev = props.enablePrev,
+          enableNext = props.enableNext;
+
+      var shouldShowTimePicker = showTimePicker && timePicker;
+      var disabledTimeConfig = shouldShowTimePicker && disabledTime ? (0, util$2.getTimeConfig)(selectedValue, disabledTime) : null;
+      var rangeClassName = prefixCls + '-range';
+      var newProps = {
+        locale: locale,
+        value: value,
+        prefixCls: prefixCls,
+        showTimePicker: showTimePicker
+      };
+      var index = direction === 'left' ? 0 : 1;
+      var timePickerEle = shouldShowTimePicker && _react2['default'].cloneElement(timePicker, (0, _extends3['default'])({
+        showHour: true,
+        showMinute: true,
+        showSecond: true
+      }, timePicker.props, disabledTimeConfig, timePickerDisabledTime, {
+        onChange: onInputSelect,
+        defaultOpenValue: value,
+        value: selectedValue[index]
+      }));
+
+      var dateInputElement = props.showDateInput && _react2['default'].createElement(_DateInput2['default'], {
+        format: format,
+        locale: locale,
+        prefixCls: prefixCls,
+        timePicker: timePicker,
+        disabledDate: disabledDate,
+        placeholder: placeholder,
+        disabledTime: disabledTime,
+        value: value,
+        showClear: false,
+        selectedValue: selectedValue[index],
+        onChange: onInputSelect
+      });
+
+      return _react2['default'].createElement(
+        'div',
+        {
+          className: rangeClassName + '-part ' + rangeClassName + '-' + direction
+        },
+        dateInputElement,
+        _react2['default'].createElement(
+          'div',
+          { style: { outline: 'none' } },
+          _react2['default'].createElement(_CalendarHeader2['default'], (0, _extends3['default'])({}, newProps, {
+            mode: mode,
+            enableNext: enableNext,
+            enablePrev: enablePrev,
+            onValueChange: props.onValueChange,
+            onPanelChange: props.onPanelChange,
+            disabledMonth: props.disabledMonth
+          })),
+          showTimePicker ? _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-time-picker' },
+            _react2['default'].createElement(
+              'div',
+              { className: prefixCls + '-time-picker-panel' },
+              timePickerEle
+            )
+          ) : null,
+          _react2['default'].createElement(
+            'div',
+            { className: prefixCls + '-body' },
+            _react2['default'].createElement(_DateTable2['default'], (0, _extends3['default'])({}, newProps, {
+              hoverValue: hoverValue,
+              selectedValue: selectedValue,
+              dateRender: props.dateRender,
+              onSelect: props.onSelect,
+              onDayHover: props.onDayHover,
+              disabledDate: disabledDate,
+              showWeekNumber: props.showWeekNumber
+            }))
+          )
+        )
+      );
+    }
+  });
+
+  exports['default'] = CalendarPart;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(CalendarPart_1);
+
+  var toTime = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+  exports.goStartMonth = goStartMonth;
+  exports.goEndMonth = goEndMonth;
+  exports.goTime = goTime;
+  exports.includesTime = includesTime;
+  function goStartMonth(time) {
+    return time.clone().startOf('month');
+  }
+
+  function goEndMonth(time) {
+    return time.clone().endOf('month');
+  }
+
+  function goTime(time, direction, unit) {
+    return time.clone().add(direction, unit);
+  }
+
+  function includesTime() {
+    var timeList = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var time = arguments[1];
+    var unit = arguments[2];
+
+    return timeList.some(function (t) {
+      return t.isSame(time, unit);
+    });
+  }
+  });
+
+  unwrapExports(toTime);
+  var toTime_1 = toTime.goStartMonth;
+  var toTime_2 = toTime.goEndMonth;
+  var toTime_3 = toTime.goTime;
+  var toTime_4 = toTime.includesTime;
+
+  var RangeCalendar_1 = createCommonjsModule(function (module, exports) {
+
+  exports.__esModule = true;
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _createReactClass2 = _interopRequireDefault(createReactClass);
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+  var _moment2 = _interopRequireDefault(moment);
+
+
+
+  var _classnames3 = _interopRequireDefault(classnames);
+
+
+
+  var _KeyCode2 = _interopRequireDefault(KeyCode_1);
+
+
+
+  var _CalendarPart2 = _interopRequireDefault(CalendarPart_1);
+
+
+
+  var _TodayButton2 = _interopRequireDefault(TodayButton_1);
+
+
+
+  var _OkButton2 = _interopRequireDefault(OkButton_1);
+
+
+
+  var _TimePickerButton2 = _interopRequireDefault(TimePickerButton_1);
+
+
+
+  var _CommonMixin2 = _interopRequireDefault(CommonMixin$1);
+
+
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function noop() {}
+
+  function isEmptyArray(arr) {
+    return Array.isArray(arr) && (arr.length === 0 || arr.every(function (i) {
+      return !i;
+    }));
+  }
+
+  function isArraysEqual(a, b) {
+    if (a === b) return true;
+    if (a === null || typeof a === 'undefined' || b === null || typeof b === 'undefined') {
+      return false;
+    }
+    if (a.length !== b.length) return false;
+
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+  function getValueFromSelectedValue(selectedValue) {
+    var start = selectedValue[0],
+        end = selectedValue[1];
+
+    var newEnd = end && end.isSame(start, 'month') ? end.clone().add(1, 'month') : end;
+    return [start, newEnd];
+  }
+
+  function normalizeAnchor(props, init) {
+    var selectedValue = props.selectedValue || init && props.defaultSelectedValue;
+    var value = props.value || init && props.defaultValue;
+    var normalizedValue = value ? getValueFromSelectedValue(value) : getValueFromSelectedValue(selectedValue);
+    return !isEmptyArray(normalizedValue) ? normalizedValue : init && [(0, _moment2['default'])(), (0, _moment2['default'])().add(1, 'months')];
+  }
+
+  function generateOptions(length, extraOptionGen) {
+    var arr = extraOptionGen ? extraOptionGen().concat() : [];
+    for (var value = 0; value < length; value++) {
+      if (arr.indexOf(value) === -1) {
+        arr.push(value);
+      }
+    }
+    return arr;
+  }
+
+  function onInputSelect(direction, value) {
+    if (!value) {
+      return;
+    }
+    var originalValue = this.state.selectedValue;
+    var selectedValue = originalValue.concat();
+    var index = direction === 'left' ? 0 : 1;
+    selectedValue[index] = value;
+    if (selectedValue[0] && this.compare(selectedValue[0], selectedValue[1]) > 0) {
+      selectedValue[1 - index] = this.state.showTimePicker ? selectedValue[index] : undefined;
+    }
+    this.props.onInputSelect(selectedValue);
+    this.fireSelectValueChange(selectedValue);
+  }
+
+  var RangeCalendar = (0, _createReactClass2['default'])({
+    displayName: 'RangeCalendar',
+
+    propTypes: {
+      prefixCls: _propTypes2['default'].string,
+      dateInputPlaceholder: _propTypes2['default'].any,
+      defaultValue: _propTypes2['default'].any,
+      value: _propTypes2['default'].any,
+      hoverValue: _propTypes2['default'].any,
+      mode: _propTypes2['default'].arrayOf(_propTypes2['default'].oneOf(['date', 'month', 'year', 'decade'])),
+      showDateInput: _propTypes2['default'].bool,
+      timePicker: _propTypes2['default'].any,
+      showOk: _propTypes2['default'].bool,
+      showToday: _propTypes2['default'].bool,
+      defaultSelectedValue: _propTypes2['default'].array,
+      selectedValue: _propTypes2['default'].array,
+      onOk: _propTypes2['default'].func,
+      showClear: _propTypes2['default'].bool,
+      locale: _propTypes2['default'].object,
+      onChange: _propTypes2['default'].func,
+      onSelect: _propTypes2['default'].func,
+      onValueChange: _propTypes2['default'].func,
+      onHoverChange: _propTypes2['default'].func,
+      onPanelChange: _propTypes2['default'].func,
+      format: _propTypes2['default'].oneOfType([_propTypes2['default'].object, _propTypes2['default'].string]),
+      onClear: _propTypes2['default'].func,
+      type: _propTypes2['default'].any,
+      disabledDate: _propTypes2['default'].func,
+      disabledTime: _propTypes2['default'].func
+    },
+
+    mixins: [_CommonMixin2['default']],
+
+    getDefaultProps: function getDefaultProps() {
+      return {
+        type: 'both',
+        defaultSelectedValue: [],
+        onValueChange: noop,
+        onHoverChange: noop,
+        onPanelChange: noop,
+        disabledTime: noop,
+        onInputSelect: noop,
+        showToday: true,
+        showDateInput: true
+      };
+    },
+    getInitialState: function getInitialState() {
+      var props = this.props;
+      var selectedValue = props.selectedValue || props.defaultSelectedValue;
+      var value = normalizeAnchor(props, 1);
+      return {
+        selectedValue: selectedValue,
+        prevSelectedValue: selectedValue,
+        firstSelectedValue: null,
+        hoverValue: props.hoverValue || [],
+        value: value,
+        showTimePicker: false,
+        mode: props.mode || ['date', 'date']
+      };
+    },
+    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+      var state = this.state;
+
+      var newState = {};
+      if ('value' in nextProps) {
+        newState.value = normalizeAnchor(nextProps, 0);
+        this.setState(newState);
+      }
+      if ('hoverValue' in nextProps && !isArraysEqual(state.hoverValue, nextProps.hoverValue)) {
+        this.setState({ hoverValue: nextProps.hoverValue });
+      }
+      if ('selectedValue' in nextProps) {
+        newState.selectedValue = nextProps.selectedValue;
+        newState.prevSelectedValue = nextProps.selectedValue;
+        this.setState(newState);
+      }
+      if ('mode' in nextProps && !isArraysEqual(state.mode, nextProps.mode)) {
+        this.setState({ mode: nextProps.mode });
+      }
+    },
+    onDatePanelEnter: function onDatePanelEnter() {
+      if (this.hasSelectedValue()) {
+        this.fireHoverValueChange(this.state.selectedValue.concat());
+      }
+    },
+    onDatePanelLeave: function onDatePanelLeave() {
+      if (this.hasSelectedValue()) {
+        this.fireHoverValueChange([]);
+      }
+    },
+    onSelect: function onSelect(value) {
+      var type = this.props.type;
+      var _state = this.state,
+          selectedValue = _state.selectedValue,
+          prevSelectedValue = _state.prevSelectedValue,
+          firstSelectedValue = _state.firstSelectedValue;
+
+      var nextSelectedValue = void 0;
+      if (type === 'both') {
+        if (!firstSelectedValue) {
+          (0, util$2.syncTime)(prevSelectedValue[0], value);
+          nextSelectedValue = [value];
+        } else if (this.compare(firstSelectedValue, value) < 0) {
+          (0, util$2.syncTime)(prevSelectedValue[1], value);
+          nextSelectedValue = [firstSelectedValue, value];
+        } else {
+          (0, util$2.syncTime)(prevSelectedValue[0], value);
+          (0, util$2.syncTime)(prevSelectedValue[1], firstSelectedValue);
+          nextSelectedValue = [value, firstSelectedValue];
+        }
+      } else if (type === 'start') {
+        (0, util$2.syncTime)(prevSelectedValue[0], value);
+        var endValue = selectedValue[1];
+        nextSelectedValue = endValue && this.compare(endValue, value) > 0 ? [value, endValue] : [value];
+      } else {
+        // type === 'end'
+        var startValue = selectedValue[0];
+        if (startValue && this.compare(startValue, value) <= 0) {
+          (0, util$2.syncTime)(prevSelectedValue[1], value);
+          nextSelectedValue = [startValue, value];
+        } else {
+          (0, util$2.syncTime)(prevSelectedValue[0], value);
+          nextSelectedValue = [value];
+        }
+      }
+
+      this.fireSelectValueChange(nextSelectedValue);
+    },
+    onKeyDown: function onKeyDown(event) {
+      var _this = this;
+
+      if (event.target.nodeName.toLowerCase() === 'input') {
+        return;
+      }
+
+      var keyCode = event.keyCode;
+
+      var ctrlKey = event.ctrlKey || event.metaKey;
+
+      var _state2 = this.state,
+          selectedValue = _state2.selectedValue,
+          hoverValue = _state2.hoverValue,
+          firstSelectedValue = _state2.firstSelectedValue,
+          value = _state2.value;
+      var _props = this.props,
+          onKeyDown = _props.onKeyDown,
+          disabledDate = _props.disabledDate;
+
+      // Update last time of the picker
+
+      var updateHoverPoint = function updateHoverPoint(func) {
+        // Change hover to make focus in UI
+        var currentHoverTime = void 0;
+        var nextHoverTime = void 0;
+        var nextHoverValue = void 0;
+
+        if (!firstSelectedValue) {
+          currentHoverTime = hoverValue[0] || selectedValue[0] || value[0] || (0, _moment2['default'])();
+          nextHoverTime = func(currentHoverTime);
+          nextHoverValue = [nextHoverTime];
+          _this.fireHoverValueChange(nextHoverValue);
+        } else {
+          if (hoverValue.length === 1) {
+            currentHoverTime = hoverValue[0].clone();
+            nextHoverTime = func(currentHoverTime);
+            nextHoverValue = _this.onDayHover(nextHoverTime);
+          } else {
+            currentHoverTime = hoverValue[0].isSame(firstSelectedValue, 'day') ? hoverValue[1] : hoverValue[0];
+            nextHoverTime = func(currentHoverTime);
+            nextHoverValue = _this.onDayHover(nextHoverTime);
+          }
+        }
+
+        // Find origin hover time on value index
+        if (nextHoverValue.length >= 2) {
+          var miss = nextHoverValue.some(function (ht) {
+            return !(0, toTime.includesTime)(value, ht, 'month');
+          });
+          if (miss) {
+            var newValue = nextHoverValue.slice().sort(function (t1, t2) {
+              return t1.valueOf() - t2.valueOf();
+            });
+            if (newValue[0].isSame(newValue[1], 'month')) {
+              newValue[1] = newValue[0].clone().add(1, 'month');
+            }
+            _this.fireValueChange(newValue);
+          }
+        } else if (nextHoverValue.length === 1) {
+          // If only one value, let's keep the origin panel
+          var oriValueIndex = value.findIndex(function (time) {
+            return time.isSame(currentHoverTime, 'month');
+          });
+          if (oriValueIndex === -1) oriValueIndex = 0;
+
+          if (value.every(function (time) {
+            return !time.isSame(nextHoverTime, 'month');
+          })) {
+            var _newValue = value.slice();
+            _newValue[oriValueIndex] = nextHoverTime.clone();
+            _this.fireValueChange(_newValue);
+          }
+        }
+
+        event.preventDefault();
+
+        return nextHoverTime;
+      };
+
+      switch (keyCode) {
+        case _KeyCode2['default'].DOWN:
+          updateHoverPoint(function (time) {
+            return (0, toTime.goTime)(time, 1, 'weeks');
+          });
+          return;
+        case _KeyCode2['default'].UP:
+          updateHoverPoint(function (time) {
+            return (0, toTime.goTime)(time, -1, 'weeks');
+          });
+          return;
+        case _KeyCode2['default'].LEFT:
+          if (ctrlKey) {
+            updateHoverPoint(function (time) {
+              return (0, toTime.goTime)(time, -1, 'years');
+            });
+          } else {
+            updateHoverPoint(function (time) {
+              return (0, toTime.goTime)(time, -1, 'days');
+            });
+          }
+          return;
+        case _KeyCode2['default'].RIGHT:
+          if (ctrlKey) {
+            updateHoverPoint(function (time) {
+              return (0, toTime.goTime)(time, 1, 'years');
+            });
+          } else {
+            updateHoverPoint(function (time) {
+              return (0, toTime.goTime)(time, 1, 'days');
+            });
+          }
+          return;
+        case _KeyCode2['default'].HOME:
+          updateHoverPoint(function (time) {
+            return (0, toTime.goStartMonth)(time);
+          });
+          return;
+        case _KeyCode2['default'].END:
+          updateHoverPoint(function (time) {
+            return (0, toTime.goEndMonth)(time);
+          });
+          return;
+        case _KeyCode2['default'].PAGE_DOWN:
+          updateHoverPoint(function (time) {
+            return (0, toTime.goTime)(time, 1, 'month');
+          });
+          return;
+        case _KeyCode2['default'].PAGE_UP:
+          updateHoverPoint(function (time) {
+            return (0, toTime.goTime)(time, -1, 'month');
+          });
+          return;
+        case _KeyCode2['default'].ENTER:
+          {
+            var lastValue = void 0;
+            if (hoverValue.length === 0) {
+              lastValue = updateHoverPoint(function (time) {
+                return time;
+              });
+            } else if (hoverValue.length === 1) {
+              lastValue = hoverValue[0];
+            } else {
+              lastValue = hoverValue[0].isSame(firstSelectedValue, 'day') ? hoverValue[1] : hoverValue[0];
+            }
+            if (lastValue && (!disabledDate || !disabledDate(lastValue))) {
+              this.onSelect(lastValue);
+            }
+            event.preventDefault();
+            return;
+          }
+        default:
+          if (onKeyDown) {
+            onKeyDown(event);
+          }
+      }
+    },
+    onDayHover: function onDayHover(value) {
+      var hoverValue = [];
+      var _state3 = this.state,
+          selectedValue = _state3.selectedValue,
+          firstSelectedValue = _state3.firstSelectedValue;
+      var type = this.props.type;
+
+      if (type === 'start' && selectedValue[1]) {
+        hoverValue = this.compare(value, selectedValue[1]) < 0 ? [value, selectedValue[1]] : [value];
+      } else if (type === 'end' && selectedValue[0]) {
+        hoverValue = this.compare(value, selectedValue[0]) > 0 ? [selectedValue[0], value] : [];
+      } else {
+        if (!firstSelectedValue) {
+          if (this.state.hoverValue.length) {
+            this.setState({ hoverValue: [] });
+          }
+          return hoverValue;
+        }
+        hoverValue = this.compare(value, firstSelectedValue) < 0 ? [value, firstSelectedValue] : [firstSelectedValue, value];
+      }
+      this.fireHoverValueChange(hoverValue);
+
+      return hoverValue;
+    },
+    onToday: function onToday() {
+      var startValue = (0, util$2.getTodayTime)(this.state.value[0]);
+      var endValue = startValue.clone().add(1, 'months');
+      this.setState({ value: [startValue, endValue] });
+    },
+    onOpenTimePicker: function onOpenTimePicker() {
+      this.setState({
+        showTimePicker: true
+      });
+    },
+    onCloseTimePicker: function onCloseTimePicker() {
+      this.setState({
+        showTimePicker: false
+      });
+    },
+    onOk: function onOk() {
+      var selectedValue = this.state.selectedValue;
+
+      if (this.isAllowedDateAndTime(selectedValue)) {
+        this.props.onOk(this.state.selectedValue);
+      }
+    },
+    onStartInputSelect: function onStartInputSelect() {
+      for (var _len = arguments.length, oargs = Array(_len), _key = 0; _key < _len; _key++) {
+        oargs[_key] = arguments[_key];
+      }
+
+      var args = ['left'].concat(oargs);
+      return onInputSelect.apply(this, args);
+    },
+    onEndInputSelect: function onEndInputSelect() {
+      for (var _len2 = arguments.length, oargs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        oargs[_key2] = arguments[_key2];
+      }
+
+      var args = ['right'].concat(oargs);
+      return onInputSelect.apply(this, args);
+    },
+    onStartValueChange: function onStartValueChange(leftValue) {
+      var value = [].concat(this.state.value);
+      value[0] = leftValue;
+      return this.fireValueChange(value);
+    },
+    onEndValueChange: function onEndValueChange(rightValue) {
+      var value = [].concat(this.state.value);
+      value[1] = rightValue;
+      return this.fireValueChange(value);
+    },
+    onStartPanelChange: function onStartPanelChange(value, mode) {
+      var props = this.props,
+          state = this.state;
+
+      var newMode = [mode, state.mode[1]];
+      if (!('mode' in props)) {
+        this.setState({
+          mode: newMode
+        });
+      }
+      var newValue = [value || state.value[0], state.value[1]];
+      props.onPanelChange(newValue, newMode);
+    },
+    onEndPanelChange: function onEndPanelChange(value, mode) {
+      var props = this.props,
+          state = this.state;
+
+      var newMode = [state.mode[0], mode];
+      if (!('mode' in props)) {
+        this.setState({
+          mode: newMode
+        });
+      }
+      var newValue = [state.value[0], value || state.value[1]];
+      props.onPanelChange(newValue, newMode);
+    },
+    getStartValue: function getStartValue() {
+      var value = this.state.value[0];
+      var selectedValue = this.state.selectedValue;
+      // keep selectedTime when select date
+      if (selectedValue[0] && this.props.timePicker) {
+        value = value.clone();
+        (0, util$2.syncTime)(selectedValue[0], value);
+      }
+      if (this.state.showTimePicker && selectedValue[0]) {
+        return selectedValue[0];
+      }
+      return value;
+    },
+    getEndValue: function getEndValue() {
+      var _state4 = this.state,
+          value = _state4.value,
+          selectedValue = _state4.selectedValue,
+          showTimePicker = _state4.showTimePicker;
+
+      var endValue = value[1] ? value[1].clone() : value[0].clone().add(1, 'month');
+      // keep selectedTime when select date
+      if (selectedValue[1] && this.props.timePicker) {
+        (0, util$2.syncTime)(selectedValue[1], endValue);
+      }
+      if (showTimePicker) {
+        return selectedValue[1] ? selectedValue[1] : this.getStartValue();
+      }
+      return endValue;
+    },
+
+    // get disabled hours for second picker
+    getEndDisableTime: function getEndDisableTime() {
+      var _state5 = this.state,
+          selectedValue = _state5.selectedValue,
+          value = _state5.value;
+      var disabledTime = this.props.disabledTime;
+
+      var userSettingDisabledTime = disabledTime(selectedValue, 'end') || {};
+      var startValue = selectedValue && selectedValue[0] || value[0].clone();
+      // if startTime and endTime is same day..
+      // the second time picker will not able to pick time before first time picker
+      if (!selectedValue[1] || startValue.isSame(selectedValue[1], 'day')) {
+        var hours = startValue.hour();
+        var minutes = startValue.minute();
+        var second = startValue.second();
+        var _disabledHours = userSettingDisabledTime.disabledHours,
+            _disabledMinutes = userSettingDisabledTime.disabledMinutes,
+            _disabledSeconds = userSettingDisabledTime.disabledSeconds;
+
+        var oldDisabledMinutes = _disabledMinutes ? _disabledMinutes() : [];
+        var olddisabledSeconds = _disabledSeconds ? _disabledSeconds() : [];
+        _disabledHours = generateOptions(hours, _disabledHours);
+        _disabledMinutes = generateOptions(minutes, _disabledMinutes);
+        _disabledSeconds = generateOptions(second, _disabledSeconds);
+        return {
+          disabledHours: function disabledHours() {
+            return _disabledHours;
+          },
+          disabledMinutes: function disabledMinutes(hour) {
+            if (hour === hours) {
+              return _disabledMinutes;
+            }
+            return oldDisabledMinutes;
+          },
+          disabledSeconds: function disabledSeconds(hour, minute) {
+            if (hour === hours && minute === minutes) {
+              return _disabledSeconds;
+            }
+            return olddisabledSeconds;
+          }
+        };
+      }
+      return userSettingDisabledTime;
+    },
+    isAllowedDateAndTime: function isAllowedDateAndTime(selectedValue) {
+      return (0, util$2.isAllowedDate)(selectedValue[0], this.props.disabledDate, this.disabledStartTime) && (0, util$2.isAllowedDate)(selectedValue[1], this.props.disabledDate, this.disabledEndTime);
+    },
+    isMonthYearPanelShow: function isMonthYearPanelShow(mode) {
+      return ['month', 'year', 'decade'].indexOf(mode) > -1;
+    },
+    hasSelectedValue: function hasSelectedValue() {
+      var selectedValue = this.state.selectedValue;
+
+      return !!selectedValue[1] && !!selectedValue[0];
+    },
+    compare: function compare(v1, v2) {
+      if (this.props.timePicker) {
+        return v1.diff(v2);
+      }
+      return v1.diff(v2, 'days');
+    },
+    fireSelectValueChange: function fireSelectValueChange(selectedValue, direct) {
+      var timePicker = this.props.timePicker;
+      var prevSelectedValue = this.state.prevSelectedValue;
+
+      if (timePicker && timePicker.props.defaultValue) {
+        var timePickerDefaultValue = timePicker.props.defaultValue;
+        if (!prevSelectedValue[0] && selectedValue[0]) {
+          (0, util$2.syncTime)(timePickerDefaultValue[0], selectedValue[0]);
+        }
+        if (!prevSelectedValue[1] && selectedValue[1]) {
+          (0, util$2.syncTime)(timePickerDefaultValue[1], selectedValue[1]);
+        }
+      }
+
+      if (!('selectedValue' in this.props)) {
+        this.setState({
+          selectedValue: selectedValue
+        });
+      }
+
+      // 尚未选择过时间，直接输入的话
+      if (!this.state.selectedValue[0] || !this.state.selectedValue[1]) {
+        var startValue = selectedValue[0] || (0, _moment2['default'])();
+        var endValue = selectedValue[1] || startValue.clone().add(1, 'months');
+        this.setState({
+          selectedValue: selectedValue,
+          value: getValueFromSelectedValue([startValue, endValue])
+        });
+      }
+
+      if (selectedValue[0] && !selectedValue[1]) {
+        this.setState({ firstSelectedValue: selectedValue[0] });
+        this.fireHoverValueChange(selectedValue.concat());
+      }
+      this.props.onChange(selectedValue);
+      if (direct || selectedValue[0] && selectedValue[1]) {
+        this.setState({
+          prevSelectedValue: selectedValue,
+          firstSelectedValue: null
+        });
+        this.fireHoverValueChange([]);
+        this.props.onSelect(selectedValue);
+      }
+    },
+    fireValueChange: function fireValueChange(value) {
+      var props = this.props;
+      if (!('value' in props)) {
+        this.setState({
+          value: value
+        });
+      }
+      props.onValueChange(value);
+    },
+    fireHoverValueChange: function fireHoverValueChange(hoverValue) {
+      var props = this.props;
+      if (!('hoverValue' in props)) {
+        this.setState({ hoverValue: hoverValue });
+      }
+      props.onHoverChange(hoverValue);
+    },
+    clear: function clear() {
+      this.fireSelectValueChange([], true);
+      this.props.onClear();
+    },
+    disabledStartTime: function disabledStartTime(time) {
+      return this.props.disabledTime(time, 'start');
+    },
+    disabledEndTime: function disabledEndTime(time) {
+      return this.props.disabledTime(time, 'end');
+    },
+    disabledStartMonth: function disabledStartMonth(month) {
+      var value = this.state.value;
+
+      return month.isSameOrAfter(value[1], 'month');
+    },
+    disabledEndMonth: function disabledEndMonth(month) {
+      var value = this.state.value;
+
+      return month.isSameOrBefore(value[0], 'month');
+    },
+    render: function render() {
+      var _className, _classnames;
+
+      var props = this.props,
+          state = this.state;
+      var prefixCls = props.prefixCls,
+          dateInputPlaceholder = props.dateInputPlaceholder,
+          timePicker = props.timePicker,
+          showOk = props.showOk,
+          locale = props.locale,
+          showClear = props.showClear,
+          showToday = props.showToday,
+          type = props.type;
+      var hoverValue = state.hoverValue,
+          selectedValue = state.selectedValue,
+          mode = state.mode,
+          showTimePicker = state.showTimePicker;
+
+      var className = (_className = {}, _className[props.className] = !!props.className, _className[prefixCls] = 1, _className[prefixCls + '-hidden'] = !props.visible, _className[prefixCls + '-range'] = 1, _className[prefixCls + '-show-time-picker'] = showTimePicker, _className[prefixCls + '-week-number'] = props.showWeekNumber, _className);
+      var classes = (0, _classnames3['default'])(className);
+      var newProps = {
+        selectedValue: state.selectedValue,
+        onSelect: this.onSelect,
+        onDayHover: type === 'start' && selectedValue[1] || type === 'end' && selectedValue[0] || !!hoverValue.length ? this.onDayHover : undefined
+      };
+
+      var placeholder1 = void 0;
+      var placeholder2 = void 0;
+
+      if (dateInputPlaceholder) {
+        if (Array.isArray(dateInputPlaceholder)) {
+          placeholder1 = dateInputPlaceholder[0];
+          placeholder2 = dateInputPlaceholder[1];
+        } else {
+          placeholder1 = placeholder2 = dateInputPlaceholder;
+        }
+      }
+      var showOkButton = showOk === true || showOk !== false && !!timePicker;
+      var cls = (0, _classnames3['default'])((_classnames = {}, _classnames[prefixCls + '-footer'] = true, _classnames[prefixCls + '-range-bottom'] = true, _classnames[prefixCls + '-footer-show-ok'] = showOkButton, _classnames));
+
+      var startValue = this.getStartValue();
+      var endValue = this.getEndValue();
+      var todayTime = (0, util$2.getTodayTime)(startValue);
+      var thisMonth = todayTime.month();
+      var thisYear = todayTime.year();
+      var isTodayInView = startValue.year() === thisYear && startValue.month() === thisMonth || endValue.year() === thisYear && endValue.month() === thisMonth;
+      var nextMonthOfStart = startValue.clone().add(1, 'months');
+      var isClosestMonths = nextMonthOfStart.year() === endValue.year() && nextMonthOfStart.month() === endValue.month();
+
+      // console.warn('Render:', selectedValue.map(t => t.format('YYYY-MM-DD')).join(', '));
+      // console.log('start:', startValue.format('YYYY-MM-DD'));
+      // console.log('end:', endValue.format('YYYY-MM-DD'));
+
+      return _react2['default'].createElement(
+        'div',
+        {
+          ref: this.saveRoot,
+          className: classes,
+          style: props.style,
+          tabIndex: '0',
+          onKeyDown: this.onKeyDown
+        },
+        props.renderSidebar(),
+        _react2['default'].createElement(
+          'div',
+          { className: prefixCls + '-panel' },
+          showClear && selectedValue[0] && selectedValue[1] ? _react2['default'].createElement('a', {
+            className: prefixCls + '-clear-btn',
+            role: 'button',
+            title: locale.clear,
+            onClick: this.clear
+          }) : null,
+          _react2['default'].createElement(
+            'div',
+            {
+              className: prefixCls + '-date-panel',
+              onMouseLeave: type !== 'both' ? this.onDatePanelLeave : undefined,
+              onMouseEnter: type !== 'both' ? this.onDatePanelEnter : undefined
+            },
+            _react2['default'].createElement(_CalendarPart2['default'], (0, _extends3['default'])({}, props, newProps, {
+              hoverValue: hoverValue,
+              direction: 'left',
+              disabledTime: this.disabledStartTime,
+              disabledMonth: this.disabledStartMonth,
+              format: this.getFormat(),
+              value: startValue,
+              mode: mode[0],
+              placeholder: placeholder1,
+              onInputSelect: this.onStartInputSelect,
+              onValueChange: this.onStartValueChange,
+              onPanelChange: this.onStartPanelChange,
+              showDateInput: this.props.showDateInput,
+              timePicker: timePicker,
+              showTimePicker: showTimePicker,
+              enablePrev: true,
+              enableNext: !isClosestMonths || this.isMonthYearPanelShow(mode[1])
+            })),
+            _react2['default'].createElement(
+              'span',
+              { className: prefixCls + '-range-middle' },
+              '~'
+            ),
+            _react2['default'].createElement(_CalendarPart2['default'], (0, _extends3['default'])({}, props, newProps, {
+              hoverValue: hoverValue,
+              direction: 'right',
+              format: this.getFormat(),
+              timePickerDisabledTime: this.getEndDisableTime(),
+              placeholder: placeholder2,
+              value: endValue,
+              mode: mode[1],
+              onInputSelect: this.onEndInputSelect,
+              onValueChange: this.onEndValueChange,
+              onPanelChange: this.onEndPanelChange,
+              showDateInput: this.props.showDateInput,
+              timePicker: timePicker,
+              showTimePicker: showTimePicker,
+              disabledTime: this.disabledEndTime,
+              disabledMonth: this.disabledEndMonth,
+              enablePrev: !isClosestMonths || this.isMonthYearPanelShow(mode[0]),
+              enableNext: true
+            }))
+          ),
+          _react2['default'].createElement(
+            'div',
+            { className: cls },
+            props.renderFooter(),
+            showToday || props.timePicker || showOkButton ? _react2['default'].createElement(
+              'div',
+              { className: prefixCls + '-footer-btn' },
+              showToday ? _react2['default'].createElement(_TodayButton2['default'], (0, _extends3['default'])({}, props, {
+                disabled: isTodayInView,
+                value: state.value[0],
+                onToday: this.onToday,
+                text: locale.backToToday
+              })) : null,
+              props.timePicker ? _react2['default'].createElement(_TimePickerButton2['default'], (0, _extends3['default'])({}, props, {
+                showTimePicker: showTimePicker,
+                onOpenTimePicker: this.onOpenTimePicker,
+                onCloseTimePicker: this.onCloseTimePicker,
+                timePickerDisabled: !this.hasSelectedValue() || hoverValue.length
+              })) : null,
+              showOkButton ? _react2['default'].createElement(_OkButton2['default'], (0, _extends3['default'])({}, props, {
+                onOk: this.onOk,
+                okDisabled: !this.isAllowedDateAndTime(selectedValue) || !this.hasSelectedValue() || hoverValue.length
+              })) : null
+            ) : null
+          )
+        )
+      );
+    }
+  });
+
+  exports['default'] = RangeCalendar;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(RangeCalendar_1);
+
+  var RangePicker_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var _slicedToArray3 = _interopRequireDefault(slicedToArray);
+
+
+
+  var React$$1 = _interopRequireWildcard(React__default);
+
+
+
+  var moment$$1 = _interopRequireWildcard(moment);
+
+
+
+  var _RangeCalendar2 = _interopRequireDefault(RangeCalendar_1);
+
+
+
+  var _Picker2 = _interopRequireDefault(Picker_1);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _icon2 = _interopRequireDefault(icon);
+
+
+
+  var _warning2 = _interopRequireDefault(warning$4);
+
+
+
+  var _interopDefault2 = _interopRequireDefault(interopDefault_1);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  /* tslint:disable jsx-no-multiline-js */
+  function getShowDateFromValue(value) {
+      var _value = (0, _slicedToArray3['default'])(value, 2),
+          start = _value[0],
+          end = _value[1];
+      // value could be an empty array, then we should not reset showDate
+
+
+      if (!start && !end) {
+          return;
+      }
+      var newEnd = end && end.isSame(start, 'month') ? end.clone().add(1, 'month') : end;
+      return [start, newEnd];
+  }
+  function formatValue(value, format) {
+      return value && value.format(format) || '';
+  }
+  function pickerValueAdapter(value) {
+      if (!value) {
+          return;
+      }
+      if (Array.isArray(value)) {
+          return value;
+      }
+      return [value, value.clone().add(1, 'month')];
+  }
+  function isEmptyArray(arr) {
+      if (Array.isArray(arr)) {
+          return arr.length === 0 || arr.every(function (i) {
+              return !i;
+          });
+      }
+      return false;
+  }
+  function fixLocale(value, localeCode) {
+      if (!localeCode) {
+          return;
+      }
+      if (!value || value.length === 0) {
+          return;
+      }
+      if (value[0]) {
+          value[0].locale(localeCode);
+      }
+      if (value[1]) {
+          value[1].locale(localeCode);
+      }
+  }
+
+  var RangePicker = function (_React$Component) {
+      (0, _inherits3['default'])(RangePicker, _React$Component);
+
+      function RangePicker(props) {
+          (0, _classCallCheck3['default'])(this, RangePicker);
+
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (RangePicker.__proto__ || Object.getPrototypeOf(RangePicker)).call(this, props));
+
+          _this.clearSelection = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              _this.setState({ value: [] });
+              _this.handleChange([]);
+          };
+          _this.clearHoverValue = function () {
+              return _this.setState({ hoverValue: [] });
+          };
+          _this.handleChange = function (value) {
+              var props = _this.props;
+              if (!('value' in props)) {
+                  _this.setState(function (_ref) {
+                      var showDate = _ref.showDate;
+                      return {
+                          value: value,
+                          showDate: getShowDateFromValue(value) || showDate
+                      };
+                  });
+              }
+              props.onChange(value, [formatValue(value[0], props.format), formatValue(value[1], props.format)]);
+          };
+          _this.handleOpenChange = function (open) {
+              if (!('open' in _this.props)) {
+                  _this.setState({ open: open });
+              }
+              if (open === false) {
+                  _this.clearHoverValue();
+              }
+              var onOpenChange = _this.props.onOpenChange;
+
+              if (onOpenChange) {
+                  onOpenChange(open);
+              }
+          };
+          _this.handleShowDateChange = function (showDate) {
+              return _this.setState({ showDate: showDate });
+          };
+          _this.handleHoverChange = function (hoverValue) {
+              return _this.setState({ hoverValue: hoverValue });
+          };
+          _this.handleRangeMouseLeave = function () {
+              if (_this.state.open) {
+                  _this.clearHoverValue();
+              }
+          };
+          _this.handleCalendarInputSelect = function (value) {
+              if (!value[0]) {
+                  return;
+              }
+              _this.setState(function (_ref2) {
+                  var showDate = _ref2.showDate;
+                  return {
+                      value: value,
+                      showDate: getShowDateFromValue(value) || showDate
+                  };
+              });
+          };
+          _this.handleRangeClick = function (value) {
+              if (typeof value === 'function') {
+                  value = value();
+              }
+              _this.setValue(value, true);
+              var onOk = _this.props.onOk;
+
+              if (onOk) {
+                  onOk(value);
+              }
+          };
+          _this.savePicker = function (node) {
+              _this.picker = node;
+          };
+          _this.renderFooter = function () {
+              var _this$props = _this.props,
+                  prefixCls = _this$props.prefixCls,
+                  ranges = _this$props.ranges,
+                  renderExtraFooter = _this$props.renderExtraFooter;
+
+              if (!ranges && !renderExtraFooter) {
+                  return null;
+              }
+              var customFooter = renderExtraFooter ? React$$1.createElement(
+                  'div',
+                  { className: prefixCls + '-footer-extra', key: 'extra' },
+                  renderExtraFooter.apply(undefined, arguments)
+              ) : null;
+              var operations = Object.keys(ranges || {}).map(function (range) {
+                  var value = ranges[range];
+                  return React$$1.createElement(
+                      'a',
+                      { key: range, onClick: function onClick() {
+                              return _this.handleRangeClick(value);
+                          }, onMouseEnter: function onMouseEnter() {
+                              return _this.setState({ hoverValue: value });
+                          }, onMouseLeave: _this.handleRangeMouseLeave },
+                      range
+                  );
+              });
+              var rangeNode = React$$1.createElement(
+                  'div',
+                  { className: prefixCls + '-footer-extra ' + prefixCls + '-range-quick-selector', key: 'range' },
+                  operations
+              );
+              return [rangeNode, customFooter];
+          };
+          var value = props.value || props.defaultValue || [];
+          if (value[0] && !(0, _interopDefault2['default'])(moment$$1).isMoment(value[0]) || value[1] && !(0, _interopDefault2['default'])(moment$$1).isMoment(value[1])) {
+              throw new Error('The value/defaultValue of RangePicker must be a moment object array after `antd@2.0`, ' + 'see: https://u.ant.design/date-picker-value');
+          }
+          var pickerValue = !value || isEmptyArray(value) ? props.defaultPickerValue : value;
+          _this.state = {
+              value: value,
+              showDate: pickerValueAdapter(pickerValue || (0, _interopDefault2['default'])(moment$$1)()),
+              open: props.open,
+              hoverValue: []
+          };
+          return _this;
+      }
+
+      (0, _createClass3['default'])(RangePicker, [{
+          key: 'componentWillReceiveProps',
+          value: function componentWillReceiveProps(nextProps) {
+              if ('value' in nextProps) {
+                  var state = this.state;
+                  var value = nextProps.value || [];
+                  this.setState({
+                      value: value,
+                      showDate: getShowDateFromValue(value) || state.showDate
+                  });
+              }
+              if ('open' in nextProps) {
+                  this.setState({
+                      open: nextProps.open
+                  });
+              }
+          }
+      }, {
+          key: 'setValue',
+          value: function setValue(value, hidePanel) {
+              this.handleChange(value);
+              if ((hidePanel || !this.props.showTime) && !('open' in this.props)) {
+                  this.setState({ open: false });
+              }
+          }
+      }, {
+          key: 'focus',
+          value: function focus() {
+              this.picker.focus();
+          }
+      }, {
+          key: 'blur',
+          value: function blur() {
+              this.picker.blur();
+          }
+      }, {
+          key: 'render',
+          value: function render() {
+              var _classNames,
+                  _this2 = this;
+
+              var state = this.state,
+                  props = this.props;
+              var value = state.value,
+                  showDate = state.showDate,
+                  hoverValue = state.hoverValue,
+                  open = state.open;
+              var prefixCls = props.prefixCls,
+                  popupStyle = props.popupStyle,
+                  style = props.style,
+                  disabledDate = props.disabledDate,
+                  disabledTime = props.disabledTime,
+                  showTime = props.showTime,
+                  showToday = props.showToday,
+                  ranges = props.ranges,
+                  onOk = props.onOk,
+                  locale = props.locale,
+                  localeCode = props.localeCode,
+                  format = props.format,
+                  dateRender = props.dateRender,
+                  onCalendarChange = props.onCalendarChange;
+
+              fixLocale(value, localeCode);
+              fixLocale(showDate, localeCode);
+              (0, _warning2['default'])(!('onOK' in props), 'It should be `RangePicker[onOk]`, instead of `onOK`!');
+              var calendarClassName = (0, _classnames2['default'])((_classNames = {}, (0, _defineProperty3['default'])(_classNames, prefixCls + '-time', showTime), (0, _defineProperty3['default'])(_classNames, prefixCls + '-range-with-ranges', ranges), _classNames));
+              // 需要选择时间时，点击 ok 时才触发 onChange
+              var pickerChangeHandler = {
+                  onChange: this.handleChange
+              };
+              var calendarProps = {
+                  onOk: this.handleChange
+              };
+              if (props.timePicker) {
+                  pickerChangeHandler.onChange = function (changedValue) {
+                      return _this2.handleChange(changedValue);
+                  };
+              } else {
+                  calendarProps = {};
+              }
+              if ('mode' in props) {
+                  calendarProps.mode = props.mode;
+              }
+              var startPlaceholder = 'placeholder' in props ? props.placeholder[0] : locale.lang.rangePlaceholder[0];
+              var endPlaceholder = 'placeholder' in props ? props.placeholder[1] : locale.lang.rangePlaceholder[1];
+              var calendar = React$$1.createElement(_RangeCalendar2['default'], (0, _extends3['default'])({}, calendarProps, { onChange: onCalendarChange, format: format, prefixCls: prefixCls, className: calendarClassName, renderFooter: this.renderFooter, timePicker: props.timePicker, disabledDate: disabledDate, disabledTime: disabledTime, dateInputPlaceholder: [startPlaceholder, endPlaceholder], locale: locale.lang, onOk: onOk, dateRender: dateRender, value: showDate, onValueChange: this.handleShowDateChange, hoverValue: hoverValue, onHoverChange: this.handleHoverChange, onPanelChange: props.onPanelChange, showToday: showToday, onInputSelect: this.handleCalendarInputSelect }));
+              // default width for showTime
+              var pickerStyle = {};
+              if (props.showTime) {
+                  pickerStyle.width = style && style.width || 350;
+              }
+              var clearIcon = !props.disabled && props.allowClear && value && (value[0] || value[1]) ? React$$1.createElement(_icon2['default'], { type: 'cross-circle', className: prefixCls + '-picker-clear', onClick: this.clearSelection }) : null;
+              var input = function input(_ref3) {
+                  var inputValue = _ref3.value;
+
+                  var start = inputValue[0];
+                  var end = inputValue[1];
+                  return React$$1.createElement(
+                      'span',
+                      { className: props.pickerInputClass },
+                      React$$1.createElement('input', { disabled: props.disabled, readOnly: true, value: start && start.format(props.format) || '', placeholder: startPlaceholder, className: prefixCls + '-range-picker-input', tabIndex: -1 }),
+                      React$$1.createElement(
+                          'span',
+                          { className: prefixCls + '-range-picker-separator' },
+                          ' ~ '
+                      ),
+                      React$$1.createElement('input', { disabled: props.disabled, readOnly: true, value: end && end.format(props.format) || '', placeholder: endPlaceholder, className: prefixCls + '-range-picker-input', tabIndex: -1 }),
+                      clearIcon,
+                      React$$1.createElement('span', { className: prefixCls + '-picker-icon' })
+                  );
+              };
+              return React$$1.createElement(
+                  'span',
+                  { ref: this.savePicker, id: props.id, className: (0, _classnames2['default'])(props.className, props.pickerClass), style: (0, _extends3['default'])({}, style, pickerStyle), tabIndex: props.disabled ? -1 : 0, onFocus: props.onFocus, onBlur: props.onBlur },
+                  React$$1.createElement(
+                      _Picker2['default'],
+                      (0, _extends3['default'])({}, props, pickerChangeHandler, { calendar: calendar, value: value, open: open, onOpenChange: this.handleOpenChange, prefixCls: prefixCls + '-picker-container', style: popupStyle }),
+                      input
+                  )
+              );
+          }
+      }]);
+      return RangePicker;
+  }(React$$1.Component);
+
+  exports['default'] = RangePicker;
+
+  RangePicker.defaultProps = {
+      prefixCls: 'ant-calendar',
+      allowClear: true,
+      showToday: false
+  };
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(RangePicker_1);
+
+  var WeekPicker_1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _classCallCheck3 = _interopRequireDefault(classCallCheck);
+
+
+
+  var _createClass3 = _interopRequireDefault(createClass);
+
+
+
+  var _possibleConstructorReturn3 = _interopRequireDefault(possibleConstructorReturn);
+
+
+
+  var _inherits3 = _interopRequireDefault(inherits);
+
+
+
+  var React$$1 = _interopRequireWildcard(React__default);
+
+
+
+  var moment$$1 = _interopRequireWildcard(moment);
+
+
+
+  var _rcCalendar2 = _interopRequireDefault(Calendar);
+
+
+
+  var _Picker2 = _interopRequireDefault(Picker_1);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _icon2 = _interopRequireDefault(icon);
+
+
+
+  var _interopDefault2 = _interopRequireDefault(interopDefault_1);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  function formatValue(value, format) {
+      return value && value.format(format) || '';
+  }
+
+  var WeekPicker = function (_React$Component) {
+      (0, _inherits3['default'])(WeekPicker, _React$Component);
+
+      function WeekPicker(props) {
+          (0, _classCallCheck3['default'])(this, WeekPicker);
+
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (WeekPicker.__proto__ || Object.getPrototypeOf(WeekPicker)).call(this, props));
+
+          _this.weekDateRender = function (current) {
+              var selectedValue = _this.state.value;
+              var prefixCls = _this.props.prefixCls;
+
+              if (selectedValue && current.year() === selectedValue.year() && current.week() === selectedValue.week()) {
+                  return React$$1.createElement(
+                      'div',
+                      { className: prefixCls + '-selected-day' },
+                      React$$1.createElement(
+                          'div',
+                          { className: prefixCls + '-date' },
+                          current.date()
+                      )
+                  );
+              }
+              return React$$1.createElement(
+                  'div',
+                  { className: prefixCls + '-date' },
+                  current.date()
+              );
+          };
+          _this.handleChange = function (value) {
+              if (!('value' in _this.props)) {
+                  _this.setState({ value: value });
+              }
+              _this.props.onChange(value, formatValue(value, _this.props.format));
+          };
+          _this.clearSelection = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              _this.handleChange(null);
+          };
+          _this.saveInput = function (node) {
+              _this.input = node;
+          };
+          var value = props.value || props.defaultValue;
+          if (value && !(0, _interopDefault2['default'])(moment$$1).isMoment(value)) {
+              throw new Error('The value/defaultValue of DatePicker or MonthPicker must be ' + 'a moment object after `antd@2.0`, see: https://u.ant.design/date-picker-value');
+          }
+          _this.state = {
+              value: value
+          };
+          return _this;
+      }
+
+      (0, _createClass3['default'])(WeekPicker, [{
+          key: 'componentWillReceiveProps',
+          value: function componentWillReceiveProps(nextProps) {
+              if ('value' in nextProps) {
+                  this.setState({ value: nextProps.value });
+              }
+          }
+      }, {
+          key: 'focus',
+          value: function focus() {
+              this.input.focus();
+          }
+      }, {
+          key: 'blur',
+          value: function blur() {
+              this.input.blur();
+          }
+      }, {
+          key: 'render',
+          value: function render() {
+              var _this2 = this;
+
+              var _props = this.props,
+                  prefixCls = _props.prefixCls,
+                  className = _props.className,
+                  disabled = _props.disabled,
+                  pickerClass = _props.pickerClass,
+                  popupStyle = _props.popupStyle,
+                  pickerInputClass = _props.pickerInputClass,
+                  format = _props.format,
+                  allowClear = _props.allowClear,
+                  locale = _props.locale,
+                  localeCode = _props.localeCode,
+                  disabledDate = _props.disabledDate,
+                  style = _props.style,
+                  onFocus = _props.onFocus,
+                  onBlur = _props.onBlur;
+
+              var pickerValue = this.state.value;
+              if (pickerValue && localeCode) {
+                  pickerValue.locale(localeCode);
+              }
+              var placeholder = 'placeholder' in this.props ? this.props.placeholder : locale.lang.placeholder;
+              var calendar = React$$1.createElement(_rcCalendar2['default'], { showWeekNumber: true, dateRender: this.weekDateRender, prefixCls: prefixCls, format: format, locale: locale.lang, showDateInput: false, showToday: false, disabledDate: disabledDate });
+              var clearIcon = !disabled && allowClear && this.state.value ? React$$1.createElement(_icon2['default'], { type: 'cross-circle', className: prefixCls + '-picker-clear', onClick: this.clearSelection }) : null;
+              var input = function input(_ref) {
+                  var value = _ref.value;
+
+                  return React$$1.createElement(
+                      'span',
+                      null,
+                      React$$1.createElement('input', { ref: _this2.saveInput, disabled: disabled, readOnly: true, value: value && value.format(format) || '', placeholder: placeholder, className: pickerInputClass, onFocus: onFocus, onBlur: onBlur, style: style }),
+                      clearIcon,
+                      React$$1.createElement('span', { className: prefixCls + '-picker-icon' })
+                  );
+              };
+              return React$$1.createElement(
+                  'span',
+                  { className: (0, _classnames2['default'])(className, pickerClass), id: this.props.id },
+                  React$$1.createElement(
+                      _Picker2['default'],
+                      (0, _extends3['default'])({}, this.props, { calendar: calendar, prefixCls: prefixCls + '-picker-container', value: pickerValue, onChange: this.handleChange, style: popupStyle }),
+                      input
+                  )
+              );
+          }
+      }]);
+      return WeekPicker;
+  }(React$$1.Component);
+
+  exports['default'] = WeekPicker;
+
+  WeekPicker.defaultProps = {
+      format: 'gggg-wo',
+      allowClear: true
+  };
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(WeekPicker_1);
+
+  var datePicker = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _rcCalendar2 = _interopRequireDefault(Calendar);
+
+
+
+  var _MonthCalendar2 = _interopRequireDefault(MonthCalendar_1);
+
+
+
+  var _createPicker2 = _interopRequireDefault(createPicker_1);
+
+
+
+  var _wrapPicker2 = _interopRequireDefault(wrapPicker_1);
+
+
+
+  var _RangePicker2 = _interopRequireDefault(RangePicker_1);
+
+
+
+  var _WeekPicker2 = _interopRequireDefault(WeekPicker_1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var DatePicker = (0, _wrapPicker2['default'])((0, _createPicker2['default'])(_rcCalendar2['default']));
+  var MonthPicker = (0, _wrapPicker2['default'])((0, _createPicker2['default'])(_MonthCalendar2['default']), 'YYYY-MM');
+  (0, _extends3['default'])(DatePicker, {
+      RangePicker: (0, _wrapPicker2['default'])(_RangePicker2['default']),
+      MonthPicker: MonthPicker,
+      WeekPicker: (0, _wrapPicker2['default'])(_WeekPicker2['default'], 'gggg-wo')
+  });
+  exports['default'] = DatePicker;
+  module.exports = exports['default'];
+  });
+
+  unwrapExports(datePicker);
+
   // Based on https://github.com/tmpvar/jsdom/blob/aa85b2abf07766ff7bf5c1f6daafb3726f2f2db5/lib/jsdom/living/blob.js
   // (MIT licensed)
 
@@ -23149,6 +32272,72 @@
   var nodePonyfill_2 = nodePonyfill.Headers;
   var nodePonyfill_3 = nodePonyfill.Request;
   var nodePonyfill_4 = nodePonyfill.Response;
+
+  var WrapperDatePicker =
+  /*#__PURE__*/
+  function (_Component) {
+    _inherits(WrapperDatePicker, _Component);
+
+    function WrapperDatePicker(props) {
+      var _this;
+
+      _classCallCheck(this, WrapperDatePicker);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(WrapperDatePicker).call(this, props));
+
+      if (props.value instanceof Array) {
+        _this.state = {
+          value: props.value && props.value.length == 2 ? [new moment(props.value[0], props.format), new moment(props.value[1], props.format)] : null
+        };
+      } else {
+        _this.state = {
+          value: props.value && props.value !== "" ? new moment(props.value, props.format) : null
+        };
+      }
+
+      return _this;
+    }
+
+    _createClass(WrapperDatePicker, [{
+      key: "componentWillReceiveProps",
+      value: function componentWillReceiveProps(nextProps) {
+        if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
+          if (nextProps.value instanceof Array) {
+            this.setState({
+              value: nextProps.value && nextProps.value.length == 2 ? [new moment(nextProps.value[0], nextProps.format), new moment(nextProps.value[1], nextProps.format)] : null
+            });
+          } else {
+            this.setState({
+              value: nextProps.value && nextProps.value !== "" ? new moment(nextProps.value, nextProps.format) : null
+            });
+          }
+        }
+      }
+    }, {
+      key: "onChange",
+      value: function onChange(date, dateString) {
+        var onChange = this.props.onChange;
+        console.log(date, dateString);
+        this.setState({
+          value: date
+        }, onChange(dateString));
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var _this$props = this.props,
+            children = _this$props.children,
+            otherProps = _this$props.otherProps;
+        var value = this.state.value;
+        return React__default.cloneElement(children, _objectSpread({}, otherProps, {
+          value: value,
+          onChange: this.onChange.bind(this)
+        }));
+      }
+    }]);
+
+    return WrapperDatePicker;
+  }(React.Component);
 
   var objectDestructuringEmpty = createCommonjsModule(function (module, exports) {
 
@@ -25932,7 +35121,7 @@
     return bigPos.substr(0, smallPos.length) === smallPos;
   }
 
-  function noop$4() {}
+  function noop$9() {}
 
   var contextTypes$2 = {
     rcTree: PropTypes.shape({
@@ -26436,17 +35625,17 @@
     defaultExpandedKeys: [],
     defaultCheckedKeys: [],
     defaultSelectedKeys: [],
-    onExpand: noop$4,
-    onCheck: noop$4,
-    onSelect: noop$4,
-    onDragStart: noop$4,
-    onDragEnter: noop$4,
-    onDragOver: noop$4,
-    onDragLeave: noop$4,
-    onDrop: noop$4,
-    onDragEnd: noop$4,
-    onMouseEnter: noop$4,
-    onMouseLeave: noop$4
+    onExpand: noop$9,
+    onCheck: noop$9,
+    onSelect: noop$9,
+    onDragStart: noop$9,
+    onDragEnter: noop$9,
+    onDragOver: noop$9,
+    onDragLeave: noop$9,
+    onDrop: noop$9,
+    onDragEnd: noop$9,
+    onMouseEnter: noop$9,
+    onMouseLeave: noop$9
   };
 
   var _initialiseProps$b = function _initialiseProps() {
@@ -27297,7 +36486,7 @@
     loadData: PropTypes.func
   };
 
-  function noop$5() {}
+  function noop$a() {}
 
   function filterFn(input, child) {
     return String(getPropValue$1(child, labelCompatible(this.props.treeNodeFilterProp))).indexOf(input) > -1;
@@ -27342,7 +36531,7 @@
     });
   }
 
-  var Select$2 = function (_Component) {
+  var Select$3 = function (_Component) {
     _inherits$1(Select, _Component);
 
     function Select(props) {
@@ -28138,8 +37327,8 @@
     return Select;
   }(React.Component);
 
-  Select$2.propTypes = SelectPropTypes$1;
-  Select$2.defaultProps = {
+  Select$3.propTypes = SelectPropTypes$1;
+  Select$3.defaultProps = {
     prefixCls: 'rc-tree-select',
     filterTreeNode: filterFn, // [Legacy] TODO: Set false and filter not hide?
     showSearch: true,
@@ -28147,11 +37336,11 @@
     placeholder: '',
     searchPlaceholder: '',
     labelInValue: false,
-    onClick: noop$5,
-    onChange: noop$5,
-    onSelect: noop$5,
-    onDeselect: noop$5,
-    onSearch: noop$5,
+    onClick: noop$a,
+    onChange: noop$a,
+    onSelect: noop$a,
+    onDeselect: noop$a,
+    onSearch: noop$a,
     showArrow: true,
     dropdownMatchSelectWidth: true,
     dropdownStyle: {},
@@ -28363,13 +37552,13 @@
     };
   };
 
-  Select$2.SHOW_ALL = SHOW_ALL;
-  Select$2.SHOW_PARENT = SHOW_PARENT;
-  Select$2.SHOW_CHILD = SHOW_CHILD;
+  Select$3.SHOW_ALL = SHOW_ALL;
+  Select$3.SHOW_PARENT = SHOW_PARENT;
+  Select$3.SHOW_CHILD = SHOW_CHILD;
 
   // export this package's api
 
-  Select$2.TreeNode = TreeNode$2;
+  Select$3.TreeNode = TreeNode$2;
 
   var treeSelect = createCommonjsModule(function (module, exports) {
 
@@ -28407,7 +37596,7 @@
 
 
 
-  var _rcTreeSelect2 = _interopRequireDefault(Select$2);
+  var _rcTreeSelect2 = _interopRequireDefault(Select$3);
 
 
 
@@ -28492,10 +37681,10 @@
 
   exports['default'] = TreeSelect;
 
-  TreeSelect.TreeNode = Select$2.TreeNode;
-  TreeSelect.SHOW_ALL = Select$2.SHOW_ALL;
-  TreeSelect.SHOW_PARENT = Select$2.SHOW_PARENT;
-  TreeSelect.SHOW_CHILD = Select$2.SHOW_CHILD;
+  TreeSelect.TreeNode = Select$3.TreeNode;
+  TreeSelect.SHOW_ALL = Select$3.SHOW_ALL;
+  TreeSelect.SHOW_PARENT = Select$3.SHOW_PARENT;
+  TreeSelect.SHOW_CHILD = Select$3.SHOW_CHILD;
   TreeSelect.defaultProps = {
       prefixCls: 'ant-select',
       transitionName: 'slide-up',
@@ -28904,17 +38093,23 @@
           };
         }
 
-        if (childData.length === 0) {
-          return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
-        } else if (field.props.renderItem) {
-          /**********有坑 ，待坑**************/
-          return React__default.createElement(field.type, Object.assign({
-            key: new Date().valueOf()
-          }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
-            return field.props.renderItem && field.props.renderItem(d, idx);
-          }));
+        if (field.type.name === "PickerWrapper") {
+          var _field$props2 = field.props,
+              _children = _field$props2.children,
+              _otherProps = _field$props2.otherProps;
+          return React__default.createElement(WrapperDatePicker, _otherProps, field);
         } else {
-          return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+          if (childData.length === 0) {
+            return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+          } else if (field.props.renderItem) {
+            return React__default.createElement(field.type, Object.assign({
+              key: new Date().valueOf()
+            }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
+              return field.props.renderItem && field.props.renderItem(d, idx);
+            }));
+          } else {
+            return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+          }
         }
       }
     }, {
@@ -28958,28 +38153,6 @@
             getFieldDecorator = _this$context.formRef.getFieldDecorator,
             formLayout = _this$context.formLayout;
         var styles = {};
-        var normalizeDefault = {}; // if(element.type.name===RangePicker.name){
-        //   if(defaultValue instanceof Array){
-        //     defaultValue=defaultValue && [(defaultValue[0]===""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]===""|| !defaultValue[1])?null:moment(defaultValue[1])]
-        //   }else{
-        //     defaultValue=(defaultValue===""|| !defaultValue) ?null:moment(defaultValue)
-        //   }
-        //    normalizeDefault={
-        //      normalize:function(values){
-        //        // console.log("normalize",values && [values[0].format(format),values[1].format(format)])
-        //        // return values && [values[0].format(format),values[1].format(format)]
-        //         return values && values.format(format)
-        //      }
-        //    }
-        // }
-        // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
-        //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
-        //    normalizeDefault={
-        //      normalize:function(values){
-        //        return values && values.format(format)
-        //      }
-        //    }
-        // }
 
         if (element.type === Input$1 && element.props.type === "hidden") {
           styles = {
@@ -29004,7 +38177,7 @@
         }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
           initialValue: defaultValue,
           hidden: element.props.hidden || false
-        }, normalizeDefault))(this.renderField()));
+        }))(this.renderField()));
       }
     }]);
 
@@ -29249,7 +38422,7 @@
 
   var targetOffset = [0, 0];
 
-  var placements$1 = {
+  var placements$3 = {
     left: {
       points: ['cr', 'cl'],
       overflow: autoAdjustOverflow$1,
@@ -29435,7 +38608,7 @@
           prefixCls: prefixCls,
           popup: this.getPopupElement,
           action: trigger,
-          builtinPlacements: placements$1,
+          builtinPlacements: placements$3,
           popupPlacement: placement,
           popupAlign: align,
           getPopupContainer: getTooltipContainer,
@@ -29489,7 +38662,7 @@
     arrowContent: null
   };
 
-  var placements_1 = createCommonjsModule(function (module, exports) {
+  var placements_1$2 = createCommonjsModule(function (module, exports) {
 
   exports.__esModule = true;
   var autoAdjustOverflow = {
@@ -29577,10 +38750,10 @@
   exports['default'] = placements;
   });
 
-  unwrapExports(placements_1);
-  var placements_2 = placements_1.placements;
+  unwrapExports(placements_1$2);
+  var placements_2 = placements_1$2.placements;
 
-  var placements$3 = createCommonjsModule(function (module, exports) {
+  var placements$5 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
       value: true
@@ -29674,14 +38847,14 @@
           }
       };
       Object.keys(placementMap).forEach(function (key) {
-          placementMap[key] = config.arrowPointAtCenter ? (0, _extends3['default'])({}, placementMap[key], { overflow: getOverflowOptions(autoAdjustOverflow), targetOffset: targetOffset }) : (0, _extends3['default'])({}, placements_1.placements[key], { overflow: getOverflowOptions(autoAdjustOverflow) });
+          placementMap[key] = config.arrowPointAtCenter ? (0, _extends3['default'])({}, placementMap[key], { overflow: getOverflowOptions(autoAdjustOverflow), targetOffset: targetOffset }) : (0, _extends3['default'])({}, placements_1$2.placements[key], { overflow: getOverflowOptions(autoAdjustOverflow) });
       });
       return placementMap;
   }
   });
 
-  unwrapExports(placements$3);
-  var placements_1$1 = placements$3.getOverflowOptions;
+  unwrapExports(placements$5);
+  var placements_1$3 = placements$5.getOverflowOptions;
 
   var tooltip = createCommonjsModule(function (module, exports) {
 
@@ -29727,7 +38900,7 @@
 
 
 
-  var _placements2 = _interopRequireDefault(placements$3);
+  var _placements2 = _interopRequireDefault(placements$5);
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -30247,7 +39420,7 @@
   var lib_2$1 = lib$3.connect;
   var lib_3$1 = lib$3.Provider;
 
-  function noop$6() {}
+  function noop$b() {}
 
   function getKeyFromChildrenIndex$1(child, menuEventKey, index) {
     var prefix = menuEventKey || '';
@@ -30528,7 +39701,7 @@
     visible: true,
     focusable: true,
     style: {},
-    manualRef: noop$6
+    manualRef: noop$b
   };
 
   var _initialiseProps$d = function _initialiseProps() {
@@ -30663,7 +39836,7 @@
         active: !childProps.disabled && isActive,
         multiple: props.multiple,
         onClick: function onClick(e) {
-          (childProps.onClick || noop$6)(e);
+          (childProps.onClick || noop$b)(e);
           _this3.onClick(e);
         },
         onItemHover: _this3.onItemHover,
@@ -30806,10 +39979,10 @@
   };
   Menu$1.defaultProps = {
     selectable: true,
-    onClick: noop$6,
-    onSelect: noop$6,
-    onOpenChange: noop$6,
-    onDeselect: noop$6,
+    onClick: noop$b,
+    onSelect: noop$b,
+    onOpenChange: noop$b,
+    onDeselect: noop$b,
     defaultSelectedKeys: [],
     defaultOpenKeys: [],
     subMenuOpenDelay: 0.1,
@@ -30924,7 +40097,7 @@
     adjustY: 1
   };
 
-  var placements$5 = {
+  var placements$7 = {
     topLeft: {
       points: ['bl', 'tl'],
       overflow: autoAdjustOverflow$2,
@@ -31210,7 +40383,7 @@
             prefixCls: prefixCls,
             popupClassName: prefixCls + '-popup ' + popupClassName,
             getPopupContainer: getPopupContainer,
-            builtinPlacements: placements$5,
+            builtinPlacements: placements$7,
             popupPlacement: popupPlacement,
             popupVisible: isOpen,
             popupAlign: popupAlign,
@@ -31258,12 +40431,12 @@
     manualRef: PropTypes.func
   };
   SubMenu$1.defaultProps = {
-    onMouseEnter: noop$6,
-    onMouseLeave: noop$6,
-    onTitleMouseEnter: noop$6,
-    onTitleMouseLeave: noop$6,
-    onTitleClick: noop$6,
-    manualRef: noop$6,
+    onMouseEnter: noop$b,
+    onMouseLeave: noop$b,
+    onTitleMouseEnter: noop$b,
+    onTitleMouseLeave: noop$b,
+    onTitleClick: noop$b,
+    manualRef: noop$b,
     mode: 'vertical',
     title: ''
   };
@@ -31701,10 +40874,10 @@
     manualRef: PropTypes.func
   };
   MenuItem$1.defaultProps = {
-    onSelect: noop$6,
-    onMouseEnter: noop$6,
-    onMouseLeave: noop$6,
-    manualRef: noop$6
+    onSelect: noop$b,
+    onMouseEnter: noop$b,
+    onMouseLeave: noop$b,
+    manualRef: noop$b
   };
   MenuItem$1.isMenuItem = true;
 
@@ -32277,7 +41450,7 @@
 
   var targetOffset$1 = [0, 0];
 
-  var placements$6 = {
+  var placements$8 = {
     topLeft: {
       points: ['bl', 'tl'],
       overflow: autoAdjustOverflow$3,
@@ -32399,7 +41572,7 @@
           ref: this.saveTrigger,
           popupClassName: overlayClassName,
           popupStyle: overlayStyle,
-          builtinPlacements: placements$6,
+          builtinPlacements: placements$8,
           action: trigger,
           showAction: showAction,
           hideAction: hideAction,
@@ -36779,7 +45952,7 @@
     next_3: '向后 3 页'
   };
 
-  function noop$7() {}
+  function noop$c() {}
 
   function isInteger(value) {
     return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
@@ -36799,7 +45972,7 @@
 
       _initialiseProps$i.call(_this);
 
-      var hasOnChange = props.onChange !== noop$7;
+      var hasOnChange = props.onChange !== noop$c;
       var hasCurrent = 'current' in props;
       if (hasCurrent && !hasOnChange) {
         console.warn('Warning: You provided a `current` prop to a Pagination component without an `onChange` handler. This will render a read-only component.'); // eslint-disable-line
@@ -37210,7 +46383,7 @@
     defaultCurrent: 1,
     total: 0,
     defaultPageSize: 10,
-    onChange: noop$7,
+    onChange: noop$c,
     className: '',
     selectPrefixCls: 'rc-select',
     prefixCls: 'rc-pagination',
@@ -37221,7 +46394,7 @@
     showSizeChanger: false,
     showLessItems: false,
     showTitle: true,
-    onShowSizeChange: noop$7,
+    onShowSizeChange: noop$c,
     locale: LOCALE,
     style: {},
     itemRender: defaultItemRender
@@ -40717,7 +49890,7 @@
 
   unwrapExports(createBodyRow);
 
-  var util$2 = createCommonjsModule(function (module, exports) {
+  var util$3 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
       value: true
@@ -40808,11 +49981,11 @@
   }
   });
 
-  unwrapExports(util$2);
-  var util_1 = util$2.flatArray;
-  var util_2 = util$2.treeMap;
-  var util_3 = util$2.flatFilter;
-  var util_4 = util$2.normalizeColumns;
+  unwrapExports(util$3);
+  var util_1$1 = util$3.flatArray;
+  var util_2$1 = util$3.treeMap;
+  var util_3$1 = util$3.flatFilter;
+  var util_4$1 = util$3.normalizeColumns;
 
   var Table_1 = createCommonjsModule(function (module, exports) {
 
@@ -40989,7 +50162,7 @@
               var filters = (0, _extends5['default'])({}, _this.state.filters, (0, _defineProperty3['default'])({}, _this.getColumnKey(column), nextFilters));
               // Remove filters not in current columns
               var currentColumnKeys = [];
-              (0, util$2.treeMap)(_this.columns, function (c) {
+              (0, util$3.treeMap)(_this.columns, function (c) {
                   if (!c.children) {
                       currentColumnKeys.push(_this.getColumnKey(c));
                   }
@@ -41233,7 +50406,7 @@
               return React$$1.createElement(_rcTable2['default'], (0, _extends5['default'])({ key: 'table' }, restProps, { onRow: _this.onRow, components: _this.components, prefixCls: prefixCls, data: data, columns: columns, showHeader: showHeader, className: classString, expandIconColumnIndex: expandIconColumnIndex, expandIconAsCell: expandIconAsCell, emptyText: !loading.spinning && locale.emptyText }));
           };
           (0, _warning2['default'])(!('columnsPageRange' in props || 'columnsPageSize' in props), '`columnsPageRange` and `columnsPageSize` are removed, please use ' + 'fixed columns instead, see: https://u.ant.design/fixed-columns.');
-          _this.columns = props.columns || (0, util$2.normalizeColumns)(props.children);
+          _this.columns = props.columns || (0, util$3.normalizeColumns)(props.children);
           _this.createComponents(props.components);
           _this.state = (0, _extends5['default'])({}, _this.getDefaultSortOrder(_this.columns), {
               // 减少状态
@@ -41270,7 +50443,7 @@
       }, {
           key: 'componentWillReceiveProps',
           value: function componentWillReceiveProps(nextProps) {
-              this.columns = nextProps.columns || (0, util$2.normalizeColumns)(nextProps.children);
+              this.columns = nextProps.columns || (0, util$3.normalizeColumns)(nextProps.children);
               if ('pagination' in nextProps || 'pagination' in this.props) {
                   this.setState(function (previousState) {
                       var newPagination = (0, _extends5['default'])({}, defaultPagination, previousState.pagination, nextProps.pagination);
@@ -41371,14 +50544,14 @@
       }, {
           key: 'getSortOrderColumns',
           value: function getSortOrderColumns(columns) {
-              return (0, util$2.flatFilter)(columns || this.columns || [], function (column) {
+              return (0, util$3.flatFilter)(columns || this.columns || [], function (column) {
                   return 'sortOrder' in column;
               });
           }
       }, {
           key: 'getFilteredValueColumns',
           value: function getFilteredValueColumns(columns) {
-              return (0, util$2.flatFilter)(columns || this.columns || [], function (column) {
+              return (0, util$3.flatFilter)(columns || this.columns || [], function (column) {
                   return typeof column.filteredValue !== 'undefined';
               });
           }
@@ -41398,7 +50571,7 @@
           key: 'getDefaultSortOrder',
           value: function getDefaultSortOrder(columns) {
               var definedSortState = this.getSortStateFromColumns(columns);
-              var defaultSortedColumn = (0, util$2.flatFilter)(columns || [], function (column) {
+              var defaultSortedColumn = (0, util$3.flatFilter)(columns || [], function (column) {
                   return column.defaultSortOrder != null;
               })[0];
               if (defaultSortedColumn && !definedSortState.sortColumn) {
@@ -41565,7 +50738,7 @@
                   dropdownPrefixCls = _props2.dropdownPrefixCls;
               var sortOrder = this.state.sortOrder;
 
-              return (0, util$2.treeMap)(columns, function (originColumn, i) {
+              return (0, util$3.treeMap)(columns, function (originColumn, i) {
                   var column = (0, _extends5['default'])({}, originColumn);
                   var key = _this7.getColumnKey(column, i);
                   var filterDropdown$$1 = void 0;
@@ -41657,7 +50830,7 @@
               var _this8 = this;
 
               var column = void 0;
-              (0, util$2.treeMap)(this.columns, function (c) {
+              (0, util$3.treeMap)(this.columns, function (c) {
                   if (_this8.getColumnKey(c) === myKey) {
                       column = c;
                   }
@@ -41693,12 +50866,12 @@
       }, {
           key: 'getFlatData',
           value: function getFlatData() {
-              return (0, util$2.flatArray)(this.getLocalData());
+              return (0, util$3.flatArray)(this.getLocalData());
           }
       }, {
           key: 'getFlatCurrentPageData',
           value: function getFlatCurrentPageData() {
-              return (0, util$2.flatArray)(this.getCurrentPageData());
+              return (0, util$3.flatArray)(this.getCurrentPageData());
           }
       }, {
           key: 'recursiveSort',
@@ -42142,6 +51315,57 @@
     columns: []
   });
 
+  var ModalAndView =
+  /*#__PURE__*/
+  function (_Component) {
+    _inherits(ModalAndView, _Component);
+
+    function ModalAndView() {
+      _classCallCheck(this, ModalAndView);
+
+      return _possibleConstructorReturn(this, _getPrototypeOf(ModalAndView).apply(this, arguments));
+    }
+
+    _createClass(ModalAndView, [{
+      key: "handleBackRoute",
+      value: function handleBackRoute() {
+        var _this$props = this.props,
+            actions = _this$props.actions,
+            history = _this$props.history,
+            router = _this$props.router; //  actions.backRoute(router)
+      }
+    }, {
+      key: "handleSaveRoute",
+      value: function handleSaveRoute() {
+        var formView = this.refs.formView;
+        formView.onSubmit();
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        var _this$props2 = this.props,
+            route = _this$props2.route,
+            children = _this$props2.children,
+            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]);
+
+        console.log(Modal$1);
+        console.log(React__default.createElement("div", null));
+        console.log(this.props);
+        return React__default.createElement(Modal$1, _extends({
+          title: "title",
+          visible: true,
+          maskClosable: false,
+          onCancel: this.handleBackRoute.bind(this),
+          onOk: this.handleSaveRoute.bind(this)
+        }, otherProps), React__default.cloneElement(children.type, Object.assign({}, otherProps, {
+          ref: "formView"
+        })));
+      }
+    }]);
+
+    return ModalAndView;
+  }(React.Component); //export default withRouter(ModalAndView)
+
   var PropertyTable =
   /*#__PURE__*/
   function (_Component) {
@@ -42184,8 +51408,10 @@
   exports.BaseForm = SubmitForm;
   exports.FormItem = FormItem$1;
   exports.ButtonGroups = ButtonGroups;
+  exports.WrapperDatePicker = WrapperDatePicker;
   exports.DataTable = DataTable;
   exports.Permission = Permission;
+  exports.ModalAndView = ModalAndView;
   exports.TreeView = TreeView;
   exports.PropertyTable = PropertyTable;
 

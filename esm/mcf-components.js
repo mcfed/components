@@ -13,12 +13,13 @@ function __$styleInject(css) {
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Form from 'antd/lib/form';
+import moment from 'moment';
 import Tree from 'antd/lib/tree';
 import Input from 'antd/lib/input';
 import Button from 'antd/lib/button';
 import TreeSelect from 'antd/lib/tree-select';
-import 'moment';
 import Select from 'antd/lib/select';
+import 'antd/lib/date-picker';
 import fetch from 'cross-fetch';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
@@ -290,6 +291,72 @@ _defineProperty(AdvancedForm, "defaultProps", {
     }
   }
 });
+
+var WrapperDatePicker =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(WrapperDatePicker, _Component);
+
+  function WrapperDatePicker(props) {
+    var _this;
+
+    _classCallCheck(this, WrapperDatePicker);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(WrapperDatePicker).call(this, props));
+
+    if (props.value instanceof Array) {
+      _this.state = {
+        value: props.value && props.value.length == 2 ? [new moment(props.value[0], props.format), new moment(props.value[1], props.format)] : null
+      };
+    } else {
+      _this.state = {
+        value: props.value && props.value !== "" ? new moment(props.value, props.format) : null
+      };
+    }
+
+    return _this;
+  }
+
+  _createClass(WrapperDatePicker, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
+        if (nextProps.value instanceof Array) {
+          this.setState({
+            value: nextProps.value && nextProps.value.length == 2 ? [new moment(nextProps.value[0], nextProps.format), new moment(nextProps.value[1], nextProps.format)] : null
+          });
+        } else {
+          this.setState({
+            value: nextProps.value && nextProps.value !== "" ? new moment(nextProps.value, nextProps.format) : null
+          });
+        }
+      }
+    }
+  }, {
+    key: "onChange",
+    value: function onChange(date, dateString) {
+      var onChange = this.props.onChange;
+      console.log(date, dateString);
+      this.setState({
+        value: date
+      }, onChange(dateString));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props = this.props,
+          children = _this$props.children,
+          otherProps = _this$props.otherProps;
+      var value = this.state.value;
+      return React.cloneElement(children, _objectSpread({}, otherProps, {
+        value: value,
+        onChange: this.onChange.bind(this)
+      }));
+    }
+  }]);
+
+  return WrapperDatePicker;
+}(Component);
 
 var Search = Input.Search;
 var TreeNode = Tree.TreeNode,
@@ -688,17 +755,23 @@ function (_Component) {
         };
       }
 
-      if (childData.length === 0) {
-        return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
-      } else if (field.props.renderItem) {
-        /**********有坑 ，待坑**************/
-        return React.createElement(field.type, Object.assign({
-          key: new Date().valueOf()
-        }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
-          return field.props.renderItem && field.props.renderItem(d, idx);
-        }));
+      if (field.type.name === "PickerWrapper") {
+        var _field$props2 = field.props,
+            _children = _field$props2.children,
+            _otherProps = _field$props2.otherProps;
+        return React.createElement(WrapperDatePicker, _otherProps, field);
       } else {
-        return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+        if (childData.length === 0) {
+          return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+        } else if (field.props.renderItem) {
+          return React.createElement(field.type, Object.assign({
+            key: new Date().valueOf()
+          }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
+            return field.props.renderItem && field.props.renderItem(d, idx);
+          }));
+        } else {
+          return React.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+        }
       }
     }
   }, {
@@ -742,28 +815,6 @@ function (_Component) {
           getFieldDecorator = _this$context.formRef.getFieldDecorator,
           formLayout = _this$context.formLayout;
       var styles = {};
-      var normalizeDefault = {}; // if(element.type.name===RangePicker.name){
-      //   if(defaultValue instanceof Array){
-      //     defaultValue=defaultValue && [(defaultValue[0]===""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]===""|| !defaultValue[1])?null:moment(defaultValue[1])]
-      //   }else{
-      //     defaultValue=(defaultValue===""|| !defaultValue) ?null:moment(defaultValue)
-      //   }
-      //    normalizeDefault={
-      //      normalize:function(values){
-      //        // console.log("normalize",values && [values[0].format(format),values[1].format(format)])
-      //        // return values && [values[0].format(format),values[1].format(format)]
-      //         return values && values.format(format)
-      //      }
-      //    }
-      // }
-      // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
-      //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
-      //    normalizeDefault={
-      //      normalize:function(values){
-      //        return values && values.format(format)
-      //      }
-      //    }
-      // }
 
       if (element.type === Input && element.props.type === "hidden") {
         styles = {
@@ -788,7 +839,7 @@ function (_Component) {
       }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
         initialValue: defaultValue,
         hidden: element.props.hidden || false
-      }, normalizeDefault))(this.renderField()));
+      }))(this.renderField()));
     }
   }]);
 
@@ -1515,6 +1566,57 @@ _defineProperty(DataTable, "defaultProps", {
   columns: []
 });
 
+var ModalAndView =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(ModalAndView, _Component);
+
+  function ModalAndView() {
+    _classCallCheck(this, ModalAndView);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(ModalAndView).apply(this, arguments));
+  }
+
+  _createClass(ModalAndView, [{
+    key: "handleBackRoute",
+    value: function handleBackRoute() {
+      var _this$props = this.props,
+          actions = _this$props.actions,
+          history = _this$props.history,
+          router = _this$props.router; //  actions.backRoute(router)
+    }
+  }, {
+    key: "handleSaveRoute",
+    value: function handleSaveRoute() {
+      var formView = this.refs.formView;
+      formView.onSubmit();
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props2 = this.props,
+          route = _this$props2.route,
+          children = _this$props2.children,
+          otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]);
+
+      console.log(Modal);
+      console.log(React.createElement("div", null));
+      console.log(this.props);
+      return React.createElement(Modal, _extends({
+        title: "title",
+        visible: true,
+        maskClosable: false,
+        onCancel: this.handleBackRoute.bind(this),
+        onOk: this.handleSaveRoute.bind(this)
+      }, otherProps), React.cloneElement(children.type, Object.assign({}, otherProps, {
+        ref: "formView"
+      })));
+    }
+  }]);
+
+  return ModalAndView;
+}(Component); //export default withRouter(ModalAndView)
+
 var PropertyTable =
 /*#__PURE__*/
 function (_Component) {
@@ -1553,4 +1655,4 @@ PropertyTable.propsType = {
   renderItem: PropTypes.func
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, DataTable, Permission, TreeView, PropertyTable };
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, ModalAndView, TreeView, PropertyTable };

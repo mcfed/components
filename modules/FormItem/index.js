@@ -4,7 +4,9 @@ import moment from 'moment'
 import Select from 'antd/lib/select'
 import Input from 'antd/lib/input'
 import Form from 'antd/lib/form'
+import DatePicker from 'antd/lib/date-picker'
 import fetch from 'cross-fetch'
+import WrapperDatePicker from '../WrapperDatePicker'
 import {TreeSelectPicker} from '../TreeView'
 
 const Option=Select.Option
@@ -88,19 +90,22 @@ export default class FormItem extends Component{
         getPopupContainer:triggerNode => triggerNode.parentNode
       }
     }
-
     if(field.type == TreeSelectPicker){
       treeDataProp={
         treeData:this.loopTreeData(childData)
       }
     }
-    if(childData.length===0){
-      return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
-    }else if(field.props.renderItem){
-                                                        /**********有坑 ，待坑**************/
-      return React.createElement(field.type,Object.assign({key:new Date().valueOf()},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
+    if(field.type.name==="PickerWrapper"){
+      let {children,otherProps}=field.props
+        return React.createElement(WrapperDatePicker,otherProps,field)
     }else{
-      return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
+      if(childData.length===0){
+        return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
+      }else if(field.props.renderItem){
+        return React.createElement(field.type,Object.assign({key:new Date().valueOf()},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
+      }else{
+        return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
+      }
     }
   }
   loopTreeData(data){
@@ -118,30 +123,6 @@ export default class FormItem extends Component{
     let {defaultValue,allowClear,...otherProps} =element.props
     let {formRef:{getFieldDecorator},formLayout}= this.context
     let styles={}
-    let normalizeDefault={}
-    // if(element.type.name===RangePicker.name){
-    //   if(defaultValue instanceof Array){
-    //     defaultValue=defaultValue && [(defaultValue[0]===""|| !defaultValue[0]) ?null:moment(defaultValue[0]),(defaultValue[1]===""|| !defaultValue[1])?null:moment(defaultValue[1])]
-    //   }else{
-    //     defaultValue=(defaultValue===""|| !defaultValue) ?null:moment(defaultValue)
-    //   }
-    //    normalizeDefault={
-    //      normalize:function(values){
-    //        // console.log("normalize",values && [values[0].format(format),values[1].format(format)])
-    //        // return values && [values[0].format(format),values[1].format(format)]
-    //         return values && values.format(format)
-    //      }
-    //    }
-    // }
-
-    // if(element.type==DatePicker ||  element.type==MonthPicker || element.type==WeekPicker){
-    //    defaultValue=(defaultValue==""|| !defaultValue) ?null:moment(defaultValue)
-    //    normalizeDefault={
-    //      normalize:function(values){
-    //        return values && values.format(format)
-    //      }
-    //    }
-    // }
 
     if(element.type===Input && element.props.type==="hidden"){
       styles={
@@ -154,7 +135,7 @@ export default class FormItem extends Component{
       }
     }
     return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} colon={false} {...styles}>
-      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false,...normalizeDefault})(this.renderField())}
+      {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false})(this.renderField())}
     </Form.Item>)
   }
 }

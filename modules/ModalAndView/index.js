@@ -1,5 +1,5 @@
-import React, {Component, PropTypes,Children} from 'react'
-import {Modal} from 'antd'
+import React, {Component} from 'react'
+import  Modal from 'antd/lib/modal'
 
 class ModalAndView extends Component {
 
@@ -14,14 +14,17 @@ class ModalAndView extends Component {
 
   render() {
     var {route, children,...otherProps} = this.props
-//	console.log(this.props)
+    console.log(Modal)
+    console.log(<div/>)
+  	console.log(this.props)
     return (
-      <Modal title={"titl"} visible={true} maskClosable={false} onCancel={this.handleBackRoute.bind(this)} onOk={this.handleSaveRoute.bind(this)} {...otherProps}>
+      <Modal title={"title"} visible={true} maskClosable={false} onCancel={this.handleBackRoute.bind(this)} onOk={this.handleSaveRoute.bind(this)} {...otherProps}>
         {
-          React.cloneElement(children,Object.assign({},otherProps,{
+          React.cloneElement(children.type,Object.assign({},otherProps,{
             ref:"formView"
           }))
         }
+
       </Modal>
     )
   }
