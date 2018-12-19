@@ -186,6 +186,96 @@
     throw new TypeError("Invalid attempt to spread non-iterable instance");
   }
 
+  var Td = function Td(_ref) {
+    var name = _ref.name,
+        value = _ref.value,
+        _ref$nameClass = _ref.nameClass,
+        nameClass = _ref$nameClass === void 0 ? '' : _ref$nameClass,
+        _ref$valueClass = _ref.valueClass,
+        valueClass = _ref$valueClass === void 0 ? '' : _ref$valueClass;
+    return [React__default.createElement("td", {
+      className: nameClass,
+      key: 'td' + name
+    }, typeof name === 'function' ? name() : name), React__default.createElement("td", {
+      className: valueClass,
+      key: 'td1' + name
+    }, typeof value === 'function' ? value() : value)];
+  };
+
+  Td.propTypes = {
+    nameClass: PropTypes.string,
+    valueClass: PropTypes.string
+  };
+
+  var DetailTable =
+  /*#__PURE__*/
+  function (_React$Component) {
+    _inherits(DetailTable, _React$Component);
+
+    function DetailTable() {
+      var _getPrototypeOf2;
+
+      var _this;
+
+      _classCallCheck(this, DetailTable);
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(DetailTable)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showDom", function (dataSource) {
+        var columnNumber = _this.props.columnNumber === undefined ? 1 : _this.props.columnNumber;
+
+        if (columnNumber <= 0) {
+          throw Error('列数必须大于0');
+        }
+
+        var trLength = Math.ceil(dataSource.length / columnNumber);
+        var dom = [];
+
+        var _loop = function _loop(i) {
+          dom.push(React__default.createElement("tr", {
+            key: 'tr' + i
+          }, dataSource.map(function (v, k) {
+            return k >= columnNumber * i && k < columnNumber * i + columnNumber && React__default.createElement(Td, _extends({}, _this.props, {
+              key: 'td' + k,
+              name: v.name,
+              value: v.value
+            }));
+          })));
+        };
+
+        for (var i = 0; i < trLength; i++) {
+          _loop(i);
+        }
+
+        return dom;
+      });
+
+      return _this;
+    }
+
+    _createClass(DetailTable, [{
+      key: "render",
+      value: function render() {
+        var dataSource = this.props.dataSource;
+        return React__default.createElement("table", {
+          className: this.props.tableClass
+        }, React__default.createElement("tbody", null, this.showDom(dataSource)));
+      }
+    }]);
+
+    return DetailTable;
+  }(React__default.Component);
+
+  DetailTable.propTypes = {
+    columnNumber: PropTypes.number,
+    dataSource: PropTypes.array,
+    tableClass: PropTypes.string
+  };
+
   var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
   function unwrapExports (x) {
@@ -503,7 +593,7 @@
     return store[key] || (store[key] = value !== undefined ? value : {});
   })('versions', []).push({
     version: _core.version,
-    mode: _library ? 'pure' : 'global',
+    mode: 'pure',
     copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
   });
   });
@@ -51943,6 +52033,7 @@
   exports.TreeView = TreeView;
   exports.PropertyTable = PropertyTable;
   exports.EditTable = EditTable;
+  exports.DetailTable = DetailTable;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

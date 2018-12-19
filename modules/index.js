@@ -1,3 +1,4 @@
+import DetailTable from "./DetailTable";
 
 export AdvancedSearch from './AdvancedSearch'
 export BaseForm from './BaseForm'
@@ -13,3 +14,4 @@ export TreeView from './TreeView'
 export PropertyTable from './PropertyTable'
 
 export EditTable from './EditTable'
+export DetailTable from './DetailTable'
