@@ -593,7 +593,7 @@
     return store[key] || (store[key] = value !== undefined ? value : {});
   })('versions', []).push({
     version: _core.version,
-    mode: 'pure',
+    mode: _library ? 'pure' : 'global',
     copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
   });
   });
@@ -20141,7 +20141,8 @@
       value: function getNotCollectedFields() {
         var _this3 = this;
 
-        return this.getValidFieldsName().filter(function (name) {
+        var fieldsName = this.getValidFieldsName();
+        return fieldsName.filter(function (name) {
           return !_this3.fields[name];
         }).map(function (name) {
           return {
@@ -20344,6 +20345,7 @@
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
   /* eslint-disable react/prefer-es6-class */
+  /* eslint-disable prefer-promise-reject-errors */
 
   var DEFAULT_TRIGGER = 'onChange';
 
@@ -20361,6 +20363,7 @@
         fieldDataProp = option.fieldDataProp,
         _option$formPropName = option.formPropName,
         formPropName = _option$formPropName === undefined ? 'form' : _option$formPropName,
+        formName = option.name,
         withRef = option.withRef;
 
 
@@ -20526,7 +20529,7 @@
             ref: this.getCacheBind(name, name + '__ref', this.saveRef)
           });
           if (fieldNameProp) {
-            inputProps[fieldNameProp] = name;
+            inputProps[fieldNameProp] = formName ? formName + '_' + name : name;
           }
 
           var validateRules = (0, utils$1.normalizeValidateRules)(validate, rules, validateTrigger);
@@ -20767,36 +20770,56 @@
         validateFields: function validateFields(ns, opt, cb) {
           var _this8 = this;
 
-          var _getParams = (0, utils$1.getParams)(ns, opt, cb),
-              names = _getParams.names,
-              callback = _getParams.callback,
-              options = _getParams.options;
+          var pending = new Promise(function (resolve, reject) {
+            var _getParams = (0, utils$1.getParams)(ns, opt, cb),
+                names = _getParams.names,
+                options = _getParams.options;
 
-          var fieldNames = names ? this.fieldsStore.getValidFieldsFullName(names) : this.fieldsStore.getValidFieldsName();
-          var fields = fieldNames.filter(function (name) {
-            var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
-            return (0, utils$1.hasRules)(fieldMeta.validate);
-          }).map(function (name) {
-            var field = _this8.fieldsStore.getField(name);
-            field.value = _this8.fieldsStore.getFieldValue(name);
-            return field;
-          });
-          if (!fields.length) {
-            if (callback) {
-              callback(null, this.fieldsStore.getFieldsValue(fieldNames));
+            var _getParams2 = (0, utils$1.getParams)(ns, opt, cb),
+                callback = _getParams2.callback;
+
+            if (!callback || typeof callback === 'function') {
+              var oldCb = callback;
+              callback = function callback(errors, values) {
+                if (oldCb) {
+                  oldCb(errors, values);
+                } else if (errors) {
+                  reject({ errors: errors, values: values });
+                } else {
+                  resolve(values);
+                }
+              };
             }
-            return;
-          }
-          if (!('firstFields' in options)) {
-            options.firstFields = fieldNames.filter(function (name) {
+            var fieldNames = names ? _this8.fieldsStore.getValidFieldsFullName(names) : _this8.fieldsStore.getValidFieldsName();
+            var fields = fieldNames.filter(function (name) {
               var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
-              return !!fieldMeta.validateFirst;
+              return (0, utils$1.hasRules)(fieldMeta.validate);
+            }).map(function (name) {
+              var field = _this8.fieldsStore.getField(name);
+              field.value = _this8.fieldsStore.getFieldValue(name);
+              return field;
             });
-          }
-          this.validateFieldsInternal(fields, {
-            fieldNames: fieldNames,
-            options: options
-          }, callback);
+            if (!fields.length) {
+              if (callback) {
+                callback(null, _this8.fieldsStore.getFieldsValue(fieldNames));
+              }
+              return;
+            }
+            if (!('firstFields' in options)) {
+              options.firstFields = fieldNames.filter(function (name) {
+                var fieldMeta = _this8.fieldsStore.getFieldMeta(name);
+                return !!fieldMeta.validateFirst;
+              });
+            }
+            _this8.validateFieldsInternal(fields, {
+              fieldNames: fieldNames,
+              options: options
+            }, callback);
+          });
+          pending['catch'](function (e) {
+            return e;
+          });
+          return pending;
         },
         isSubmitting: function isSubmitting() {
           return this.state.submitting;
@@ -42158,10 +42181,11 @@
             confirm = _it$props.confirm,
             placement = _it$props.placement,
             children = _it$props.children,
+            block = _it$props.block,
             actionkey = _it$props.actionkey,
             disabled = _it$props.disabled,
             permission = _it$props.permission,
-            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "actionkey", "disabled", "permission"]);
+            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "block", "actionkey", "disabled", "permission"]);
 
         if (confirm && !disabled) {
           return React__default.createElement(Confirm, Object.assign({}, {

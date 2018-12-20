@@ -1272,10 +1272,11 @@ function (_Component2) {
           confirm = _it$props.confirm,
           placement = _it$props.placement,
           children = _it$props.children,
+          block = _it$props.block,
           actionkey = _it$props.actionkey,
           disabled = _it$props.disabled,
           permission = _it$props.permission,
-          otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "actionkey", "disabled", "permission"]);
+          otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "block", "actionkey", "disabled", "permission"]);
 
       if (confirm && !disabled) {
         return React.createElement(Confirm, Object.assign({}, {

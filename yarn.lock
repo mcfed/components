@@ -3973,7 +3973,12 @@ mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-moment@2.x, moment@^2.19.3, moment@^2.22.2:
+moment@2.x, moment@^2.19.3:
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.23.0.tgz#759ea491ac97d54bac5ad776996e2a58cc1bc225"
+  integrity sha512-3IE39bHVqFbWWaPOMHZF98Q9c3LDKGTmypMiTM2QygGXXElkFWIH7GxfmlwmY2vwa+wmNsoYZmG2iusf1ZjJoA==
+
+moment@^2.22.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
@@ -4775,9 +4780,9 @@ rc-editor-mention@^1.0.2:
     rc-editor-core "~0.8.3"
 
 rc-form@^2.1.0:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/rc-form/-/rc-form-2.2.7.tgz#8880851b9cd4a9c911f5272c91db73978a72377d"
-  integrity sha512-50zIXXa+QzssgZZQx5OwGFbELr99d0sCZYVo1SIXS216ioWnFefzbFs+iofTCir+YbTCQHh/cxqXDdC6r6HvYg==
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/rc-form/-/rc-form-2.3.0.tgz#4e7c16bcb32402565f629dfdf163bb810b16d941"
+  integrity sha512-2lp/NdSls0nh2C+twLqwiQixwr3p6Ngoi2v912bgxLd/nJS64Gad87KtnwMAdUFfQ4TOpGZ6AFAFEmrwVSFbMw==
   dependencies:
     async-validator "~1.8.5"
     babel-runtime "6.x"
@@ -5052,10 +5057,10 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.0.0.tgz#9cc3079c3dcd70d4c6e01b84aab2a7e34c303f58"
-  integrity sha1-nMMHnD3NcNTG4BuEqrKn40wwP1g=
+react-dom@16.3.0:
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.0.tgz#b318e52184188ecb5c3e81117420cca40618643e"
+  integrity sha512-xT/FxawAurL6AV8YtAP7LkdDJFFX2vvv17AqFLQRF81ZtWLXkV/0dcAaiFIy0lmoQEFT931TU9aaH+5dBUxTcw==
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -5102,10 +5107,10 @@ react-test-renderer@^16.0.0-0:
     react-is "^16.6.0"
     scheduler "^0.10.0"
 
-react@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.0.0.tgz#ce7df8f1941b036f02b2cca9dbd0cb1f0e855e2d"
-  integrity sha1-zn348ZQbA28Cssyp29DLHw6FXi0=
+react@16.3.0:
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.3.0.tgz#fc5a01c68f91e9b38e92cf83f7b795ebdca8ddff"
+  integrity sha512-Qh35tNbwY8SLFELkN3PCLO16EARV+lgcmNkQnoZXfzAF1ASRpeucZYUwBlBzsRAzTb7KyfBaLQ4/K/DLC6MYeA==
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"

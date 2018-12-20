@@ -57,7 +57,7 @@ export default class ButtonGroups extends Component {
 
   renderReactElement(it,idx){
     let {handleClick} = this.props
-    let {tip,confirm,placement,children,actionkey,disabled,permission,...otherProps} = it.props
+    let {tip,confirm,placement,children,block,actionkey,disabled,permission,...otherProps} = it.props
 
     if(confirm && !disabled){
       return React.createElement(
