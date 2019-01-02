@@ -285,10 +285,25 @@ function (_React$Component) {
   _createClass(DetailTable, [{
     key: "render",
     value: function render() {
-      var dataSource = this.props.dataSource;
-      return React.createElement("table", {
-        className: this.props.tableClass
-      }, React.createElement("tbody", null, this.showDom(dataSource)));
+      var _this$props = this.props,
+          dataSource = _this$props.dataSource,
+          title = _this$props.title,
+          tableClass = _this$props.tableClass;
+      return React.createElement("div", {
+        className: tableClass
+      }, React.createElement("div", {
+        className: "ant-table-title"
+      }, title), React.createElement("div", {
+        className: "ant-table-content"
+      }, React.createElement("div", {
+        className: "ant-table-body"
+      }, React.createElement("table", {
+        style: {
+          width: '100%'
+        }
+      }, React.createElement("tbody", {
+        className: "ant-table-tbody"
+      }, this.showDom(dataSource))))));
     }
   }]);
 
@@ -298,7 +313,12 @@ function (_React$Component) {
 DetailTable.propTypes = {
   columnNumber: PropTypes.number,
   dataSource: PropTypes.array,
-  tableClass: PropTypes.string
+  tableClass: PropTypes.string,
+  title: PropTypes.string
+};
+DetailTable.defaultProps = {
+  columnNumber: 2,
+  tableClass: "ant-table ant-table-bordered ant-table-detail"
 };
 
 var FormCreate = Form.create;
@@ -1090,10 +1110,10 @@ function (_React$Component) {
       var renderChildren;
       var formItemLayout = layout && layout !== 'inline' ? {
         labelCol: {
-          span: 6
+          span: 8
         },
         wrapperCol: {
-          span: 18
+          span: 16
         }
       } : {};
 
@@ -1391,9 +1411,10 @@ function (_Component2) {
     value: function renderChildren() {
       var _this$props3 = this.props,
           children = _this$props3.children,
-          showSize = _this$props3.showSize;
+          showSize = _this$props3.showSize,
+          mode = _this$props3.mode;
       var childrenArray = React.Children.toArray(children);
-      return React.createElement(Button.Group, null, childrenArray.length > showSize ? this.renderMixButtonMenu() : this.renderButtonOnly());
+      return React.createElement(Button.Group, null, mode === 'ButtonGroup' ? this.renderButtonOnly() : this.renderMixButtonMenu());
     }
   }, {
     key: "render",
@@ -1418,10 +1439,13 @@ _defineProperty(ButtonGroups, "contextTypes", {// appReducer:PropTypes.object
 });
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu'])
 };
 ButtonGroups.defaultProps = {
-  showSize: 5
+  showSize: 5,
+  handleClick: function handleClick(actionkey) {},
+  mode: 'ButtonGroup'
 };
 
 var TableMenu =

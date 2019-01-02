@@ -72,10 +72,10 @@ export default class AdvancedSearchForm extends React.Component {
     let renderChildren;
     const formItemLayout = layout && layout!=='inline'? {
       labelCol: {
-        span: 6
+        span: 8
       },
       wrapperCol: {
-        span: 18
+        span: 16
       }
     }:{};
     if(React.Children.count(children)===0){

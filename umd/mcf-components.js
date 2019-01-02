@@ -260,10 +260,25 @@
     _createClass(DetailTable, [{
       key: "render",
       value: function render() {
-        var dataSource = this.props.dataSource;
-        return React__default.createElement("table", {
-          className: this.props.tableClass
-        }, React__default.createElement("tbody", null, this.showDom(dataSource)));
+        var _this$props = this.props,
+            dataSource = _this$props.dataSource,
+            title = _this$props.title,
+            tableClass = _this$props.tableClass;
+        return React__default.createElement("div", {
+          className: tableClass
+        }, React__default.createElement("div", {
+          className: "ant-table-title"
+        }, title), React__default.createElement("div", {
+          className: "ant-table-content"
+        }, React__default.createElement("div", {
+          className: "ant-table-body"
+        }, React__default.createElement("table", {
+          style: {
+            width: '100%'
+          }
+        }, React__default.createElement("tbody", {
+          className: "ant-table-tbody"
+        }, this.showDom(dataSource))))));
       }
     }]);
 
@@ -273,7 +288,12 @@
   DetailTable.propTypes = {
     columnNumber: PropTypes.number,
     dataSource: PropTypes.array,
-    tableClass: PropTypes.string
+    tableClass: PropTypes.string,
+    title: PropTypes.string
+  };
+  DetailTable.defaultProps = {
+    columnNumber: 2,
+    tableClass: "ant-table ant-table-bordered ant-table-detail"
   };
 
   var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -38450,10 +38470,10 @@
         var renderChildren;
         var formItemLayout = layout && layout !== 'inline' ? {
           labelCol: {
-            span: 6
+            span: 8
           },
           wrapperCol: {
-            span: 18
+            span: 16
           }
         } : {};
 
@@ -42300,9 +42320,10 @@
       value: function renderChildren() {
         var _this$props3 = this.props,
             children = _this$props3.children,
-            showSize = _this$props3.showSize;
+            showSize = _this$props3.showSize,
+            mode = _this$props3.mode;
         var childrenArray = React__default.Children.toArray(children);
-        return React__default.createElement(Button.Group, null, childrenArray.length > showSize ? this.renderMixButtonMenu() : this.renderButtonOnly());
+        return React__default.createElement(Button.Group, null, mode === 'ButtonGroup' ? this.renderButtonOnly() : this.renderMixButtonMenu());
       }
     }, {
       key: "render",
@@ -42327,10 +42348,13 @@
   });
   ButtonGroups.propTypes = {
     showSize: PropTypes.number,
-    handleClick: PropTypes.func
+    handleClick: PropTypes.func,
+    mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu'])
   };
   ButtonGroups.defaultProps = {
-    showSize: 5
+    showSize: 5,
+    handleClick: function handleClick(actionkey) {},
+    mode: 'ButtonGroup'
   };
 
   /**

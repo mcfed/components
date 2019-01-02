@@ -130,7 +130,7 @@ export default class ButtonGroups extends Component {
 
     return (
       <Button.Group>
-        { mode === 'ButtonGroup' ? this.renderMixButtonMenu() : this.renderButtonOnly() }
+        { mode === 'ButtonGroup' ? this.renderButtonOnly() : this.renderMixButtonMenu() }
       </Button.Group>
     )
   }
@@ -157,6 +157,6 @@ ButtonGroups.propTypes = {
 }
 ButtonGroups.defaultProps = {
   showSize:5,
-  handleClick:function(actionkey)=>{},
+  handleClick:function(actionkey){},
   mode:'ButtonGroup'
 }
