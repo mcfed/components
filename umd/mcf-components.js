@@ -32460,7 +32460,7 @@
               value: date
             }, onChange(undefined));
           } else {
-            console.log(format, date[0].format(format), date[1].format(format));
+            // console.log(format,date[0].format(format),date[1].format(format))
             this.setState({
               value: date
             }, onChange([date[0].format(format), date[1].format(format)]));
@@ -38424,10 +38424,20 @@
         });
       });
 
+      _this.state.loading = props.loading;
       return _this;
     }
 
     _createClass(AdvancedSearchForm, [{
+      key: "componentWillReceiveProps",
+      value: function componentWillReceiveProps(nextProps) {
+        if (nextProps.loading !== this.props.loading) {
+          this.setState({
+            loading: nextProps.loading
+          });
+        }
+      }
+    }, {
       key: "getFields",
       // To generate mock Form.Item
       value: function getFields() {
@@ -38526,6 +38536,7 @@
             className = _this$props2.className,
             autoSubmitForm = _this$props2.autoSubmitForm,
             layout = _this$props2.layout;
+        var loading = this.state.loading;
         return React__default.createElement("div", {
           className: classnames("advanced-search-panel", className)
         }, React__default.createElement(SubmitForm, {
@@ -38538,6 +38549,7 @@
           className: "advanced-search-toolbar"
         }, React__default.createElement(Button, {
           htmlType: "submit",
+          disabled: loading,
           onClick: this.handleSearch.bind(this),
           type: "primary"
         }, "\u641C\u7D22"), React__default.createElement(Button, {
@@ -38552,12 +38564,14 @@
   AdvancedSearchForm.propTypes = {
     filterSubmitHandler: PropTypes.func,
     showConfig: PropTypes.bool,
+    loading: PropTypes.bool,
     footer: PropTypes.element,
     showExpand: PropTypes.number
   };
   AdvancedSearchForm.defaultProps = {
     autoSubmitForm: false,
     showConfig: false,
+    loading: false,
     filterSubmitHandler: function filterSubmitHandler() {},
     showExpand: 3,
     layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)

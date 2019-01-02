@@ -30,6 +30,7 @@ export default class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state.loading=props.loading
   }
 
   handleSearch = (e,values) => {
@@ -43,6 +44,14 @@ export default class AdvancedSearchForm extends React.Component {
         // console.log(values)
         filterSubmitHandler.call(this,values);
       });
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if(nextProps.loading !== this.props.loading){
+      this.setState({
+        loading:nextProps.loading
+      })
     }
   }
 
@@ -131,12 +140,13 @@ export default class AdvancedSearchForm extends React.Component {
   }
   render() {
     let {showConfig,children,className,autoSubmitForm,layout} = this.props
+    let {loading} = this.state
     return (
       <div className={classNames("advanced-search-panel",className)}>
         <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
           { this.renderKeyword() }
           <div className="advanced-search-toolbar">
-							<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">搜索</Button>
+							<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">搜索</Button>
 							<Button htmlType="reset" onClick={this.handleReset.bind(this)}>重置</Button>
           </div>
         </SubmitForm>
@@ -148,6 +158,7 @@ export default class AdvancedSearchForm extends React.Component {
 AdvancedSearchForm.propTypes = {
   filterSubmitHandler: PropTypes.func,
   showConfig:PropTypes.bool,
+  loading:PropTypes.bool,
   footer:PropTypes.element,
   showExpand:PropTypes.number
 }
@@ -155,6 +166,7 @@ AdvancedSearchForm.propTypes = {
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm:false,
   showConfig:false,
+  loading:false,
   filterSubmitHandler: function() {},
 	showExpand:3,
 	layout:'horizontal'

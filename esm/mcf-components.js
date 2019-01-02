@@ -457,7 +457,7 @@ function (_Component) {
             value: date
           }, onChange(undefined));
         } else {
-          console.log(format, date[0].format(format), date[1].format(format));
+          // console.log(format,date[0].format(format),date[1].format(format))
           this.setState({
             value: date
           }, onChange([date[0].format(format), date[1].format(format)]));
@@ -1064,10 +1064,20 @@ function (_React$Component) {
       });
     });
 
+    _this.state.loading = props.loading;
     return _this;
   }
 
   _createClass(AdvancedSearchForm, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.loading !== this.props.loading) {
+        this.setState({
+          loading: nextProps.loading
+        });
+      }
+    }
+  }, {
     key: "getFields",
     // To generate mock Form.Item
     value: function getFields() {
@@ -1166,6 +1176,7 @@ function (_React$Component) {
           className = _this$props2.className,
           autoSubmitForm = _this$props2.autoSubmitForm,
           layout = _this$props2.layout;
+      var loading = this.state.loading;
       return React.createElement("div", {
         className: classNames("advanced-search-panel", className)
       }, React.createElement(SubmitForm, {
@@ -1178,6 +1189,7 @@ function (_React$Component) {
         className: "advanced-search-toolbar"
       }, React.createElement(Button, {
         htmlType: "submit",
+        disabled: loading,
         onClick: this.handleSearch.bind(this),
         type: "primary"
       }, "\u641C\u7D22"), React.createElement(Button, {
@@ -1192,12 +1204,14 @@ function (_React$Component) {
 AdvancedSearchForm.propTypes = {
   filterSubmitHandler: PropTypes.func,
   showConfig: PropTypes.bool,
+  loading: PropTypes.bool,
   footer: PropTypes.element,
   showExpand: PropTypes.number
 };
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
+  loading: false,
   filterSubmitHandler: function filterSubmitHandler() {},
   showExpand: 3,
   layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)
