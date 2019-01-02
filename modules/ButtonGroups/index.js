@@ -125,12 +125,12 @@ export default class ButtonGroups extends Component {
   }
 
   renderChildren(){
-    let {children,showSize} = this.props
+    let {children,showSize,mode} = this.props
     let childrenArray = React.Children.toArray(children)
 
     return (
       <Button.Group>
-        {childrenArray.length > showSize ? this.renderMixButtonMenu() : this.renderButtonOnly() }
+        { mode === 'ButtonGroup' ? this.renderMixButtonMenu() : this.renderButtonOnly() }
       </Button.Group>
     )
   }
@@ -153,7 +153,10 @@ export default class ButtonGroups extends Component {
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
+  mode:PropTypes.oneOf(['ButtonGroup','ButtonMenu'])
 }
 ButtonGroups.defaultProps = {
   showSize:5,
+  handleClick:function(actionkey)=>{},
+  mode:'ButtonGroup'
 }
