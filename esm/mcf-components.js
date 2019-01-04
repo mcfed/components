@@ -981,9 +981,7 @@ function (_Component) {
 
       return React.createElement(Form.Item, _extends({
         label: label
-      }, Object.assign({}, {}, formLayout, this.props), {
-        colon: false
-      }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
+      }, Object.assign({}, {}, formLayout, this.props), styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
         initialValue: defaultValue,
         hidden: element.props.hidden || false
       }))(this.renderField()));
