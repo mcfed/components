@@ -1071,7 +1071,20 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleReset", function () {
-      _this.form.resetFields();
+      var form = _this.form;
+      var values = form.getFieldsValue();
+      var emptyValue = {}; // this.form.resetFields();
+
+      for (var v in values) {
+        console.log(v);
+
+        if (values.hasOwnProperty(v)) {
+          emptyValue[v] = undefined;
+        }
+      }
+
+      console.log(emptyValue);
+      form.setFieldsValue(emptyValue);
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleExpand", function () {
@@ -1224,12 +1237,14 @@ AdvancedSearchForm.propTypes = {
   showConfig: PropTypes.bool,
   loading: PropTypes.bool,
   footer: PropTypes.element,
+  locale: PropTypes.object,
   showExpand: PropTypes.number
 };
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
   loading: false,
+  locale: {},
   filterSubmitHandler: function filterSubmitHandler() {},
   showExpand: 3,
   layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)

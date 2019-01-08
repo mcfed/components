@@ -56,7 +56,18 @@ export default class AdvancedSearchForm extends React.Component {
   }
 
   handleReset = () => {
-    this.form.resetFields();
+    const form=this.form
+    const values=form.getFieldsValue();
+    let emptyValue={}
+    // this.form.resetFields();
+    for(var v in values){
+      // console.log(v)
+      if(values.hasOwnProperty(v)){
+        emptyValue[v]=undefined
+      }
+    }
+    // console.log(emptyValue)
+    form.setFieldsValue(emptyValue)
   }
 
   toggleExpand = () => {
@@ -160,6 +171,7 @@ AdvancedSearchForm.propTypes = {
   showConfig:PropTypes.bool,
   loading:PropTypes.bool,
   footer:PropTypes.element,
+  locale:PropTypes.object,
   showExpand:PropTypes.number
 }
 
@@ -167,6 +179,7 @@ AdvancedSearchForm.defaultProps = {
   autoSubmitForm:false,
   showConfig:false,
   loading:false,
+  locale:{},
   filterSubmitHandler: function() {},
 	showExpand:3,
 	layout:'horizontal'
