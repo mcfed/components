@@ -38436,14 +38436,13 @@
         var emptyValue = {}; // this.form.resetFields();
 
         for (var v in values) {
-          console.log(v);
-
+          // console.log(v)
           if (values.hasOwnProperty(v)) {
             emptyValue[v] = undefined;
           }
-        }
+        } // console.log(emptyValue)
 
-        console.log(emptyValue);
+
         form.setFieldsValue(emptyValue);
       });
 
@@ -38566,7 +38565,8 @@
             children = _this$props2.children,
             className = _this$props2.className,
             autoSubmitForm = _this$props2.autoSubmitForm,
-            layout = _this$props2.layout;
+            layout = _this$props2.layout,
+            locale = _this$props2.locale;
         var loading = this.state.loading;
         return React__default.createElement("div", {
           className: classnames("advanced-search-panel", className)
@@ -38583,10 +38583,10 @@
           disabled: loading,
           onClick: this.handleSearch.bind(this),
           type: "primary"
-        }, "\u641C\u7D22"), React__default.createElement(Button, {
+        }, locale.searchText), React__default.createElement(Button, {
           htmlType: "reset",
           onClick: this.handleReset.bind(this)
-        }, "\u91CD\u7F6E"))));
+        }, locale.resetText))));
       }
     }]);
 
@@ -38604,7 +38604,10 @@
     autoSubmitForm: false,
     showConfig: false,
     loading: false,
-    locale: {},
+    locale: {
+      searchText: "搜索",
+      resetText: "重置"
+    },
     filterSubmitHandler: function filterSubmitHandler() {},
     showExpand: 3,
     layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)

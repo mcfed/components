@@ -25,6 +25,7 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
+import 'antd/lib/locale-provider/LocaleReceiver';
 import classNames from 'classnames';
 import Icon from 'antd/lib/icon';
 import Tooltip from 'antd/lib/tooltip';
@@ -1076,14 +1077,13 @@ function (_React$Component) {
       var emptyValue = {}; // this.form.resetFields();
 
       for (var v in values) {
-        console.log(v);
-
+        // console.log(v)
         if (values.hasOwnProperty(v)) {
           emptyValue[v] = undefined;
         }
-      }
+      } // console.log(emptyValue)
 
-      console.log(emptyValue);
+
       form.setFieldsValue(emptyValue);
     });
 
@@ -1206,7 +1206,8 @@ function (_React$Component) {
           children = _this$props2.children,
           className = _this$props2.className,
           autoSubmitForm = _this$props2.autoSubmitForm,
-          layout = _this$props2.layout;
+          layout = _this$props2.layout,
+          locale = _this$props2.locale;
       var loading = this.state.loading;
       return React.createElement("div", {
         className: classNames("advanced-search-panel", className)
@@ -1223,10 +1224,10 @@ function (_React$Component) {
         disabled: loading,
         onClick: this.handleSearch.bind(this),
         type: "primary"
-      }, "\u641C\u7D22"), React.createElement(Button, {
+      }, locale.searchText), React.createElement(Button, {
         htmlType: "reset",
         onClick: this.handleReset.bind(this)
-      }, "\u91CD\u7F6E"))));
+      }, locale.resetText))));
     }
   }]);
 
@@ -1244,7 +1245,10 @@ AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
   loading: false,
-  locale: {},
+  locale: {
+    searchText: "搜索",
+    resetText: "重置"
+  },
   filterSubmitHandler: function filterSubmitHandler() {},
   showExpand: 3,
   layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)
