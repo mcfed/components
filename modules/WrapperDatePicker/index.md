@@ -1,11 +1,11 @@
-##WrapperDatePicker
+## WrapperDatePicker
 >外包日历选择器组件：简化DatePicker使用复杂度。解决以下问题
 
   - 原设计 DatePicker 类型 value 必需 使用 moment 数据类型才可以初始
   - moment 类型不接受 undefined 为空数据构造 等问题。
   - getFieldDecorator 获取到 值为moment 类型， 需要format成字符串后才可传送后台参数
 
-##Usage
+## Usage
 > 使用方式1：结合FormItem 组件，可直接充当ANTD组件使用，不需要 外包WrapperDatePicker 使用,FormItem内部自动会进行外包转换
 ```html
   <FormItem>
