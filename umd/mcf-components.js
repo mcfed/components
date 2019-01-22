@@ -384,7 +384,7 @@
 
   // instead of the ES6 spec version, we didn't implement @@toPrimitive case
   // and the second argument - flag - preferred type is a string
-  var _toPrimitive$1 = function (it, S) {
+  var _toPrimitive = function (it, S) {
     if (!_isObject(it)) return it;
     var fn, val;
     if (S && typeof (fn = it.toString) == 'function' && !_isObject(val = fn.call(it))) return val;
@@ -397,7 +397,7 @@
 
   var f = _descriptors ? Object.defineProperty : function defineProperty(O, P, Attributes) {
     _anObject(O);
-    P = _toPrimitive$1(P, true);
+    P = _toPrimitive(P, true);
     _anObject(Attributes);
     if (_ie8DomDefine) try {
       return dP(O, P, Attributes);
@@ -1138,7 +1138,7 @@
 
   var f$6 = _descriptors ? gOPD : function getOwnPropertyDescriptor(O, P) {
     O = _toIobject(O);
-    P = _toPrimitive$1(P, true);
+    P = _toPrimitive(P, true);
     if (_ie8DomDefine) try {
       return gOPD(O, P);
     } catch (e) { /* empty */ }
@@ -1221,7 +1221,7 @@
   var $defineProperty = function defineProperty(it, key, D) {
     if (it === ObjectProto$1) $defineProperty(OPSymbols, key, D);
     _anObject(it);
-    key = _toPrimitive$1(key, true);
+    key = _toPrimitive(key, true);
     _anObject(D);
     if (_has(AllSymbols, key)) {
       if (!D.enumerable) {
@@ -1246,13 +1246,13 @@
     return P === undefined ? _objectCreate(it) : $defineProperties(_objectCreate(it), P);
   };
   var $propertyIsEnumerable = function propertyIsEnumerable(key) {
-    var E = isEnum.call(this, key = _toPrimitive$1(key, true));
+    var E = isEnum.call(this, key = _toPrimitive(key, true));
     if (this === ObjectProto$1 && _has(AllSymbols, key) && !_has(OPSymbols, key)) return false;
     return E || !_has(this, key) || !_has(AllSymbols, key) || _has(this, HIDDEN) && this[HIDDEN][key] ? E : true;
   };
   var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key) {
     it = _toIobject(it);
-    key = _toPrimitive$1(key, true);
+    key = _toPrimitive(key, true);
     if (it === ObjectProto$1 && _has(AllSymbols, key) && !_has(OPSymbols, key)) return;
     var D = gOPD$1(it, key);
     if (D && _has(AllSymbols, key) && !(_has(it, HIDDEN) && it[HIDDEN][key])) D.enumerable = true;
