@@ -23,11 +23,11 @@ import 'antd/lib/date-picker';
 import fetch from 'cross-fetch';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
+import Icon from 'antd/lib/icon';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
 import 'antd/lib/locale-provider/LocaleReceiver';
 import classNames from 'classnames';
-import Icon from 'antd/lib/icon';
 import Tooltip from 'antd/lib/tooltip';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
@@ -1087,14 +1087,6 @@ function (_React$Component) {
       form.setFieldsValue(emptyValue);
     });
 
-    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleExpand", function () {
-      var expand = _this.state.expand;
-
-      _this.setState({
-        expand: !expand
-      });
-    });
-
     _this.state.loading = props.loading;
     return _this;
   }
@@ -1109,8 +1101,16 @@ function (_React$Component) {
       }
     }
   }, {
+    key: "toggleExpand",
+    value: function toggleExpand() {
+      var expand = this.state.expand;
+      this.setState({
+        expand: !expand
+      });
+    } // To generate mock Form.Item
+
+  }, {
     key: "getFields",
-    // To generate mock Form.Item
     value: function getFields() {
       var _this2 = this;
 
@@ -1130,12 +1130,13 @@ function (_React$Component) {
 
       if (React.Children.count(children) === 0) {
         return null;
-      } // if(this.state.expand==false ){
-      //   renderChildren = children.filter((ch,idx)=>idx<3)
-      // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+      }
 
-
-      if (this.props.showConfig) {
+      if (this.state.expand == false) {
+        renderChildren = children.filter(function (ch, idx) {
+          return idx < 3;
+        }); // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+      } else if (this.props.showConfig) {
         //高级配置后，前三固定 后四配置
         renderChildren = React.Children.toArray(children).filter(function (ch, idx) {
           //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
@@ -1227,7 +1228,10 @@ function (_React$Component) {
       }, locale.searchText), React.createElement(Button, {
         htmlType: "reset",
         onClick: this.handleReset.bind(this)
-      }, locale.resetText))));
+      }, locale.resetText), React.createElement(Icon, {
+        type: "down",
+        onClick: this.toggleExpand.bind(this)
+      }))));
     }
   }]);
 

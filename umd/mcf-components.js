@@ -2330,6 +2330,54 @@
     return shallowCopy;
   }
 
+  var icon = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+
+
+  var React$$1 = _interopRequireWildcard(React__default);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+
+
+  var _omit2 = _interopRequireDefault(omit);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var Icon = function Icon(props) {
+      var type = props.type,
+          _props$className = props.className,
+          className = _props$className === undefined ? '' : _props$className,
+          spin = props.spin;
+
+      var classString = (0, _classnames2['default'])((0, _defineProperty3['default'])({
+          anticon: true,
+          'anticon-spin': !!spin || type === 'loading'
+      }, 'anticon-' + type, true), className);
+      return React$$1.createElement('i', (0, _extends3['default'])({}, (0, _omit2['default'])(props, ['type', 'spin']), { className: classString }));
+  };
+  exports['default'] = Icon;
+  module.exports = exports['default'];
+  });
+
+  var Icon = unwrapExports(icon);
+
   var Input_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -2612,54 +2660,6 @@
   });
 
   unwrapExports(Group_1);
-
-  var icon = createCommonjsModule(function (module, exports) {
-
-  Object.defineProperty(exports, "__esModule", {
-      value: true
-  });
-
-
-
-  var _extends3 = _interopRequireDefault(_extends$1);
-
-
-
-  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
-
-
-
-  var React$$1 = _interopRequireWildcard(React__default);
-
-
-
-  var _classnames2 = _interopRequireDefault(classnames);
-
-
-
-  var _omit2 = _interopRequireDefault(omit);
-
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
-
-  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-  var Icon = function Icon(props) {
-      var type = props.type,
-          _props$className = props.className,
-          className = _props$className === undefined ? '' : _props$className,
-          spin = props.spin;
-
-      var classString = (0, _classnames2['default'])((0, _defineProperty3['default'])({
-          anticon: true,
-          'anticon-spin': !!spin || type === 'loading'
-      }, 'anticon-' + type, true), className);
-      return React$$1.createElement('i', (0, _extends3['default'])({}, (0, _omit2['default'])(props, ['type', 'spin']), { className: classString }));
-  };
-  exports['default'] = Icon;
-  module.exports = exports['default'];
-  });
-
-  var Icon = unwrapExports(icon);
 
   var button = createCommonjsModule(function (module, exports) {
 
@@ -7895,9 +7895,7 @@
               return;
             }
             var nextState = finnalMapStateToProps(_this.store.getState(), _this.props);
-            if (!(0, _shallowequal2.default)(_this.state.subscribed, nextState)) {
-              _this.setState({ subscribed: nextState });
-            }
+            _this.setState({ subscribed: nextState });
           };
 
           _this.store = context.miniStore;
@@ -7918,6 +7916,11 @@
           key: 'componentWillUnmount',
           value: function componentWillUnmount() {
             this.tryUnsubscribe();
+          }
+        }, {
+          key: 'shouldComponentUpdate',
+          value: function shouldComponentUpdate(nextProps, nextState) {
+            return !(0, _shallowequal2.default)(this.props, nextProps) || !(0, _shallowequal2.default)(this.state.subscribed, nextState.subscribed);
           }
         }, {
           key: 'trySubscribe',
@@ -8099,631 +8102,947 @@
     });
   }
 
-  var menuAllProps = ['defaultSelectedKeys', 'selectedKeys', 'defaultOpenKeys', 'openKeys', 'mode', 'getPopupContainer', 'onSelect', 'onDeselect', 'onDestroy', 'openTransitionName', 'openAnimation', 'subMenuOpenDelay', 'subMenuCloseDelay', 'forceSubMenuRender', 'triggerSubMenuAction', 'level', 'selectable', 'multiple', 'onOpenChange', 'visible', 'focusable', 'defaultActiveFirst', 'prefixCls', 'inlineIndent', 'parentMenu', 'title', 'rootPrefixCls', 'eventKey', 'active', 'onItemHover', 'onTitleMouseEnter', 'onTitleMouseLeave', 'onTitleClick', 'popupOffset', 'isOpen', 'renderMenuItem', 'manualRef', 'subMenuKey', 'disabled', 'index', 'isSelected', 'store', 'activeKey',
+  var menuAllProps = ['defaultSelectedKeys', 'selectedKeys', 'defaultOpenKeys', 'openKeys', 'mode', 'getPopupContainer', 'onSelect', 'onDeselect', 'onDestroy', 'openTransitionName', 'openAnimation', 'subMenuOpenDelay', 'subMenuCloseDelay', 'forceSubMenuRender', 'triggerSubMenuAction', 'level', 'selectable', 'multiple', 'onOpenChange', 'visible', 'focusable', 'defaultActiveFirst', 'prefixCls', 'inlineIndent', 'parentMenu', 'title', 'rootPrefixCls', 'eventKey', 'active', 'onItemHover', 'onTitleMouseEnter', 'onTitleMouseLeave', 'onTitleClick', 'popupAlign', 'popupOffset', 'isOpen', 'renderMenuItem', 'manualRef', 'subMenuKey', 'disabled', 'index', 'isSelected', 'store', 'activeKey', 'builtinPlacements', 'overflowedIndicator',
 
   // the following keys found need to be removed from test regression
-  'attribute', 'value', 'popupClassName', 'inlineCollapsed', 'menu', 'theme'];
+  'attribute', 'value', 'popupClassName', 'inlineCollapsed', 'menu', 'theme', 'itemIcon', 'expandIcon'];
 
-  var DOMWrap = function (_React$Component) {
-    _inherits$1(DOMWrap, _React$Component);
-
-    function DOMWrap() {
-      _classCallCheck$1(this, DOMWrap);
-
-      return _possibleConstructorReturn$1(this, _React$Component.apply(this, arguments));
-    }
-
-    DOMWrap.prototype.render = function render() {
-      var props = _extends$2({}, this.props);
-      if (!props.visible) {
-        props.className += ' ' + props.hiddenClassName;
-      }
-      var Tag = props.tag;
-      delete props.tag;
-      delete props.hiddenClassName;
-      delete props.visible;
-      return React__default.createElement(Tag, props);
-    };
-
-    return DOMWrap;
-  }(React__default.Component);
-
-  DOMWrap.propTypes = {
-    tag: PropTypes.string,
-    hiddenClassName: PropTypes.string,
-    visible: PropTypes.bool
-  };
-  DOMWrap.defaultProps = {
-    tag: 'div',
-    className: ''
+  var getWidth = function getWidth(elem) {
+    return elem && typeof elem.getBoundingClientRect === 'function' && elem.getBoundingClientRect().width || 0;
   };
 
-  function allDisabled(arr) {
-    if (!arr.length) {
-      return true;
+  var setStyle = function setStyle(elem, styleProperty, value) {
+    if (elem && typeof elem.style === 'object') {
+      elem.style[styleProperty] = value;
     }
-    return arr.every(function (c) {
-      return !!c.props.disabled;
-    });
-  }
-
-  function updateActiveKey(store, menuId, activeKey) {
-    var _extends2;
-
-    var state = store.getState();
-    store.setState({
-      activeKey: _extends$2({}, state.activeKey, (_extends2 = {}, _extends2[menuId] = activeKey, _extends2))
-    });
-  }
-
-  function getActiveKey(props, originalActiveKey) {
-    var activeKey = originalActiveKey;
-    var children = props.children,
-        eventKey = props.eventKey;
-
-    if (activeKey) {
-      var found = void 0;
-      loopMenuItem(children, function (c, i) {
-        if (c && !c.props.disabled && activeKey === getKeyFromChildrenIndex(c, eventKey, i)) {
-          found = true;
-        }
-      });
-      if (found) {
-        return activeKey;
-      }
-    }
-    activeKey = null;
-    if (props.defaultActiveFirst) {
-      loopMenuItem(children, function (c, i) {
-        if (!activeKey && c && !c.props.disabled) {
-          activeKey = getKeyFromChildrenIndex(c, eventKey, i);
-        }
-      });
-      return activeKey;
-    }
-    return activeKey;
-  }
-
-  function saveRef(c) {
-    if (c) {
-      var index = this.instanceArray.indexOf(c);
-      if (index !== -1) {
-        // update component if it's already inside instanceArray
-        this.instanceArray[index] = c;
-      } else {
-        // add component if it's not in instanceArray yet;
-        this.instanceArray.push(c);
-      }
-    }
-  }
-
-  var SubPopupMenu = function (_React$Component) {
-    _inherits$1(SubPopupMenu, _React$Component);
-
-    function SubPopupMenu(props) {
-      var _extends3;
-
-      _classCallCheck$1(this, SubPopupMenu);
-
-      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
-
-      _initialiseProps$1.call(_this);
-
-      props.store.setState({
-        activeKey: _extends$2({}, props.store.getState().activeKey, (_extends3 = {}, _extends3[props.eventKey] = getActiveKey(props, props.activeKey), _extends3))
-      });
-      return _this;
-    }
-
-    SubPopupMenu.prototype.componentWillMount = function componentWillMount() {
-      this.instanceArray = [];
-    };
-
-    SubPopupMenu.prototype.componentDidMount = function componentDidMount() {
-      // invoke customized ref to expose component to mixin
-      if (this.props.manualRef) {
-        this.props.manualRef(this);
-      }
-    };
-
-    SubPopupMenu.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-      var originalActiveKey = 'activeKey' in nextProps ? nextProps.activeKey : this.getStore().getState().activeKey[this.getEventKey()];
-      var activeKey = getActiveKey(nextProps, originalActiveKey);
-      if (activeKey !== originalActiveKey) {
-        updateActiveKey(this.getStore(), this.getEventKey(), activeKey);
-      }
-    };
-
-    SubPopupMenu.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
-      return this.props.visible || nextProps.visible;
-    };
-
-    // all keyboard events callbacks run from here at first
-
-
-    SubPopupMenu.prototype.render = function render() {
-      var _this2 = this;
-
-      var props = _objectWithoutProperties$1(this.props, []);
-
-      this.instanceArray = [];
-      var className = classnames(props.prefixCls, props.className, props.prefixCls + '-' + props.mode);
-      var domProps = {
-        className: className,
-        // role could be 'select' and by default set to menu
-        role: props.role || 'menu'
-      };
-      if (props.id) {
-        domProps.id = props.id;
-      }
-      if (props.focusable) {
-        domProps.tabIndex = '0';
-        domProps.onKeyDown = this.onKeyDown;
-      }
-      var prefixCls = props.prefixCls,
-          eventKey = props.eventKey,
-          visible = props.visible;
-
-      menuAllProps.forEach(function (key) {
-        return delete props[key];
-      });
-
-      // Otherwise, the propagated click event will trigger another onClick
-      delete props.onClick;
-      return (
-        // ESLint is not smart enough to know that the type of `children` was checked.
-        /* eslint-disable */
-        React__default.createElement(
-          DOMWrap,
-          _extends$2({}, props, {
-            tag: 'ul',
-            hiddenClassName: prefixCls + '-hidden',
-            visible: visible
-          }, domProps),
-          React__default.Children.map(props.children, function (c, i) {
-            return _this2.renderMenuItem(c, i, eventKey || '0-menu-');
-          })
-        )
-        /*eslint-enable */
-
-      );
-    };
-
-    return SubPopupMenu;
-  }(React__default.Component);
-
-  SubPopupMenu.propTypes = {
-    onSelect: PropTypes.func,
-    onClick: PropTypes.func,
-    onDeselect: PropTypes.func,
-    onOpenChange: PropTypes.func,
-    onDestroy: PropTypes.func,
-    openTransitionName: PropTypes.string,
-    openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    openKeys: PropTypes.arrayOf(PropTypes.string),
-    visible: PropTypes.bool,
-    children: PropTypes.any,
-    parentMenu: PropTypes.object,
-    eventKey: PropTypes.string,
-    store: PropTypes.shape({
-      getState: PropTypes.func,
-      setState: PropTypes.func
-    }),
-
-    // adding in refactor
-    focusable: PropTypes.bool,
-    multiple: PropTypes.bool,
-    style: PropTypes.object,
-    defaultActiveFirst: PropTypes.bool,
-    activeKey: PropTypes.string,
-    selectedKeys: PropTypes.arrayOf(PropTypes.string),
-    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
-    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
-    level: PropTypes.number,
-    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
-    triggerSubMenuAction: PropTypes.oneOf(['click', 'hover']),
-    inlineIndent: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    manualRef: PropTypes.func
-  };
-  SubPopupMenu.defaultProps = {
-    prefixCls: 'rc-menu',
-    className: '',
-    mode: 'vertical',
-    level: 1,
-    inlineIndent: 24,
-    visible: true,
-    focusable: true,
-    style: {},
-    manualRef: noop$1
   };
 
-  var _initialiseProps$1 = function _initialiseProps() {
-    var _this3 = this;
-
-    this.onKeyDown = function (e, callback) {
-      var keyCode = e.keyCode;
-      var handled = void 0;
-      _this3.getFlatInstanceArray().forEach(function (obj) {
-        if (obj && obj.props.active && obj.onKeyDown) {
-          handled = obj.onKeyDown(e);
-        }
-      });
-      if (handled) {
-        return 1;
+  /**
+   * A collection of shims that provide minimal functionality of the ES6 collections.
+   *
+   * These implementations are not meant to be used outside of the ResizeObserver
+   * modules as they cover only a limited range of use cases.
+   */
+  /* eslint-disable require-jsdoc, valid-jsdoc */
+  var MapShim = (function () {
+      if (typeof Map !== 'undefined') {
+          return Map;
       }
-      var activeItem = null;
-      if (keyCode === KeyCode.UP || keyCode === KeyCode.DOWN) {
-        activeItem = _this3.step(keyCode === KeyCode.UP ? -1 : 1);
-      }
-      if (activeItem) {
-        e.preventDefault();
-        updateActiveKey(_this3.getStore(), _this3.getEventKey(), activeItem.props.eventKey);
-
-        if (typeof callback === 'function') {
-          callback(activeItem);
-        }
-
-        return 1;
-      }
-    };
-
-    this.onItemHover = function (e) {
-      var key = e.key,
-          hover = e.hover;
-
-      updateActiveKey(_this3.getStore(), _this3.getEventKey(), hover ? key : null);
-    };
-
-    this.onDeselect = function (selectInfo) {
-      _this3.props.onDeselect(selectInfo);
-    };
-
-    this.onSelect = function (selectInfo) {
-      _this3.props.onSelect(selectInfo);
-    };
-
-    this.onClick = function (e) {
-      _this3.props.onClick(e);
-    };
-
-    this.onOpenChange = function (e) {
-      _this3.props.onOpenChange(e);
-    };
-
-    this.onDestroy = function (key) {
-      /* istanbul ignore next */
-      _this3.props.onDestroy(key);
-    };
-
-    this.getFlatInstanceArray = function () {
-      return _this3.instanceArray;
-    };
-
-    this.getStore = function () {
-      return _this3.props.store;
-    };
-
-    this.getEventKey = function () {
-      // when eventKey not available ,it's menu and return menu id '0-menu-'
-      return _this3.props.eventKey || '0-menu-';
-    };
-
-    this.getOpenTransitionName = function () {
-      return _this3.props.openTransitionName;
-    };
-
-    this.step = function (direction) {
-      var children = _this3.getFlatInstanceArray();
-      var activeKey = _this3.getStore().getState().activeKey[_this3.getEventKey()];
-      var len = children.length;
-      if (!len) {
-        return null;
-      }
-      if (direction < 0) {
-        children = children.concat().reverse();
-      }
-      // find current activeIndex
-      var activeIndex = -1;
-      children.every(function (c, ci) {
-        if (c && c.props.eventKey === activeKey) {
-          activeIndex = ci;
-          return false;
-        }
-        return true;
-      });
-      if (!_this3.props.defaultActiveFirst && activeIndex !== -1 && allDisabled(children.slice(activeIndex, len - 1))) {
-        return undefined;
-      }
-      var start = (activeIndex + 1) % len;
-      var i = start;
-
-      do {
-        var child = children[i];
-        if (!child || child.props.disabled) {
-          i = (i + 1) % len;
-        } else {
-          return child;
-        }
-      } while (i !== start);
-
-      return null;
-    };
-
-    this.renderCommonMenuItem = function (child, i, extraProps) {
-      var state = _this3.getStore().getState();
-      var props = _this3.props;
-      var key = getKeyFromChildrenIndex(child, props.eventKey, i);
-      var childProps = child.props;
-      var isActive = key === state.activeKey;
-      var newChildProps = _extends$2({
-        mode: props.mode,
-        level: props.level,
-        inlineIndent: props.inlineIndent,
-        renderMenuItem: _this3.renderMenuItem,
-        rootPrefixCls: props.prefixCls,
-        index: i,
-        parentMenu: props.parentMenu,
-        // customized ref function, need to be invoked manually in child's componentDidMount
-        manualRef: childProps.disabled ? undefined : createChainedFunction(child.ref, saveRef.bind(_this3)),
-        eventKey: key,
-        active: !childProps.disabled && isActive,
-        multiple: props.multiple,
-        onClick: function onClick(e) {
-          (childProps.onClick || noop$1)(e);
-          _this3.onClick(e);
-        },
-        onItemHover: _this3.onItemHover,
-        openTransitionName: _this3.getOpenTransitionName(),
-        openAnimation: props.openAnimation,
-        subMenuOpenDelay: props.subMenuOpenDelay,
-        subMenuCloseDelay: props.subMenuCloseDelay,
-        forceSubMenuRender: props.forceSubMenuRender,
-        onOpenChange: _this3.onOpenChange,
-        onDeselect: _this3.onDeselect,
-        onSelect: _this3.onSelect
-      }, extraProps);
-      if (props.mode === 'inline') {
-        newChildProps.triggerSubMenuAction = 'click';
-      }
-      return React__default.cloneElement(child, newChildProps);
-    };
-
-    this.renderMenuItem = function (c, i, subMenuKey) {
-      /* istanbul ignore if */
-      if (!c) {
-        return null;
-      }
-      var state = _this3.getStore().getState();
-      var extraProps = {
-        openKeys: state.openKeys,
-        selectedKeys: state.selectedKeys,
-        triggerSubMenuAction: _this3.props.triggerSubMenuAction,
-        subMenuKey: subMenuKey
-      };
-      return _this3.renderCommonMenuItem(c, i, extraProps);
-    };
-  };
-
-  var SubPopupMenu$1 = lib_2()(SubPopupMenu);
-
-  var Menu = function (_React$Component) {
-    _inherits$1(Menu, _React$Component);
-
-    function Menu(props) {
-      _classCallCheck$1(this, Menu);
-
-      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
-
-      _initialiseProps$2.call(_this);
-
-      _this.isRootMenu = true;
-
-      var selectedKeys = props.defaultSelectedKeys;
-      var openKeys = props.defaultOpenKeys;
-      if ('selectedKeys' in props) {
-        selectedKeys = props.selectedKeys || [];
-      }
-      if ('openKeys' in props) {
-        openKeys = props.openKeys || [];
-      }
-
-      _this.store = lib_1({
-        selectedKeys: selectedKeys,
-        openKeys: openKeys,
-        activeKey: { '0-menu-': getActiveKey(props, props.activeKey) }
-      });
-      return _this;
-    }
-
-    Menu.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
-      if ('selectedKeys' in nextProps) {
-        this.store.setState({
-          selectedKeys: nextProps.selectedKeys || []
-        });
-      }
-      if ('openKeys' in nextProps) {
-        this.store.setState({
-          openKeys: nextProps.openKeys || []
-        });
-      }
-    };
-
-    // onKeyDown needs to be exposed as a instance method
-    // e.g., in rc-select, we need to navigate menu item while
-    // current active item is rc-select input box rather than the menu itself
-
-
-    Menu.prototype.render = function render() {
-      var _this2 = this;
-
-      var props = _objectWithoutProperties$1(this.props, []);
-
-      props.className += ' ' + props.prefixCls + '-root';
-      props = _extends$2({}, props, {
-        onClick: this.onClick,
-        onOpenChange: this.onOpenChange,
-        onDeselect: this.onDeselect,
-        onSelect: this.onSelect,
-        openTransitionName: this.getOpenTransitionName(),
-        parentMenu: this
-      });
-      return React__default.createElement(
-        lib_3,
-        { store: this.store },
-        React__default.createElement(
-          SubPopupMenu$1,
-          _extends$2({}, props, { ref: function ref(c) {
-              return _this2.innerMenu = c;
-            } }),
-          this.props.children
-        )
-      );
-    };
-
-    return Menu;
-  }(React__default.Component);
-
-  Menu.propTypes = {
-    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
-    defaultActiveFirst: PropTypes.bool,
-    selectedKeys: PropTypes.arrayOf(PropTypes.string),
-    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
-    openKeys: PropTypes.arrayOf(PropTypes.string),
-    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
-    getPopupContainer: PropTypes.func,
-    onClick: PropTypes.func,
-    onSelect: PropTypes.func,
-    onDeselect: PropTypes.func,
-    onDestroy: PropTypes.func,
-    openTransitionName: PropTypes.string,
-    openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    subMenuOpenDelay: PropTypes.number,
-    subMenuCloseDelay: PropTypes.number,
-    forceSubMenuRender: PropTypes.bool,
-    triggerSubMenuAction: PropTypes.string,
-    level: PropTypes.number,
-    selectable: PropTypes.bool,
-    multiple: PropTypes.bool,
-    children: PropTypes.any,
-    className: PropTypes.string,
-    style: PropTypes.object,
-    activeKey: PropTypes.string,
-    prefixCls: PropTypes.string
-  };
-  Menu.defaultProps = {
-    selectable: true,
-    onClick: noop$1,
-    onSelect: noop$1,
-    onOpenChange: noop$1,
-    onDeselect: noop$1,
-    defaultSelectedKeys: [],
-    defaultOpenKeys: [],
-    subMenuOpenDelay: 0.1,
-    subMenuCloseDelay: 0.1,
-    triggerSubMenuAction: 'hover',
-    prefixCls: 'rc-menu',
-    className: '',
-    mode: 'vertical',
-    style: {}
-  };
-
-  var _initialiseProps$2 = function _initialiseProps() {
-    var _this3 = this;
-
-    this.onSelect = function (selectInfo) {
-      var props = _this3.props;
-      if (props.selectable) {
-        // root menu
-        var selectedKeys = _this3.store.getState().selectedKeys;
-        var selectedKey = selectInfo.key;
-        if (props.multiple) {
-          selectedKeys = selectedKeys.concat([selectedKey]);
-        } else {
-          selectedKeys = [selectedKey];
-        }
-        if (!('selectedKeys' in props)) {
-          _this3.store.setState({
-            selectedKeys: selectedKeys
+      /**
+       * Returns index in provided array that matches the specified key.
+       *
+       * @param {Array<Array>} arr
+       * @param {*} key
+       * @returns {number}
+       */
+      function getIndex(arr, key) {
+          var result = -1;
+          arr.some(function (entry, index) {
+              if (entry[0] === key) {
+                  result = index;
+                  return true;
+              }
+              return false;
           });
-        }
-        props.onSelect(_extends$2({}, selectInfo, {
-          selectedKeys: selectedKeys
-        }));
+          return result;
       }
-    };
-
-    this.onClick = function (e) {
-      _this3.props.onClick(e);
-    };
-
-    this.onKeyDown = function (e, callback) {
-      _this3.innerMenu.getWrappedInstance().onKeyDown(e, callback);
-    };
-
-    this.onOpenChange = function (event) {
-      var props = _this3.props;
-      var openKeys = _this3.store.getState().openKeys.concat();
-      var changed = false;
-      var processSingle = function processSingle(e) {
-        var oneChanged = false;
-        if (e.open) {
-          oneChanged = openKeys.indexOf(e.key) === -1;
-          if (oneChanged) {
-            openKeys.push(e.key);
+      return /** @class */ (function () {
+          function class_1() {
+              this.__entries__ = [];
           }
-        } else {
-          var index = openKeys.indexOf(e.key);
-          oneChanged = index !== -1;
-          if (oneChanged) {
-            openKeys.splice(index, 1);
-          }
-        }
-        changed = changed || oneChanged;
-      };
-      if (Array.isArray(event)) {
-        // batch change call
-        event.forEach(processSingle);
-      } else {
-        processSingle(event);
-      }
-      if (changed) {
-        if (!('openKeys' in _this3.props)) {
-          _this3.store.setState({ openKeys: openKeys });
-        }
-        props.onOpenChange(openKeys);
-      }
-    };
-
-    this.onDeselect = function (selectInfo) {
-      var props = _this3.props;
-      if (props.selectable) {
-        var selectedKeys = _this3.store.getState().selectedKeys.concat();
-        var selectedKey = selectInfo.key;
-        var index = selectedKeys.indexOf(selectedKey);
-        if (index !== -1) {
-          selectedKeys.splice(index, 1);
-        }
-        if (!('selectedKeys' in props)) {
-          _this3.store.setState({
-            selectedKeys: selectedKeys
+          Object.defineProperty(class_1.prototype, "size", {
+              /**
+               * @returns {boolean}
+               */
+              get: function () {
+                  return this.__entries__.length;
+              },
+              enumerable: true,
+              configurable: true
           });
-        }
-        props.onDeselect(_extends$2({}, selectInfo, {
-          selectedKeys: selectedKeys
-        }));
-      }
-    };
+          /**
+           * @param {*} key
+           * @returns {*}
+           */
+          class_1.prototype.get = function (key) {
+              var index = getIndex(this.__entries__, key);
+              var entry = this.__entries__[index];
+              return entry && entry[1];
+          };
+          /**
+           * @param {*} key
+           * @param {*} value
+           * @returns {void}
+           */
+          class_1.prototype.set = function (key, value) {
+              var index = getIndex(this.__entries__, key);
+              if (~index) {
+                  this.__entries__[index][1] = value;
+              }
+              else {
+                  this.__entries__.push([key, value]);
+              }
+          };
+          /**
+           * @param {*} key
+           * @returns {void}
+           */
+          class_1.prototype.delete = function (key) {
+              var entries = this.__entries__;
+              var index = getIndex(entries, key);
+              if (~index) {
+                  entries.splice(index, 1);
+              }
+          };
+          /**
+           * @param {*} key
+           * @returns {void}
+           */
+          class_1.prototype.has = function (key) {
+              return !!~getIndex(this.__entries__, key);
+          };
+          /**
+           * @returns {void}
+           */
+          class_1.prototype.clear = function () {
+              this.__entries__.splice(0);
+          };
+          /**
+           * @param {Function} callback
+           * @param {*} [ctx=null]
+           * @returns {void}
+           */
+          class_1.prototype.forEach = function (callback, ctx) {
+              if (ctx === void 0) { ctx = null; }
+              for (var _i = 0, _a = this.__entries__; _i < _a.length; _i++) {
+                  var entry = _a[_i];
+                  callback.call(ctx, entry[1], entry[0]);
+              }
+          };
+          return class_1;
+      }());
+  })();
 
-    this.getOpenTransitionName = function () {
-      var props = _this3.props;
-      var transitionName = props.openTransitionName;
-      var animationName = props.openAnimation;
-      if (!transitionName && typeof animationName === 'string') {
-        transitionName = props.prefixCls + '-open-' + animationName;
+  /**
+   * Detects whether window and document objects are available in current environment.
+   */
+  var isBrowser = typeof window !== 'undefined' && typeof document !== 'undefined' && window.document === document;
+
+  // Returns global object of a current environment.
+  var global$1 = (function () {
+      if (typeof global !== 'undefined' && global.Math === Math) {
+          return global;
       }
-      return transitionName;
-    };
-  };
+      if (typeof self !== 'undefined' && self.Math === Math) {
+          return self;
+      }
+      if (typeof window !== 'undefined' && window.Math === Math) {
+          return window;
+      }
+      // eslint-disable-next-line no-new-func
+      return Function('return this')();
+  })();
+
+  /**
+   * A shim for the requestAnimationFrame which falls back to the setTimeout if
+   * first one is not supported.
+   *
+   * @returns {number} Requests' identifier.
+   */
+  var requestAnimationFrame$1 = (function () {
+      if (typeof requestAnimationFrame === 'function') {
+          // It's required to use a bounded function because IE sometimes throws
+          // an "Invalid calling object" error if rAF is invoked without the global
+          // object on the left hand side.
+          return requestAnimationFrame.bind(global$1);
+      }
+      return function (callback) { return setTimeout(function () { return callback(Date.now()); }, 1000 / 60); };
+  })();
+
+  // Defines minimum timeout before adding a trailing call.
+  var trailingTimeout = 2;
+  /**
+   * Creates a wrapper function which ensures that provided callback will be
+   * invoked only once during the specified delay period.
+   *
+   * @param {Function} callback - Function to be invoked after the delay period.
+   * @param {number} delay - Delay after which to invoke callback.
+   * @returns {Function}
+   */
+  function throttle (callback, delay) {
+      var leadingCall = false, trailingCall = false, lastCallTime = 0;
+      /**
+       * Invokes the original callback function and schedules new invocation if
+       * the "proxy" was called during current request.
+       *
+       * @returns {void}
+       */
+      function resolvePending() {
+          if (leadingCall) {
+              leadingCall = false;
+              callback();
+          }
+          if (trailingCall) {
+              proxy();
+          }
+      }
+      /**
+       * Callback invoked after the specified delay. It will further postpone
+       * invocation of the original function delegating it to the
+       * requestAnimationFrame.
+       *
+       * @returns {void}
+       */
+      function timeoutCallback() {
+          requestAnimationFrame$1(resolvePending);
+      }
+      /**
+       * Schedules invocation of the original function.
+       *
+       * @returns {void}
+       */
+      function proxy() {
+          var timeStamp = Date.now();
+          if (leadingCall) {
+              // Reject immediately following calls.
+              if (timeStamp - lastCallTime < trailingTimeout) {
+                  return;
+              }
+              // Schedule new call to be in invoked when the pending one is resolved.
+              // This is important for "transitions" which never actually start
+              // immediately so there is a chance that we might miss one if change
+              // happens amids the pending invocation.
+              trailingCall = true;
+          }
+          else {
+              leadingCall = true;
+              trailingCall = false;
+              setTimeout(timeoutCallback, delay);
+          }
+          lastCallTime = timeStamp;
+      }
+      return proxy;
+  }
+
+  // Minimum delay before invoking the update of observers.
+  var REFRESH_DELAY = 20;
+  // A list of substrings of CSS properties used to find transition events that
+  // might affect dimensions of observed elements.
+  var transitionKeys = ['top', 'right', 'bottom', 'left', 'width', 'height', 'size', 'weight'];
+  // Check if MutationObserver is available.
+  var mutationObserverSupported = typeof MutationObserver !== 'undefined';
+  /**
+   * Singleton controller class which handles updates of ResizeObserver instances.
+   */
+  var ResizeObserverController = /** @class */ (function () {
+      /**
+       * Creates a new instance of ResizeObserverController.
+       *
+       * @private
+       */
+      function ResizeObserverController() {
+          /**
+           * Indicates whether DOM listeners have been added.
+           *
+           * @private {boolean}
+           */
+          this.connected_ = false;
+          /**
+           * Tells that controller has subscribed for Mutation Events.
+           *
+           * @private {boolean}
+           */
+          this.mutationEventsAdded_ = false;
+          /**
+           * Keeps reference to the instance of MutationObserver.
+           *
+           * @private {MutationObserver}
+           */
+          this.mutationsObserver_ = null;
+          /**
+           * A list of connected observers.
+           *
+           * @private {Array<ResizeObserverSPI>}
+           */
+          this.observers_ = [];
+          this.onTransitionEnd_ = this.onTransitionEnd_.bind(this);
+          this.refresh = throttle(this.refresh.bind(this), REFRESH_DELAY);
+      }
+      /**
+       * Adds observer to observers list.
+       *
+       * @param {ResizeObserverSPI} observer - Observer to be added.
+       * @returns {void}
+       */
+      ResizeObserverController.prototype.addObserver = function (observer) {
+          if (!~this.observers_.indexOf(observer)) {
+              this.observers_.push(observer);
+          }
+          // Add listeners if they haven't been added yet.
+          if (!this.connected_) {
+              this.connect_();
+          }
+      };
+      /**
+       * Removes observer from observers list.
+       *
+       * @param {ResizeObserverSPI} observer - Observer to be removed.
+       * @returns {void}
+       */
+      ResizeObserverController.prototype.removeObserver = function (observer) {
+          var observers = this.observers_;
+          var index = observers.indexOf(observer);
+          // Remove observer if it's present in registry.
+          if (~index) {
+              observers.splice(index, 1);
+          }
+          // Remove listeners if controller has no connected observers.
+          if (!observers.length && this.connected_) {
+              this.disconnect_();
+          }
+      };
+      /**
+       * Invokes the update of observers. It will continue running updates insofar
+       * it detects changes.
+       *
+       * @returns {void}
+       */
+      ResizeObserverController.prototype.refresh = function () {
+          var changesDetected = this.updateObservers_();
+          // Continue running updates if changes have been detected as there might
+          // be future ones caused by CSS transitions.
+          if (changesDetected) {
+              this.refresh();
+          }
+      };
+      /**
+       * Updates every observer from observers list and notifies them of queued
+       * entries.
+       *
+       * @private
+       * @returns {boolean} Returns "true" if any observer has detected changes in
+       *      dimensions of it's elements.
+       */
+      ResizeObserverController.prototype.updateObservers_ = function () {
+          // Collect observers that have active observations.
+          var activeObservers = this.observers_.filter(function (observer) {
+              return observer.gatherActive(), observer.hasActive();
+          });
+          // Deliver notifications in a separate cycle in order to avoid any
+          // collisions between observers, e.g. when multiple instances of
+          // ResizeObserver are tracking the same element and the callback of one
+          // of them changes content dimensions of the observed target. Sometimes
+          // this may result in notifications being blocked for the rest of observers.
+          activeObservers.forEach(function (observer) { return observer.broadcastActive(); });
+          return activeObservers.length > 0;
+      };
+      /**
+       * Initializes DOM listeners.
+       *
+       * @private
+       * @returns {void}
+       */
+      ResizeObserverController.prototype.connect_ = function () {
+          // Do nothing if running in a non-browser environment or if listeners
+          // have been already added.
+          if (!isBrowser || this.connected_) {
+              return;
+          }
+          // Subscription to the "Transitionend" event is used as a workaround for
+          // delayed transitions. This way it's possible to capture at least the
+          // final state of an element.
+          document.addEventListener('transitionend', this.onTransitionEnd_);
+          window.addEventListener('resize', this.refresh);
+          if (mutationObserverSupported) {
+              this.mutationsObserver_ = new MutationObserver(this.refresh);
+              this.mutationsObserver_.observe(document, {
+                  attributes: true,
+                  childList: true,
+                  characterData: true,
+                  subtree: true
+              });
+          }
+          else {
+              document.addEventListener('DOMSubtreeModified', this.refresh);
+              this.mutationEventsAdded_ = true;
+          }
+          this.connected_ = true;
+      };
+      /**
+       * Removes DOM listeners.
+       *
+       * @private
+       * @returns {void}
+       */
+      ResizeObserverController.prototype.disconnect_ = function () {
+          // Do nothing if running in a non-browser environment or if listeners
+          // have been already removed.
+          if (!isBrowser || !this.connected_) {
+              return;
+          }
+          document.removeEventListener('transitionend', this.onTransitionEnd_);
+          window.removeEventListener('resize', this.refresh);
+          if (this.mutationsObserver_) {
+              this.mutationsObserver_.disconnect();
+          }
+          if (this.mutationEventsAdded_) {
+              document.removeEventListener('DOMSubtreeModified', this.refresh);
+          }
+          this.mutationsObserver_ = null;
+          this.mutationEventsAdded_ = false;
+          this.connected_ = false;
+      };
+      /**
+       * "Transitionend" event handler.
+       *
+       * @private
+       * @param {TransitionEvent} event
+       * @returns {void}
+       */
+      ResizeObserverController.prototype.onTransitionEnd_ = function (_a) {
+          var _b = _a.propertyName, propertyName = _b === void 0 ? '' : _b;
+          // Detect whether transition may affect dimensions of an element.
+          var isReflowProperty = transitionKeys.some(function (key) {
+              return !!~propertyName.indexOf(key);
+          });
+          if (isReflowProperty) {
+              this.refresh();
+          }
+      };
+      /**
+       * Returns instance of the ResizeObserverController.
+       *
+       * @returns {ResizeObserverController}
+       */
+      ResizeObserverController.getInstance = function () {
+          if (!this.instance_) {
+              this.instance_ = new ResizeObserverController();
+          }
+          return this.instance_;
+      };
+      /**
+       * Holds reference to the controller's instance.
+       *
+       * @private {ResizeObserverController}
+       */
+      ResizeObserverController.instance_ = null;
+      return ResizeObserverController;
+  }());
+
+  /**
+   * Defines non-writable/enumerable properties of the provided target object.
+   *
+   * @param {Object} target - Object for which to define properties.
+   * @param {Object} props - Properties to be defined.
+   * @returns {Object} Target object.
+   */
+  var defineConfigurable = (function (target, props) {
+      for (var _i = 0, _a = Object.keys(props); _i < _a.length; _i++) {
+          var key = _a[_i];
+          Object.defineProperty(target, key, {
+              value: props[key],
+              enumerable: false,
+              writable: false,
+              configurable: true
+          });
+      }
+      return target;
+  });
+
+  /**
+   * Returns the global object associated with provided element.
+   *
+   * @param {Object} target
+   * @returns {Object}
+   */
+  var getWindowOf = (function (target) {
+      // Assume that the element is an instance of Node, which means that it
+      // has the "ownerDocument" property from which we can retrieve a
+      // corresponding global object.
+      var ownerGlobal = target && target.ownerDocument && target.ownerDocument.defaultView;
+      // Return the local global object if it's not possible extract one from
+      // provided element.
+      return ownerGlobal || global$1;
+  });
+
+  // Placeholder of an empty content rectangle.
+  var emptyRect = createRectInit(0, 0, 0, 0);
+  /**
+   * Converts provided string to a number.
+   *
+   * @param {number|string} value
+   * @returns {number}
+   */
+  function toFloat(value) {
+      return parseFloat(value) || 0;
+  }
+  /**
+   * Extracts borders size from provided styles.
+   *
+   * @param {CSSStyleDeclaration} styles
+   * @param {...string} positions - Borders positions (top, right, ...)
+   * @returns {number}
+   */
+  function getBordersSize(styles) {
+      var positions = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+          positions[_i - 1] = arguments[_i];
+      }
+      return positions.reduce(function (size, position) {
+          var value = styles['border-' + position + '-width'];
+          return size + toFloat(value);
+      }, 0);
+  }
+  /**
+   * Extracts paddings sizes from provided styles.
+   *
+   * @param {CSSStyleDeclaration} styles
+   * @returns {Object} Paddings box.
+   */
+  function getPaddings(styles) {
+      var positions = ['top', 'right', 'bottom', 'left'];
+      var paddings = {};
+      for (var _i = 0, positions_1 = positions; _i < positions_1.length; _i++) {
+          var position = positions_1[_i];
+          var value = styles['padding-' + position];
+          paddings[position] = toFloat(value);
+      }
+      return paddings;
+  }
+  /**
+   * Calculates content rectangle of provided SVG element.
+   *
+   * @param {SVGGraphicsElement} target - Element content rectangle of which needs
+   *      to be calculated.
+   * @returns {DOMRectInit}
+   */
+  function getSVGContentRect(target) {
+      var bbox = target.getBBox();
+      return createRectInit(0, 0, bbox.width, bbox.height);
+  }
+  /**
+   * Calculates content rectangle of provided HTMLElement.
+   *
+   * @param {HTMLElement} target - Element for which to calculate the content rectangle.
+   * @returns {DOMRectInit}
+   */
+  function getHTMLElementContentRect(target) {
+      // Client width & height properties can't be
+      // used exclusively as they provide rounded values.
+      var clientWidth = target.clientWidth, clientHeight = target.clientHeight;
+      // By this condition we can catch all non-replaced inline, hidden and
+      // detached elements. Though elements with width & height properties less
+      // than 0.5 will be discarded as well.
+      //
+      // Without it we would need to implement separate methods for each of
+      // those cases and it's not possible to perform a precise and performance
+      // effective test for hidden elements. E.g. even jQuery's ':visible' filter
+      // gives wrong results for elements with width & height less than 0.5.
+      if (!clientWidth && !clientHeight) {
+          return emptyRect;
+      }
+      var styles = getWindowOf(target).getComputedStyle(target);
+      var paddings = getPaddings(styles);
+      var horizPad = paddings.left + paddings.right;
+      var vertPad = paddings.top + paddings.bottom;
+      // Computed styles of width & height are being used because they are the
+      // only dimensions available to JS that contain non-rounded values. It could
+      // be possible to utilize the getBoundingClientRect if only it's data wasn't
+      // affected by CSS transformations let alone paddings, borders and scroll bars.
+      var width = toFloat(styles.width), height = toFloat(styles.height);
+      // Width & height include paddings and borders when the 'border-box' box
+      // model is applied (except for IE).
+      if (styles.boxSizing === 'border-box') {
+          // Following conditions are required to handle Internet Explorer which
+          // doesn't include paddings and borders to computed CSS dimensions.
+          //
+          // We can say that if CSS dimensions + paddings are equal to the "client"
+          // properties then it's either IE, and thus we don't need to subtract
+          // anything, or an element merely doesn't have paddings/borders styles.
+          if (Math.round(width + horizPad) !== clientWidth) {
+              width -= getBordersSize(styles, 'left', 'right') + horizPad;
+          }
+          if (Math.round(height + vertPad) !== clientHeight) {
+              height -= getBordersSize(styles, 'top', 'bottom') + vertPad;
+          }
+      }
+      // Following steps can't be applied to the document's root element as its
+      // client[Width/Height] properties represent viewport area of the window.
+      // Besides, it's as well not necessary as the <html> itself neither has
+      // rendered scroll bars nor it can be clipped.
+      if (!isDocumentElement(target)) {
+          // In some browsers (only in Firefox, actually) CSS width & height
+          // include scroll bars size which can be removed at this step as scroll
+          // bars are the only difference between rounded dimensions + paddings
+          // and "client" properties, though that is not always true in Chrome.
+          var vertScrollbar = Math.round(width + horizPad) - clientWidth;
+          var horizScrollbar = Math.round(height + vertPad) - clientHeight;
+          // Chrome has a rather weird rounding of "client" properties.
+          // E.g. for an element with content width of 314.2px it sometimes gives
+          // the client width of 315px and for the width of 314.7px it may give
+          // 314px. And it doesn't happen all the time. So just ignore this delta
+          // as a non-relevant.
+          if (Math.abs(vertScrollbar) !== 1) {
+              width -= vertScrollbar;
+          }
+          if (Math.abs(horizScrollbar) !== 1) {
+              height -= horizScrollbar;
+          }
+      }
+      return createRectInit(paddings.left, paddings.top, width, height);
+  }
+  /**
+   * Checks whether provided element is an instance of the SVGGraphicsElement.
+   *
+   * @param {Element} target - Element to be checked.
+   * @returns {boolean}
+   */
+  var isSVGGraphicsElement = (function () {
+      // Some browsers, namely IE and Edge, don't have the SVGGraphicsElement
+      // interface.
+      if (typeof SVGGraphicsElement !== 'undefined') {
+          return function (target) { return target instanceof getWindowOf(target).SVGGraphicsElement; };
+      }
+      // If it's so, then check that element is at least an instance of the
+      // SVGElement and that it has the "getBBox" method.
+      // eslint-disable-next-line no-extra-parens
+      return function (target) { return (target instanceof getWindowOf(target).SVGElement &&
+          typeof target.getBBox === 'function'); };
+  })();
+  /**
+   * Checks whether provided element is a document element (<html>).
+   *
+   * @param {Element} target - Element to be checked.
+   * @returns {boolean}
+   */
+  function isDocumentElement(target) {
+      return target === getWindowOf(target).document.documentElement;
+  }
+  /**
+   * Calculates an appropriate content rectangle for provided html or svg element.
+   *
+   * @param {Element} target - Element content rectangle of which needs to be calculated.
+   * @returns {DOMRectInit}
+   */
+  function getContentRect(target) {
+      if (!isBrowser) {
+          return emptyRect;
+      }
+      if (isSVGGraphicsElement(target)) {
+          return getSVGContentRect(target);
+      }
+      return getHTMLElementContentRect(target);
+  }
+  /**
+   * Creates rectangle with an interface of the DOMRectReadOnly.
+   * Spec: https://drafts.fxtf.org/geometry/#domrectreadonly
+   *
+   * @param {DOMRectInit} rectInit - Object with rectangle's x/y coordinates and dimensions.
+   * @returns {DOMRectReadOnly}
+   */
+  function createReadOnlyRect(_a) {
+      var x = _a.x, y = _a.y, width = _a.width, height = _a.height;
+      // If DOMRectReadOnly is available use it as a prototype for the rectangle.
+      var Constr = typeof DOMRectReadOnly !== 'undefined' ? DOMRectReadOnly : Object;
+      var rect = Object.create(Constr.prototype);
+      // Rectangle's properties are not writable and non-enumerable.
+      defineConfigurable(rect, {
+          x: x, y: y, width: width, height: height,
+          top: y,
+          right: x + width,
+          bottom: height + y,
+          left: x
+      });
+      return rect;
+  }
+  /**
+   * Creates DOMRectInit object based on the provided dimensions and the x/y coordinates.
+   * Spec: https://drafts.fxtf.org/geometry/#dictdef-domrectinit
+   *
+   * @param {number} x - X coordinate.
+   * @param {number} y - Y coordinate.
+   * @param {number} width - Rectangle's width.
+   * @param {number} height - Rectangle's height.
+   * @returns {DOMRectInit}
+   */
+  function createRectInit(x, y, width, height) {
+      return { x: x, y: y, width: width, height: height };
+  }
+
+  /**
+   * Class that is responsible for computations of the content rectangle of
+   * provided DOM element and for keeping track of it's changes.
+   */
+  var ResizeObservation = /** @class */ (function () {
+      /**
+       * Creates an instance of ResizeObservation.
+       *
+       * @param {Element} target - Element to be observed.
+       */
+      function ResizeObservation(target) {
+          /**
+           * Broadcasted width of content rectangle.
+           *
+           * @type {number}
+           */
+          this.broadcastWidth = 0;
+          /**
+           * Broadcasted height of content rectangle.
+           *
+           * @type {number}
+           */
+          this.broadcastHeight = 0;
+          /**
+           * Reference to the last observed content rectangle.
+           *
+           * @private {DOMRectInit}
+           */
+          this.contentRect_ = createRectInit(0, 0, 0, 0);
+          this.target = target;
+      }
+      /**
+       * Updates content rectangle and tells whether it's width or height properties
+       * have changed since the last broadcast.
+       *
+       * @returns {boolean}
+       */
+      ResizeObservation.prototype.isActive = function () {
+          var rect = getContentRect(this.target);
+          this.contentRect_ = rect;
+          return (rect.width !== this.broadcastWidth ||
+              rect.height !== this.broadcastHeight);
+      };
+      /**
+       * Updates 'broadcastWidth' and 'broadcastHeight' properties with a data
+       * from the corresponding properties of the last observed content rectangle.
+       *
+       * @returns {DOMRectInit} Last observed content rectangle.
+       */
+      ResizeObservation.prototype.broadcastRect = function () {
+          var rect = this.contentRect_;
+          this.broadcastWidth = rect.width;
+          this.broadcastHeight = rect.height;
+          return rect;
+      };
+      return ResizeObservation;
+  }());
+
+  var ResizeObserverEntry = /** @class */ (function () {
+      /**
+       * Creates an instance of ResizeObserverEntry.
+       *
+       * @param {Element} target - Element that is being observed.
+       * @param {DOMRectInit} rectInit - Data of the element's content rectangle.
+       */
+      function ResizeObserverEntry(target, rectInit) {
+          var contentRect = createReadOnlyRect(rectInit);
+          // According to the specification following properties are not writable
+          // and are also not enumerable in the native implementation.
+          //
+          // Property accessors are not being used as they'd require to define a
+          // private WeakMap storage which may cause memory leaks in browsers that
+          // don't support this type of collections.
+          defineConfigurable(this, { target: target, contentRect: contentRect });
+      }
+      return ResizeObserverEntry;
+  }());
+
+  var ResizeObserverSPI = /** @class */ (function () {
+      /**
+       * Creates a new instance of ResizeObserver.
+       *
+       * @param {ResizeObserverCallback} callback - Callback function that is invoked
+       *      when one of the observed elements changes it's content dimensions.
+       * @param {ResizeObserverController} controller - Controller instance which
+       *      is responsible for the updates of observer.
+       * @param {ResizeObserver} callbackCtx - Reference to the public
+       *      ResizeObserver instance which will be passed to callback function.
+       */
+      function ResizeObserverSPI(callback, controller, callbackCtx) {
+          /**
+           * Collection of resize observations that have detected changes in dimensions
+           * of elements.
+           *
+           * @private {Array<ResizeObservation>}
+           */
+          this.activeObservations_ = [];
+          /**
+           * Registry of the ResizeObservation instances.
+           *
+           * @private {Map<Element, ResizeObservation>}
+           */
+          this.observations_ = new MapShim();
+          if (typeof callback !== 'function') {
+              throw new TypeError('The callback provided as parameter 1 is not a function.');
+          }
+          this.callback_ = callback;
+          this.controller_ = controller;
+          this.callbackCtx_ = callbackCtx;
+      }
+      /**
+       * Starts observing provided element.
+       *
+       * @param {Element} target - Element to be observed.
+       * @returns {void}
+       */
+      ResizeObserverSPI.prototype.observe = function (target) {
+          if (!arguments.length) {
+              throw new TypeError('1 argument required, but only 0 present.');
+          }
+          // Do nothing if current environment doesn't have the Element interface.
+          if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+              return;
+          }
+          if (!(target instanceof getWindowOf(target).Element)) {
+              throw new TypeError('parameter 1 is not of type "Element".');
+          }
+          var observations = this.observations_;
+          // Do nothing if element is already being observed.
+          if (observations.has(target)) {
+              return;
+          }
+          observations.set(target, new ResizeObservation(target));
+          this.controller_.addObserver(this);
+          // Force the update of observations.
+          this.controller_.refresh();
+      };
+      /**
+       * Stops observing provided element.
+       *
+       * @param {Element} target - Element to stop observing.
+       * @returns {void}
+       */
+      ResizeObserverSPI.prototype.unobserve = function (target) {
+          if (!arguments.length) {
+              throw new TypeError('1 argument required, but only 0 present.');
+          }
+          // Do nothing if current environment doesn't have the Element interface.
+          if (typeof Element === 'undefined' || !(Element instanceof Object)) {
+              return;
+          }
+          if (!(target instanceof getWindowOf(target).Element)) {
+              throw new TypeError('parameter 1 is not of type "Element".');
+          }
+          var observations = this.observations_;
+          // Do nothing if element is not being observed.
+          if (!observations.has(target)) {
+              return;
+          }
+          observations.delete(target);
+          if (!observations.size) {
+              this.controller_.removeObserver(this);
+          }
+      };
+      /**
+       * Stops observing all elements.
+       *
+       * @returns {void}
+       */
+      ResizeObserverSPI.prototype.disconnect = function () {
+          this.clearActive();
+          this.observations_.clear();
+          this.controller_.removeObserver(this);
+      };
+      /**
+       * Collects observation instances the associated element of which has changed
+       * it's content rectangle.
+       *
+       * @returns {void}
+       */
+      ResizeObserverSPI.prototype.gatherActive = function () {
+          var _this = this;
+          this.clearActive();
+          this.observations_.forEach(function (observation) {
+              if (observation.isActive()) {
+                  _this.activeObservations_.push(observation);
+              }
+          });
+      };
+      /**
+       * Invokes initial callback function with a list of ResizeObserverEntry
+       * instances collected from active resize observations.
+       *
+       * @returns {void}
+       */
+      ResizeObserverSPI.prototype.broadcastActive = function () {
+          // Do nothing if observer doesn't have active observations.
+          if (!this.hasActive()) {
+              return;
+          }
+          var ctx = this.callbackCtx_;
+          // Create ResizeObserverEntry instance for every active observation.
+          var entries = this.activeObservations_.map(function (observation) {
+              return new ResizeObserverEntry(observation.target, observation.broadcastRect());
+          });
+          this.callback_.call(ctx, entries, ctx);
+          this.clearActive();
+      };
+      /**
+       * Clears the collection of active observations.
+       *
+       * @returns {void}
+       */
+      ResizeObserverSPI.prototype.clearActive = function () {
+          this.activeObservations_.splice(0);
+      };
+      /**
+       * Tells whether observer has active observations.
+       *
+       * @returns {boolean}
+       */
+      ResizeObserverSPI.prototype.hasActive = function () {
+          return this.activeObservations_.length > 0;
+      };
+      return ResizeObserverSPI;
+  }());
+
+  // Registry of internal observers. If WeakMap is not available use current shim
+  // for the Map collection as it has all required methods and because WeakMap
+  // can't be fully polyfilled anyway.
+  var observers = typeof WeakMap !== 'undefined' ? new WeakMap() : new MapShim();
+  /**
+   * ResizeObserver API. Encapsulates the ResizeObserver SPI implementation
+   * exposing only those methods and properties that are defined in the spec.
+   */
+  var ResizeObserver = /** @class */ (function () {
+      /**
+       * Creates a new instance of ResizeObserver.
+       *
+       * @param {ResizeObserverCallback} callback - Callback that is invoked when
+       *      dimensions of the observed elements change.
+       */
+      function ResizeObserver(callback) {
+          if (!(this instanceof ResizeObserver)) {
+              throw new TypeError('Cannot call a class as a function.');
+          }
+          if (!arguments.length) {
+              throw new TypeError('1 argument required, but only 0 present.');
+          }
+          var controller = ResizeObserverController.getInstance();
+          var observer = new ResizeObserverSPI(callback, controller, this);
+          observers.set(this, observer);
+      }
+      return ResizeObserver;
+  }());
+  // Expose public methods of ResizeObserver.
+  [
+      'observe',
+      'unobserve',
+      'disconnect'
+  ].forEach(function (method) {
+      ResizeObserver.prototype[method] = function () {
+          var _a;
+          return (_a = observers.get(this))[method].apply(_a, arguments);
+      };
+  });
+
+  var index$3 = (function () {
+      // Export existing implementation if available.
+      if (typeof global$1.ResizeObserver !== 'undefined') {
+          return global$1.ResizeObserver;
+      }
+      return ResizeObserver;
+  })();
 
   function addEventListenerWrap(target, eventType, cb, option) {
     /* eslint camelcase: 2 */
@@ -8757,7 +9076,7 @@
     return '';
   }
 
-  function saveRef$1(name, component) {
+  function saveRef(name, component) {
     this[name] = component;
   }
 
@@ -10250,7 +10569,7 @@
 
       var _this = _possibleConstructorReturn$1(this, _Component.call(this, props));
 
-      _initialiseProps$3.call(_this);
+      _initialiseProps$1.call(_this);
 
       _this.state = {
         // Used for stretch
@@ -10259,8 +10578,8 @@
         targetHeight: undefined
       };
 
-      _this.savePopupRef = saveRef$1.bind(_this, 'popupInstance');
-      _this.saveAlignRef = saveRef$1.bind(_this, 'alignInstance');
+      _this.savePopupRef = saveRef.bind(_this, 'popupInstance');
+      _this.saveAlignRef = saveRef.bind(_this, 'alignInstance');
       return _this;
     }
 
@@ -10508,7 +10827,7 @@
     })
   };
 
-  var _initialiseProps$3 = function _initialiseProps() {
+  var _initialiseProps$1 = function _initialiseProps() {
     var _this3 = this;
 
     this.onAlign = function (popupDomNode, align) {
@@ -10598,7 +10917,7 @@
 
       var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
 
-      _initialiseProps$4.call(_this);
+      _initialiseProps$2.call(_this);
 
       var popupVisible = void 0;
       if ('popupVisible' in props) {
@@ -11030,7 +11349,7 @@
     hideAction: []
   };
 
-  var _initialiseProps$4 = function _initialiseProps() {
+  var _initialiseProps$2 = function _initialiseProps() {
     var _this5 = this;
 
     this.onMouseEnter = function (e) {
@@ -11338,7 +11657,7 @@
 
       var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
 
-      _initialiseProps$5.call(_this);
+      _initialiseProps$3.call(_this);
 
       var store = props.store;
       var eventKey = props.eventKey;
@@ -11426,11 +11745,14 @@
         subMenuCloseDelay: props.subMenuCloseDelay,
         forceSubMenuRender: props.forceSubMenuRender,
         triggerSubMenuAction: props.triggerSubMenuAction,
+        builtinPlacements: props.builtinPlacements,
         defaultActiveFirst: props.store.getState().defaultActiveFirst[getMenuIdFromSubMenuEventKey(props.eventKey)],
         multiple: props.multiple,
         prefixCls: props.rootPrefixCls,
         id: this._menuId,
-        manualRef: this.saveMenuInstance
+        manualRef: this.saveMenuInstance,
+        itemIcon: props.itemIcon,
+        expandIcon: props.expandIcon
       };
 
       var haveRendered = this.haveRendered;
@@ -11467,7 +11789,7 @@
           transitionAppear: transitionAppear
         }),
         React__default.createElement(
-          SubPopupMenu$1,
+          connected$1,
           _extends$2({}, baseProps, { id: this._menuId }),
           children
         )
@@ -11525,6 +11847,15 @@
         };
       }
 
+      // expand custom icon should NOT be displayed in menu with horizontal mode.
+      var icon = null;
+      if (props.mode !== 'horizontal') {
+        icon = this.props.expandIcon; // ReactNode
+        if (typeof this.props.expandIcon === 'function') {
+          icon = React__default.createElement(this.props.expandIcon, _extends$2({}, this.props));
+        }
+      }
+
       var title = React__default.createElement(
         'div',
         _extends$2({
@@ -11538,7 +11869,7 @@
           title: typeof props.title === 'string' ? props.title : undefined
         }),
         props.title,
-        React__default.createElement('i', { className: prefixCls + '-arrow' })
+        icon || React__default.createElement('i', { className: prefixCls + '-arrow' })
       );
       var children = this.renderChildren(props.children);
 
@@ -11552,7 +11883,8 @@
           triggerSubMenuAction = props.triggerSubMenuAction,
           subMenuOpenDelay = props.subMenuOpenDelay,
           forceSubMenuRender = props.forceSubMenuRender,
-          subMenuCloseDelay = props.subMenuCloseDelay;
+          subMenuCloseDelay = props.subMenuCloseDelay,
+          builtinPlacements = props.builtinPlacements;
 
       menuAllProps.forEach(function (key) {
         return delete props[key];
@@ -11574,7 +11906,7 @@
             prefixCls: prefixCls,
             popupClassName: prefixCls + '-popup ' + popupClassName,
             getPopupContainer: getPopupContainer,
-            builtinPlacements: placements,
+            builtinPlacements: _extends$2({}, placements, builtinPlacements),
             popupPlacement: popupPlacement,
             popupVisible: isOpen,
             popupAlign: popupAlign,
@@ -11619,7 +11951,9 @@
     isOpen: PropTypes.bool,
     store: PropTypes.object,
     mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
-    manualRef: PropTypes.func
+    manualRef: PropTypes.func,
+    itemIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+    expandIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
   };
   SubMenu.defaultProps = {
     onMouseEnter: noop$1,
@@ -11632,7 +11966,7 @@
     title: ''
   };
 
-  var _initialiseProps$5 = function _initialiseProps() {
+  var _initialiseProps$3 = function _initialiseProps() {
     var _this3 = this;
 
     this.onDestroy = function (key) {
@@ -11765,7 +12099,11 @@
     };
 
     this.onSubMenuClick = function (info) {
-      _this3.props.onClick(_this3.addKeyPath(info));
+      // in the case of overflowed submenu
+      // onClick is not copied over
+      if (typeof _this3.props.onClick === 'function') {
+        _this3.props.onClick(_this3.addKeyPath(info));
+      }
     };
 
     this.onSelect = function (info) {
@@ -11870,6 +12208,946 @@
   })(SubMenu);
 
   connected.isSubMenu = true;
+
+  var canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+  var MENUITEM_OVERFLOWED_CLASSNAME = 'menuitem-overflowed';
+
+  // Fix ssr
+  if (canUseDOM) {
+    require('mutationobserver-shim');
+  }
+
+  var DOMWrap = function (_React$Component) {
+    _inherits$1(DOMWrap, _React$Component);
+
+    function DOMWrap() {
+      var _temp, _this, _ret;
+
+      _classCallCheck$1(this, DOMWrap);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = _possibleConstructorReturn$1(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.state = {
+        lastVisibleIndex: undefined
+      }, _this.getMenuItemNodes = function () {
+        var prefixCls = _this.props.prefixCls;
+
+        var ul = ReactDOM__default.findDOMNode(_this);
+        if (!ul) {
+          return [];
+        }
+
+        // filter out all overflowed indicator placeholder
+        return [].slice.call(ul.children).filter(function (node) {
+          return node.className.split(' ').indexOf(prefixCls + '-overflowed-submenu') < 0;
+        });
+      }, _this.getOverflowedSubMenuItem = function (keyPrefix, overflowedItems, renderPlaceholder) {
+        var _this$props = _this.props,
+            overflowedIndicator = _this$props.overflowedIndicator,
+            level = _this$props.level,
+            mode = _this$props.mode,
+            prefixCls = _this$props.prefixCls,
+            theme = _this$props.theme,
+            propStyle = _this$props.style;
+
+        if (level !== 1 || mode !== 'horizontal') {
+          return null;
+        }
+        // put all the overflowed item inside a submenu
+        // with a title of overflow indicator ('...')
+        var copy = _this.props.children[0];
+
+        var _copy$props = copy.props,
+            throwAway = _copy$props.children,
+            title = _copy$props.title,
+            eventKey = _copy$props.eventKey,
+            rest = _objectWithoutProperties$1(_copy$props, ['children', 'title', 'eventKey']);
+
+        var style = _extends$2({}, propStyle);
+        var key = keyPrefix + '-overflowed-indicator';
+
+        if (overflowedItems.length === 0 && renderPlaceholder !== true) {
+          style = _extends$2({}, style, {
+            display: 'none'
+          });
+        } else if (renderPlaceholder) {
+          style = _extends$2({}, style, {
+            visibility: 'hidden',
+            // prevent from taking normal dom space
+            position: 'absolute'
+          });
+          key = key + '-placeholder';
+        }
+
+        var popupClassName = theme ? prefixCls + '-' + theme : '';
+        var props = {};
+        menuAllProps.forEach(function (k) {
+          if (rest[k] !== undefined) {
+            props[k] = rest[k];
+          }
+        });
+
+        return React__default.createElement(
+          connected,
+          _extends$2({
+            title: overflowedIndicator,
+            className: prefixCls + '-overflowed-submenu',
+            popupClassName: popupClassName
+          }, props, {
+            key: key,
+            eventKey: keyPrefix + '-overflowed-indicator',
+            disabled: false,
+            style: style
+          }),
+          overflowedItems
+        );
+      }, _this.setChildrenWidthAndResize = function () {
+        if (_this.props.mode !== 'horizontal') {
+          return;
+        }
+        var ul = ReactDOM__default.findDOMNode(_this);
+
+        if (!ul) {
+          return;
+        }
+
+        var ulChildrenNodes = ul.children;
+
+        if (!ulChildrenNodes || ulChildrenNodes.length === 0) {
+          return;
+        }
+
+        var lastOverflowedIndicatorPlaceholder = ul.children[ulChildrenNodes.length - 1];
+
+        // need last overflowed indicator for calculating length;
+        setStyle(lastOverflowedIndicatorPlaceholder, 'display', 'inline-block');
+
+        var menuItemNodes = _this.getMenuItemNodes();
+
+        // reset display attribute for all hidden elements caused by overflow to calculate updated width
+        // and then reset to original state after width calculation
+
+        var overflowedItems = menuItemNodes.filter(function (c) {
+          return c.className.split(' ').indexOf(MENUITEM_OVERFLOWED_CLASSNAME) >= 0;
+        });
+
+        overflowedItems.forEach(function (c) {
+          setStyle(c, 'display', 'inline-block');
+        });
+
+        _this.menuItemSizes = menuItemNodes.map(function (c) {
+          return getWidth(c);
+        });
+
+        overflowedItems.forEach(function (c) {
+          setStyle(c, 'display', 'none');
+        });
+        _this.overflowedIndicatorWidth = getWidth(ul.children[ul.children.length - 1]);
+        _this.originalTotalWidth = _this.menuItemSizes.reduce(function (acc, cur) {
+          return acc + cur;
+        }, 0);
+        _this.handleResize();
+        // prevent the overflowed indicator from taking space;
+        setStyle(lastOverflowedIndicatorPlaceholder, 'display', 'none');
+      }, _this.resizeObserver = null, _this.mutationObserver = null, _this.originalTotalWidth = 0, _this.overflowedItems = [], _this.menuItemSizes = [], _this.handleResize = function () {
+        if (_this.props.mode !== 'horizontal') {
+          return;
+        }
+
+        var ul = ReactDOM__default.findDOMNode(_this);
+        if (!ul) {
+          return;
+        }
+        var width = getWidth(ul);
+
+        _this.overflowedItems = [];
+        var currentSumWidth = 0;
+
+        // index for last visible child in horizontal mode
+        var lastVisibleIndex = undefined;
+
+        if (_this.originalTotalWidth > width) {
+          lastVisibleIndex = -1;
+
+          _this.menuItemSizes.forEach(function (liWidth) {
+            currentSumWidth += liWidth;
+            if (currentSumWidth + _this.overflowedIndicatorWidth <= width) {
+              lastVisibleIndex++;
+            }
+          });
+        }
+
+        _this.setState({ lastVisibleIndex: lastVisibleIndex });
+      }, _temp), _possibleConstructorReturn$1(_this, _ret);
+    }
+
+    DOMWrap.prototype.componentDidMount = function componentDidMount() {
+      var _this2 = this;
+
+      this.setChildrenWidthAndResize();
+      if (this.props.level === 1 && this.props.mode === 'horizontal') {
+        var menuUl = ReactDOM__default.findDOMNode(this);
+        if (!menuUl) {
+          return;
+        }
+        this.resizeObserver = new index$3(function (entries) {
+          entries.forEach(_this2.setChildrenWidthAndResize);
+        });
+
+        [].slice.call(menuUl.children).concat(menuUl).forEach(function (el) {
+          _this2.resizeObserver.observe(el);
+        });
+
+        if (typeof MutationObserver !== 'undefined') {
+          this.mutationObserver = new MutationObserver(function () {
+            _this2.resizeObserver.disconnect();
+            [].slice.call(menuUl.children).concat(menuUl).forEach(function (el) {
+              _this2.resizeObserver.observe(el);
+            });
+            _this2.setChildrenWidthAndResize();
+          });
+          this.mutationObserver.observe(menuUl, { attributes: false, childList: true, subTree: false });
+        }
+      }
+    };
+
+    DOMWrap.prototype.componentWillUnmount = function componentWillUnmount() {
+      if (this.resizeObserver) {
+        this.resizeObserver.disconnect();
+      }
+      if (this.mutationObserver) {
+        this.resizeObserver.disconnect();
+      }
+    };
+
+    // get all valid menuItem nodes
+
+
+    // memorize rendered menuSize
+
+
+    // original scroll size of the list
+
+
+    // copy of overflowed items
+
+
+    // cache item of the original items (so we can track the size and order)
+
+
+    DOMWrap.prototype.renderChildren = function renderChildren(children) {
+      var _this3 = this;
+
+      // need to take care of overflowed items in horizontal mode
+      var lastVisibleIndex = this.state.lastVisibleIndex;
+
+      return (children || []).reduce(function (acc, childNode, index) {
+        var item = childNode;
+        if (_this3.props.mode === 'horizontal') {
+          var overflowed = _this3.getOverflowedSubMenuItem(childNode.props.eventKey, []);
+          if (lastVisibleIndex !== undefined && _this3.props.className.indexOf(_this3.props.prefixCls + '-root') !== -1) {
+            if (index > lastVisibleIndex) {
+              item = React__default.cloneElement(childNode,
+              // 这里修改 eventKey 是为了防止隐藏状态下还会触发 openkeys 事件
+              {
+                style: { display: 'none' },
+                eventKey: childNode.props.eventKey + '-hidden',
+                className: childNode.className + ' ' + MENUITEM_OVERFLOWED_CLASSNAME
+              });
+            }
+            if (index === lastVisibleIndex + 1) {
+              _this3.overflowedItems = children.slice(lastVisibleIndex + 1).map(function (c) {
+                return React__default.cloneElement(c,
+                // children[index].key will become '.$key' in clone by default,
+                // we have to overwrite with the correct key explicitly
+                { key: c.props.eventKey, mode: 'vertical-left' });
+              });
+
+              overflowed = _this3.getOverflowedSubMenuItem(childNode.props.eventKey, _this3.overflowedItems);
+            }
+          }
+
+          var ret = [].concat(acc, [overflowed, item]);
+
+          if (index === children.length - 1) {
+            // need a placeholder for calculating overflowed indicator width
+            ret.push(_this3.getOverflowedSubMenuItem(childNode.props.eventKey, [], true));
+          }
+          return ret;
+        }
+        return [].concat(acc, [item]);
+      }, []);
+    };
+
+    DOMWrap.prototype.render = function render() {
+      var _props = this.props,
+          hiddenClassName = _props.hiddenClassName,
+          visible = _props.visible,
+          prefixCls = _props.prefixCls,
+          overflowedIndicator = _props.overflowedIndicator,
+          mode = _props.mode,
+          level = _props.level,
+          Tag = _props.tag,
+          children = _props.children,
+          theme = _props.theme,
+          rest = _objectWithoutProperties$1(_props, ['hiddenClassName', 'visible', 'prefixCls', 'overflowedIndicator', 'mode', 'level', 'tag', 'children', 'theme']);
+
+      if (!visible) {
+        rest.className += ' ' + hiddenClassName;
+      }
+
+      return React__default.createElement(
+        Tag,
+        rest,
+        this.renderChildren(this.props.children)
+      );
+    };
+
+    return DOMWrap;
+  }(React__default.Component);
+
+  DOMWrap.propTypes = {
+    className: PropTypes.string,
+    children: PropTypes.node,
+    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
+    prefixCls: PropTypes.string,
+    level: PropTypes.number,
+    theme: PropTypes.string,
+    overflowedIndicator: PropTypes.node,
+    visible: PropTypes.bool,
+    hiddenClassName: PropTypes.string,
+    tag: PropTypes.string,
+    style: PropTypes.object
+  };
+
+  DOMWrap.defaultProps = {
+    tag: 'div',
+    className: ''
+  };
+
+  function allDisabled(arr) {
+    if (!arr.length) {
+      return true;
+    }
+    return arr.every(function (c) {
+      return !!c.props.disabled;
+    });
+  }
+
+  function updateActiveKey(store, menuId, activeKey) {
+    var _extends2;
+
+    var state = store.getState();
+    store.setState({
+      activeKey: _extends$2({}, state.activeKey, (_extends2 = {}, _extends2[menuId] = activeKey, _extends2))
+    });
+  }
+
+  function getEventKey(props) {
+    // when eventKey not available ,it's menu and return menu id '0-menu-'
+    return props.eventKey || '0-menu-';
+  }
+
+  function getActiveKey(props, originalActiveKey) {
+    var activeKey = originalActiveKey;
+    var children = props.children,
+        eventKey = props.eventKey;
+
+    if (activeKey) {
+      var found = void 0;
+      loopMenuItem(children, function (c, i) {
+        if (c && !c.props.disabled && activeKey === getKeyFromChildrenIndex(c, eventKey, i)) {
+          found = true;
+        }
+      });
+      if (found) {
+        return activeKey;
+      }
+    }
+    activeKey = null;
+    if (props.defaultActiveFirst) {
+      loopMenuItem(children, function (c, i) {
+        if (!activeKey && c && !c.props.disabled) {
+          activeKey = getKeyFromChildrenIndex(c, eventKey, i);
+        }
+      });
+      return activeKey;
+    }
+    return activeKey;
+  }
+
+  function saveRef$1(c) {
+    if (c) {
+      var index = this.instanceArray.indexOf(c);
+      if (index !== -1) {
+        // update component if it's already inside instanceArray
+        this.instanceArray[index] = c;
+      } else {
+        // add component if it's not in instanceArray yet;
+        this.instanceArray.push(c);
+      }
+    }
+  }
+
+  var SubPopupMenu = function (_React$Component) {
+    _inherits$1(SubPopupMenu, _React$Component);
+
+    function SubPopupMenu(props) {
+      var _extends3;
+
+      _classCallCheck$1(this, SubPopupMenu);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _initialiseProps$4.call(_this);
+
+      props.store.setState({
+        activeKey: _extends$2({}, props.store.getState().activeKey, (_extends3 = {}, _extends3[props.eventKey] = getActiveKey(props, props.activeKey), _extends3))
+      });
+
+      _this.instanceArray = [];
+      return _this;
+    }
+
+    SubPopupMenu.prototype.componentDidMount = function componentDidMount() {
+      // invoke customized ref to expose component to mixin
+      if (this.props.manualRef) {
+        this.props.manualRef(this);
+      }
+    };
+
+    SubPopupMenu.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+      return this.props.visible || nextProps.visible;
+    };
+
+    SubPopupMenu.prototype.componentDidUpdate = function componentDidUpdate(prevProps) {
+      var props = this.props;
+      var originalActiveKey = 'activeKey' in props ? props.activeKey : props.store.getState().activeKey[getEventKey(props)];
+      var activeKey = getActiveKey(props, originalActiveKey);
+      if (activeKey !== originalActiveKey) {
+        updateActiveKey(props.store, getEventKey(props), activeKey);
+      } else if ('activeKey' in prevProps) {
+        // If prev activeKey is not same as current activeKey,
+        // we should set it.
+        var prevActiveKey = getActiveKey(prevProps, prevProps.activeKey);
+        if (activeKey !== prevActiveKey) {
+          updateActiveKey(props.store, getEventKey(props), activeKey);
+        }
+      }
+    };
+
+    // all keyboard events callbacks run from here at first
+
+
+    SubPopupMenu.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = _objectWithoutProperties$1(this.props, []);
+
+      this.instanceArray = [];
+      var className = classnames(props.prefixCls, props.className, props.prefixCls + '-' + props.mode);
+      var domProps = {
+        className: className,
+        // role could be 'select' and by default set to menu
+        role: props.role || 'menu'
+      };
+      if (props.id) {
+        domProps.id = props.id;
+      }
+      if (props.focusable) {
+        domProps.tabIndex = '0';
+        domProps.onKeyDown = this.onKeyDown;
+      }
+      var prefixCls = props.prefixCls,
+          eventKey = props.eventKey,
+          visible = props.visible,
+          level = props.level,
+          mode = props.mode,
+          overflowedIndicator = props.overflowedIndicator,
+          theme = props.theme;
+
+      menuAllProps.forEach(function (key) {
+        return delete props[key];
+      });
+
+      // Otherwise, the propagated click event will trigger another onClick
+      delete props.onClick;
+
+      return (
+        // ESLint is not smart enough to know that the type of `children` was checked.
+        /* eslint-disable */
+        React__default.createElement(
+          DOMWrap,
+          _extends$2({}, props, {
+            prefixCls: prefixCls,
+            mode: mode,
+            tag: 'ul',
+            level: level,
+            theme: theme,
+            hiddenClassName: prefixCls + '-hidden',
+            visible: visible,
+            overflowedIndicator: overflowedIndicator
+          }, domProps),
+          React__default.Children.map(props.children, function (c, i) {
+            return _this2.renderMenuItem(c, i, eventKey || '0-menu-');
+          })
+        )
+        /*eslint-enable */
+
+      );
+    };
+
+    return SubPopupMenu;
+  }(React__default.Component);
+  SubPopupMenu.propTypes = {
+    onSelect: PropTypes.func,
+    onClick: PropTypes.func,
+    onDeselect: PropTypes.func,
+    onOpenChange: PropTypes.func,
+    onDestroy: PropTypes.func,
+    openTransitionName: PropTypes.string,
+    openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    openKeys: PropTypes.arrayOf(PropTypes.string),
+    visible: PropTypes.bool,
+    children: PropTypes.any,
+    parentMenu: PropTypes.object,
+    eventKey: PropTypes.string,
+    store: PropTypes.shape({
+      getState: PropTypes.func,
+      setState: PropTypes.func
+    }),
+
+    // adding in refactor
+    focusable: PropTypes.bool,
+    multiple: PropTypes.bool,
+    style: PropTypes.object,
+    defaultActiveFirst: PropTypes.bool,
+    activeKey: PropTypes.string,
+    selectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
+    level: PropTypes.number,
+    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
+    triggerSubMenuAction: PropTypes.oneOf(['click', 'hover']),
+    inlineIndent: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    manualRef: PropTypes.func,
+    itemIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+    expandIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
+  };
+  SubPopupMenu.defaultProps = {
+    prefixCls: 'rc-menu',
+    className: '',
+    mode: 'vertical',
+    level: 1,
+    inlineIndent: 24,
+    visible: true,
+    focusable: true,
+    style: {},
+    manualRef: noop$1
+  };
+
+  var _initialiseProps$4 = function _initialiseProps() {
+    var _this3 = this;
+
+    this.onKeyDown = function (e, callback) {
+      var keyCode = e.keyCode;
+      var handled = void 0;
+      _this3.getFlatInstanceArray().forEach(function (obj) {
+        if (obj && obj.props.active && obj.onKeyDown) {
+          handled = obj.onKeyDown(e);
+        }
+      });
+      if (handled) {
+        return 1;
+      }
+      var activeItem = null;
+      if (keyCode === KeyCode.UP || keyCode === KeyCode.DOWN) {
+        activeItem = _this3.step(keyCode === KeyCode.UP ? -1 : 1);
+      }
+      if (activeItem) {
+        e.preventDefault();
+        updateActiveKey(_this3.props.store, getEventKey(_this3.props), activeItem.props.eventKey);
+
+        if (typeof callback === 'function') {
+          callback(activeItem);
+        }
+
+        return 1;
+      }
+    };
+
+    this.onItemHover = function (e) {
+      var key = e.key,
+          hover = e.hover;
+
+      updateActiveKey(_this3.props.store, getEventKey(_this3.props), hover ? key : null);
+    };
+
+    this.onDeselect = function (selectInfo) {
+      _this3.props.onDeselect(selectInfo);
+    };
+
+    this.onSelect = function (selectInfo) {
+      _this3.props.onSelect(selectInfo);
+    };
+
+    this.onClick = function (e) {
+      _this3.props.onClick(e);
+    };
+
+    this.onOpenChange = function (e) {
+      _this3.props.onOpenChange(e);
+    };
+
+    this.onDestroy = function (key) {
+      /* istanbul ignore next */
+      _this3.props.onDestroy(key);
+    };
+
+    this.getFlatInstanceArray = function () {
+      return _this3.instanceArray;
+    };
+
+    this.getOpenTransitionName = function () {
+      return _this3.props.openTransitionName;
+    };
+
+    this.step = function (direction) {
+      var children = _this3.getFlatInstanceArray();
+      var activeKey = _this3.props.store.getState().activeKey[getEventKey(_this3.props)];
+      var len = children.length;
+      if (!len) {
+        return null;
+      }
+      if (direction < 0) {
+        children = children.concat().reverse();
+      }
+      // find current activeIndex
+      var activeIndex = -1;
+      children.every(function (c, ci) {
+        if (c && c.props.eventKey === activeKey) {
+          activeIndex = ci;
+          return false;
+        }
+        return true;
+      });
+      if (!_this3.props.defaultActiveFirst && activeIndex !== -1 && allDisabled(children.slice(activeIndex, len - 1))) {
+        return undefined;
+      }
+      var start = (activeIndex + 1) % len;
+      var i = start;
+
+      do {
+        var child = children[i];
+        if (!child || child.props.disabled) {
+          i = (i + 1) % len;
+        } else {
+          return child;
+        }
+      } while (i !== start);
+
+      return null;
+    };
+
+    this.renderCommonMenuItem = function (child, i, extraProps) {
+      var state = _this3.props.store.getState();
+      var props = _this3.props;
+      var key = getKeyFromChildrenIndex(child, props.eventKey, i);
+      var childProps = child.props;
+      var isActive = key === state.activeKey;
+      var newChildProps = _extends$2({
+        mode: childProps.mode || props.mode,
+        level: props.level,
+        inlineIndent: props.inlineIndent,
+        renderMenuItem: _this3.renderMenuItem,
+        rootPrefixCls: props.prefixCls,
+        index: i,
+        parentMenu: props.parentMenu,
+        // customized ref function, need to be invoked manually in child's componentDidMount
+        manualRef: childProps.disabled ? undefined : createChainedFunction(child.ref, saveRef$1.bind(_this3)),
+        eventKey: key,
+        active: !childProps.disabled && isActive,
+        multiple: props.multiple,
+        onClick: function onClick(e) {
+          (childProps.onClick || noop$1)(e);
+          _this3.onClick(e);
+        },
+        onItemHover: _this3.onItemHover,
+        openTransitionName: _this3.getOpenTransitionName(),
+        openAnimation: props.openAnimation,
+        subMenuOpenDelay: props.subMenuOpenDelay,
+        subMenuCloseDelay: props.subMenuCloseDelay,
+        forceSubMenuRender: props.forceSubMenuRender,
+        onOpenChange: _this3.onOpenChange,
+        onDeselect: _this3.onDeselect,
+        onSelect: _this3.onSelect,
+        builtinPlacements: props.builtinPlacements,
+        itemIcon: childProps.itemIcon || _this3.props.itemIcon,
+        expandIcon: childProps.expandIcon || _this3.props.expandIcon
+      }, extraProps);
+      if (props.mode === 'inline') {
+        newChildProps.triggerSubMenuAction = 'click';
+      }
+      return React__default.cloneElement(child, newChildProps);
+    };
+
+    this.renderMenuItem = function (c, i, subMenuKey) {
+      /* istanbul ignore if */
+      if (!c) {
+        return null;
+      }
+      var state = _this3.props.store.getState();
+      var extraProps = {
+        openKeys: state.openKeys,
+        selectedKeys: state.selectedKeys,
+        triggerSubMenuAction: _this3.props.triggerSubMenuAction,
+        subMenuKey: subMenuKey
+      };
+      return _this3.renderCommonMenuItem(c, i, extraProps);
+    };
+  };
+
+  var connected$1 = lib_2()(SubPopupMenu);
+
+  var Menu = function (_React$Component) {
+    _inherits$1(Menu, _React$Component);
+
+    function Menu(props) {
+      _classCallCheck$1(this, Menu);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _initialiseProps$5.call(_this);
+
+      _this.isRootMenu = true;
+
+      var selectedKeys = props.defaultSelectedKeys;
+      var openKeys = props.defaultOpenKeys;
+      if ('selectedKeys' in props) {
+        selectedKeys = props.selectedKeys || [];
+      }
+      if ('openKeys' in props) {
+        openKeys = props.openKeys || [];
+      }
+
+      _this.store = lib_1({
+        selectedKeys: selectedKeys,
+        openKeys: openKeys,
+        activeKey: { '0-menu-': getActiveKey(props, props.activeKey) }
+      });
+      return _this;
+    }
+
+    Menu.prototype.componentDidMount = function componentDidMount() {
+      this.updateMiniStore();
+    };
+
+    Menu.prototype.componentDidUpdate = function componentDidUpdate() {
+      this.updateMiniStore();
+    };
+
+    // onKeyDown needs to be exposed as a instance method
+    // e.g., in rc-select, we need to navigate menu item while
+    // current active item is rc-select input box rather than the menu itself
+
+
+    Menu.prototype.updateMiniStore = function updateMiniStore() {
+      if ('selectedKeys' in this.props) {
+        this.store.setState({
+          selectedKeys: this.props.selectedKeys || []
+        });
+      }
+      if ('openKeys' in this.props) {
+        this.store.setState({
+          openKeys: this.props.openKeys || []
+        });
+      }
+    };
+
+    Menu.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = _objectWithoutProperties$1(this.props, []);
+
+      props.className += ' ' + props.prefixCls + '-root';
+      props = _extends$2({}, props, {
+        onClick: this.onClick,
+        onOpenChange: this.onOpenChange,
+        onDeselect: this.onDeselect,
+        onSelect: this.onSelect,
+        openTransitionName: this.getOpenTransitionName(),
+        parentMenu: this
+      });
+      return React__default.createElement(
+        lib_3,
+        { store: this.store },
+        React__default.createElement(
+          connected$1,
+          _extends$2({}, props, { ref: function ref(c) {
+              return _this2.innerMenu = c;
+            } }),
+          this.props.children
+        )
+      );
+    };
+
+    return Menu;
+  }(React__default.Component);
+
+  Menu.propTypes = {
+    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultActiveFirst: PropTypes.bool,
+    selectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
+    openKeys: PropTypes.arrayOf(PropTypes.string),
+    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
+    getPopupContainer: PropTypes.func,
+    onClick: PropTypes.func,
+    onSelect: PropTypes.func,
+    onDeselect: PropTypes.func,
+    onDestroy: PropTypes.func,
+    openTransitionName: PropTypes.string,
+    openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    subMenuOpenDelay: PropTypes.number,
+    subMenuCloseDelay: PropTypes.number,
+    forceSubMenuRender: PropTypes.bool,
+    triggerSubMenuAction: PropTypes.string,
+    level: PropTypes.number,
+    selectable: PropTypes.bool,
+    multiple: PropTypes.bool,
+    children: PropTypes.any,
+    className: PropTypes.string,
+    style: PropTypes.object,
+    activeKey: PropTypes.string,
+    prefixCls: PropTypes.string,
+    builtinPlacements: PropTypes.object,
+    itemIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+    expandIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
+    overflowedIndicator: PropTypes.node
+  };
+  Menu.defaultProps = {
+    selectable: true,
+    onClick: noop$1,
+    onSelect: noop$1,
+    onOpenChange: noop$1,
+    onDeselect: noop$1,
+    defaultSelectedKeys: [],
+    defaultOpenKeys: [],
+    subMenuOpenDelay: 0.1,
+    subMenuCloseDelay: 0.1,
+    triggerSubMenuAction: 'hover',
+    prefixCls: 'rc-menu',
+    className: '',
+    mode: 'vertical',
+    style: {},
+    builtinPlacements: {},
+    overflowedIndicator: React__default.createElement(
+      'span',
+      null,
+      '\xB7\xB7\xB7'
+    )
+  };
+
+  var _initialiseProps$5 = function _initialiseProps() {
+    var _this3 = this;
+
+    this.onSelect = function (selectInfo) {
+      var props = _this3.props;
+      if (props.selectable) {
+        // root menu
+        var selectedKeys = _this3.store.getState().selectedKeys;
+        var selectedKey = selectInfo.key;
+        if (props.multiple) {
+          selectedKeys = selectedKeys.concat([selectedKey]);
+        } else {
+          selectedKeys = [selectedKey];
+        }
+        if (!('selectedKeys' in props)) {
+          _this3.store.setState({
+            selectedKeys: selectedKeys
+          });
+        }
+        props.onSelect(_extends$2({}, selectInfo, {
+          selectedKeys: selectedKeys
+        }));
+      }
+    };
+
+    this.onClick = function (e) {
+      _this3.props.onClick(e);
+    };
+
+    this.onKeyDown = function (e, callback) {
+      _this3.innerMenu.getWrappedInstance().onKeyDown(e, callback);
+    };
+
+    this.onOpenChange = function (event) {
+      var props = _this3.props;
+      var openKeys = _this3.store.getState().openKeys.concat();
+      var changed = false;
+      var processSingle = function processSingle(e) {
+        var oneChanged = false;
+        if (e.open) {
+          oneChanged = openKeys.indexOf(e.key) === -1;
+          if (oneChanged) {
+            openKeys.push(e.key);
+          }
+        } else {
+          var index = openKeys.indexOf(e.key);
+          oneChanged = index !== -1;
+          if (oneChanged) {
+            openKeys.splice(index, 1);
+          }
+        }
+        changed = changed || oneChanged;
+      };
+      if (Array.isArray(event)) {
+        // batch change call
+        event.forEach(processSingle);
+      } else {
+        processSingle(event);
+      }
+      if (changed) {
+        if (!('openKeys' in _this3.props)) {
+          _this3.store.setState({ openKeys: openKeys });
+        }
+        props.onOpenChange(openKeys);
+      }
+    };
+
+    this.onDeselect = function (selectInfo) {
+      var props = _this3.props;
+      if (props.selectable) {
+        var selectedKeys = _this3.store.getState().selectedKeys.concat();
+        var selectedKey = selectInfo.key;
+        var index = selectedKeys.indexOf(selectedKey);
+        if (index !== -1) {
+          selectedKeys.splice(index, 1);
+        }
+        if (!('selectedKeys' in props)) {
+          _this3.store.setState({
+            selectedKeys: selectedKeys
+          });
+        }
+        props.onDeselect(_extends$2({}, selectInfo, {
+          selectedKeys: selectedKeys
+        }));
+      }
+    };
+
+    this.getOpenTransitionName = function () {
+      var props = _this3.props;
+      var transitionName = props.openTransitionName;
+      var animationName = props.openAnimation;
+      if (!transitionName && typeof animationName === 'string') {
+        transitionName = props.prefixCls + '-open-' + animationName;
+      }
+      return transitionName;
+    };
+  };
 
   var _extends$4 = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -12569,7 +13847,7 @@
         title: props.title,
         className: className,
         // set to menuitem by default
-        role: 'menuitem',
+        role: props.role || 'menuitem',
         'aria-disabled': props.disabled
       });
 
@@ -12579,10 +13857,13 @@
           role: 'option',
           'aria-selected': props.isSelected
         });
-      } else if (props.role === null) {
+      } else if (props.role === null || props.role === 'none') {
         // sometimes we want to specify role inside <li/> element
         // <li><a role='menuitem'>Link</a></li> would be a good example
-        delete attrs.role;
+        // in this case the role on <li/> should be "none" to
+        // remove the implied listitem role.
+        // https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-1/menubar-1.html
+        attrs.role = 'none';
       }
       // In case that onClick/onMouseLeave/onMouseEnter is passed down from owner
       var mouseEvent = {
@@ -12597,12 +13878,17 @@
       menuAllProps.forEach(function (key) {
         return delete props[key];
       });
+      var icon = this.props.itemIcon;
+      if (typeof this.props.itemIcon === 'function') {
+        icon = React__default.createElement(this.props.itemIcon, this.props);
+      }
       return React__default.createElement(
         'li',
         _extends$2({}, props, attrs, mouseEvent, {
           style: style
         }),
-        props.children
+        props.children,
+        icon
       );
     };
 
@@ -12628,7 +13914,8 @@
     onMouseLeave: PropTypes.func,
     multiple: PropTypes.bool,
     isSelected: PropTypes.bool,
-    manualRef: PropTypes.func
+    manualRef: PropTypes.func,
+    itemIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.node])
   };
   MenuItem.defaultProps = {
     onSelect: noop$1,
@@ -12638,7 +13925,7 @@
   };
   MenuItem.isMenuItem = true;
 
-  var connected$1 = lib_2(function (_ref, _ref2) {
+  var connected$2 = lib_2(function (_ref, _ref2) {
     var activeKey = _ref.activeKey,
         selectedKeys = _ref.selectedKeys;
     var eventKey = _ref2.eventKey,
@@ -12736,11 +14023,14 @@
 
     Divider.prototype.render = function render() {
       var _props = this.props,
-          _props$className = _props.className,
-          className = _props$className === undefined ? '' : _props$className,
-          rootPrefixCls = _props.rootPrefixCls;
+          className = _props.className,
+          rootPrefixCls = _props.rootPrefixCls,
+          style = _props.style;
 
-      return React__default.createElement('li', { className: className + ' ' + rootPrefixCls + '-item-divider' });
+      return React__default.createElement('li', {
+        className: className + ' ' + rootPrefixCls + '-item-divider',
+        style: style
+      });
     };
 
     return Divider;
@@ -12748,11 +14038,14 @@
 
   Divider.propTypes = {
     className: PropTypes.string,
-    rootPrefixCls: PropTypes.string
+    rootPrefixCls: PropTypes.string,
+    style: PropTypes.object
   };
   Divider.defaultProps = {
     // To fix keyboard UX.
-    disabled: true
+    disabled: true,
+    className: '',
+    style: {}
   };
 
   /**
@@ -14432,7 +15725,7 @@
         value.forEach(function (singleValue) {
           var key = singleValue;
           var menuItem = React__default.createElement(
-            connected$1,
+            connected$2,
             {
               style: UNSELECTABLE_STYLE,
               role: 'option',
@@ -14461,7 +15754,7 @@
           });
           if (notFindInputItem) {
             options.unshift(React__default.createElement(
-              connected$1,
+              connected$2,
               {
                 style: UNSELECTABLE_STYLE,
                 role: 'option',
@@ -14477,7 +15770,7 @@
 
       if (!options.length && notFoundContent) {
         options = [React__default.createElement(
-          connected$1,
+          connected$2,
           {
             style: UNSELECTABLE_STYLE,
             attribute: UNSELECTABLE_ATTRIBUTE,
@@ -14528,7 +15821,7 @@
         validateOptionValue(childValue, _this2.props);
 
         if (_this2.filterOption(inputValue, child)) {
-          var menuItem = React__default.createElement(connected$1, _extends$2({
+          var menuItem = React__default.createElement(connected$2, _extends$2({
             style: UNSELECTABLE_STYLE,
             attribute: UNSELECTABLE_ATTRIBUTE,
             value: childValue,
@@ -19334,15 +20627,12 @@
         },
         saveRef: function saveRef(name, _, component) {
           if (!component) {
-            var _fieldMeta = this.fieldsStore.getFieldMeta(name);
-            if (!_fieldMeta.preserve) {
-              // after destroy, delete data
-              this.clearedFieldMetaCache[name] = {
-                field: this.fieldsStore.getField(name),
-                meta: _fieldMeta
-              };
-              this.clearField(name);
-            }
+            // after destroy, delete data
+            this.clearedFieldMetaCache[name] = {
+              field: this.fieldsStore.getField(name),
+              meta: this.fieldsStore.getFieldMeta(name)
+            };
+            this.clearField(name);
             delete this.domFields[name];
             return;
           }
@@ -19368,8 +20658,7 @@
 
           var fieldList = this.fieldsStore.getAllFieldsName();
           var removedList = fieldList.filter(function (field) {
-            var fieldMeta = _this5.fieldsStore.getFieldMeta(field);
-            return !_this5.renderFields[field] && !_this5.domFields[field] && !fieldMeta.preserve;
+            return !_this5.renderFields[field] && !_this5.domFields[field];
           });
           if (removedList.length) {
             removedList.forEach(this.clearField);
@@ -19548,10 +20837,6 @@
             }, callback);
           });
           pending['catch'](function (e) {
-            if (console.error) {
-              // eslint-disable-line
-              console.error(e); // eslint-disable-line
-            }
             return e;
           });
           return pending;
@@ -19574,7 +20859,7 @@
         render: function render() {
           var _props = this.props,
               wrappedComponentRef = _props.wrappedComponentRef,
-              restProps = (0, _objectWithoutProperties3['default'])(_props, ['wrappedComponentRef']); // eslint-disable-line
+              restProps = (0, _objectWithoutProperties3['default'])(_props, ['wrappedComponentRef']);
 
           var formProps = (0, _defineProperty3['default'])({}, formPropName, this.getForm());
           if (withRef) {
@@ -37161,14 +38446,6 @@
         form.setFieldsValue(emptyValue);
       });
 
-      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleExpand", function () {
-        var expand = _this.state.expand;
-
-        _this.setState({
-          expand: !expand
-        });
-      });
-
       _this.state.loading = props.loading;
       return _this;
     }
@@ -37183,8 +38460,16 @@
         }
       }
     }, {
+      key: "toggleExpand",
+      value: function toggleExpand() {
+        var expand = this.state.expand;
+        this.setState({
+          expand: !expand
+        });
+      } // To generate mock Form.Item
+
+    }, {
       key: "getFields",
-      // To generate mock Form.Item
       value: function getFields() {
         var _this2 = this;
 
@@ -37204,12 +38489,13 @@
 
         if (React__default.Children.count(children) === 0) {
           return null;
-        } // if(this.state.expand==false ){
-        //   renderChildren = children.filter((ch,idx)=>idx<3)
-        // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+        }
 
-
-        if (this.props.showConfig) {
+        if (this.state.expand == false) {
+          renderChildren = children.filter(function (ch, idx) {
+            return idx < 3;
+          }); // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+        } else if (this.props.showConfig) {
           //高级配置后，前三固定 后四配置
           renderChildren = React__default.Children.toArray(children).filter(function (ch, idx) {
             //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
@@ -37301,7 +38587,10 @@
         }, locale.searchText), React__default.createElement(Button, {
           htmlType: "reset",
           onClick: this.handleReset.bind(this)
-        }, locale.resetText))));
+        }, locale.resetText), React__default.createElement(Icon, {
+          type: "down",
+          onClick: this.toggleExpand.bind(this)
+        }))));
       }
     }]);
 
@@ -38014,6 +39303,1904 @@
 
   var Tooltip$1 = unwrapExports(tooltip);
 
+  var PropTypes$3 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.storeShape = undefined;
+
+
+
+  var _propTypes2 = _interopRequireDefault(PropTypes);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  var storeShape = exports.storeShape = _propTypes2.default.shape({
+    subscribe: _propTypes2.default.func.isRequired,
+    setState: _propTypes2.default.func.isRequired,
+    getState: _propTypes2.default.func.isRequired
+  });
+  });
+
+  unwrapExports(PropTypes$3);
+  var PropTypes_1$1 = PropTypes$3.storeShape;
+
+  var Provider_1$1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  var Provider = function (_Component) {
+    _inherits(Provider, _Component);
+
+    function Provider() {
+      _classCallCheck(this, Provider);
+
+      return _possibleConstructorReturn(this, (Provider.__proto__ || Object.getPrototypeOf(Provider)).apply(this, arguments));
+    }
+
+    _createClass(Provider, [{
+      key: 'getChildContext',
+      value: function getChildContext() {
+        return {
+          miniStore: this.props.store
+        };
+      }
+    }, {
+      key: 'render',
+      value: function render() {
+        return React__default.Children.only(this.props.children);
+      }
+    }]);
+
+    return Provider;
+  }(React__default.Component);
+
+  Provider.propTypes = {
+    store: PropTypes$3.storeShape.isRequired
+  };
+  Provider.childContextTypes = {
+    miniStore: PropTypes$3.storeShape.isRequired
+  };
+  exports.default = Provider;
+  });
+
+  unwrapExports(Provider_1$1);
+
+  var connect_1$1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  exports.default = connect;
+
+
+
+  var _react2 = _interopRequireDefault(React__default);
+
+
+
+  var _shallowequal2 = _interopRequireDefault(shallowequal);
+
+
+
+  var _hoistNonReactStatics2 = _interopRequireDefault(hoistNonReactStatics_cjs);
+
+
+
+
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+  function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+  }
+
+  function isStateless(Component) {
+    return !Component.prototype.render;
+  }
+
+  var defaultMapStateToProps = function defaultMapStateToProps() {
+    return {};
+  };
+
+  function connect(mapStateToProps) {
+    var shouldSubscribe = !!mapStateToProps;
+    var finnalMapStateToProps = mapStateToProps || defaultMapStateToProps;
+
+    return function wrapWithConnect(WrappedComponent) {
+      var Connect = function (_Component) {
+        _inherits(Connect, _Component);
+
+        _createClass(Connect, null, [{
+          key: 'getDerivedStateFromProps',
+          value: function getDerivedStateFromProps(props, prevState) {
+            // using ownProps
+            if (mapStateToProps && mapStateToProps.length === 2 && props !== prevState.props) {
+              return {
+                subscribed: finnalMapStateToProps(prevState.store.getState(), props),
+                props: props
+              };
+            }
+            return { props: props };
+          }
+        }]);
+
+        function Connect(props, context) {
+          _classCallCheck(this, Connect);
+
+          var _this = _possibleConstructorReturn(this, (Connect.__proto__ || Object.getPrototypeOf(Connect)).call(this, props, context));
+
+          _this.handleChange = function () {
+            if (!_this.unsubscribe) {
+              return;
+            }
+            var nextState = finnalMapStateToProps(_this.store.getState(), _this.props);
+            if (!(0, _shallowequal2.default)(_this.state.subscribed, nextState)) {
+              _this.setState({ subscribed: nextState });
+            }
+          };
+
+          _this.store = context.miniStore;
+          _this.state = {
+            subscribed: finnalMapStateToProps(_this.store.getState(), props),
+            store: _this.store,
+            props: props
+          };
+          return _this;
+        }
+
+        _createClass(Connect, [{
+          key: 'componentDidMount',
+          value: function componentDidMount() {
+            this.trySubscribe();
+          }
+        }, {
+          key: 'componentWillUnmount',
+          value: function componentWillUnmount() {
+            this.tryUnsubscribe();
+          }
+        }, {
+          key: 'trySubscribe',
+          value: function trySubscribe() {
+            if (shouldSubscribe) {
+              this.unsubscribe = this.store.subscribe(this.handleChange);
+              this.handleChange();
+            }
+          }
+        }, {
+          key: 'tryUnsubscribe',
+          value: function tryUnsubscribe() {
+            if (this.unsubscribe) {
+              this.unsubscribe();
+              this.unsubscribe = null;
+            }
+          }
+        }, {
+          key: 'getWrappedInstance',
+          value: function getWrappedInstance() {
+            return this.wrappedInstance;
+          }
+        }, {
+          key: 'render',
+          value: function render() {
+            var _this2 = this;
+
+            var props = _extends({}, this.props, this.state.subscribed, {
+              store: this.store
+            });
+
+            if (!isStateless(WrappedComponent)) {
+              props = _extends({}, props, {
+                ref: function ref(c) {
+                  return _this2.wrappedInstance = c;
+                }
+              });
+            }
+
+            return _react2.default.createElement(WrappedComponent, props);
+          }
+        }]);
+
+        return Connect;
+      }(React__default.Component);
+
+      Connect.displayName = 'Connect(' + getDisplayName(WrappedComponent) + ')';
+      Connect.contextTypes = {
+        miniStore: PropTypes$3.storeShape.isRequired
+      };
+
+
+      (0, reactLifecyclesCompat_es.polyfill)(Connect);
+
+      return (0, _hoistNonReactStatics2.default)(Connect, WrappedComponent);
+    };
+  }
+  });
+
+  unwrapExports(connect_1$1);
+
+  var create_1$1 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+  exports.default = create;
+  function create(initialState) {
+    var state = initialState;
+    var listeners = [];
+
+    function setState(partial) {
+      state = _extends({}, state, partial);
+      for (var i = 0; i < listeners.length; i++) {
+        listeners[i]();
+      }
+    }
+
+    function getState() {
+      return state;
+    }
+
+    function subscribe(listener) {
+      listeners.push(listener);
+
+      return function unsubscribe() {
+        var index = listeners.indexOf(listener);
+        listeners.splice(index, 1);
+      };
+    }
+
+    return {
+      setState: setState,
+      getState: getState,
+      subscribe: subscribe
+    };
+  }
+  });
+
+  unwrapExports(create_1$1);
+
+  var lib$3 = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.create = exports.connect = exports.Provider = undefined;
+
+
+
+  var _Provider3 = _interopRequireDefault(Provider_1$1);
+
+
+
+  var _connect3 = _interopRequireDefault(connect_1$1);
+
+
+
+  var _create3 = _interopRequireDefault(create_1$1);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  exports.Provider = _Provider3.default;
+  exports.connect = _connect3.default;
+  exports.create = _create3.default;
+  });
+
+  unwrapExports(lib$3);
+  var lib_1$1 = lib$3.create;
+  var lib_2$1 = lib$3.connect;
+  var lib_3$1 = lib$3.Provider;
+
+  function noop$b() {}
+
+  function getKeyFromChildrenIndex$1(child, menuEventKey, index) {
+    var prefix = menuEventKey || '';
+    return child.key || prefix + 'item_' + index;
+  }
+
+  function getMenuIdFromSubMenuEventKey$1(eventKey) {
+    return eventKey + '-menu-';
+  }
+
+  function loopMenuItem$1(children, cb) {
+    var index = -1;
+    React__default.Children.forEach(children, function (c) {
+      index++;
+      if (c && c.type && c.type.isMenuItemGroup) {
+        React__default.Children.forEach(c.props.children, function (c2) {
+          index++;
+          cb(c2, index);
+        });
+      } else {
+        cb(c, index);
+      }
+    });
+  }
+
+  function loopMenuItemRecursively$1(children, keys, ret) {
+    /* istanbul ignore if */
+    if (!children || ret.find) {
+      return;
+    }
+    React__default.Children.forEach(children, function (c) {
+      if (c) {
+        var construct = c.type;
+        if (!construct || !(construct.isSubMenu || construct.isMenuItem || construct.isMenuItemGroup)) {
+          return;
+        }
+        if (keys.indexOf(c.key) !== -1) {
+          ret.find = true;
+        } else if (c.props.children) {
+          loopMenuItemRecursively$1(c.props.children, keys, ret);
+        }
+      }
+    });
+  }
+
+  var menuAllProps$1 = ['defaultSelectedKeys', 'selectedKeys', 'defaultOpenKeys', 'openKeys', 'mode', 'getPopupContainer', 'onSelect', 'onDeselect', 'onDestroy', 'openTransitionName', 'openAnimation', 'subMenuOpenDelay', 'subMenuCloseDelay', 'forceSubMenuRender', 'triggerSubMenuAction', 'level', 'selectable', 'multiple', 'onOpenChange', 'visible', 'focusable', 'defaultActiveFirst', 'prefixCls', 'inlineIndent', 'parentMenu', 'title', 'rootPrefixCls', 'eventKey', 'active', 'onItemHover', 'onTitleMouseEnter', 'onTitleMouseLeave', 'onTitleClick', 'popupOffset', 'isOpen', 'renderMenuItem', 'manualRef', 'subMenuKey', 'disabled', 'index', 'isSelected', 'store', 'activeKey',
+
+  // the following keys found need to be removed from test regression
+  'attribute', 'value', 'popupClassName', 'inlineCollapsed', 'menu', 'theme'];
+
+  var DOMWrap$1 = function (_React$Component) {
+    _inherits$1(DOMWrap, _React$Component);
+
+    function DOMWrap() {
+      _classCallCheck$1(this, DOMWrap);
+
+      return _possibleConstructorReturn$1(this, _React$Component.apply(this, arguments));
+    }
+
+    DOMWrap.prototype.render = function render() {
+      var props = _extends$2({}, this.props);
+      if (!props.visible) {
+        props.className += ' ' + props.hiddenClassName;
+      }
+      var Tag = props.tag;
+      delete props.tag;
+      delete props.hiddenClassName;
+      delete props.visible;
+      return React__default.createElement(Tag, props);
+    };
+
+    return DOMWrap;
+  }(React__default.Component);
+
+  DOMWrap$1.propTypes = {
+    tag: PropTypes.string,
+    hiddenClassName: PropTypes.string,
+    visible: PropTypes.bool
+  };
+  DOMWrap$1.defaultProps = {
+    tag: 'div',
+    className: ''
+  };
+
+  function allDisabled$1(arr) {
+    if (!arr.length) {
+      return true;
+    }
+    return arr.every(function (c) {
+      return !!c.props.disabled;
+    });
+  }
+
+  function updateActiveKey$1(store, menuId, activeKey) {
+    var _extends2;
+
+    var state = store.getState();
+    store.setState({
+      activeKey: _extends$2({}, state.activeKey, (_extends2 = {}, _extends2[menuId] = activeKey, _extends2))
+    });
+  }
+
+  function getActiveKey$1(props, originalActiveKey) {
+    var activeKey = originalActiveKey;
+    var children = props.children,
+        eventKey = props.eventKey;
+
+    if (activeKey) {
+      var found = void 0;
+      loopMenuItem$1(children, function (c, i) {
+        if (c && !c.props.disabled && activeKey === getKeyFromChildrenIndex$1(c, eventKey, i)) {
+          found = true;
+        }
+      });
+      if (found) {
+        return activeKey;
+      }
+    }
+    activeKey = null;
+    if (props.defaultActiveFirst) {
+      loopMenuItem$1(children, function (c, i) {
+        if (!activeKey && c && !c.props.disabled) {
+          activeKey = getKeyFromChildrenIndex$1(c, eventKey, i);
+        }
+      });
+      return activeKey;
+    }
+    return activeKey;
+  }
+
+  function saveRef$4(c) {
+    if (c) {
+      var index = this.instanceArray.indexOf(c);
+      if (index !== -1) {
+        // update component if it's already inside instanceArray
+        this.instanceArray[index] = c;
+      } else {
+        // add component if it's not in instanceArray yet;
+        this.instanceArray.push(c);
+      }
+    }
+  }
+
+  var SubPopupMenu$1 = function (_React$Component) {
+    _inherits$1(SubPopupMenu, _React$Component);
+
+    function SubPopupMenu(props) {
+      var _extends3;
+
+      _classCallCheck$1(this, SubPopupMenu);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _initialiseProps$d.call(_this);
+
+      props.store.setState({
+        activeKey: _extends$2({}, props.store.getState().activeKey, (_extends3 = {}, _extends3[props.eventKey] = getActiveKey$1(props, props.activeKey), _extends3))
+      });
+      return _this;
+    }
+
+    SubPopupMenu.prototype.componentWillMount = function componentWillMount() {
+      this.instanceArray = [];
+    };
+
+    SubPopupMenu.prototype.componentDidMount = function componentDidMount() {
+      // invoke customized ref to expose component to mixin
+      if (this.props.manualRef) {
+        this.props.manualRef(this);
+      }
+    };
+
+    SubPopupMenu.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      var originalActiveKey = 'activeKey' in nextProps ? nextProps.activeKey : this.getStore().getState().activeKey[this.getEventKey()];
+      var activeKey = getActiveKey$1(nextProps, originalActiveKey);
+      if (activeKey !== originalActiveKey) {
+        updateActiveKey$1(this.getStore(), this.getEventKey(), activeKey);
+      }
+    };
+
+    SubPopupMenu.prototype.shouldComponentUpdate = function shouldComponentUpdate(nextProps) {
+      return this.props.visible || nextProps.visible;
+    };
+
+    // all keyboard events callbacks run from here at first
+
+
+    SubPopupMenu.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = _objectWithoutProperties$1(this.props, []);
+
+      this.instanceArray = [];
+      var className = classnames(props.prefixCls, props.className, props.prefixCls + '-' + props.mode);
+      var domProps = {
+        className: className,
+        // role could be 'select' and by default set to menu
+        role: props.role || 'menu'
+      };
+      if (props.id) {
+        domProps.id = props.id;
+      }
+      if (props.focusable) {
+        domProps.tabIndex = '0';
+        domProps.onKeyDown = this.onKeyDown;
+      }
+      var prefixCls = props.prefixCls,
+          eventKey = props.eventKey,
+          visible = props.visible;
+
+      menuAllProps$1.forEach(function (key) {
+        return delete props[key];
+      });
+
+      // Otherwise, the propagated click event will trigger another onClick
+      delete props.onClick;
+      return (
+        // ESLint is not smart enough to know that the type of `children` was checked.
+        /* eslint-disable */
+        React__default.createElement(
+          DOMWrap$1,
+          _extends$2({}, props, {
+            tag: 'ul',
+            hiddenClassName: prefixCls + '-hidden',
+            visible: visible
+          }, domProps),
+          React__default.Children.map(props.children, function (c, i) {
+            return _this2.renderMenuItem(c, i, eventKey || '0-menu-');
+          })
+        )
+        /*eslint-enable */
+
+      );
+    };
+
+    return SubPopupMenu;
+  }(React__default.Component);
+
+  SubPopupMenu$1.propTypes = {
+    onSelect: PropTypes.func,
+    onClick: PropTypes.func,
+    onDeselect: PropTypes.func,
+    onOpenChange: PropTypes.func,
+    onDestroy: PropTypes.func,
+    openTransitionName: PropTypes.string,
+    openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    openKeys: PropTypes.arrayOf(PropTypes.string),
+    visible: PropTypes.bool,
+    children: PropTypes.any,
+    parentMenu: PropTypes.object,
+    eventKey: PropTypes.string,
+    store: PropTypes.shape({
+      getState: PropTypes.func,
+      setState: PropTypes.func
+    }),
+
+    // adding in refactor
+    focusable: PropTypes.bool,
+    multiple: PropTypes.bool,
+    style: PropTypes.object,
+    defaultActiveFirst: PropTypes.bool,
+    activeKey: PropTypes.string,
+    selectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
+    level: PropTypes.number,
+    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
+    triggerSubMenuAction: PropTypes.oneOf(['click', 'hover']),
+    inlineIndent: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    manualRef: PropTypes.func
+  };
+  SubPopupMenu$1.defaultProps = {
+    prefixCls: 'rc-menu',
+    className: '',
+    mode: 'vertical',
+    level: 1,
+    inlineIndent: 24,
+    visible: true,
+    focusable: true,
+    style: {},
+    manualRef: noop$b
+  };
+
+  var _initialiseProps$d = function _initialiseProps() {
+    var _this3 = this;
+
+    this.onKeyDown = function (e, callback) {
+      var keyCode = e.keyCode;
+      var handled = void 0;
+      _this3.getFlatInstanceArray().forEach(function (obj) {
+        if (obj && obj.props.active && obj.onKeyDown) {
+          handled = obj.onKeyDown(e);
+        }
+      });
+      if (handled) {
+        return 1;
+      }
+      var activeItem = null;
+      if (keyCode === KeyCode.UP || keyCode === KeyCode.DOWN) {
+        activeItem = _this3.step(keyCode === KeyCode.UP ? -1 : 1);
+      }
+      if (activeItem) {
+        e.preventDefault();
+        updateActiveKey$1(_this3.getStore(), _this3.getEventKey(), activeItem.props.eventKey);
+
+        if (typeof callback === 'function') {
+          callback(activeItem);
+        }
+
+        return 1;
+      }
+    };
+
+    this.onItemHover = function (e) {
+      var key = e.key,
+          hover = e.hover;
+
+      updateActiveKey$1(_this3.getStore(), _this3.getEventKey(), hover ? key : null);
+    };
+
+    this.onDeselect = function (selectInfo) {
+      _this3.props.onDeselect(selectInfo);
+    };
+
+    this.onSelect = function (selectInfo) {
+      _this3.props.onSelect(selectInfo);
+    };
+
+    this.onClick = function (e) {
+      _this3.props.onClick(e);
+    };
+
+    this.onOpenChange = function (e) {
+      _this3.props.onOpenChange(e);
+    };
+
+    this.onDestroy = function (key) {
+      /* istanbul ignore next */
+      _this3.props.onDestroy(key);
+    };
+
+    this.getFlatInstanceArray = function () {
+      return _this3.instanceArray;
+    };
+
+    this.getStore = function () {
+      return _this3.props.store;
+    };
+
+    this.getEventKey = function () {
+      // when eventKey not available ,it's menu and return menu id '0-menu-'
+      return _this3.props.eventKey || '0-menu-';
+    };
+
+    this.getOpenTransitionName = function () {
+      return _this3.props.openTransitionName;
+    };
+
+    this.step = function (direction) {
+      var children = _this3.getFlatInstanceArray();
+      var activeKey = _this3.getStore().getState().activeKey[_this3.getEventKey()];
+      var len = children.length;
+      if (!len) {
+        return null;
+      }
+      if (direction < 0) {
+        children = children.concat().reverse();
+      }
+      // find current activeIndex
+      var activeIndex = -1;
+      children.every(function (c, ci) {
+        if (c && c.props.eventKey === activeKey) {
+          activeIndex = ci;
+          return false;
+        }
+        return true;
+      });
+      if (!_this3.props.defaultActiveFirst && activeIndex !== -1 && allDisabled$1(children.slice(activeIndex, len - 1))) {
+        return undefined;
+      }
+      var start = (activeIndex + 1) % len;
+      var i = start;
+
+      do {
+        var child = children[i];
+        if (!child || child.props.disabled) {
+          i = (i + 1) % len;
+        } else {
+          return child;
+        }
+      } while (i !== start);
+
+      return null;
+    };
+
+    this.renderCommonMenuItem = function (child, i, extraProps) {
+      var state = _this3.getStore().getState();
+      var props = _this3.props;
+      var key = getKeyFromChildrenIndex$1(child, props.eventKey, i);
+      var childProps = child.props;
+      var isActive = key === state.activeKey;
+      var newChildProps = _extends$2({
+        mode: props.mode,
+        level: props.level,
+        inlineIndent: props.inlineIndent,
+        renderMenuItem: _this3.renderMenuItem,
+        rootPrefixCls: props.prefixCls,
+        index: i,
+        parentMenu: props.parentMenu,
+        // customized ref function, need to be invoked manually in child's componentDidMount
+        manualRef: childProps.disabled ? undefined : createChainedFunction(child.ref, saveRef$4.bind(_this3)),
+        eventKey: key,
+        active: !childProps.disabled && isActive,
+        multiple: props.multiple,
+        onClick: function onClick(e) {
+          (childProps.onClick || noop$b)(e);
+          _this3.onClick(e);
+        },
+        onItemHover: _this3.onItemHover,
+        openTransitionName: _this3.getOpenTransitionName(),
+        openAnimation: props.openAnimation,
+        subMenuOpenDelay: props.subMenuOpenDelay,
+        subMenuCloseDelay: props.subMenuCloseDelay,
+        forceSubMenuRender: props.forceSubMenuRender,
+        onOpenChange: _this3.onOpenChange,
+        onDeselect: _this3.onDeselect,
+        onSelect: _this3.onSelect
+      }, extraProps);
+      if (props.mode === 'inline') {
+        newChildProps.triggerSubMenuAction = 'click';
+      }
+      return React__default.cloneElement(child, newChildProps);
+    };
+
+    this.renderMenuItem = function (c, i, subMenuKey) {
+      /* istanbul ignore if */
+      if (!c) {
+        return null;
+      }
+      var state = _this3.getStore().getState();
+      var extraProps = {
+        openKeys: state.openKeys,
+        selectedKeys: state.selectedKeys,
+        triggerSubMenuAction: _this3.props.triggerSubMenuAction,
+        subMenuKey: subMenuKey
+      };
+      return _this3.renderCommonMenuItem(c, i, extraProps);
+    };
+  };
+
+  var SubPopupMenu$2 = lib_2$1()(SubPopupMenu$1);
+
+  var Menu$1 = function (_React$Component) {
+    _inherits$1(Menu, _React$Component);
+
+    function Menu(props) {
+      _classCallCheck$1(this, Menu);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _initialiseProps$e.call(_this);
+
+      _this.isRootMenu = true;
+
+      var selectedKeys = props.defaultSelectedKeys;
+      var openKeys = props.defaultOpenKeys;
+      if ('selectedKeys' in props) {
+        selectedKeys = props.selectedKeys || [];
+      }
+      if ('openKeys' in props) {
+        openKeys = props.openKeys || [];
+      }
+
+      _this.store = lib_1$1({
+        selectedKeys: selectedKeys,
+        openKeys: openKeys,
+        activeKey: { '0-menu-': getActiveKey$1(props, props.activeKey) }
+      });
+      return _this;
+    }
+
+    Menu.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+      if ('selectedKeys' in nextProps) {
+        this.store.setState({
+          selectedKeys: nextProps.selectedKeys || []
+        });
+      }
+      if ('openKeys' in nextProps) {
+        this.store.setState({
+          openKeys: nextProps.openKeys || []
+        });
+      }
+    };
+
+    // onKeyDown needs to be exposed as a instance method
+    // e.g., in rc-select, we need to navigate menu item while
+    // current active item is rc-select input box rather than the menu itself
+
+
+    Menu.prototype.render = function render() {
+      var _this2 = this;
+
+      var props = _objectWithoutProperties$1(this.props, []);
+
+      props.className += ' ' + props.prefixCls + '-root';
+      props = _extends$2({}, props, {
+        onClick: this.onClick,
+        onOpenChange: this.onOpenChange,
+        onDeselect: this.onDeselect,
+        onSelect: this.onSelect,
+        openTransitionName: this.getOpenTransitionName(),
+        parentMenu: this
+      });
+      return React__default.createElement(
+        lib_3$1,
+        { store: this.store },
+        React__default.createElement(
+          SubPopupMenu$2,
+          _extends$2({}, props, { ref: function ref(c) {
+              return _this2.innerMenu = c;
+            } }),
+          this.props.children
+        )
+      );
+    };
+
+    return Menu;
+  }(React__default.Component);
+
+  Menu$1.propTypes = {
+    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultActiveFirst: PropTypes.bool,
+    selectedKeys: PropTypes.arrayOf(PropTypes.string),
+    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
+    openKeys: PropTypes.arrayOf(PropTypes.string),
+    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
+    getPopupContainer: PropTypes.func,
+    onClick: PropTypes.func,
+    onSelect: PropTypes.func,
+    onDeselect: PropTypes.func,
+    onDestroy: PropTypes.func,
+    openTransitionName: PropTypes.string,
+    openAnimation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    subMenuOpenDelay: PropTypes.number,
+    subMenuCloseDelay: PropTypes.number,
+    forceSubMenuRender: PropTypes.bool,
+    triggerSubMenuAction: PropTypes.string,
+    level: PropTypes.number,
+    selectable: PropTypes.bool,
+    multiple: PropTypes.bool,
+    children: PropTypes.any,
+    className: PropTypes.string,
+    style: PropTypes.object,
+    activeKey: PropTypes.string,
+    prefixCls: PropTypes.string
+  };
+  Menu$1.defaultProps = {
+    selectable: true,
+    onClick: noop$b,
+    onSelect: noop$b,
+    onOpenChange: noop$b,
+    onDeselect: noop$b,
+    defaultSelectedKeys: [],
+    defaultOpenKeys: [],
+    subMenuOpenDelay: 0.1,
+    subMenuCloseDelay: 0.1,
+    triggerSubMenuAction: 'hover',
+    prefixCls: 'rc-menu',
+    className: '',
+    mode: 'vertical',
+    style: {}
+  };
+
+  var _initialiseProps$e = function _initialiseProps() {
+    var _this3 = this;
+
+    this.onSelect = function (selectInfo) {
+      var props = _this3.props;
+      if (props.selectable) {
+        // root menu
+        var selectedKeys = _this3.store.getState().selectedKeys;
+        var selectedKey = selectInfo.key;
+        if (props.multiple) {
+          selectedKeys = selectedKeys.concat([selectedKey]);
+        } else {
+          selectedKeys = [selectedKey];
+        }
+        if (!('selectedKeys' in props)) {
+          _this3.store.setState({
+            selectedKeys: selectedKeys
+          });
+        }
+        props.onSelect(_extends$2({}, selectInfo, {
+          selectedKeys: selectedKeys
+        }));
+      }
+    };
+
+    this.onClick = function (e) {
+      _this3.props.onClick(e);
+    };
+
+    this.onKeyDown = function (e, callback) {
+      _this3.innerMenu.getWrappedInstance().onKeyDown(e, callback);
+    };
+
+    this.onOpenChange = function (event) {
+      var props = _this3.props;
+      var openKeys = _this3.store.getState().openKeys.concat();
+      var changed = false;
+      var processSingle = function processSingle(e) {
+        var oneChanged = false;
+        if (e.open) {
+          oneChanged = openKeys.indexOf(e.key) === -1;
+          if (oneChanged) {
+            openKeys.push(e.key);
+          }
+        } else {
+          var index = openKeys.indexOf(e.key);
+          oneChanged = index !== -1;
+          if (oneChanged) {
+            openKeys.splice(index, 1);
+          }
+        }
+        changed = changed || oneChanged;
+      };
+      if (Array.isArray(event)) {
+        // batch change call
+        event.forEach(processSingle);
+      } else {
+        processSingle(event);
+      }
+      if (changed) {
+        if (!('openKeys' in _this3.props)) {
+          _this3.store.setState({ openKeys: openKeys });
+        }
+        props.onOpenChange(openKeys);
+      }
+    };
+
+    this.onDeselect = function (selectInfo) {
+      var props = _this3.props;
+      if (props.selectable) {
+        var selectedKeys = _this3.store.getState().selectedKeys.concat();
+        var selectedKey = selectInfo.key;
+        var index = selectedKeys.indexOf(selectedKey);
+        if (index !== -1) {
+          selectedKeys.splice(index, 1);
+        }
+        if (!('selectedKeys' in props)) {
+          _this3.store.setState({
+            selectedKeys: selectedKeys
+          });
+        }
+        props.onDeselect(_extends$2({}, selectInfo, {
+          selectedKeys: selectedKeys
+        }));
+      }
+    };
+
+    this.getOpenTransitionName = function () {
+      var props = _this3.props;
+      var transitionName = props.openTransitionName;
+      var animationName = props.openAnimation;
+      if (!transitionName && typeof animationName === 'string') {
+        transitionName = props.prefixCls + '-open-' + animationName;
+      }
+      return transitionName;
+    };
+  };
+
+  var autoAdjustOverflow$2 = {
+    adjustX: 1,
+    adjustY: 1
+  };
+
+  var placements$7 = {
+    topLeft: {
+      points: ['bl', 'tl'],
+      overflow: autoAdjustOverflow$2,
+      offset: [0, -7]
+    },
+    bottomLeft: {
+      points: ['tl', 'bl'],
+      overflow: autoAdjustOverflow$2,
+      offset: [0, 7]
+    },
+    leftTop: {
+      points: ['tr', 'tl'],
+      overflow: autoAdjustOverflow$2,
+      offset: [-4, 0]
+    },
+    rightTop: {
+      points: ['tl', 'tr'],
+      overflow: autoAdjustOverflow$2,
+      offset: [4, 0]
+    }
+  };
+
+  var guid$1 = 0;
+
+  var popupPlacementMap$1 = {
+    horizontal: 'bottomLeft',
+    vertical: 'rightTop',
+    'vertical-left': 'rightTop',
+    'vertical-right': 'leftTop'
+  };
+
+  var updateDefaultActiveFirst$1 = function updateDefaultActiveFirst(store, eventKey, defaultActiveFirst) {
+    var _extends2;
+
+    var menuId = getMenuIdFromSubMenuEventKey$1(eventKey);
+    var state = store.getState();
+    store.setState({
+      defaultActiveFirst: _extends$2({}, state.defaultActiveFirst, (_extends2 = {}, _extends2[menuId] = defaultActiveFirst, _extends2))
+    });
+  };
+
+  var SubMenu$1 = function (_React$Component) {
+    _inherits$1(SubMenu, _React$Component);
+
+    function SubMenu(props) {
+      _classCallCheck$1(this, SubMenu);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _initialiseProps$f.call(_this);
+
+      var store = props.store;
+      var eventKey = props.eventKey;
+      var defaultActiveFirst = store.getState().defaultActiveFirst;
+
+      _this.isRootMenu = false;
+
+      var value = false;
+
+      if (defaultActiveFirst) {
+        value = defaultActiveFirst[eventKey];
+      }
+
+      updateDefaultActiveFirst$1(store, eventKey, value);
+      return _this;
+    }
+
+    SubMenu.prototype.componentDidMount = function componentDidMount() {
+      this.componentDidUpdate();
+    };
+
+    SubMenu.prototype.componentDidUpdate = function componentDidUpdate() {
+      var _this2 = this;
+
+      var _props = this.props,
+          mode = _props.mode,
+          parentMenu = _props.parentMenu,
+          manualRef = _props.manualRef;
+
+      // invoke customized ref to expose component to mixin
+
+      if (manualRef) {
+        manualRef(this);
+      }
+
+      if (mode !== 'horizontal' || !parentMenu.isRootMenu || !this.props.isOpen) {
+        return;
+      }
+
+      this.minWidthTimeout = setTimeout(function () {
+        return _this2.adjustWidth();
+      }, 0);
+    };
+
+    SubMenu.prototype.componentWillUnmount = function componentWillUnmount() {
+      var _props2 = this.props,
+          onDestroy = _props2.onDestroy,
+          eventKey = _props2.eventKey;
+
+      if (onDestroy) {
+        onDestroy(eventKey);
+      }
+
+      /* istanbul ignore if */
+      if (this.minWidthTimeout) {
+        clearTimeout(this.minWidthTimeout);
+      }
+
+      /* istanbul ignore if */
+      if (this.mouseenterTimeout) {
+        clearTimeout(this.mouseenterTimeout);
+      }
+    };
+
+    SubMenu.prototype.renderChildren = function renderChildren(children) {
+      var props = this.props;
+      var baseProps = {
+        mode: props.mode === 'horizontal' ? 'vertical' : props.mode,
+        visible: this.props.isOpen,
+        level: props.level + 1,
+        inlineIndent: props.inlineIndent,
+        focusable: false,
+        onClick: this.onSubMenuClick,
+        onSelect: this.onSelect,
+        onDeselect: this.onDeselect,
+        onDestroy: this.onDestroy,
+        selectedKeys: props.selectedKeys,
+        eventKey: props.eventKey + '-menu-',
+        openKeys: props.openKeys,
+        openTransitionName: props.openTransitionName,
+        openAnimation: props.openAnimation,
+        onOpenChange: this.onOpenChange,
+        subMenuOpenDelay: props.subMenuOpenDelay,
+        parentMenu: this,
+        subMenuCloseDelay: props.subMenuCloseDelay,
+        forceSubMenuRender: props.forceSubMenuRender,
+        triggerSubMenuAction: props.triggerSubMenuAction,
+        defaultActiveFirst: props.store.getState().defaultActiveFirst[getMenuIdFromSubMenuEventKey$1(props.eventKey)],
+        multiple: props.multiple,
+        prefixCls: props.rootPrefixCls,
+        id: this._menuId,
+        manualRef: this.saveMenuInstance
+      };
+
+      var haveRendered = this.haveRendered;
+      this.haveRendered = true;
+
+      this.haveOpened = this.haveOpened || baseProps.visible || baseProps.forceSubMenuRender;
+      // never rendered not planning to, don't render
+      if (!this.haveOpened) {
+        return React__default.createElement('div', null);
+      }
+
+      // don't show transition on first rendering (no animation for opened menu)
+      // show appear transition if it's not visible (not sure why)
+      // show appear transition if it's not inline mode
+      var transitionAppear = haveRendered || !baseProps.visible || !baseProps.mode === 'inline';
+
+      baseProps.className = ' ' + baseProps.prefixCls + '-sub';
+      var animProps = {};
+
+      if (baseProps.openTransitionName) {
+        animProps.transitionName = baseProps.openTransitionName;
+      } else if (typeof baseProps.openAnimation === 'object') {
+        animProps.animation = _extends$2({}, baseProps.openAnimation);
+        if (!transitionAppear) {
+          delete animProps.animation.appear;
+        }
+      }
+
+      return React__default.createElement(
+        Animate,
+        _extends$2({}, animProps, {
+          showProp: 'visible',
+          component: '',
+          transitionAppear: transitionAppear
+        }),
+        React__default.createElement(
+          SubPopupMenu$2,
+          _extends$2({}, baseProps, { id: this._menuId }),
+          children
+        )
+      );
+    };
+
+    SubMenu.prototype.render = function render() {
+      var _classNames;
+
+      var props = _extends$2({}, this.props);
+      var isOpen = props.isOpen;
+      var prefixCls = this.getPrefixCls();
+      var isInlineMode = props.mode === 'inline';
+      var className = classnames(prefixCls, prefixCls + '-' + props.mode, (_classNames = {}, _classNames[props.className] = !!props.className, _classNames[this.getOpenClassName()] = isOpen, _classNames[this.getActiveClassName()] = props.active || isOpen && !isInlineMode, _classNames[this.getDisabledClassName()] = props.disabled, _classNames[this.getSelectedClassName()] = this.isChildrenSelected(), _classNames));
+
+      if (!this._menuId) {
+        if (props.eventKey) {
+          this._menuId = props.eventKey + '$Menu';
+        } else {
+          this._menuId = '$__$' + ++guid$1 + '$Menu';
+        }
+      }
+
+      var mouseEvents = {};
+      var titleClickEvents = {};
+      var titleMouseEvents = {};
+      if (!props.disabled) {
+        mouseEvents = {
+          onMouseLeave: this.onMouseLeave,
+          onMouseEnter: this.onMouseEnter
+        };
+
+        // only works in title, not outer li
+        titleClickEvents = {
+          onClick: this.onTitleClick
+        };
+        titleMouseEvents = {
+          onMouseEnter: this.onTitleMouseEnter,
+          onMouseLeave: this.onTitleMouseLeave
+        };
+      }
+
+      var style = {};
+      if (isInlineMode) {
+        style.paddingLeft = props.inlineIndent * props.level;
+      }
+
+      var ariaOwns = {};
+      // only set aria-owns when menu is open
+      // otherwise it would be an invalid aria-owns value
+      // since corresponding node cannot be found
+      if (this.props.isOpen) {
+        ariaOwns = {
+          'aria-owns': this._menuId
+        };
+      }
+
+      var title = React__default.createElement(
+        'div',
+        _extends$2({
+          ref: this.saveSubMenuTitle,
+          style: style,
+          className: prefixCls + '-title'
+        }, titleMouseEvents, titleClickEvents, {
+          'aria-expanded': isOpen
+        }, ariaOwns, {
+          'aria-haspopup': 'true',
+          title: typeof props.title === 'string' ? props.title : undefined
+        }),
+        props.title,
+        React__default.createElement('i', { className: prefixCls + '-arrow' })
+      );
+      var children = this.renderChildren(props.children);
+
+      var getPopupContainer = props.parentMenu.isRootMenu ? props.parentMenu.props.getPopupContainer : function (triggerNode) {
+        return triggerNode.parentNode;
+      };
+      var popupPlacement = popupPlacementMap$1[props.mode];
+      var popupAlign = props.popupOffset ? { offset: props.popupOffset } : {};
+      var popupClassName = props.mode === 'inline' ? '' : props.popupClassName;
+      var disabled = props.disabled,
+          triggerSubMenuAction = props.triggerSubMenuAction,
+          subMenuOpenDelay = props.subMenuOpenDelay,
+          forceSubMenuRender = props.forceSubMenuRender,
+          subMenuCloseDelay = props.subMenuCloseDelay;
+
+      menuAllProps$1.forEach(function (key) {
+        return delete props[key];
+      });
+      // Set onClick to null, to ignore propagated onClick event
+      delete props.onClick;
+
+      return React__default.createElement(
+        'li',
+        _extends$2({}, props, mouseEvents, {
+          className: className,
+          role: 'menuitem'
+        }),
+        isInlineMode && title,
+        isInlineMode && children,
+        !isInlineMode && React__default.createElement(
+          Trigger,
+          {
+            prefixCls: prefixCls,
+            popupClassName: prefixCls + '-popup ' + popupClassName,
+            getPopupContainer: getPopupContainer,
+            builtinPlacements: placements$7,
+            popupPlacement: popupPlacement,
+            popupVisible: isOpen,
+            popupAlign: popupAlign,
+            popup: children,
+            action: disabled ? [] : [triggerSubMenuAction],
+            mouseEnterDelay: subMenuOpenDelay,
+            mouseLeaveDelay: subMenuCloseDelay,
+            onPopupVisibleChange: this.onPopupVisibleChange,
+            forceRender: forceSubMenuRender
+          },
+          title
+        )
+      );
+    };
+
+    return SubMenu;
+  }(React__default.Component);
+
+  SubMenu$1.propTypes = {
+    parentMenu: PropTypes.object,
+    title: PropTypes.node,
+    children: PropTypes.any,
+    selectedKeys: PropTypes.array,
+    openKeys: PropTypes.array,
+    onClick: PropTypes.func,
+    onOpenChange: PropTypes.func,
+    rootPrefixCls: PropTypes.string,
+    eventKey: PropTypes.string,
+    multiple: PropTypes.bool,
+    active: PropTypes.bool, // TODO: remove
+    onItemHover: PropTypes.func,
+    onSelect: PropTypes.func,
+    triggerSubMenuAction: PropTypes.string,
+    onDeselect: PropTypes.func,
+    onDestroy: PropTypes.func,
+    onMouseEnter: PropTypes.func,
+    onMouseLeave: PropTypes.func,
+    onTitleMouseEnter: PropTypes.func,
+    onTitleMouseLeave: PropTypes.func,
+    onTitleClick: PropTypes.func,
+    popupOffset: PropTypes.array,
+    isOpen: PropTypes.bool,
+    store: PropTypes.object,
+    mode: PropTypes.oneOf(['horizontal', 'vertical', 'vertical-left', 'vertical-right', 'inline']),
+    manualRef: PropTypes.func
+  };
+  SubMenu$1.defaultProps = {
+    onMouseEnter: noop$b,
+    onMouseLeave: noop$b,
+    onTitleMouseEnter: noop$b,
+    onTitleMouseLeave: noop$b,
+    onTitleClick: noop$b,
+    manualRef: noop$b,
+    mode: 'vertical',
+    title: ''
+  };
+
+  var _initialiseProps$f = function _initialiseProps() {
+    var _this3 = this;
+
+    this.onDestroy = function (key) {
+      _this3.props.onDestroy(key);
+    };
+
+    this.onKeyDown = function (e) {
+      var keyCode = e.keyCode;
+      var menu = _this3.menuInstance;
+      var _props3 = _this3.props,
+          isOpen = _props3.isOpen,
+          store = _props3.store;
+
+
+      if (keyCode === KeyCode.ENTER) {
+        _this3.onTitleClick(e);
+        updateDefaultActiveFirst$1(store, _this3.props.eventKey, true);
+        return true;
+      }
+
+      if (keyCode === KeyCode.RIGHT) {
+        if (isOpen) {
+          menu.onKeyDown(e);
+        } else {
+          _this3.triggerOpenChange(true);
+          // need to update current menu's defaultActiveFirst value
+          updateDefaultActiveFirst$1(store, _this3.props.eventKey, true);
+        }
+        return true;
+      }
+      if (keyCode === KeyCode.LEFT) {
+        var handled = void 0;
+        if (isOpen) {
+          handled = menu.onKeyDown(e);
+        } else {
+          return undefined;
+        }
+        if (!handled) {
+          _this3.triggerOpenChange(false);
+          handled = true;
+        }
+        return handled;
+      }
+
+      if (isOpen && (keyCode === KeyCode.UP || keyCode === KeyCode.DOWN)) {
+        return menu.onKeyDown(e);
+      }
+    };
+
+    this.onOpenChange = function (e) {
+      _this3.props.onOpenChange(e);
+    };
+
+    this.onPopupVisibleChange = function (visible) {
+      _this3.triggerOpenChange(visible, visible ? 'mouseenter' : 'mouseleave');
+    };
+
+    this.onMouseEnter = function (e) {
+      var _props4 = _this3.props,
+          key = _props4.eventKey,
+          onMouseEnter = _props4.onMouseEnter,
+          store = _props4.store;
+
+      updateDefaultActiveFirst$1(store, _this3.props.eventKey, false);
+      onMouseEnter({
+        key: key,
+        domEvent: e
+      });
+    };
+
+    this.onMouseLeave = function (e) {
+      var _props5 = _this3.props,
+          parentMenu = _props5.parentMenu,
+          eventKey = _props5.eventKey,
+          onMouseLeave = _props5.onMouseLeave;
+
+      parentMenu.subMenuInstance = _this3;
+      onMouseLeave({
+        key: eventKey,
+        domEvent: e
+      });
+    };
+
+    this.onTitleMouseEnter = function (domEvent) {
+      var _props6 = _this3.props,
+          key = _props6.eventKey,
+          onItemHover = _props6.onItemHover,
+          onTitleMouseEnter = _props6.onTitleMouseEnter;
+
+      onItemHover({
+        key: key,
+        hover: true
+      });
+      onTitleMouseEnter({
+        key: key,
+        domEvent: domEvent
+      });
+    };
+
+    this.onTitleMouseLeave = function (e) {
+      var _props7 = _this3.props,
+          parentMenu = _props7.parentMenu,
+          eventKey = _props7.eventKey,
+          onItemHover = _props7.onItemHover,
+          onTitleMouseLeave = _props7.onTitleMouseLeave;
+
+      parentMenu.subMenuInstance = _this3;
+      onItemHover({
+        key: eventKey,
+        hover: false
+      });
+      onTitleMouseLeave({
+        key: eventKey,
+        domEvent: e
+      });
+    };
+
+    this.onTitleClick = function (e) {
+      var props = _this3.props;
+
+      props.onTitleClick({
+        key: props.eventKey,
+        domEvent: e
+      });
+      if (props.triggerSubMenuAction === 'hover') {
+        return;
+      }
+      _this3.triggerOpenChange(!props.isOpen, 'click');
+      updateDefaultActiveFirst$1(props.store, _this3.props.eventKey, false);
+    };
+
+    this.onSubMenuClick = function (info) {
+      _this3.props.onClick(_this3.addKeyPath(info));
+    };
+
+    this.onSelect = function (info) {
+      _this3.props.onSelect(info);
+    };
+
+    this.onDeselect = function (info) {
+      _this3.props.onDeselect(info);
+    };
+
+    this.getPrefixCls = function () {
+      return _this3.props.rootPrefixCls + '-submenu';
+    };
+
+    this.getActiveClassName = function () {
+      return _this3.getPrefixCls() + '-active';
+    };
+
+    this.getDisabledClassName = function () {
+      return _this3.getPrefixCls() + '-disabled';
+    };
+
+    this.getSelectedClassName = function () {
+      return _this3.getPrefixCls() + '-selected';
+    };
+
+    this.getOpenClassName = function () {
+      return _this3.props.rootPrefixCls + '-submenu-open';
+    };
+
+    this.saveMenuInstance = function (c) {
+      // children menu instance
+      _this3.menuInstance = c;
+    };
+
+    this.addKeyPath = function (info) {
+      return _extends$2({}, info, {
+        keyPath: (info.keyPath || []).concat(_this3.props.eventKey)
+      });
+    };
+
+    this.triggerOpenChange = function (open, type) {
+      var key = _this3.props.eventKey;
+      var openChange = function openChange() {
+        _this3.onOpenChange({
+          key: key,
+          item: _this3,
+          trigger: type,
+          open: open
+        });
+      };
+      if (type === 'mouseenter') {
+        // make sure mouseenter happen after other menu item's mouseleave
+        _this3.mouseenterTimeout = setTimeout(function () {
+          openChange();
+        }, 0);
+      } else {
+        openChange();
+      }
+    };
+
+    this.isChildrenSelected = function () {
+      var ret = { find: false };
+      loopMenuItemRecursively$1(_this3.props.children, _this3.props.selectedKeys, ret);
+      return ret.find;
+    };
+
+    this.isOpen = function () {
+      return _this3.props.openKeys.indexOf(_this3.props.eventKey) !== -1;
+    };
+
+    this.adjustWidth = function () {
+      /* istanbul ignore if */
+      if (!_this3.subMenuTitle || !_this3.menuInstance) {
+        return;
+      }
+      var popupMenu = ReactDOM__default.findDOMNode(_this3.menuInstance);
+      if (popupMenu.offsetWidth >= _this3.subMenuTitle.offsetWidth) {
+        return;
+      }
+
+      /* istanbul ignore next */
+      popupMenu.style.minWidth = _this3.subMenuTitle.offsetWidth + 'px';
+    };
+
+    this.saveSubMenuTitle = function (subMenuTitle) {
+      _this3.subMenuTitle = subMenuTitle;
+    };
+  };
+
+  var connected$3 = lib_2$1(function (_ref, _ref2) {
+    var openKeys = _ref.openKeys,
+        activeKey = _ref.activeKey,
+        selectedKeys = _ref.selectedKeys;
+    var eventKey = _ref2.eventKey,
+        subMenuKey = _ref2.subMenuKey;
+    return {
+      isOpen: openKeys.indexOf(eventKey) > -1,
+      active: activeKey[subMenuKey] === eventKey,
+      selectedKeys: selectedKeys
+    };
+  })(SubMenu$1);
+
+  connected$3.isSubMenu = true;
+
+  /* eslint react/no-is-mounted:0 */
+
+  var MenuItem$1 = function (_React$Component) {
+    _inherits$1(MenuItem, _React$Component);
+
+    function MenuItem(props) {
+      _classCallCheck$1(this, MenuItem);
+
+      var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
+
+      _this.onKeyDown = function (e) {
+        var keyCode = e.keyCode;
+        if (keyCode === KeyCode.ENTER) {
+          _this.onClick(e);
+          return true;
+        }
+      };
+
+      _this.onMouseLeave = function (e) {
+        var _this$props = _this.props,
+            eventKey = _this$props.eventKey,
+            onItemHover = _this$props.onItemHover,
+            onMouseLeave = _this$props.onMouseLeave;
+
+        onItemHover({
+          key: eventKey,
+          hover: false
+        });
+        onMouseLeave({
+          key: eventKey,
+          domEvent: e
+        });
+      };
+
+      _this.onMouseEnter = function (e) {
+        var _this$props2 = _this.props,
+            eventKey = _this$props2.eventKey,
+            onItemHover = _this$props2.onItemHover,
+            onMouseEnter = _this$props2.onMouseEnter;
+
+        onItemHover({
+          key: eventKey,
+          hover: true
+        });
+        onMouseEnter({
+          key: eventKey,
+          domEvent: e
+        });
+      };
+
+      _this.onClick = function (e) {
+        var _this$props3 = _this.props,
+            eventKey = _this$props3.eventKey,
+            multiple = _this$props3.multiple,
+            onClick = _this$props3.onClick,
+            onSelect = _this$props3.onSelect,
+            onDeselect = _this$props3.onDeselect,
+            isSelected = _this$props3.isSelected;
+
+        var info = {
+          key: eventKey,
+          keyPath: [eventKey],
+          item: _this,
+          domEvent: e
+        };
+        onClick(info);
+        if (multiple) {
+          if (isSelected) {
+            onDeselect(info);
+          } else {
+            onSelect(info);
+          }
+        } else if (!isSelected) {
+          onSelect(info);
+        }
+      };
+
+      return _this;
+    }
+
+    MenuItem.prototype.componentDidMount = function componentDidMount() {
+      // invoke customized ref to expose component to mixin
+      this.callRef();
+    };
+
+    MenuItem.prototype.componentDidUpdate = function componentDidUpdate() {
+      if (this.props.active) {
+        lib$2(ReactDOM__default.findDOMNode(this), ReactDOM__default.findDOMNode(this.props.parentMenu), {
+          onlyScrollIfNeeded: true
+        });
+      }
+      this.callRef();
+    };
+
+    MenuItem.prototype.componentWillUnmount = function componentWillUnmount() {
+      var props = this.props;
+      if (props.onDestroy) {
+        props.onDestroy(props.eventKey);
+      }
+    };
+
+    MenuItem.prototype.getPrefixCls = function getPrefixCls() {
+      return this.props.rootPrefixCls + '-item';
+    };
+
+    MenuItem.prototype.getActiveClassName = function getActiveClassName() {
+      return this.getPrefixCls() + '-active';
+    };
+
+    MenuItem.prototype.getSelectedClassName = function getSelectedClassName() {
+      return this.getPrefixCls() + '-selected';
+    };
+
+    MenuItem.prototype.getDisabledClassName = function getDisabledClassName() {
+      return this.getPrefixCls() + '-disabled';
+    };
+
+    MenuItem.prototype.callRef = function callRef() {
+      if (this.props.manualRef) {
+        this.props.manualRef(this);
+      }
+    };
+
+    MenuItem.prototype.render = function render() {
+      var _classNames;
+
+      var props = _extends$2({}, this.props);
+      var className = classnames(this.getPrefixCls(), props.className, (_classNames = {}, _classNames[this.getActiveClassName()] = !props.disabled && props.active, _classNames[this.getSelectedClassName()] = props.isSelected, _classNames[this.getDisabledClassName()] = props.disabled, _classNames));
+      var attrs = _extends$2({}, props.attribute, {
+        title: props.title,
+        className: className,
+        // set to menuitem by default
+        role: 'menuitem',
+        'aria-disabled': props.disabled
+      });
+
+      if (props.role === 'option') {
+        // overwrite to option
+        attrs = _extends$2({}, attrs, {
+          role: 'option',
+          'aria-selected': props.isSelected
+        });
+      } else if (props.role === null) {
+        // sometimes we want to specify role inside <li/> element
+        // <li><a role='menuitem'>Link</a></li> would be a good example
+        delete attrs.role;
+      }
+      // In case that onClick/onMouseLeave/onMouseEnter is passed down from owner
+      var mouseEvent = {
+        onClick: props.disabled ? null : this.onClick,
+        onMouseLeave: props.disabled ? null : this.onMouseLeave,
+        onMouseEnter: props.disabled ? null : this.onMouseEnter
+      };
+      var style = _extends$2({}, props.style);
+      if (props.mode === 'inline') {
+        style.paddingLeft = props.inlineIndent * props.level;
+      }
+      menuAllProps$1.forEach(function (key) {
+        return delete props[key];
+      });
+      return React__default.createElement(
+        'li',
+        _extends$2({}, props, attrs, mouseEvent, {
+          style: style
+        }),
+        props.children
+      );
+    };
+
+    return MenuItem;
+  }(React__default.Component);
+
+  MenuItem$1.propTypes = {
+    attribute: PropTypes.object,
+    rootPrefixCls: PropTypes.string,
+    eventKey: PropTypes.string,
+    active: PropTypes.bool,
+    children: PropTypes.any,
+    selectedKeys: PropTypes.array,
+    disabled: PropTypes.bool,
+    title: PropTypes.string,
+    onItemHover: PropTypes.func,
+    onSelect: PropTypes.func,
+    onClick: PropTypes.func,
+    onDeselect: PropTypes.func,
+    parentMenu: PropTypes.object,
+    onDestroy: PropTypes.func,
+    onMouseEnter: PropTypes.func,
+    onMouseLeave: PropTypes.func,
+    multiple: PropTypes.bool,
+    isSelected: PropTypes.bool,
+    manualRef: PropTypes.func
+  };
+  MenuItem$1.defaultProps = {
+    onSelect: noop$b,
+    onMouseEnter: noop$b,
+    onMouseLeave: noop$b,
+    manualRef: noop$b
+  };
+  MenuItem$1.isMenuItem = true;
+
+  var connected$4 = lib_2$1(function (_ref, _ref2) {
+    var activeKey = _ref.activeKey,
+        selectedKeys = _ref.selectedKeys;
+    var eventKey = _ref2.eventKey,
+        subMenuKey = _ref2.subMenuKey;
+    return {
+      active: activeKey[subMenuKey] === eventKey,
+      isSelected: selectedKeys.indexOf(eventKey) !== -1
+    };
+  })(MenuItem$1);
+
+  var MenuItemGroup$1 = function (_React$Component) {
+    _inherits$1(MenuItemGroup, _React$Component);
+
+    function MenuItemGroup() {
+      var _temp, _this, _ret;
+
+      _classCallCheck$1(this, MenuItemGroup);
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = _possibleConstructorReturn$1(this, _React$Component.call.apply(_React$Component, [this].concat(args))), _this), _this.renderInnerMenuItem = function (item) {
+        var _this$props = _this.props,
+            renderMenuItem = _this$props.renderMenuItem,
+            index = _this$props.index;
+
+        return renderMenuItem(item, index, _this.props.subMenuKey);
+      }, _temp), _possibleConstructorReturn$1(_this, _ret);
+    }
+
+    MenuItemGroup.prototype.render = function render() {
+      var props = _objectWithoutProperties$1(this.props, []);
+
+      var _props$className = props.className,
+          className = _props$className === undefined ? '' : _props$className,
+          rootPrefixCls = props.rootPrefixCls;
+
+      var titleClassName = rootPrefixCls + '-item-group-title';
+      var listClassName = rootPrefixCls + '-item-group-list';
+      var title = props.title,
+          children = props.children;
+
+      menuAllProps$1.forEach(function (key) {
+        return delete props[key];
+      });
+
+      // Set onClick to null, to ignore propagated onClick event
+      delete props.onClick;
+
+      return React__default.createElement(
+        'li',
+        _extends$2({}, props, { className: className + ' ' + rootPrefixCls + '-item-group' }),
+        React__default.createElement(
+          'div',
+          {
+            className: titleClassName,
+            title: typeof title === 'string' ? title : undefined
+          },
+          title
+        ),
+        React__default.createElement(
+          'ul',
+          { className: listClassName },
+          React__default.Children.map(children, this.renderInnerMenuItem)
+        )
+      );
+    };
+
+    return MenuItemGroup;
+  }(React__default.Component);
+
+  MenuItemGroup$1.propTypes = {
+    renderMenuItem: PropTypes.func,
+    index: PropTypes.number,
+    className: PropTypes.string,
+    subMenuKey: PropTypes.string,
+    rootPrefixCls: PropTypes.string
+  };
+  MenuItemGroup$1.defaultProps = {
+    disabled: true
+  };
+
+
+  MenuItemGroup$1.isMenuItemGroup = true;
+
+  var Divider$1 = function (_React$Component) {
+    _inherits$1(Divider, _React$Component);
+
+    function Divider() {
+      _classCallCheck$1(this, Divider);
+
+      return _possibleConstructorReturn$1(this, _React$Component.apply(this, arguments));
+    }
+
+    Divider.prototype.render = function render() {
+      var _props = this.props,
+          _props$className = _props.className,
+          className = _props$className === undefined ? '' : _props$className,
+          rootPrefixCls = _props.rootPrefixCls;
+
+      return React__default.createElement('li', { className: className + ' ' + rootPrefixCls + '-item-divider' });
+    };
+
+    return Divider;
+  }(React__default.Component);
+
+  Divider$1.propTypes = {
+    className: PropTypes.string,
+    rootPrefixCls: PropTypes.string
+  };
+  Divider$1.defaultProps = {
+    // To fix keyboard UX.
+    disabled: true
+  };
+
   var SubMenu_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -38083,7 +41270,7 @@
                   className = _props.className;
 
               var theme = this.context.antdMenuTheme;
-              return React$$1.createElement(Menu.SubMenu, (0, _extends3['default'])({}, this.props, { ref: this.saveSubMenu, popupClassName: (0, _classnames2['default'])(rootPrefixCls + '-' + theme, className) }));
+              return React$$1.createElement(Menu$1.SubMenu, (0, _extends3['default'])({}, this.props, { ref: this.saveSubMenu, popupClassName: (0, _classnames2['default'])(rootPrefixCls + '-' + theme, className) }));
           }
       }]);
       return SubMenu;
@@ -38168,7 +41355,7 @@
               return React$$1.createElement(
                   _tooltip2['default'],
                   { title: inlineCollapsed && props.level === 1 ? props.children : '', placement: 'right', overlayClassName: props.rootPrefixCls + '-inline-collapsed-tooltip' },
-                  React$$1.createElement(Menu.Item, (0, _extends3['default'])({}, props, { ref: this.saveMenuItem }))
+                  React$$1.createElement(Menu$1.Item, (0, _extends3['default'])({}, props, { ref: this.saveMenuItem }))
               );
           }
       }]);
@@ -38223,7 +41410,7 @@
 
 
 
-  var _rcMenu2 = _interopRequireDefault(Menu);
+  var _rcMenu2 = _interopRequireDefault(Menu$1);
 
 
 
@@ -38253,13 +41440,13 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  var Menu$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Menu$$1, _React$Component);
+  var Menu = function (_React$Component) {
+      (0, _inherits3['default'])(Menu, _React$Component);
 
-      function Menu$$1(props) {
-          (0, _classCallCheck3['default'])(this, Menu$$1);
+      function Menu(props) {
+          (0, _classCallCheck3['default'])(this, Menu);
 
-          var _this = (0, _possibleConstructorReturn3['default'])(this, (Menu$$1.__proto__ || Object.getPrototypeOf(Menu$$1)).call(this, props));
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (Menu.__proto__ || Object.getPrototypeOf(Menu)).call(this, props));
 
           _this.inlineOpenKeys = [];
           _this.handleClick = function (e) {
@@ -38292,7 +41479,7 @@
           return _this;
       }
 
-      (0, _createClass3['default'])(Menu$$1, [{
+      (0, _createClass3['default'])(Menu, [{
           key: 'getChildContext',
           value: function getChildContext() {
               return {
@@ -38431,75 +41618,75 @@
               return React$$1.createElement(_rcMenu2['default'], (0, _extends3['default'])({}, this.props, menuProps));
           }
       }]);
-      return Menu$$1;
+      return Menu;
   }(React$$1.Component);
 
-  exports['default'] = Menu$$1;
+  exports['default'] = Menu;
 
-  Menu$$1.Divider = Menu.Divider;
-  Menu$$1.Item = _MenuItem2['default'];
-  Menu$$1.SubMenu = _SubMenu2['default'];
-  Menu$$1.ItemGroup = Menu.ItemGroup;
-  Menu$$1.defaultProps = {
+  Menu.Divider = Menu$1.Divider;
+  Menu.Item = _MenuItem2['default'];
+  Menu.SubMenu = _SubMenu2['default'];
+  Menu.ItemGroup = Menu$1.ItemGroup;
+  Menu.defaultProps = {
       prefixCls: 'ant-menu',
       className: '',
       theme: 'light',
       focusable: false
   };
-  Menu$$1.childContextTypes = {
+  Menu.childContextTypes = {
       inlineCollapsed: _propTypes2['default'].bool,
       antdMenuTheme: _propTypes2['default'].string
   };
-  Menu$$1.contextTypes = {
+  Menu.contextTypes = {
       siderCollapsed: _propTypes2['default'].bool,
       collapsedWidth: _propTypes2['default'].oneOfType([_propTypes2['default'].number, _propTypes2['default'].string])
   };
   module.exports = exports['default'];
   });
 
-  var Menu$1 = unwrapExports(menu);
+  var Menu$2 = unwrapExports(menu);
 
-  var autoAdjustOverflow$2 = {
+  var autoAdjustOverflow$3 = {
     adjustX: 1,
     adjustY: 1
   };
 
   var targetOffset$1 = [0, 0];
 
-  var placements$7 = {
+  var placements$8 = {
     topLeft: {
       points: ['bl', 'tl'],
-      overflow: autoAdjustOverflow$2,
+      overflow: autoAdjustOverflow$3,
       offset: [0, -4],
       targetOffset: targetOffset$1
     },
     topCenter: {
       points: ['bc', 'tc'],
-      overflow: autoAdjustOverflow$2,
+      overflow: autoAdjustOverflow$3,
       offset: [0, -4],
       targetOffset: targetOffset$1
     },
     topRight: {
       points: ['br', 'tr'],
-      overflow: autoAdjustOverflow$2,
+      overflow: autoAdjustOverflow$3,
       offset: [0, -4],
       targetOffset: targetOffset$1
     },
     bottomLeft: {
       points: ['tl', 'bl'],
-      overflow: autoAdjustOverflow$2,
+      overflow: autoAdjustOverflow$3,
       offset: [0, 4],
       targetOffset: targetOffset$1
     },
     bottomCenter: {
       points: ['tc', 'bc'],
-      overflow: autoAdjustOverflow$2,
+      overflow: autoAdjustOverflow$3,
       offset: [0, 4],
       targetOffset: targetOffset$1
     },
     bottomRight: {
       points: ['tr', 'br'],
-      overflow: autoAdjustOverflow$2,
+      overflow: autoAdjustOverflow$3,
       offset: [0, 4],
       targetOffset: targetOffset$1
     }
@@ -38523,7 +41710,7 @@
 
       var _this = _possibleConstructorReturn$2(this, _Component.call(this, props));
 
-      _initialiseProps$d.call(_this);
+      _initialiseProps$g.call(_this);
 
       if ('visible' in props) {
         _this.state = {
@@ -38588,7 +41775,7 @@
           ref: this.saveTrigger,
           popupClassName: overlayClassName,
           popupStyle: overlayStyle,
-          builtinPlacements: placements$7,
+          builtinPlacements: placements$8,
           action: trigger,
           showAction: showAction,
           hideAction: hideAction,
@@ -38643,7 +41830,7 @@
     placement: 'bottomLeft'
   };
 
-  var _initialiseProps$d = function _initialiseProps() {
+  var _initialiseProps$g = function _initialiseProps() {
     var _this2 = this;
 
     this.onClick = function (e) {
@@ -39140,10 +42327,10 @@
         var _this3 = this;
 
         var handleClick = this.props.handleClick;
-        return React__default.createElement(Menu$1, {
+        return React__default.createElement(Menu$2, {
           onClick: handleClick
         }, itemList.map(function (it, idx) {
-          return React__default.createElement(Menu$1.Item, {
+          return React__default.createElement(Menu$2.Item, {
             key: idx
           }, _this3.renderMenuReactElement(it, idx));
         }));
@@ -40845,7 +44032,7 @@
     return null;
   }
 
-  var TableHeaderRow$1 = lib_2(function (state, props) {
+  var TableHeaderRow$1 = lib_2$1(function (state, props) {
     return {
       height: getRowHeight(state, props)
     };
@@ -41368,7 +44555,7 @@
 
   polyfill(TableRow);
 
-  var TableRow$1 = lib_2(function (state, props) {
+  var TableRow$1 = lib_2$1(function (state, props) {
     var currentHoverKey = state.currentHoverKey,
         expandedRowKeys = state.expandedRowKeys;
     var rowKey = props.rowKey,
@@ -41562,7 +44749,7 @@
   };
 
 
-  var ExpandableRow$1 = lib_2(function (_ref, _ref2) {
+  var ExpandableRow$1 = lib_2$1(function (_ref, _ref2) {
     var expandedRowKeys = _ref.expandedRowKeys;
     var rowKey = _ref2.rowKey;
     return {
@@ -41754,7 +44941,7 @@
   };
 
 
-  var BaseTable$1 = lib_2()(BaseTable);
+  var BaseTable$1 = lib_2$1()(BaseTable);
 
   function HeadTable(props, _ref) {
     var table = _ref.table;
@@ -41938,7 +45125,7 @@
 
       var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
 
-      _initialiseProps$e.call(_this);
+      _initialiseProps$h.call(_this);
 
       var data = props.data,
           childrenColumnName = props.childrenColumnName,
@@ -42091,7 +45278,7 @@
     onExpandedRowsChange: function onExpandedRowsChange() {}
   };
 
-  var _initialiseProps$e = function _initialiseProps() {
+  var _initialiseProps$h = function _initialiseProps() {
     var _this2 = this;
 
     this.handleExpandChange = function (expanded, record, event, rowKey) {
@@ -42171,7 +45358,7 @@
 
   polyfill(ExpandableTable);
 
-  var ExpandableTable$1 = lib_2()(ExpandableTable);
+  var ExpandableTable$1 = lib_2$1()(ExpandableTable);
 
   var Table = function (_React$Component) {
     _inherits$1(Table, _React$Component);
@@ -42341,7 +45528,7 @@
 
       _this.columnManager = new ColumnManager(props.columns, props.children);
 
-      _this.store = lib_1({
+      _this.store = lib_1$1({
         currentHoverKey: null,
         fixedColumnsHeadRowsHeight: [],
         fixedColumnsBodyRowsHeight: []
@@ -42601,7 +45788,7 @@
       var hasRightFixed = this.columnManager.isAnyColumnsRightFixed();
 
       return React__default.createElement(
-        lib_3,
+        lib_3$1,
         { store: this.store },
         React__default.createElement(
           ExpandableTable$1,
@@ -42973,7 +46160,7 @@
     next_3: '向后 3 页'
   };
 
-  function noop$b() {}
+  function noop$c() {}
 
   function isInteger(value) {
     return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
@@ -42991,9 +46178,9 @@
 
       var _this = _possibleConstructorReturn$1(this, (Pagination.__proto__ || Object.getPrototypeOf(Pagination)).call(this, props));
 
-      _initialiseProps$f.call(_this);
+      _initialiseProps$i.call(_this);
 
-      var hasOnChange = props.onChange !== noop$b;
+      var hasOnChange = props.onChange !== noop$c;
       var hasCurrent = 'current' in props;
       if (hasCurrent && !hasOnChange) {
         console.warn('Warning: You provided a `current` prop to a Pagination component without an `onChange` handler. This will render a read-only component.'); // eslint-disable-line
@@ -43404,7 +46591,7 @@
     defaultCurrent: 1,
     total: 0,
     defaultPageSize: 10,
-    onChange: noop$b,
+    onChange: noop$c,
     className: '',
     selectPrefixCls: 'rc-select',
     prefixCls: 'rc-pagination',
@@ -43415,13 +46602,13 @@
     showSizeChanger: false,
     showLessItems: false,
     showTitle: true,
-    onShowSizeChange: noop$b,
+    onShowSizeChange: noop$c,
     locale: LOCALE,
     style: {},
     itemRender: defaultItemRender
   };
 
-  var _initialiseProps$f = function _initialiseProps() {
+  var _initialiseProps$i = function _initialiseProps() {
     var _this2 = this;
 
     this.savePaginationNode = function (node) {
@@ -45006,7 +48193,7 @@
 
       var _this = _possibleConstructorReturn$1(this, _React$Component.call(this, props));
 
-      _initialiseProps$g.call(_this);
+      _initialiseProps$j.call(_this);
 
       var checked = 'checked' in props ? props.checked : props.defaultChecked;
 
@@ -45112,7 +48299,7 @@
     onBlur: PropTypes.func,
     onChange: PropTypes.func,
     onClick: PropTypes.func,
-    tabIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    tabIndex: PropTypes.string,
     readOnly: PropTypes.bool,
     autoFocus: PropTypes.bool,
     value: PropTypes.any
@@ -45128,7 +48315,7 @@
     onChange: function onChange() {}
   };
 
-  var _initialiseProps$g = function _initialiseProps() {
+  var _initialiseProps$j = function _initialiseProps() {
     var _this2 = this;
 
     this.handleChange = function (e) {
@@ -46016,7 +49203,7 @@
 
 
 
-  var _rcMenu2 = _interopRequireDefault(Menu);
+  var _rcMenu2 = _interopRequireDefault(Menu$1);
 
 
 
@@ -46187,7 +49374,7 @@
               var multiple = 'filterMultiple' in column ? column.filterMultiple : true;
               var input = multiple ? React$$1.createElement(_checkbox2['default'], { checked: this.state.selectedKeys.indexOf(item.value.toString()) >= 0 }) : React$$1.createElement(_radio2['default'], { checked: this.state.selectedKeys.indexOf(item.value.toString()) >= 0 });
               return React$$1.createElement(
-                  Menu.Item,
+                  Menu$1.Item,
                   { key: item.value },
                   input,
                   React$$1.createElement(
@@ -46221,7 +49408,7 @@
                       });
                       var subMenuCls = containSelected ? _this2.props.dropdownPrefixCls + '-submenu-contain-selected' : '';
                       return React$$1.createElement(
-                          Menu.SubMenu,
+                          Menu$1.SubMenu,
                           { title: item.text, className: subMenuCls, key: item.value.toString() },
                           _this2.renderMenus(item.children)
                       );

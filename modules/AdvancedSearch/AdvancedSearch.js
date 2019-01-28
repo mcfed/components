@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import Row from 'antd/lib/row'
 import Col from 'antd/lib/col'
+import Icon from 'antd/lib/icon'
 import Input from 'antd/lib/input'
 import Modal from 'antd/lib/modal'
 import Button from 'antd/lib/button'
@@ -71,7 +72,7 @@ export default class AdvancedSearchForm extends React.Component {
     form.setFieldsValue(emptyValue)
   }
 
-  toggleExpand = () => {
+  toggleExpand(){
     const {expand} = this.state;
     this.setState({
       expand: !expand
@@ -93,10 +94,10 @@ export default class AdvancedSearchForm extends React.Component {
     if(React.Children.count(children)===0){
       return (null)
     }
-    // if(this.state.expand==false ){
-    //   renderChildren = children.filter((ch,idx)=>idx<3)
+    if(this.state.expand==false ){
+      renderChildren = children.filter((ch,idx)=>idx<3)
     // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
-    if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+    }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>{
         //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
         return this.state.displayItem.indexOf(ch.props.name)>=0 || idx < this.props.showExpand
@@ -160,6 +161,7 @@ export default class AdvancedSearchForm extends React.Component {
           <div className="advanced-search-toolbar">
 							<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
 							<Button htmlType="reset" onClick={this.handleReset.bind(this)}>{locale.resetText}</Button>
+              <Icon type="down" onClick={this.toggleExpand.bind(this)} />
           </div>
         </SubmitForm>
       </div>
