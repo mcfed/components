@@ -25,6 +25,7 @@ import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Modal from 'antd/lib/modal';
 import message from 'antd/lib/message';
+import 'antd/lib/locale-provider/LocaleReceiver';
 import classNames from 'classnames';
 import Icon from 'antd/lib/icon';
 import Tooltip from 'antd/lib/tooltip';
@@ -314,13 +315,25 @@ function (_React$Component) {
   _createClass(DetailTable, [{
     key: "render",
     value: function render() {
-      var dataSource = this.props.dataSource;
-      return React.createElement("table", {
+      var _this$props = this.props,
+          dataSource = _this$props.dataSource,
+          title = _this$props.title,
+          tableClass = _this$props.tableClass;
+      return React.createElement("div", {
+        className: tableClass
+      }, React.createElement("div", {
+        className: "ant-table-title"
+      }, title), React.createElement("div", {
+        className: "ant-table-content"
+      }, React.createElement("div", {
+        className: "ant-table-body"
+      }, React.createElement("table", {
         style: {
           width: '100%'
-        },
-        className: this.props.tableClass
-      }, React.createElement("tbody", null, this.showDom(dataSource)));
+        }
+      }, React.createElement("tbody", {
+        className: "ant-table-tbody"
+      }, this.showDom(dataSource))))));
     }
   }]);
 
@@ -330,8 +343,13 @@ function (_React$Component) {
 DetailTable.propTypes = {
   mode: PropTypes.oneOf(['object', 'array']),
   columnNumber: PropTypes.number,
-  dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-  tableClass: PropTypes.string
+  dataSource: PropTypes.array,
+  tableClass: PropTypes.string,
+  title: PropTypes.string
+};
+DetailTable.defaultProps = {
+  columnNumber: 2,
+  tableClass: "ant-table ant-table-bordered ant-table-detail"
 };
 
 var FormCreate = Form.create;
@@ -467,7 +485,7 @@ function (_Component) {
       if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
         if (nextProps.value instanceof Array) {
           this.setState({
-            value: nextProps.value && nextProps.value.length == 2 ? [new moment(nextProps.value[0], nextProps.format), new moment(nextProps.value[1], nextProps.format)] : null
+            value: nextProps.value && nextProps.value.length == 2 && nextProps.value[0] !== "" && nextProps.value[1] !== "" ? [new moment(nextProps.value[0], nextProps.format), new moment(nextProps.value[1], nextProps.format)] : null
           });
         } else {
           this.setState({
@@ -479,18 +497,34 @@ function (_Component) {
   }, {
     key: "onChange",
     value: function onChange(date, dateString) {
-      var onChange = this.props.onChange;
-      console.log(date, dateString);
-      this.setState({
-        value: date
-      }, onChange(dateString));
+      var _this$props = this.props,
+          onChange = _this$props.onChange,
+          children = _this$props.children;
+      var format = children.props.format;
+
+      if (date instanceof Array) {
+        if (date.length == 0) {
+          this.setState({
+            value: date
+          }, onChange(undefined));
+        } else {
+          // console.log(format,date[0].format(format),date[1].format(format))
+          this.setState({
+            value: date
+          }, onChange([date[0].format(format), date[1].format(format)]));
+        }
+      } else {
+        this.setState({
+          value: date
+        }, onChange(date.format(format)));
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var _this$props = this.props,
-          children = _this$props.children,
-          otherProps = _this$props.otherProps;
+      var _this$props2 = this.props,
+          children = _this$props2.children,
+          otherProps = _this$props2.otherProps;
       var value = this.state.value;
       return React.cloneElement(children, _objectSpread({}, otherProps, {
         value: value,
@@ -978,9 +1012,7 @@ function (_Component) {
 
       return React.createElement(Form.Item, _extends({
         label: label
-      }, Object.assign({}, {}, formLayout, this.props), {
-        colon: false
-      }, styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
+      }, Object.assign({}, {}, formLayout, this.props), styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
         initialValue: defaultValue,
         hidden: element.props.hidden || false
       }))(this.renderField()));
@@ -1070,7 +1102,19 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "handleReset", function () {
-      _this.form.resetFields();
+      var form = _this.form;
+      var values = form.getFieldsValue();
+      var emptyValue = {}; // this.form.resetFields();
+
+      for (var v in values) {
+        // console.log(v)
+        if (values.hasOwnProperty(v)) {
+          emptyValue[v] = undefined;
+        }
+      } // console.log(emptyValue)
+
+
+      form.setFieldsValue(emptyValue);
     });
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "toggleExpand", function () {
@@ -1081,10 +1125,20 @@ function (_React$Component) {
       });
     });
 
+    _this.state.loading = props.loading;
     return _this;
   }
 
   _createClass(AdvancedSearchForm, [{
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      if (nextProps.loading !== this.props.loading) {
+        this.setState({
+          loading: nextProps.loading
+        });
+      }
+    }
+  }, {
     key: "getFields",
     // To generate mock Form.Item
     value: function getFields() {
@@ -1097,10 +1151,10 @@ function (_React$Component) {
       var renderChildren;
       var formItemLayout = layout && layout !== 'inline' ? {
         labelCol: {
-          span: 6
+          span: 8
         },
         wrapperCol: {
-          span: 18
+          span: 16
         }
       } : {};
 
@@ -1182,7 +1236,9 @@ function (_React$Component) {
           children = _this$props2.children,
           className = _this$props2.className,
           autoSubmitForm = _this$props2.autoSubmitForm,
-          layout = _this$props2.layout;
+          layout = _this$props2.layout,
+          locale = _this$props2.locale;
+      var loading = this.state.loading;
       return React.createElement("div", {
         className: classNames("advanced-search-panel", className)
       }, React.createElement(SubmitForm, {
@@ -1195,12 +1251,13 @@ function (_React$Component) {
         className: "advanced-search-toolbar"
       }, React.createElement(Button, {
         htmlType: "submit",
+        disabled: loading,
         onClick: this.handleSearch.bind(this),
         type: "primary"
-      }, "\u641C\u7D22"), React.createElement(Button, {
+      }, locale.searchText), React.createElement(Button, {
         htmlType: "reset",
         onClick: this.handleReset.bind(this)
-      }, "\u91CD\u7F6E"))));
+      }, locale.resetText))));
     }
   }]);
 
@@ -1209,12 +1266,19 @@ function (_React$Component) {
 AdvancedSearchForm.propTypes = {
   filterSubmitHandler: PropTypes.func,
   showConfig: PropTypes.bool,
+  loading: PropTypes.bool,
   footer: PropTypes.element,
+  locale: PropTypes.object,
   showExpand: PropTypes.number
 };
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
+  loading: false,
+  locale: {
+    searchText: "搜索",
+    resetText: "重置"
+  },
   filterSubmitHandler: function filterSubmitHandler() {},
   showExpand: 3,
   layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)
@@ -1305,10 +1369,11 @@ function (_Component2) {
           confirm = _it$props.confirm,
           placement = _it$props.placement,
           children = _it$props.children,
+          block = _it$props.block,
           actionkey = _it$props.actionkey,
           disabled = _it$props.disabled,
           permission = _it$props.permission,
-          otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "actionkey", "disabled", "permission"]);
+          otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "block", "actionkey", "disabled", "permission"]);
 
       if (confirm && !disabled) {
         return React.createElement(Confirm, Object.assign({}, {
@@ -1393,9 +1458,10 @@ function (_Component2) {
     value: function renderChildren() {
       var _this$props3 = this.props,
           children = _this$props3.children,
-          showSize = _this$props3.showSize;
+          showSize = _this$props3.showSize,
+          mode = _this$props3.mode;
       var childrenArray = React.Children.toArray(children);
-      return React.createElement(Button.Group, null, childrenArray.length > showSize ? this.renderMixButtonMenu() : this.renderButtonOnly());
+      return React.createElement(Button.Group, null, mode === 'ButtonGroup' ? this.renderButtonOnly() : this.renderMixButtonMenu());
     }
   }, {
     key: "render",
@@ -1420,10 +1486,13 @@ _defineProperty(ButtonGroups, "contextTypes", {// appReducer:PropTypes.object
 });
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
-  handleClick: PropTypes.func
+  handleClick: PropTypes.func,
+  mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu'])
 };
 ButtonGroups.defaultProps = {
-  showSize: 5
+  showSize: 5,
+  handleClick: function handleClick(actionkey) {},
+  mode: 'ButtonGroup'
 };
 
 var TableMenu =

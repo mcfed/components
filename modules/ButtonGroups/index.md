@@ -22,7 +22,8 @@
 | 参数 | 说明 | 类型 | 默认值 |
 | - | - | - | - |
 | handleClick | 点击事件监听 | funciton | funciton(actionkey){} |
-| showSize | 最多显示个数，超过后已...菜单显示 | number | 5 |
+| showSize | 最多显示个数 | number | 5 |
+| mode | 显示模式 `ButtonGroup` 和 `ButtonMenu`  | number | "ButtonGroup" |
 
 ## Button options
 > Button 是ANTD 组件，在ButtonGroup组件内部不要再使用`onClick`事件处理,统一使用 `ButtonGroup handleClick`处理监听。额外扩展以下属性

@@ -36,23 +36,33 @@ class DetailTable extends React.Component {
     return array.map((d,k) => <tr key = {k}>{d.map((c,v)=><Td key={v} dataSource={c} labelKey={this.props.labelKey} valueKey={this.props.valueKey} />)}</tr>)
   }
   render () {
-    const {dataSource} = this.props
+    const {dataSource,title,tableClass} = this.props
     return (
-      <table style={{width:'100%'}} className={this.props.tableClass}>
-        <tbody>
-          {this.showDom(dataSource)}
-        </tbody>
-      </table>
+      <div className={tableClass}>
+      <div className="ant-table-title">{title}</div>
+        <div className="ant-table-content">
+          <div className="ant-table-body">
+          <table  style={{width:'100%'}}>
+            <tbody className="ant-table-tbody">
+              {this.showDom(dataSource)}
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
     )
   }
 }
 DetailTable.propTypes ={
   mode: propTypes.oneOf(['object', 'array']),
   columnNumber: propTypes.number,
-  dataSource: propTypes.oneOfType([
-    propTypes.array,
-    propTypes.object,
-  ]),
-  tableClass: propTypes.string
+  dataSource: propTypes.array,
+  tableClass: propTypes.string,
+  title: propTypes.string
+}
+
+DetailTable.defaultProps={
+  columnNumber:2,
+  tableClass:"ant-table ant-table-bordered ant-table-detail"
 }
 export default DetailTable

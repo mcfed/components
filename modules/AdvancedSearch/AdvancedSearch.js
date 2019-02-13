@@ -9,6 +9,7 @@ import Button from 'antd/lib/button'
 // import Transfer from 'antd/lib/Transfer'
 import message from 'antd/lib/message'
 import Select from 'antd/lib/select'
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
@@ -30,6 +31,7 @@ export default class AdvancedSearchForm extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state.loading=props.loading
   }
 
   handleSearch = (e,values) => {
@@ -46,8 +48,27 @@ export default class AdvancedSearchForm extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps){
+    if(nextProps.loading !== this.props.loading){
+      this.setState({
+        loading:nextProps.loading
+      })
+    }
+  }
+
   handleReset = () => {
-    this.form.resetFields();
+    const form=this.form
+    const values=form.getFieldsValue();
+    let emptyValue={}
+    // this.form.resetFields();
+    for(var v in values){
+      // console.log(v)
+      if(values.hasOwnProperty(v)){
+        emptyValue[v]=undefined
+      }
+    }
+    // console.log(emptyValue)
+    form.setFieldsValue(emptyValue)
   }
 
   toggleExpand = () => {
@@ -63,10 +84,10 @@ export default class AdvancedSearchForm extends React.Component {
     let renderChildren;
     const formItemLayout = layout && layout!=='inline'? {
       labelCol: {
-        span: 6
+        span: 8
       },
       wrapperCol: {
-        span: 18
+        span: 16
       }
     }:{};
     if(React.Children.count(children)===0){
@@ -130,14 +151,15 @@ export default class AdvancedSearchForm extends React.Component {
     )
   }
   render() {
-    let {showConfig,children,className,autoSubmitForm,layout} = this.props
+    let {showConfig,children,className,autoSubmitForm,layout,locale} = this.props
+    let {loading} = this.state
     return (
       <div className={classNames("advanced-search-panel",className)}>
         <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
           { this.renderKeyword() }
           <div className="advanced-search-toolbar">
-							<Button htmlType="submit" onClick={this.handleSearch.bind(this)} type="primary">搜索</Button>
-							<Button htmlType="reset" onClick={this.handleReset.bind(this)}>重置</Button>
+							<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
+							<Button htmlType="reset" onClick={this.handleReset.bind(this)}>{locale.resetText}</Button>
           </div>
         </SubmitForm>
       </div>
@@ -148,13 +170,20 @@ export default class AdvancedSearchForm extends React.Component {
 AdvancedSearchForm.propTypes = {
   filterSubmitHandler: PropTypes.func,
   showConfig:PropTypes.bool,
+  loading:PropTypes.bool,
   footer:PropTypes.element,
+  locale:PropTypes.object,
   showExpand:PropTypes.number
 }
 
 AdvancedSearchForm.defaultProps = {
   autoSubmitForm:false,
   showConfig:false,
+  loading:false,
+  locale:{
+    searchText:"搜索",
+    resetText:"重置"
+  },
   filterSubmitHandler: function() {},
 	showExpand:3,
 	layout:'horizontal'
