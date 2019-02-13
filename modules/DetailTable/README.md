@@ -1,6 +1,6 @@
 # DetailTable 组件
 
-> 可编辑表格API基于antd组件中的Table组件，拓展了两个属性editComponent，editConfig
+> 详情表格组件，支持两种显示模式，对象和数组，支持数组配置显示key与value
 ## Usage
 ```
 const add = [
@@ -16,14 +16,25 @@ const add = [
         name: '3',
         value: '1231'
       },
-    ]
-<DetailTable tableClass={'table'} dataSource={add} columnNumber={2} nameClass={'name'} valueClass={'value'} />
+]
+const add = {
+      adf: 1231,
+      sdf: 1231,
+      ads: 1231,
+      acddf: 1231,
+      adadf: 1231,
+      a32df: 1231,
+      cda: 1231
+    }
+<DetailTable tableClass={'table'} mode='object' labelKey={'label'} valueKey={'value'} dataSource={add} columnNumber={2} />
 
 ```
 ## Option
 | 参数 | 说明 | 类型 |
 | - | - | - |
-|dataSource|传递显示数据格式为[{name:值或方法,value:值或方法}]|array|
+|mode|支持数组模式和对象模式（'array',object）默认数组模式|string
+|dataSource|传递数据，根据类型传递相应的数据|array,object|
 |columnNumber|定义列数，不得小于0|number|
-|nameClass|名称样式|string|
-|valueClass|值样式|string|
+|tableClass|表格样式|string|
+|labelKey|数组模式下配置显示名称key值，默认label|string|
+|valueKey|数组模式下配置显示名称value值，默认value|string|

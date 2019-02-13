@@ -33,6 +33,8 @@ import Dropdown from 'antd/lib/dropdown';
 import Table from 'antd/lib/table';
 import Checkbox from 'antd/lib/checkbox';
 import Popconfirm from 'antd/lib/popconfirm';
+import _Divider from 'antd/es/divider';
+import _Icon from 'antd/es/icon';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -212,24 +214,21 @@ function _nonIterableSpread() {
 }
 
 var Td = function Td(_ref) {
-  var name = _ref.name,
-      value = _ref.value,
-      _ref$nameClass = _ref.nameClass,
-      nameClass = _ref$nameClass === void 0 ? '' : _ref$nameClass,
-      _ref$valueClass = _ref.valueClass,
-      valueClass = _ref$valueClass === void 0 ? '' : _ref$valueClass;
-  return [React.createElement("td", {
-    className: nameClass,
-    key: 'td' + name
-  }, typeof name === 'function' ? name() : name), React.createElement("td", {
-    className: valueClass,
-    key: 'td1' + name
-  }, typeof value === 'function' ? value() : value)];
+  var dataSource = _ref.dataSource,
+      _ref$labelKey = _ref.labelKey,
+      labelKey = _ref$labelKey === void 0 ? 'label' : _ref$labelKey,
+      _ref$valueKey = _ref.valueKey,
+      valueKey = _ref$valueKey === void 0 ? 'value' : _ref$valueKey;
+  return [React.createElement("th", {
+    key: 'td' + dataSource[labelKey]
+  }, typeof dataSource[labelKey] === 'function' ? dataSource[labelKey]() : dataSource[labelKey]), React.createElement("td", {
+    key: 'td1' + dataSource[valueKey]
+  }, typeof dataSource[valueKey] === 'function' ? dataSource[valueKey]() : dataSource[valueKey])];
 };
 
 Td.propTypes = {
-  nameClass: PropTypes.string,
-  valueClass: PropTypes.string
+  labelKey: PropTypes.string,
+  valueKey: PropTypes.string
 };
 
 var DetailTable =
@@ -251,32 +250,62 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(DetailTable)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showDom", function (dataSource) {
+      var Data = [];
+
+      if (_this.props.mode === 'object' && Array.isArray(dataSource)) {
+        throw Error('使用对象模式，数据必须为object');
+      }
+
+      if (!Array.isArray(dataSource) && _this.props.mode !== 'object') {
+        throw Error('数据为对象时，mode需要为object');
+      }
+
+      if (_this.props.mode && _this.props.mode === 'object') {
+        for (var a in dataSource) {
+          Data.push({
+            label: a,
+            value: dataSource[a]
+          });
+        }
+      } else {
+        Data = _toConsumableArray(dataSource);
+      }
+
       var columnNumber = _this.props.columnNumber === undefined ? 1 : _this.props.columnNumber;
 
       if (columnNumber <= 0) {
         throw Error('列数必须大于0');
       }
 
-      var trLength = Math.ceil(dataSource.length / columnNumber);
-      var dom = [];
+      var array = [];
+      var trLength = Math.ceil(Data.length / columnNumber);
+      var remainder = Data.length % columnNumber; // 数据不足进行补充
 
-      var _loop = function _loop(i) {
-        dom.push(React.createElement("tr", {
-          key: 'tr' + i
-        }, dataSource.map(function (v, k) {
-          return k >= columnNumber * i && k < columnNumber * i + columnNumber && React.createElement(Td, _extends({}, _this.props, {
-            key: 'td' + k,
-            name: v.name,
-            value: v.value
-          }));
-        })));
-      };
-
-      for (var i = 0; i < trLength; i++) {
-        _loop(i);
+      if (remainder > 0) {
+        for (var b = 0; b < remainder; b++) {
+          Data.push({
+            name: '',
+            value: ''
+          });
+        }
       }
 
-      return dom;
+      for (var i = 0; i < trLength; i++) {
+        array.push(Data.slice(columnNumber * i, columnNumber * i + columnNumber));
+      }
+
+      return array.map(function (d, k) {
+        return React.createElement("tr", {
+          key: k
+        }, d.map(function (c, v) {
+          return React.createElement(Td, {
+            key: v,
+            dataSource: c,
+            labelKey: _this.props.labelKey,
+            valueKey: _this.props.valueKey
+          });
+        }));
+      });
     });
 
     return _this;
@@ -287,6 +316,9 @@ function (_React$Component) {
     value: function render() {
       var dataSource = this.props.dataSource;
       return React.createElement("table", {
+        style: {
+          width: '100%'
+        },
         className: this.props.tableClass
       }, React.createElement("tbody", null, this.showDom(dataSource)));
     }
@@ -296,8 +328,9 @@ function (_React$Component) {
 }(React.Component);
 
 DetailTable.propTypes = {
+  mode: PropTypes.oneOf(['object', 'array']),
   columnNumber: PropTypes.number,
-  dataSource: PropTypes.array,
+  dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   tableClass: PropTypes.string
 };
 
@@ -2077,4 +2110,80 @@ EditTable.propTypes = {
   columns: PropTypes.array.isRequired
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable };
+var up = {
+  transform: 'rotate(180deg)',
+  fontSize: 12,
+  marginLeft: 5,
+  verticalAlign: -1
+};
+var down = {
+  fontSize: 12,
+  marginLeft: 5,
+  verticalAlign: -1
+};
+
+var UpDown = function UpDown(_ref) {
+  var _ref$state = _ref.state,
+      state = _ref$state === void 0 ? 'up' : _ref$state;
+  return React.createElement(_Icon, {
+    type: 'down',
+    className: down,
+    style: state === 'down' ? down : up
+  });
+};
+
+var McFileSet =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(McFileSet, _React$Component);
+
+  function McFileSet() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    _classCallCheck(this, McFileSet);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(McFileSet)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+      hidden: _this.props.display === undefined ? false : _this.props.display === 'hide'
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showHideFun", function () {
+      _this.setState({
+        hidden: !_this.state.hidden
+      }, function () {
+        if (_this.props.onChange) {
+          _this.props.onChange(_this.state.hidden ? 'hide' : 'show');
+        }
+      });
+    });
+
+    return _this;
+  }
+
+  _createClass(McFileSet, [{
+    key: "render",
+    value: function render() {
+      return React.createElement("div", null, React.createElement(_Divider, {
+        orientation: "left"
+      }, this.props.display === undefined ? this.props.title : React.createElement("a", {
+        onClick: this.showHideFun
+      }, this.props.title, React.createElement(UpDown, {
+        state: this.state.hidden ? 'up' : 'down'
+      }))), !this.state.hidden && this.props.children);
+    }
+  }]);
+
+  return McFileSet;
+}(React.Component);
+McFileSet.defaultProps = {
+  title: '标题'
+};
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable, McFileSet as FileSet };

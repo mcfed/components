@@ -15,3 +15,4 @@ export PropertyTable from './PropertyTable'
 
 export EditTable from './EditTable'
 export DetailTable from './DetailTable'
+export FileSet from './FileSet'

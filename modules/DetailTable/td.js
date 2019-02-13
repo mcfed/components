@@ -1,12 +1,14 @@
 import React from 'react'
 import propTypes from 'prop-types'
 
-const Td = ({name, value, nameClass = '', valueClass = ''}) => [
-  <td className={nameClass} key={'td' + name}>{typeof name === 'function' ? name() : name}</td>,
-  <td className={valueClass} key={'td1' + name}>{typeof value === 'function' ? value() : value}</td>
-]
+const Td = ({dataSource, labelKey = 'label', valueKey = 'value'}) => {
+  return [
+    <th key={'td' + dataSource[labelKey]}>{typeof dataSource[labelKey] === 'function' ? dataSource[labelKey]() : dataSource[labelKey]}</th>,
+    <td key={'td1' + dataSource[valueKey]}>{typeof dataSource[valueKey] === 'function' ? dataSource[valueKey]() : dataSource[valueKey]}</td>
+  ]
+}
 Td.propTypes = {
-  nameClass: propTypes.string,
-  valueClass: propTypes.string
+  labelKey: propTypes.string,
+  valueKey: propTypes.string
 }
 export default Td
