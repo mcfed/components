@@ -24,16 +24,16 @@ import fetch from 'cross-fetch';
 import Row from 'antd/lib/row';
 import Col from 'antd/lib/col';
 import Icon from 'antd/lib/icon';
-import Modal from 'antd/lib/modal';
-import message from 'antd/lib/message';
-import 'antd/lib/locale-provider/LocaleReceiver';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classNames from 'classnames';
 import Tooltip from 'antd/lib/tooltip';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
+import Modal from 'antd/lib/modal';
 import Table from 'antd/lib/table';
 import Checkbox from 'antd/lib/checkbox';
 import Popconfirm from 'antd/lib/popconfirm';
+import message from 'antd/lib/message';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -1033,7 +1033,10 @@ Permission.defaultProps = {
   expression: true
 };
 
-var Option$1 = Select.Option;
+var Locale = {
+  searchText: "搜索",
+  resetText: "重置"
+};
 
 var AdvancedSearchForm =
 /*#__PURE__*/
@@ -1200,25 +1203,10 @@ function (_React$Component) {
       }, this.getFields());
     }
   }, {
-    key: "render",
-    value: function render() {
-      var _this$props2 = this.props,
-          showConfig = _this$props2.showConfig,
-          children = _this$props2.children,
-          className = _this$props2.className,
-          autoSubmitForm = _this$props2.autoSubmitForm,
-          layout = _this$props2.layout,
-          locale = _this$props2.locale;
+    key: "renderSearchToolbar",
+    value: function renderSearchToolbar(locale) {
       var loading = this.state.loading;
       return React.createElement("div", {
-        className: classNames("advanced-search-panel", className)
-      }, React.createElement(SubmitForm, {
-        layout: layout,
-        autoSubmitForm: autoSubmitForm,
-        className: "advanced-search-form",
-        onSubmit: this.handleSearch.bind(this),
-        wrappedComponentRef: this.saveFormRef.bind(this)
-      }, this.renderKeyword(), React.createElement("div", {
         className: "advanced-search-toolbar"
       }, React.createElement(Button, {
         htmlType: "submit",
@@ -1231,7 +1219,30 @@ function (_React$Component) {
       }, locale.resetText), React.createElement(Icon, {
         type: "down",
         onClick: this.toggleExpand.bind(this)
-      }))));
+      }));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this$props2 = this.props,
+          showConfig = _this$props2.showConfig,
+          children = _this$props2.children,
+          className = _this$props2.className,
+          autoSubmitForm = _this$props2.autoSubmitForm,
+          layout = _this$props2.layout,
+          locale = _this$props2.locale;
+      return React.createElement("div", {
+        className: classNames("advanced-search-panel", className)
+      }, React.createElement(SubmitForm, {
+        layout: layout,
+        autoSubmitForm: autoSubmitForm,
+        className: "advanced-search-form",
+        onSubmit: this.handleSearch.bind(this),
+        wrappedComponentRef: this.saveFormRef.bind(this)
+      }, this.renderKeyword(), React.createElement(LocaleReceiver, {
+        componentName: 'AdvancedSearch',
+        defaultLocale: Locale
+      }, this.renderSearchToolbar.bind(this))));
     }
   }]);
 
@@ -1249,10 +1260,6 @@ AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
   loading: false,
-  locale: {
-    searchText: "搜索",
-    resetText: "重置"
-  },
   filterSubmitHandler: function filterSubmitHandler() {},
   showExpand: 3,
   layout: 'horizontal' //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)
