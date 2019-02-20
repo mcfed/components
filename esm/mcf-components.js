@@ -608,7 +608,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: _library ? 'pure' : 'global',
+  mode: 'pure',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
