@@ -10,7 +10,7 @@ import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
 import Permission from '../Permission'
 import Locale from './locale.js'
-// import './AdvancedSearch.less'
+import style from  './AdvancedSearch.less'
 
 
 
