@@ -899,8 +899,6 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
       // Set @@toStringTag to native iterators
       _setToStringTag(IteratorPrototype, TAG, true);
-      // fix for some old engines
-      if (!_library && typeof IteratorPrototype[ITERATOR] != 'function') _hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   // fix Array#{values, @@iterator}.name in V8 / FF
@@ -909,7 +907,7 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     $default = function values() { return $native.call(this); };
   }
   // Define iterator
-  if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+  if ((FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
     _hide(proto, ITERATOR, $default);
   }
   // Plug for library
@@ -51519,6 +51517,111 @@ _defineProperty(DataTable, "defaultProps", {
   columns: []
 });
 
+var css$4 = ".ant-panel {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  background-color: #fff;\n}\n.ant-panel .ant-panel-head {\n  display: flex;\n  padding: 16px 24px;\n  color: rgba(0, 0, 0, 0.65);\n  background: #fff;\n  border-bottom: 1px solid #e8e8e8;\n  border-radius: 4px 4px 0 0;\n}\n.ant-panel .ant-panel-head .ant-panel-head-title {\n  margin: 0;\n  color: rgba(0, 0, 0, 0.85);\n  font-weight: 500;\n  font-size: 16px;\n  line-height: 22px;\n}\n.ant-panel .ant-panel-body {\n  display: flex;\n  flex: 1;\n  overflow: auto;\n  flex-direction: column;\n  padding: 10px 16px;\n}\n.ant-panel .ant-panel-footer {\n  padding: 10px 16px;\n  text-align: center;\n  border-top: 1px solid #e8e8e8;\n  border-radius: 0 0 4px 4px;\n}\n.ant-panel .ant-panel-footer button + button {\n  margin: 0 4px;\n}\n";
+styleInject(css$4);
+
+var Panel$1 =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Panel, _Component);
+
+  function Panel() {
+    _classCallCheck(this, Panel);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Panel).apply(this, arguments));
+  }
+
+  _createClass(Panel, [{
+    key: "renderHeader",
+    value: function renderHeader() {
+      var header;
+      var _this$props = this.props,
+          prefixCls = _this$props.prefixCls,
+          title = _this$props.title,
+          extra = _this$props.extra;
+
+      if (title || extra) {
+        header = React__default.createElement("div", {
+          className: prefixCls + "-head"
+        }, React__default.createElement("div", {
+          className: prefixCls + "-head-wrapper"
+        }, title && React__default.createElement("div", {
+          className: prefixCls + "-head-title"
+        }, title), extra && React__default.createElement("div", {
+          className: prefixCls + "-extra"
+        }, extra)));
+      }
+
+      return header;
+    }
+  }, {
+    key: "renderBody",
+    value: function renderBody() {
+      var props = this.props;
+      var prefixCls = this.props.prefixCls;
+      return React__default.createElement("div", {
+        className: prefixCls + '-body'
+      }, props.children);
+    }
+  }, {
+    key: "renderFooter",
+    value: function renderFooter() {
+      var footer;
+      var props = this.props;
+      var _this$props2 = this.props,
+          prefixCls = _this$props2.prefixCls,
+          onOk = _this$props2.onOk,
+          onCancel = _this$props2.onCancel,
+          okText = _this$props2.okText,
+          cancelText = _this$props2.cancelText;
+      console.log(this.props);
+
+      var defaultFooter = function defaultFooter(props) {
+        return [React__default.createElement(Button, {
+          onClick: onOk,
+          type: "primary"
+        }, okText), React__default.createElement(Button, {
+          onClick: onCancel
+        }, cancelText)];
+      };
+
+      footer = React__default.createElement("div", {
+        className: prefixCls + '-footer'
+      }, props.footer || defaultFooter());
+      return footer;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var prefixCls = this.props.prefixCls;
+      return React__default.createElement("div", {
+        className: "".concat(prefixCls)
+      }, this.renderHeader(), this.renderBody(), this.renderFooter());
+    }
+  }]);
+
+  return Panel;
+}(Component);
+Panel$1.propTypes = {
+  onOK: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  okText: PropTypes.string,
+  cancelText: PropTypes.string,
+  footer: PropTypes.element,
+  confirmLoading: PropTypes.bool
+};
+Panel$1.defaultProps = {
+  prefixCls: "ant-panel",
+  onOK: function onOK() {},
+  onCancel: function onCancel() {},
+  title: "",
+  okText: "保存",
+  cancelText: "取消",
+  footer: undefined,
+  confirmLoading: false
+};
+
 var ModalAndView =
 /*#__PURE__*/
 function (_Component) {
@@ -52524,4 +52627,4 @@ EditTable.propTypes = {
   columns: PropTypes.array.isRequired
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable };
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel$1 as Panel, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable };
