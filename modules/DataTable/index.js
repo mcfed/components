@@ -107,10 +107,10 @@ class DataTable extends Component{
   static defaultProps={
     page:{},
     prefixCls: 'ant-table',
-    showQuickJumper:true,
     pagination:{
        showTotal:total => `共 ${total} 条`,
        // showQuickJumper:true,
+       size:"middle",
        showSizeChanger:true,
        pageSizeOptions:['10','20','50','100'],
     },

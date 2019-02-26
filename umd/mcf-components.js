@@ -46861,7 +46861,7 @@
   module.exports = exports['default'];
   });
 
-  unwrapExports(spin);
+  var Spin = unwrapExports(spin);
 
   /**
    * Determine if a DOM element matches a CSS selector
@@ -51136,12 +51136,12 @@
   _defineProperty(DataTable, "defaultProps", {
     page: {},
     prefixCls: 'ant-table',
-    showQuickJumper: true,
     pagination: {
       showTotal: function showTotal(total) {
         return "\u5171 ".concat(total, " \u6761");
       },
       // showQuickJumper:true,
+      size: "middle",
       showSizeChanger: true,
       pageSizeOptions: ['10', '20', '50', '100']
     },
@@ -51153,7 +51153,7 @@
     columns: []
   });
 
-  var css$4 = ".ant-panel {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  background-color: #fff;\n}\n.ant-panel .ant-panel-head {\n  display: flex;\n  padding: 16px 24px;\n  color: rgba(0, 0, 0, 0.65);\n  background: #fff;\n  border-bottom: 1px solid #e8e8e8;\n  border-radius: 4px 4px 0 0;\n}\n.ant-panel .ant-panel-head .ant-panel-head-title {\n  margin: 0;\n  color: rgba(0, 0, 0, 0.85);\n  font-weight: 500;\n  font-size: 16px;\n  line-height: 22px;\n}\n.ant-panel .ant-panel-body {\n  display: flex;\n  flex: 1;\n  overflow: auto;\n  flex-direction: column;\n  padding: 10px 16px;\n}\n.ant-panel .ant-panel-footer {\n  padding: 10px 16px;\n  text-align: center;\n  border-top: 1px solid #e8e8e8;\n  border-radius: 0 0 4px 4px;\n}\n.ant-panel .ant-panel-footer button + button {\n  margin: 0 4px;\n}\n";
+  var css$4 = ".ant-panel-wrapper {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  background-color: #fff;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading > .ant-spin-container {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head {\n  display: flex;\n  padding: 16px 24px;\n  color: rgba(0, 0, 0, 0.65);\n  background: #fff;\n  border-bottom: 1px solid #e8e8e8;\n  border-radius: 4px 4px 0 0;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head .ant-panel-head-title {\n  margin: 0;\n  color: rgba(0, 0, 0, 0.85);\n  font-weight: 500;\n  font-size: 16px;\n  line-height: 22px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-body {\n  display: flex;\n  flex: 1;\n  overflow: auto;\n  flex-direction: column;\n  padding: 10px 16px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer {\n  padding: 10px 16px;\n  text-align: center;\n  border-top: 1px solid #e8e8e8;\n  border-radius: 0 0 4px 4px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer button {\n  margin: 0 4px;\n}\n";
   styleInject(css$4);
 
   var Panel$1 =
@@ -51209,11 +51209,12 @@
             onOk = _this$props2.onOk,
             onCancel = _this$props2.onCancel,
             okText = _this$props2.okText,
-            cancelText = _this$props2.cancelText;
-        console.log(this.props);
+            cancelText = _this$props2.cancelText,
+            confirmLoading = _this$props2.confirmLoading; // console.log(this.props)
 
-        var defaultFooter = function defaultFooter(props) {
+        var defaultFooter = props.footer ? props.footer : function (props) {
           return [React__default.createElement(Button, {
+            loading: confirmLoading,
             onClick: onOk,
             type: "primary"
           }, okText), React__default.createElement(Button, {
@@ -51221,18 +51222,27 @@
           }, cancelText)];
         };
 
-        footer = React__default.createElement("div", {
-          className: prefixCls + '-footer'
-        }, props.footer || defaultFooter());
+        if (props.footer != false) {
+          footer = React__default.createElement("div", {
+            className: prefixCls + '-footer'
+          }, defaultFooter());
+        }
+
         return footer;
       }
     }, {
       key: "render",
       value: function render() {
-        var prefixCls = this.props.prefixCls;
+        var _this$props3 = this.props,
+            prefixCls = _this$props3.prefixCls,
+            loading = _this$props3.loading;
         return React__default.createElement("div", {
+          className: "".concat(prefixCls, "-wrapper")
+        }, React__default.createElement(Spin, {
+          spinning: loading
+        }, React__default.createElement("div", {
           className: "".concat(prefixCls)
-        }, this.renderHeader(), this.renderBody(), this.renderFooter());
+        }, this.renderHeader(), this.renderBody(), this.renderFooter())));
       }
     }]);
 
@@ -51244,17 +51254,19 @@
     title: PropTypes.string,
     okText: PropTypes.string,
     cancelText: PropTypes.string,
-    footer: PropTypes.element,
-    confirmLoading: PropTypes.bool
+    footer: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
+    confirmLoading: PropTypes.bool,
+    loading: PropTypes.bool
   };
   Panel$1.defaultProps = {
     prefixCls: "ant-panel",
     onOK: function onOK() {},
+    loading: false,
     onCancel: function onCancel() {},
     title: "",
     okText: "保存",
     cancelText: "取消",
-    footer: undefined,
+    // footer:function(){},
     confirmLoading: false
   };
 

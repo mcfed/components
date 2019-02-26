@@ -1,7 +1,8 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import Button from 'antd/lib/button'
-import './index.less' 
+import Spin from 'antd/lib/spin'
+import './index.less'
 
 export default class Panel extends Component{
   renderHeader(){
@@ -38,27 +39,30 @@ export default class Panel extends Component{
     let footer
 
     const {props} = this
-    const {prefixCls,onOk,onCancel,okText,cancelText} = this.props
-    console.log(this.props)
-    const defaultFooter=(props)=>{
+    const {prefixCls,onOk,onCancel,okText,cancelText,confirmLoading} = this.props
+    // console.log(this.props)
+    const defaultFooter=props.footer ? props.footer: (props)=>{
       return [
-        <Button onClick={onOk} type="primary">{okText}</Button>,
+        <Button loading={confirmLoading} onClick={onOk} type="primary">{okText}</Button>,
         <Button onClick={onCancel}>{cancelText}</Button>
       ]
     }
-
-    footer = React.createElement("div", { className: prefixCls + '-footer' }, props.footer|| defaultFooter());
-
+    if( props.footer !=false){
+      footer = React.createElement("div", { className: prefixCls + '-footer' }, defaultFooter());
+    }
     return footer
   }
   render(){
-
-    const {prefixCls} = this.props
+    const {prefixCls,loading} = this.props
     return (
-      <div className={`${prefixCls}`}>
-        {this.renderHeader()}
-        {this.renderBody()}
-        {this.renderFooter()}
+      <div className={`${prefixCls}-wrapper`}>
+        <Spin spinning={loading}>
+          <div className={`${prefixCls}`}>
+            {this.renderHeader()}
+            {this.renderBody()}
+            {this.renderFooter()}
+          </div>
+        </Spin>
       </div>
     )
   }
@@ -71,16 +75,18 @@ Panel.propTypes = {
   title:PropTypes.string,
   okText:PropTypes.string,
   cancelText:PropTypes.string,
-  footer:PropTypes.element,
-  confirmLoading:PropTypes.bool
+  footer:PropTypes.oneOfType([PropTypes.bool,PropTypes.element]),
+  confirmLoading:PropTypes.bool,
+  loading:PropTypes.bool
 }
 Panel.defaultProps = {
   prefixCls:"ant-panel",
   onOK: function(){},
+  loading:false,
   onCancel:function(){},
   title:"",
   okText:"保存",
   cancelText:"取消",
-  footer:undefined,
+  // footer:function(){},
   confirmLoading:false
 }
