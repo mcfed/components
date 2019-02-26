@@ -37170,7 +37170,10 @@
     }, {
       key: "renderSearchToolbar",
       value: function renderSearchToolbar(locale) {
-        var loading = this.state.loading;
+        var _this$state = this.state,
+            loading = _this$state.loading,
+            expand = _this$state.expand;
+        var children = this.props.children;
         return React__default.createElement("div", {
           className: "advanced-search-toolbar"
         }, React__default.createElement(Button, {
@@ -37178,13 +37181,10 @@
           disabled: loading,
           onClick: this.handleSearch.bind(this),
           type: "primary"
-        }, locale.searchText), React__default.createElement(Button, {
-          htmlType: "reset",
-          onClick: this.handleReset.bind(this)
-        }, locale.resetText), React__default.createElement(Icon, {
-          type: "down",
+        }, locale.searchText), children.length > 3 ? React__default.createElement(Icon, {
+          type: expand ? "down" : "up",
           onClick: this.toggleExpand.bind(this)
-        }));
+        }) : "");
       }
     }, {
       key: "render",

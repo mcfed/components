@@ -146,12 +146,16 @@ export default class AdvancedSearchForm extends React.Component {
     )
   }
   renderSearchToolbar(locale){
-    let {loading} = this.state
+    let {loading,expand} = this.state
+    const {children} = this.props
     return (
       <div className="advanced-search-toolbar">
 				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
-				<Button htmlType="reset" onClick={this.handleReset.bind(this)}>{locale.resetText}</Button>
-        <Icon type="down" onClick={this.toggleExpand.bind(this)} />
+        {
+          children.length>3?
+          <Icon type={expand?"down":"up"} onClick={this.toggleExpand.bind(this)} />
+          :""
+        }
       </div>)
   }
   render() {
