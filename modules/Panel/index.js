@@ -70,8 +70,8 @@ export default class Panel extends Component{
 
 
 Panel.propTypes = {
-  onOK: PropTypes.func.isRequired,
-  onCancel:PropTypes.func.isRequired,
+  onOK: PropTypes.func,
+  onCancel:PropTypes.func,
   title:PropTypes.string,
   okText:PropTypes.string,
   cancelText:PropTypes.string,

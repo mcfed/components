@@ -51249,8 +51249,8 @@
     return Panel;
   }(React.Component);
   Panel$1.propTypes = {
-    onOK: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
+    onOK: PropTypes.func,
+    onCancel: PropTypes.func,
     title: PropTypes.string,
     okText: PropTypes.string,
     cancelText: PropTypes.string,
