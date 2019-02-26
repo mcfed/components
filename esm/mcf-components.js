@@ -51624,11 +51624,11 @@ Panel$1.propTypes = {
 };
 Panel$1.defaultProps = {
   prefixCls: "ant-panel",
-  onOK: function onOK() {},
+  onOk: function onOk() {},
   loading: false,
   onCancel: function onCancel() {},
   title: "",
-  okText: "保存",
+  okText: "确认",
   cancelText: "取消",
   // footer:function(){},
   confirmLoading: false

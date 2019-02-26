@@ -81,11 +81,11 @@ Panel.propTypes = {
 }
 Panel.defaultProps = {
   prefixCls:"ant-panel",
-  onOK: function(){},
+  onOk: function(){},
   loading:false,
   onCancel:function(){},
   title:"",
-  okText:"保存",
+  okText:"确认",
   cancelText:"取消",
   // footer:function(){},
   confirmLoading:false
