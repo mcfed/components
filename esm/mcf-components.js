@@ -37334,7 +37334,9 @@ Permission.defaultProps = {
 
 var Locale = {
   searchText: "搜索",
-  resetText: "重置"
+  resetText: "重置",
+  upText: "收起",
+  downText: "展开"
 };
 
 function styleInject(css, ref) {
@@ -37364,7 +37366,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css$2 = ".advanced-search-panel {\n  flex-shrink: 0;\n  padding-right: 170px;\n  position: relative;\n}\n.advanced-search-panel .ant-col-8 .ant-form-item {\n  margin-bottom: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 4px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn {\n  margin: 0 5px;\n}\n.advanced-search-panel .advanced-search-toolbar .anticon-down {\n  cursor: pointer;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n";
+var css$2 = ".advanced-search-panel {\n  flex-shrink: 0;\n  padding-right: 170px;\n  position: relative;\n}\n.advanced-search-panel .ant-col-8 .ant-form-item {\n  margin-bottom: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 4px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn {\n  margin: 0 5px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn-ghost {\n  border-width: 0;\n  padding-left: 0;\n  padding-right: 0;\n}\n.advanced-search-panel .advanced-search-toolbar .anticon-down {\n  cursor: pointer;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n";
 styleInject(css$2);
 
 var AdvancedSearchForm =
@@ -37545,10 +37547,12 @@ function (_React$Component) {
         disabled: loading,
         onClick: this.handleSearch.bind(this),
         type: "primary"
-      }, locale.searchText), children.length > 3 ? React__default.createElement(Icon, {
-        type: expand ? "down" : "up",
+      }, locale.searchText), children.length > 3 ? React__default.createElement(Button, {
+        type: "ghost",
         onClick: this.toggleExpand.bind(this)
-      }) : "");
+      }, expand ? locale.upText : locale.downText, React__default.createElement(Icon, {
+        type: expand ? "up" : "down"
+      })) : "");
     }
   }, {
     key: "render",

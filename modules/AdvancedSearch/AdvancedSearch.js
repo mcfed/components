@@ -153,7 +153,7 @@ export default class AdvancedSearchForm extends React.Component {
 				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
         {
           children.length>3?
-          <Icon type={expand?"down":"up"} onClick={this.toggleExpand.bind(this)} />
+    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?locale.upText:locale.downText}<Icon type={expand?"up":"down"} /></Button>
           :""
         }
       </div>)
