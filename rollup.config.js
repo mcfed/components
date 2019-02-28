@@ -1,7 +1,7 @@
 import babel from "rollup-plugin-babel"
 import replace from "rollup-plugin-replace"
 import commonjs from "rollup-plugin-commonjs"
-import less from "rollup-plugin-less-loader"
+import postcss from 'rollup-plugin-postcss'
 import json from "rollup-plugin-json"
 import nodeResolve from "rollup-plugin-node-resolve"
 import localResolve from 'rollup-plugin-local-resolve'
@@ -35,14 +35,16 @@ const commonjsOptions = {
 
 export default [{
   input,
-  output: { file: `esm/${pkg.name}.js`, format: "esm" },
+  output: { file: `esm/${pkg.name}.js`, format: "esm",name,globals },
   external:Object.keys(globals),
   plugins: [
-    localResolve(),
-    babel(babelOptionsESM),
-    less({
-      insert:true,
+    nodeResolve(),
+    postcss({
+      plugins: []
     }),
+    babel(babelOptionsESM),
+    commonjs(commonjsOptions),
+    // replace({ "process.env.NODE_ENV": JSON.stringify("production") }),
     sizeSnapshot(),
     notify()
   ]
@@ -52,6 +54,10 @@ export default [{
   external: Object.keys(globals),
   plugins: [
    nodeResolve(),
+   postcss({
+     autoModules:false,
+     plugins: []
+   }),
    babel(babelOptionsESM),
    commonjs(commonjsOptions),
    replace({ "process.env.NODE_ENV": JSON.stringify("production") }),

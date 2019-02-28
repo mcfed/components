@@ -6,6 +6,7 @@ import Tooltip from 'antd/lib/tooltip'
 import Menu from 'antd/lib/menu'
 import Dropdown from 'antd/lib/dropdown'
 import Modal from 'antd/lib/modal'
+import './index.less'
 // import {hasPermission} from 'app/utils/ConfigUtils'
 
 /*

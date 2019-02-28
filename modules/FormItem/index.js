@@ -51,7 +51,7 @@ export default class FormItem extends Component{
 
     if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
     {
-        this.fetchData(field.props.fetch,field.props.fetchCallback)
+        this.fetchData(field.props.fetch,{},field.props.fetchCallback)
     }
   }
   componentWillMount() {
@@ -61,7 +61,7 @@ export default class FormItem extends Component{
    * @param  {[type]} fetchUrl [description]
    * @return {[type]}          [description]
    */
-  fetchData(fetchUrl,params){
+  fetchData(fetchUrl,params,callback){
     // let body={}
     fetch(fetchUrl,{
       method:'GET'
@@ -69,9 +69,16 @@ export default class FormItem extends Component{
       return json.json()
     }).then(result=>{
       if(result.code==0){
-        this.setState({
-          childData:result.data.items
-        })
+        if(callback){
+          this.setState({
+            childData:callback(result)
+          })
+        }else{
+          this.setState({
+            childData:result.data.items
+          })
+        }
+
       }
     });
 
@@ -80,11 +87,25 @@ export default class FormItem extends Component{
     let {children,containerTo} = this.props
     let {childData} = this.state;
     let field=children;
-    let {defaultValue,...otherProps}= field.props
+    let {defaultValue,render,disabled,...otherProps}= field.props
     // console.log(ReactDOM.findDOMNode(this));
     // getPopupContainer
+    let {formRef,formLayout}= this.context
     let containerToProp={}
     let treeDataProp={}
+    let disabledProp={}
+
+    if(disabled && typeof(disabled)==="function"){
+      disabledProp={
+        disabled:disabled.apply(this,[formRef])
+      }
+    }else if(disabled && typeof(disabled) ==="boolean"){
+      disabledProp={
+        disabled:disabled
+      }
+    }
+
+
     if(containerTo && field.type===Select && !field.props.changeCalendarContainer ){
       containerToProp={
         getPopupContainer:triggerNode => triggerNode.parentNode
@@ -96,15 +117,15 @@ export default class FormItem extends Component{
       }
     }
     if(field.type.name==="PickerWrapper"){
-      let {children,otherProps}=field.props
-        return React.createElement(WrapperDatePicker,otherProps,field)
+      let {children,dislabled,otherProps,render}=field.props
+        return React.createElement(WrapperDatePicker,Object.assign({},otherProps,disabledProp),field)
     }else{
       if(childData.length===0){
-        return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
+        return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp,disabledProp))
       }else if(field.props.renderItem){
-        return React.createElement(field.type,Object.assign({key:new Date().valueOf()},otherProps,containerToProp,treeDataProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
+        return React.createElement(field.type,Object.assign({key:new Date().valueOf()},otherProps,containerToProp,treeDataProp,disabledProp),childData.map((d,idx) =>field.props.renderItem && field.props.renderItem(d,idx)))
       }else{
-        return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp))
+        return React.createElement(field.type,Object.assign({},otherProps,containerToProp,treeDataProp,disabledProp))
       }
     }
   }
@@ -120,9 +141,11 @@ export default class FormItem extends Component{
   render(){
     let element=this.props.children
     let {name,label,format} = element.props
-    let {defaultValue,allowClear,...otherProps} =element.props
-    let {formRef:{getFieldDecorator},formLayout}= this.context
+    let {defaultValue,allowClear,hidden,disabled,render,...otherProps} =element.props
+    let {formRef,formLayout}= this.context
+    const {getFieldDecorator} = formRef
     let styles={}
+    let renderProps = true
 
     if(element.type===Input && element.props.type==="hidden"){
       styles={
@@ -134,8 +157,13 @@ export default class FormItem extends Component{
         style:{display:"none"}
       }
     }
-    return (<Form.Item label={label} {...Object.assign({},{},formLayout,this.props)} {...styles}>
+      // console.log(typeof(hiddenProp))
+    if((render && typeof(render)==="boolean" && render===false) ||
+        (render && typeof(render)==="function" && render.apply(this,[formRef])===false)){
+          renderProps=false
+    }
+    return renderProps?(<Form.Item label={label} {...Object.assign({},formLayout,this.props)} {...styles}>
       {getFieldDecorator(name,{...otherProps,initialValue:defaultValue,hidden:element.props.hidden||false})(this.renderField())}
-    </Form.Item>)
+    </Form.Item>):null
   }
 }

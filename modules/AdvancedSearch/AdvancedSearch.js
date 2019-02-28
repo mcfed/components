@@ -1,22 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-
 import Row from 'antd/lib/row'
 import Col from 'antd/lib/col'
-import Input from 'antd/lib/input'
-import Modal from 'antd/lib/modal'
+import Icon from 'antd/lib/icon'
 import Button from 'antd/lib/button'
-// import Transfer from 'antd/lib/Transfer'
-import message from 'antd/lib/message'
-import Select from 'antd/lib/select'
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
 import Permission from '../Permission'
-// import './AdvancedSearch.less'
+import Locale from './locale.js'
+import style from  './AdvancedSearch.less'
 
-const Option = Select.Option
 
 
 export default class AdvancedSearchForm extends React.Component {
@@ -71,7 +66,7 @@ export default class AdvancedSearchForm extends React.Component {
     form.setFieldsValue(emptyValue)
   }
 
-  toggleExpand = () => {
+  toggleExpand(){
     const {expand} = this.state;
     this.setState({
       expand: !expand
@@ -93,10 +88,10 @@ export default class AdvancedSearchForm extends React.Component {
     if(React.Children.count(children)===0){
       return (null)
     }
-    // if(this.state.expand==false ){
-    //   renderChildren = children.filter((ch,idx)=>idx<3)
+    if(this.state.expand==false ){
+      renderChildren = children.filter((ch,idx)=>idx<3)
     // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
-    if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+    }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>{
         //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
         return this.state.displayItem.indexOf(ch.props.name)>=0 || idx < this.props.showExpand
@@ -150,17 +145,35 @@ export default class AdvancedSearchForm extends React.Component {
       </Row>
     )
   }
+  renderSearchToolbar(locale){
+    let {loading,expand} = this.state
+    const {children} = this.props
+    return (
+      <div className="advanced-search-toolbar">
+				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
+        {
+          children.length>3?
+    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?locale.upText:locale.downText}<Icon type={expand?"up":"down"} /></Button>
+          :""
+        }
+      </div>)
+  }
   render() {
     let {showConfig,children,className,autoSubmitForm,layout,locale} = this.props
-    let {loading} = this.state
     return (
       <div className={classNames("advanced-search-panel",className)}>
         <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
           { this.renderKeyword() }
-          <div className="advanced-search-toolbar">
-							<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
-							<Button htmlType="reset" onClick={this.handleReset.bind(this)}>{locale.resetText}</Button>
-          </div>
+          {
+            React.createElement(
+              LocaleReceiver,
+              {
+                componentName:'AdvancedSearch',
+                defaultLocale:Locale
+              },
+              this.renderSearchToolbar.bind(this)
+            )
+          }
         </SubmitForm>
       </div>
     );
@@ -180,10 +193,6 @@ AdvancedSearchForm.defaultProps = {
   autoSubmitForm:false,
   showConfig:false,
   loading:false,
-  locale:{
-    searchText:"搜索",
-    resetText:"重置"
-  },
   filterSubmitHandler: function() {},
 	showExpand:3,
 	layout:'horizontal'

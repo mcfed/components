@@ -10,7 +10,7 @@ module.exports = {
       statements: 90,
     },
   },
-  notify: true,
+  notify: false,
   setupTestFrameworkScriptFile: "<rootDir>/setupTests.js",
   coveragePathIgnorePatterns: [ //该路径下的测试，忽略在测试覆盖率上
     'build',

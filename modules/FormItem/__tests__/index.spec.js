@@ -87,3 +87,45 @@ describe('FormItem shallow render with Select', () => {
 
   it.skip('FormItem render Tree 组件')
 })
+
+describe('FormItem Element 属性测试', () => {
+
+  it('disabled 属性 boolean {true}',(done)=>{
+    const { wrapper, props } = setup(<Input disabled={true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+    let element=wrapper.find("Input")
+    expect(element.prop('disabled')).toBe(true)
+    done()
+  })
+
+  it('disabled 属性 function',(done)=>{
+    const { wrapper, props } = setup(<Input disabled={(form)=>true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+    let element=wrapper.find("Input")
+    expect(element.prop('disabled')).toBe(true)
+    done()
+  })
+
+  it('render 属性 boolean {true}',(done)=>{
+    const { wrapper, props } = setup(<Input render={true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+    let element=wrapper.find("Input")
+    expect(element.exists()).toBe(true)
+    done()
+  })
+
+  it.skip('render 属性 boolean {false}',(done)=>{
+    const { wrapper, props } = setup(<Input render={false} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+    let element=wrapper.find("Input")
+    // expect(element.prop('render')).toBe(false)
+    // expect(element.exists()).toBe(false)
+    done()
+  })
+
+  it.skip('render 属性 function {false}',(done)=>{
+    const { wrapper, props } = setup(<Input render={(form)=>true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+    let element=wrapper.find("Input")
+    // console.log(wrapper.prop("children"))
+    // expect(element.prop('render')).toBe(false)
+    // expect(element.exists()).toBe(false)
+    done()
+  })
+
+})
