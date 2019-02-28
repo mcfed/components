@@ -187,24 +187,21 @@
   }
 
   var Td = function Td(_ref) {
-    var name = _ref.name,
-        value = _ref.value,
-        _ref$nameClass = _ref.nameClass,
-        nameClass = _ref$nameClass === void 0 ? '' : _ref$nameClass,
-        _ref$valueClass = _ref.valueClass,
-        valueClass = _ref$valueClass === void 0 ? '' : _ref$valueClass;
-    return [React__default.createElement("td", {
-      className: nameClass,
-      key: 'td' + name
-    }, typeof name === 'function' ? name() : name), React__default.createElement("td", {
-      className: valueClass,
-      key: 'td1' + name
-    }, typeof value === 'function' ? value() : value)];
+    var dataSource = _ref.dataSource,
+        _ref$labelKey = _ref.labelKey,
+        labelKey = _ref$labelKey === void 0 ? 'label' : _ref$labelKey,
+        _ref$valueKey = _ref.valueKey,
+        valueKey = _ref$valueKey === void 0 ? 'value' : _ref$valueKey;
+    return [React__default.createElement("th", {
+      key: 'td' + dataSource[labelKey]
+    }, typeof dataSource[labelKey] === 'function' ? dataSource[labelKey]() : dataSource[labelKey]), React__default.createElement("td", {
+      key: 'td1' + dataSource[valueKey]
+    }, typeof dataSource[valueKey] === 'function' ? dataSource[valueKey]() : dataSource[valueKey])];
   };
 
   Td.propTypes = {
-    nameClass: PropTypes.string,
-    valueClass: PropTypes.string
+    labelKey: PropTypes.string,
+    valueKey: PropTypes.string
   };
 
   var DetailTable =
@@ -226,32 +223,62 @@
       _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(DetailTable)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
       _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showDom", function (dataSource) {
+        var Data = [];
+
+        if (_this.props.mode === 'object' && Array.isArray(dataSource)) {
+          throw Error('使用对象模式，数据必须为object');
+        }
+
+        if (!Array.isArray(dataSource) && _this.props.mode !== 'object') {
+          throw Error('数据为对象时，mode需要为object');
+        }
+
+        if (_this.props.mode && _this.props.mode === 'object') {
+          for (var a in dataSource) {
+            Data.push({
+              label: a,
+              value: dataSource[a]
+            });
+          }
+        } else {
+          Data = _toConsumableArray(dataSource);
+        }
+
         var columnNumber = _this.props.columnNumber === undefined ? 1 : _this.props.columnNumber;
 
         if (columnNumber <= 0) {
           throw Error('列数必须大于0');
         }
 
-        var trLength = Math.ceil(dataSource.length / columnNumber);
-        var dom = [];
+        var array = [];
+        var trLength = Math.ceil(Data.length / columnNumber);
+        var remainder = Data.length % columnNumber; // 数据不足进行补充
 
-        var _loop = function _loop(i) {
-          dom.push(React__default.createElement("tr", {
-            key: 'tr' + i
-          }, dataSource.map(function (v, k) {
-            return k >= columnNumber * i && k < columnNumber * i + columnNumber && React__default.createElement(Td, _extends({}, _this.props, {
-              key: 'td' + k,
-              name: v.name,
-              value: v.value
-            }));
-          })));
-        };
-
-        for (var i = 0; i < trLength; i++) {
-          _loop(i);
+        if (remainder > 0) {
+          for (var b = 0; b < remainder; b++) {
+            Data.push({
+              name: '',
+              value: ''
+            });
+          }
         }
 
-        return dom;
+        for (var i = 0; i < trLength; i++) {
+          array.push(Data.slice(columnNumber * i, columnNumber * i + columnNumber));
+        }
+
+        return array.map(function (d, k) {
+          return React__default.createElement("tr", {
+            key: k
+          }, d.map(function (c, v) {
+            return React__default.createElement(Td, {
+              key: v,
+              dataSource: c,
+              labelKey: _this.props.labelKey,
+              valueKey: _this.props.valueKey
+            });
+          }));
+        });
       });
 
       return _this;
@@ -286,6 +313,7 @@
   }(React__default.Component);
 
   DetailTable.propTypes = {
+    mode: PropTypes.oneOf(['object', 'array']),
     columnNumber: PropTypes.number,
     dataSource: PropTypes.array,
     tableClass: PropTypes.string,
@@ -304,6 +332,10 @@
 
   function createCommonjsModule(fn, module) {
   	return module = { exports: {} }, fn(module, module.exports), module.exports;
+  }
+
+  function getCjsExportFromNamespace (n) {
+  	return n && n.default || n;
   }
 
   var _global = createCommonjsModule(function (module) {
@@ -613,7 +645,7 @@
     return store[key] || (store[key] = value !== undefined ? value : {});
   })('versions', []).push({
     version: _core.version,
-    mode: 'pure',
+    mode: _library ? 'pure' : 'global',
     copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
   });
   });
@@ -904,6 +936,8 @@
       if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
         // Set @@toStringTag to native iterators
         _setToStringTag(IteratorPrototype, TAG, true);
+        // fix for some old engines
+        if (!_library && typeof IteratorPrototype[ITERATOR] != 'function') _hide(IteratorPrototype, ITERATOR, returnThis);
       }
     }
     // fix Array#{values, @@iterator}.name in V8 / FF
@@ -912,7 +946,7 @@
       $default = function values() { return $native.call(this); };
     }
     // Define iterator
-    if ((FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+    if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
       _hide(proto, ITERATOR, $default);
     }
     // Plug for library
@@ -1381,9 +1415,17 @@
   // 24.3.3 JSON[@@toStringTag]
   _setToStringTag(_global.JSON, 'JSON', true);
 
+
+
+  var es6_object_toString = /*#__PURE__*/Object.freeze({
+
+  });
+
   _wksDefine('asyncIterator');
 
   _wksDefine('observable');
+
+  getCjsExportFromNamespace(es6_object_toString);
 
   var symbol = _core.Symbol;
 
@@ -2328,6 +2370,12 @@
     return shallowCopy;
   }
 
+  var es = /*#__PURE__*/Object.freeze({
+    default: omit
+  });
+
+  var _omit = getCjsExportFromNamespace(es);
+
   var icon = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -2352,7 +2400,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -2422,7 +2470,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
 
 
@@ -6830,6 +6878,10 @@
 
   Schema.messages = messages;
 
+  var es$1 = /*#__PURE__*/Object.freeze({
+    default: Schema
+  });
+
   /**
    * Copyright 2014-2015, Facebook, Inc.
    * All rights reserved.
@@ -7672,6 +7724,8 @@
 
   unwrapExports(createFieldsStore_1);
 
+  var _asyncValidator = getCjsExportFromNamespace(es$1);
+
   var createBaseForm_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -7704,7 +7758,7 @@
 
 
 
-  var _asyncValidator2 = _interopRequireDefault(Schema);
+  var _asyncValidator2 = _interopRequireDefault(_asyncValidator);
 
 
 
@@ -9043,6 +9097,11 @@
 
   cssAnimation.isCssAnimationSupported = isCssAnimationSupported;
 
+  var es$2 = /*#__PURE__*/Object.freeze({
+    isCssAnimationSupported: isCssAnimationSupported,
+    default: cssAnimation
+  });
+
   var util$1 = {
     isAppearSupported: function isAppearSupported(props) {
       return props.transitionName && props.transitionAppear || props.animation.appear;
@@ -9503,6 +9562,10 @@
     };
   };
 
+  var Animate$1 = /*#__PURE__*/Object.freeze({
+    default: Animate
+  });
+
   var constants = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -9515,6 +9578,8 @@
   unwrapExports(constants);
   var constants_1 = constants.FIELD_META_PROP;
   var constants_2 = constants.FIELD_DATA_PROP;
+
+  var _rcAnimate = getCjsExportFromNamespace(Animate$1);
 
   var FormItem_1 = createCommonjsModule(function (module, exports) {
 
@@ -9564,7 +9629,7 @@
 
 
 
-  var _rcAnimate2 = _interopRequireDefault(Animate);
+  var _rcAnimate2 = _interopRequireDefault(_rcAnimate);
 
 
 
@@ -9947,7 +10012,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
 
 
@@ -15336,6 +15401,10 @@
     };
   };
 
+  var es$3 = /*#__PURE__*/Object.freeze({
+    default: Trigger
+  });
+
   var autoAdjustOverflow = {
     adjustX: 1,
     adjustY: 1
@@ -19186,6 +19255,13 @@
   Select.Option = Option;
   Select.OptGroup = OptGroup;
 
+  var es$4 = /*#__PURE__*/Object.freeze({
+    Option: Option,
+    OptGroup: OptGroup,
+    SelectPropTypes: SelectPropTypes,
+    default: Select
+  });
+
   var en_US = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -19381,6 +19457,8 @@
 
   unwrapExports(_default);
 
+  var _rcSelect = getCjsExportFromNamespace(es$4);
+
   var select = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -19421,7 +19499,7 @@
 
 
 
-  var _rcSelect2 = _interopRequireDefault(Select);
+  var _rcSelect2 = _interopRequireDefault(_rcSelect);
 
 
 
@@ -19462,13 +19540,13 @@
   // => It is needless to export the declaration of below two inner components.
   // export { Option, OptGroup };
 
-  var Select$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Select$$1, _React$Component);
+  var Select = function (_React$Component) {
+      (0, _inherits3['default'])(Select, _React$Component);
 
-      function Select$$1() {
-          (0, _classCallCheck3['default'])(this, Select$$1);
+      function Select() {
+          (0, _classCallCheck3['default'])(this, Select);
 
-          var _this = (0, _possibleConstructorReturn3['default'])(this, (Select$$1.__proto__ || Object.getPrototypeOf(Select$$1)).apply(this, arguments));
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (Select.__proto__ || Object.getPrototypeOf(Select)).apply(this, arguments));
 
           _this.saveSelect = function (node) {
               _this.rcSelect = node;
@@ -19501,7 +19579,7 @@
           return _this;
       }
 
-      (0, _createClass3['default'])(Select$$1, [{
+      (0, _createClass3['default'])(Select, [{
           key: 'focus',
           value: function focus() {
               this.rcSelect.focus();
@@ -19535,20 +19613,20 @@
               );
           }
       }]);
-      return Select$$1;
+      return Select;
   }(React$$1.Component);
 
-  exports['default'] = Select$$1;
+  exports['default'] = Select;
 
-  Select$$1.Option = Select.Option;
-  Select$$1.OptGroup = Select.OptGroup;
-  Select$$1.defaultProps = {
+  Select.Option = _rcSelect.Option;
+  Select.OptGroup = _rcSelect.OptGroup;
+  Select.defaultProps = {
       prefixCls: 'ant-select',
       showSearch: false,
       transitionName: 'slide-up',
       choiceTransitionName: 'zoom'
   };
-  Select$$1.propTypes = SelectPropTypes;
+  Select.propTypes = SelectPropTypes;
   module.exports = exports['default'];
   });
 
@@ -19598,7 +19676,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -20143,7 +20221,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
 
 
@@ -22367,6 +22445,12 @@
         className: props.showWeekNumber ? prefixCls + '-week-number' : ''
       });
     }
+  });
+
+
+
+  var es$5 = /*#__PURE__*/Object.freeze({
+    default: Calendar
   });
 
   var KeyCode_1 = createCommonjsModule(function (module, exports) {
@@ -24730,6 +24814,8 @@
 
   unwrapExports(placements_1);
 
+  var _rcTrigger = getCjsExportFromNamespace(es$3);
+
   var Picker_1 = createCommonjsModule(function (module, exports) {
 
   exports.__esModule = true;
@@ -24764,7 +24850,7 @@
 
 
 
-  var _rcTrigger2 = _interopRequireDefault(Trigger);
+  var _rcTrigger2 = _interopRequireDefault(_rcTrigger);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -25040,7 +25126,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
 
 
@@ -26300,7 +26386,7 @@
 
 
 
-  var _rcTrigger2 = _interopRequireDefault(Trigger);
+  var _rcTrigger2 = _interopRequireDefault(_rcTrigger);
 
 
 
@@ -29195,6 +29281,8 @@
 
   unwrapExports(RangePicker_1);
 
+  var _rcCalendar = getCjsExportFromNamespace(es$5);
+
   var WeekPicker_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -29231,7 +29319,7 @@
 
 
 
-  var _rcCalendar2 = _interopRequireDefault(Calendar);
+  var _rcCalendar2 = _interopRequireDefault(_rcCalendar);
 
 
 
@@ -29403,7 +29491,7 @@
 
 
 
-  var _rcCalendar2 = _interopRequireDefault(Calendar);
+  var _rcCalendar2 = _interopRequireDefault(_rcCalendar);
 
 
 
@@ -30974,10 +31062,20 @@
   // expose Promise
   fetch.Promise = global.Promise;
 
-  var nodePonyfill = createCommonjsModule(function (module, exports) {
-  var realFetch = fetch.default || fetch;
+  var index_es = /*#__PURE__*/Object.freeze({
+    default: fetch,
+    Headers: Headers,
+    Request: Request,
+    Response: Response,
+    FetchError: FetchError
+  });
 
-  var fetch$$1 = function (url, options) {
+  var nodeFetch = getCjsExportFromNamespace(index_es);
+
+  var nodePonyfill = createCommonjsModule(function (module, exports) {
+  var realFetch = nodeFetch.default || nodeFetch;
+
+  var fetch = function (url, options) {
     // Support schemaless URIs on the server for parity with the browser.
     // Ex: //github.com/ -> https://github.com/
     if (/^\/\//.test(url)) {
@@ -30986,16 +31084,16 @@
     return realFetch.call(this, url, options)
   };
 
-  fetch$$1.polyfill = false;
+  fetch.polyfill = false;
 
-  module.exports = exports = fetch$$1;
-  exports.fetch = fetch$$1;
-  exports.Headers = fetch.Headers;
-  exports.Request = fetch.Request;
-  exports.Response = fetch.Response;
+  module.exports = exports = fetch;
+  exports.fetch = fetch;
+  exports.Headers = nodeFetch.Headers;
+  exports.Request = nodeFetch.Request;
+  exports.Response = nodeFetch.Response;
 
   // Needed for TypeScript consumers without esModuleInterop.
-  exports.default = fetch$$1;
+  exports.default = fetch;
   });
   var nodePonyfill_1 = nodePonyfill.fetch;
   var nodePonyfill_2 = nodePonyfill.Headers;
@@ -32973,6 +33071,11 @@
 
   Tree.TreeNode = TreeNode;
 
+  var es$6 = /*#__PURE__*/Object.freeze({
+    TreeNode: TreeNode,
+    default: Tree
+  });
+
   var getRequestAnimationFrame_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -33023,6 +33126,8 @@
   unwrapExports(getRequestAnimationFrame_1);
   var getRequestAnimationFrame_2 = getRequestAnimationFrame_1.cancelRequestAnimationFrame;
 
+  var _cssAnimation = getCjsExportFromNamespace(es$2);
+
   var openAnimation = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -33031,7 +33136,7 @@
 
 
 
-  var _cssAnimation2 = _interopRequireDefault(cssAnimation);
+  var _cssAnimation2 = _interopRequireDefault(_cssAnimation);
 
 
 
@@ -33090,6 +33195,8 @@
 
   unwrapExports(openAnimation);
 
+  var _rcTree = getCjsExportFromNamespace(es$6);
+
   var tree = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -33122,7 +33229,7 @@
 
 
 
-  var _rcTree2 = _interopRequireDefault(Tree);
+  var _rcTree2 = _interopRequireDefault(_rcTree);
 
 
 
@@ -33132,15 +33239,15 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  var Tree$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Tree$$1, _React$Component);
+  var Tree = function (_React$Component) {
+      (0, _inherits3['default'])(Tree, _React$Component);
 
-      function Tree$$1() {
-          (0, _classCallCheck3['default'])(this, Tree$$1);
-          return (0, _possibleConstructorReturn3['default'])(this, (Tree$$1.__proto__ || Object.getPrototypeOf(Tree$$1)).apply(this, arguments));
+      function Tree() {
+          (0, _classCallCheck3['default'])(this, Tree);
+          return (0, _possibleConstructorReturn3['default'])(this, (Tree.__proto__ || Object.getPrototypeOf(Tree)).apply(this, arguments));
       }
 
-      (0, _createClass3['default'])(Tree$$1, [{
+      (0, _createClass3['default'])(Tree, [{
           key: 'render',
           value: function render() {
               var props = this.props;
@@ -33155,13 +33262,13 @@
               );
           }
       }]);
-      return Tree$$1;
+      return Tree;
   }(React$$1.Component);
 
-  exports['default'] = Tree$$1;
+  exports['default'] = Tree;
 
-  Tree$$1.TreeNode = Tree.TreeNode;
-  Tree$$1.defaultProps = {
+  Tree.TreeNode = _rcTree.TreeNode;
+  Tree.defaultProps = {
       prefixCls: 'ant-tree',
       checkable: false,
       showIcon: false,
@@ -36305,6 +36412,16 @@
 
   Select$3.TreeNode = TreeNode$2;
 
+  var es$7 = /*#__PURE__*/Object.freeze({
+    default: Select$3,
+    TreeNode: TreeNode$2,
+    SHOW_ALL: SHOW_ALL,
+    SHOW_PARENT: SHOW_PARENT,
+    SHOW_CHILD: SHOW_CHILD
+  });
+
+  var _rcTreeSelect = getCjsExportFromNamespace(es$7);
+
   var treeSelect = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -36341,7 +36458,7 @@
 
 
 
-  var _rcTreeSelect2 = _interopRequireDefault(Select$3);
+  var _rcTreeSelect2 = _interopRequireDefault(_rcTreeSelect);
 
 
 
@@ -36426,10 +36543,10 @@
 
   exports['default'] = TreeSelect;
 
-  TreeSelect.TreeNode = Select$3.TreeNode;
-  TreeSelect.SHOW_ALL = Select$3.SHOW_ALL;
-  TreeSelect.SHOW_PARENT = Select$3.SHOW_PARENT;
-  TreeSelect.SHOW_CHILD = Select$3.SHOW_CHILD;
+  TreeSelect.TreeNode = _rcTreeSelect.TreeNode;
+  TreeSelect.SHOW_ALL = _rcTreeSelect.SHOW_ALL;
+  TreeSelect.SHOW_PARENT = _rcTreeSelect.SHOW_PARENT;
+  TreeSelect.SHOW_CHILD = _rcTreeSelect.SHOW_CHILD;
   TreeSelect.defaultProps = {
       prefixCls: 'ant-select',
       transitionName: 'slide-up',
@@ -37516,6 +37633,12 @@
     arrowContent: null
   };
 
+
+
+  var es$8 = /*#__PURE__*/Object.freeze({
+    default: Tooltip
+  });
+
   var placements_1$2 = createCommonjsModule(function (module, exports) {
 
   exports.__esModule = true;
@@ -37710,6 +37833,8 @@
   unwrapExports(placements$5);
   var placements_1$3 = placements$5.getOverflowOptions;
 
+  var _rcTooltip = getCjsExportFromNamespace(es$8);
+
   var tooltip = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -37746,7 +37871,7 @@
 
 
 
-  var _rcTooltip2 = _interopRequireDefault(Tooltip);
+  var _rcTooltip2 = _interopRequireDefault(_rcTooltip);
 
 
 
@@ -37772,13 +37897,13 @@
       return { picked: picked, omitted: omitted };
   };
 
-  var Tooltip$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Tooltip$$1, _React$Component);
+  var Tooltip = function (_React$Component) {
+      (0, _inherits3['default'])(Tooltip, _React$Component);
 
-      function Tooltip$$1(props) {
-          (0, _classCallCheck3['default'])(this, Tooltip$$1);
+      function Tooltip(props) {
+          (0, _classCallCheck3['default'])(this, Tooltip);
 
-          var _this = (0, _possibleConstructorReturn3['default'])(this, (Tooltip$$1.__proto__ || Object.getPrototypeOf(Tooltip$$1)).call(this, props));
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (Tooltip.__proto__ || Object.getPrototypeOf(Tooltip)).call(this, props));
 
           _this.onVisibleChange = function (visible) {
               var onVisibleChange = _this.props.onVisibleChange;
@@ -37827,7 +37952,7 @@
           return _this;
       }
 
-      (0, _createClass3['default'])(Tooltip$$1, [{
+      (0, _createClass3['default'])(Tooltip, [{
           key: 'componentWillReceiveProps',
           value: function componentWillReceiveProps(nextProps) {
               if ('visible' in nextProps) {
@@ -37935,12 +38060,12 @@
               );
           }
       }]);
-      return Tooltip$$1;
+      return Tooltip;
   }(React$$1.Component);
 
-  exports['default'] = Tooltip$$1;
+  exports['default'] = Tooltip;
 
-  Tooltip$$1.defaultProps = {
+  Tooltip.defaultProps = {
       prefixCls: 'ant-tooltip',
       placement: 'top',
       transitionName: 'zoom-big-fast',
@@ -39852,6 +39977,20 @@
     disabled: true
   };
 
+
+
+  var es$9 = /*#__PURE__*/Object.freeze({
+    SubMenu: connected$3,
+    Item: connected$4,
+    MenuItem: connected$4,
+    MenuItemGroup: MenuItemGroup$1,
+    ItemGroup: MenuItemGroup$1,
+    Divider: Divider$1,
+    default: Menu$1
+  });
+
+  var _rcMenu = getCjsExportFromNamespace(es$9);
+
   var SubMenu_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -39921,7 +40060,7 @@
                   className = _props.className;
 
               var theme = this.context.antdMenuTheme;
-              return React$$1.createElement(Menu$1.SubMenu, (0, _extends3['default'])({}, this.props, { ref: this.saveSubMenu, popupClassName: (0, _classnames2['default'])(rootPrefixCls + '-' + theme, className) }));
+              return React$$1.createElement(_rcMenu.SubMenu, (0, _extends3['default'])({}, this.props, { ref: this.saveSubMenu, popupClassName: (0, _classnames2['default'])(rootPrefixCls + '-' + theme, className) }));
           }
       }]);
       return SubMenu;
@@ -40006,7 +40145,7 @@
               return React$$1.createElement(
                   _tooltip2['default'],
                   { title: inlineCollapsed && props.level === 1 ? props.children : '', placement: 'right', overlayClassName: props.rootPrefixCls + '-inline-collapsed-tooltip' },
-                  React$$1.createElement(Menu$1.Item, (0, _extends3['default'])({}, props, { ref: this.saveMenuItem }))
+                  React$$1.createElement(_rcMenu.Item, (0, _extends3['default'])({}, props, { ref: this.saveMenuItem }))
               );
           }
       }]);
@@ -40061,7 +40200,7 @@
 
 
 
-  var _rcMenu2 = _interopRequireDefault(Menu$1);
+  var _rcMenu2 = _interopRequireDefault(_rcMenu);
 
 
 
@@ -40274,10 +40413,10 @@
 
   exports['default'] = Menu;
 
-  Menu.Divider = Menu$1.Divider;
+  Menu.Divider = _rcMenu.Divider;
   Menu.Item = _MenuItem2['default'];
   Menu.SubMenu = _SubMenu2['default'];
-  Menu.ItemGroup = Menu$1.ItemGroup;
+  Menu.ItemGroup = _rcMenu.ItemGroup;
   Menu.defaultProps = {
       prefixCls: 'ant-menu',
       className: '',
@@ -40531,6 +40670,14 @@
 
   polyfill(Dropdown);
 
+
+
+  var es$a = /*#__PURE__*/Object.freeze({
+    default: Dropdown
+  });
+
+  var _rcDropdown = getCjsExportFromNamespace(es$a);
+
   var dropdown = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -40563,7 +40710,7 @@
 
 
 
-  var _rcDropdown2 = _interopRequireDefault(Dropdown);
+  var _rcDropdown2 = _interopRequireDefault(_rcDropdown);
 
 
 
@@ -40577,15 +40724,15 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-  var Dropdown$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Dropdown$$1, _React$Component);
+  var Dropdown = function (_React$Component) {
+      (0, _inherits3['default'])(Dropdown, _React$Component);
 
-      function Dropdown$$1() {
-          (0, _classCallCheck3['default'])(this, Dropdown$$1);
-          return (0, _possibleConstructorReturn3['default'])(this, (Dropdown$$1.__proto__ || Object.getPrototypeOf(Dropdown$$1)).apply(this, arguments));
+      function Dropdown() {
+          (0, _classCallCheck3['default'])(this, Dropdown);
+          return (0, _possibleConstructorReturn3['default'])(this, (Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).apply(this, arguments));
       }
 
-      (0, _createClass3['default'])(Dropdown$$1, [{
+      (0, _createClass3['default'])(Dropdown, [{
           key: 'getTransitionName',
           value: function getTransitionName() {
               var _props = this.props,
@@ -40645,12 +40792,12 @@
               );
           }
       }]);
-      return Dropdown$$1;
+      return Dropdown;
   }(React$$1.Component);
 
-  exports['default'] = Dropdown$$1;
+  exports['default'] = Dropdown;
 
-  Dropdown$$1.defaultProps = {
+  Dropdown.defaultProps = {
       prefixCls: 'ant-dropdown',
       mouseEnterDelay: 0.15,
       mouseLeaveDelay: 0.1,
@@ -41279,6 +41426,10 @@
       visible: false
   };
 
+  var DialogWrap$1 = /*#__PURE__*/Object.freeze({
+    default: DialogWrap
+  });
+
   var addEventListener$1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -41344,6 +41495,8 @@
   var locale_1 = locale.changeConfirmLocale;
   var locale_2 = locale.getConfirmLocale;
 
+  var _rcDialog = getCjsExportFromNamespace(DialogWrap$1);
+
   var Modal_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -41376,7 +41529,7 @@
 
 
 
-  var _rcDialog2 = _interopRequireDefault(DialogWrap);
+  var _rcDialog2 = _interopRequireDefault(_rcDialog);
 
 
 
@@ -45592,6 +45745,12 @@
   Table.Column = Column;
   Table.ColumnGroup = ColumnGroup;
 
+  var es$b = /*#__PURE__*/Object.freeze({
+    default: Table,
+    Column: Column,
+    ColumnGroup: ColumnGroup
+  });
+
   var Pager = function Pager(props) {
     var prefixCls = props.rootPrefixCls + '-item';
     var cls = prefixCls + ' ' + prefixCls + '-' + props.page;
@@ -46439,6 +46598,12 @@
     };
   };
 
+
+
+  var es$c = /*#__PURE__*/Object.freeze({
+    default: Pagination
+  });
+
   var MiniSelect_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -46502,6 +46667,8 @@
 
   unwrapExports(MiniSelect_1);
 
+  var _rcPagination = getCjsExportFromNamespace(es$c);
+
   var Pagination_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -46534,7 +46701,7 @@
 
 
 
-  var _rcPagination2 = _interopRequireDefault(Pagination);
+  var _rcPagination2 = _interopRequireDefault(_rcPagination);
 
 
 
@@ -46569,13 +46736,13 @@
       }return t;
   };
 
-  var Pagination$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Pagination$$1, _React$Component);
+  var Pagination = function (_React$Component) {
+      (0, _inherits3['default'])(Pagination, _React$Component);
 
-      function Pagination$$1() {
-          (0, _classCallCheck3['default'])(this, Pagination$$1);
+      function Pagination() {
+          (0, _classCallCheck3['default'])(this, Pagination);
 
-          var _this = (0, _possibleConstructorReturn3['default'])(this, (Pagination$$1.__proto__ || Object.getPrototypeOf(Pagination$$1)).apply(this, arguments));
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (Pagination.__proto__ || Object.getPrototypeOf(Pagination)).apply(this, arguments));
 
           _this.renderPagination = function (locale) {
               var _a = _this.props,
@@ -46588,7 +46755,7 @@
           return _this;
       }
 
-      (0, _createClass3['default'])(Pagination$$1, [{
+      (0, _createClass3['default'])(Pagination, [{
           key: 'render',
           value: function render() {
               return React$$1.createElement(
@@ -46598,12 +46765,12 @@
               );
           }
       }]);
-      return Pagination$$1;
+      return Pagination;
   }(React$$1.Component);
 
-  exports['default'] = Pagination$$1;
+  exports['default'] = Pagination;
 
-  Pagination$$1.defaultProps = {
+  Pagination.defaultProps = {
       prefixCls: 'ant-pagination',
       selectPrefixCls: 'ant-select'
   };
@@ -46706,7 +46873,7 @@
 
 
 
-  var _rcAnimate2 = _interopRequireDefault(Animate);
+  var _rcAnimate2 = _interopRequireDefault(_rcAnimate);
 
 
 
@@ -46714,7 +46881,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -48017,6 +48184,14 @@
     };
   };
 
+
+
+  var es$d = /*#__PURE__*/Object.freeze({
+    default: Checkbox
+  });
+
+  var _rcCheckbox = getCjsExportFromNamespace(es$d);
+
   var Checkbox_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -48061,7 +48236,7 @@
 
 
 
-  var _rcCheckbox2 = _interopRequireDefault(Checkbox);
+  var _rcCheckbox2 = _interopRequireDefault(_rcCheckbox);
 
 
 
@@ -48080,13 +48255,13 @@
       }return t;
   };
 
-  var Checkbox$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Checkbox$$1, _React$Component);
+  var Checkbox = function (_React$Component) {
+      (0, _inherits3['default'])(Checkbox, _React$Component);
 
-      function Checkbox$$1() {
-          (0, _classCallCheck3['default'])(this, Checkbox$$1);
+      function Checkbox() {
+          (0, _classCallCheck3['default'])(this, Checkbox);
 
-          var _this = (0, _possibleConstructorReturn3['default'])(this, (Checkbox$$1.__proto__ || Object.getPrototypeOf(Checkbox$$1)).apply(this, arguments));
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (Checkbox.__proto__ || Object.getPrototypeOf(Checkbox)).apply(this, arguments));
 
           _this.saveCheckbox = function (node) {
               _this.rcCheckbox = node;
@@ -48094,7 +48269,7 @@
           return _this;
       }
 
-      (0, _createClass3['default'])(Checkbox$$1, [{
+      (0, _createClass3['default'])(Checkbox, [{
           key: 'shouldComponentUpdate',
           value: function shouldComponentUpdate(nextProps, nextState, nextContext) {
               return !(0, _shallowequal2['default'])(this.props, nextProps) || !(0, _shallowequal2['default'])(this.state, nextState) || !(0, _shallowequal2['default'])(this.context.checkboxGroup, nextContext.checkboxGroup);
@@ -48148,16 +48323,16 @@
               );
           }
       }]);
-      return Checkbox$$1;
+      return Checkbox;
   }(React$$1.Component);
 
-  exports['default'] = Checkbox$$1;
+  exports['default'] = Checkbox;
 
-  Checkbox$$1.defaultProps = {
+  Checkbox.defaultProps = {
       prefixCls: 'ant-checkbox',
       indeterminate: false
   };
-  Checkbox$$1.contextTypes = {
+  Checkbox.contextTypes = {
       checkboxGroup: _propTypes2['default'].any
   };
   module.exports = exports['default'];
@@ -48405,7 +48580,7 @@
 
 
 
-  var _rcCheckbox2 = _interopRequireDefault(Checkbox);
+  var _rcCheckbox2 = _interopRequireDefault(_rcCheckbox);
 
 
 
@@ -48871,7 +49046,7 @@
 
 
 
-  var _rcMenu2 = _interopRequireDefault(Menu$1);
+  var _rcMenu2 = _interopRequireDefault(_rcMenu);
 
 
 
@@ -49042,7 +49217,7 @@
               var multiple = 'filterMultiple' in column ? column.filterMultiple : true;
               var input = multiple ? React$$1.createElement(_checkbox2['default'], { checked: this.state.selectedKeys.indexOf(item.value.toString()) >= 0 }) : React$$1.createElement(_radio2['default'], { checked: this.state.selectedKeys.indexOf(item.value.toString()) >= 0 });
               return React$$1.createElement(
-                  Menu$1.Item,
+                  _rcMenu.Item,
                   { key: item.value },
                   input,
                   React$$1.createElement(
@@ -49076,7 +49251,7 @@
                       });
                       var subMenuCls = containSelected ? _this2.props.dropdownPrefixCls + '-submenu-contain-selected' : '';
                       return React$$1.createElement(
-                          Menu$1.SubMenu,
+                          _rcMenu.SubMenu,
                           { title: item.text, className: subMenuCls, key: item.value.toString() },
                           _this2.renderMenus(item.children)
                       );
@@ -49685,7 +49860,7 @@
 
 
 
-  var _omit2 = _interopRequireDefault(omit);
+  var _omit2 = _interopRequireDefault(_omit);
 
   function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
@@ -49863,6 +50038,8 @@
   var util_3$1 = util$3.flatFilter;
   var util_4$1 = util$3.normalizeColumns;
 
+  var _rcTable = getCjsExportFromNamespace(es$b);
+
   var Table_1 = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -49907,7 +50084,7 @@
 
 
 
-  var _rcTable2 = _interopRequireDefault(Table);
+  var _rcTable2 = _interopRequireDefault(_rcTable);
 
 
 
@@ -50004,13 +50181,13 @@
    */
   var emptyObject = {};
 
-  var Table$$1 = function (_React$Component) {
-      (0, _inherits3['default'])(Table$$1, _React$Component);
+  var Table = function (_React$Component) {
+      (0, _inherits3['default'])(Table, _React$Component);
 
-      function Table$$1(props) {
-          (0, _classCallCheck3['default'])(this, Table$$1);
+      function Table(props) {
+          (0, _classCallCheck3['default'])(this, Table);
 
-          var _this = (0, _possibleConstructorReturn3['default'])(this, (Table$$1.__proto__ || Object.getPrototypeOf(Table$$1)).call(this, props));
+          var _this = (0, _possibleConstructorReturn3['default'])(this, (Table.__proto__ || Object.getPrototypeOf(Table)).call(this, props));
 
           _this.getCheckboxPropsByItem = function (item, index) {
               var rowSelection = getRowSelection(_this.props);
@@ -50295,7 +50472,7 @@
           return _this;
       }
 
-      (0, _createClass3['default'])(Table$$1, [{
+      (0, _createClass3['default'])(Table, [{
           key: 'getDefaultSelection',
           value: function getDefaultSelection() {
               var _this2 = this;
@@ -50850,14 +51027,14 @@
               );
           }
       }]);
-      return Table$$1;
+      return Table;
   }(React$$1.Component);
 
-  exports['default'] = Table$$1;
+  exports['default'] = Table;
 
-  Table$$1.Column = _Column2['default'];
-  Table$$1.ColumnGroup = _ColumnGroup2['default'];
-  Table$$1.propTypes = {
+  Table.Column = _Column2['default'];
+  Table.ColumnGroup = _ColumnGroup2['default'];
+  Table.propTypes = {
       dataSource: _propTypes2['default'].array,
       columns: _propTypes2['default'].array,
       prefixCls: _propTypes2['default'].string,
@@ -50871,7 +51048,7 @@
       locale: _propTypes2['default'].object,
       dropdownPrefixCls: _propTypes2['default'].string
   };
-  Table$$1.defaultProps = {
+  Table.defaultProps = {
       dataSource: [],
       prefixCls: 'ant-table',
       useFixedHeader: false,
@@ -51855,6 +52032,14 @@
     ReactDOM__default.render(React__default.createElement(Notification, _extends$2({}, props, { ref: ref })), div);
   };
 
+
+
+  var es$e = /*#__PURE__*/Object.freeze({
+    default: Notification
+  });
+
+  var _rcNotification = getCjsExportFromNamespace(es$e);
+
   var message = createCommonjsModule(function (module, exports) {
 
   Object.defineProperty(exports, "__esModule", {
@@ -51867,7 +52052,7 @@
 
 
 
-  var _rcNotification2 = _interopRequireDefault(Notification);
+  var _rcNotification2 = _interopRequireDefault(_rcNotification);
 
 
 
@@ -52313,6 +52498,130 @@
     columns: PropTypes.array.isRequired
   };
 
+  var __rest = undefined && undefined.__rest || function (s, e) {
+      var t = {};
+      for (var p in s) {
+          if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+      }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+          if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+      }return t;
+  };
+  function Divider$2(_a) {
+      var _classNames;
+
+      var _a$prefixCls = _a.prefixCls,
+          prefixCls = _a$prefixCls === undefined ? 'ant' : _a$prefixCls,
+          _a$type = _a.type,
+          type = _a$type === undefined ? 'horizontal' : _a$type,
+          _a$orientation = _a.orientation,
+          orientation = _a$orientation === undefined ? '' : _a$orientation,
+          className = _a.className,
+          children = _a.children,
+          dashed = _a.dashed,
+          restProps = __rest(_a, ["prefixCls", "type", "orientation", "className", "children", "dashed"]);
+
+      var orientationPrefix = orientation.length > 0 ? '-' + orientation : orientation;
+      var classString = classnames(className, prefixCls + '-divider', prefixCls + '-divider-' + type, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-divider-with-text' + orientationPrefix, children), _defineProperty$1(_classNames, prefixCls + '-divider-dashed', !!dashed), _classNames));
+      return React.createElement(
+          'div',
+          _extends$2({ className: classString }, restProps),
+          children && React.createElement(
+              'span',
+              { className: prefixCls + '-divider-inner-text' },
+              children
+          )
+      );
+  }
+
+  var Icon$1 = function Icon(props) {
+      var type = props.type,
+          _props$className = props.className,
+          className = _props$className === undefined ? '' : _props$className,
+          spin = props.spin;
+
+      var classString = classnames(_defineProperty$1({
+          anticon: true,
+          'anticon-spin': !!spin || type === 'loading'
+      }, 'anticon-' + type, true), className);
+      return React.createElement('i', _extends$2({}, omit(props, ['type', 'spin']), { className: classString }));
+  };
+
+  var up = {
+    transform: 'rotate(180deg)',
+    fontSize: 12,
+    marginLeft: 5,
+    verticalAlign: -1
+  };
+  var down = {
+    fontSize: 12,
+    marginLeft: 5,
+    verticalAlign: -1
+  };
+
+  var UpDown = function UpDown(_ref) {
+    var _ref$state = _ref.state,
+        state = _ref$state === void 0 ? 'up' : _ref$state;
+    return React__default.createElement(Icon$1, {
+      type: 'down',
+      className: down,
+      style: state === 'down' ? down : up
+    });
+  };
+
+  var McFileSet =
+  /*#__PURE__*/
+  function (_React$Component) {
+    _inherits(McFileSet, _React$Component);
+
+    function McFileSet() {
+      var _getPrototypeOf2;
+
+      var _this;
+
+      _classCallCheck(this, McFileSet);
+
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(McFileSet)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+        hidden: _this.props.display === undefined ? false : _this.props.display === 'hide'
+      });
+
+      _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showHideFun", function () {
+        _this.setState({
+          hidden: !_this.state.hidden
+        }, function () {
+          if (_this.props.onChange) {
+            _this.props.onChange(_this.state.hidden ? 'hide' : 'show');
+          }
+        });
+      });
+
+      return _this;
+    }
+
+    _createClass(McFileSet, [{
+      key: "render",
+      value: function render() {
+        return React__default.createElement("div", null, React__default.createElement(Divider$2, {
+          orientation: "left"
+        }, this.props.display === undefined ? this.props.title : React__default.createElement("a", {
+          onClick: this.showHideFun
+        }, this.props.title, React__default.createElement(UpDown, {
+          state: this.state.hidden ? 'up' : 'down'
+        }))), !this.state.hidden && this.props.children);
+      }
+    }]);
+
+    return McFileSet;
+  }(React__default.Component);
+  McFileSet.defaultProps = {
+    title: '标题'
+  };
+
   exports.AdvancedSearch = AdvancedSearchForm;
   exports.BaseForm = SubmitForm;
   exports.FormItem = FormItem$1;
@@ -52326,6 +52635,7 @@
   exports.PropertyTable = PropertyTable;
   exports.EditTable = EditTable;
   exports.DetailTable = DetailTable;
+  exports.FileSet = McFileSet;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

@@ -182,24 +182,21 @@ function _nonIterableSpread() {
 }
 
 var Td = function Td(_ref) {
-  var name = _ref.name,
-      value = _ref.value,
-      _ref$nameClass = _ref.nameClass,
-      nameClass = _ref$nameClass === void 0 ? '' : _ref$nameClass,
-      _ref$valueClass = _ref.valueClass,
-      valueClass = _ref$valueClass === void 0 ? '' : _ref$valueClass;
-  return [React__default.createElement("td", {
-    className: nameClass,
-    key: 'td' + name
-  }, typeof name === 'function' ? name() : name), React__default.createElement("td", {
-    className: valueClass,
-    key: 'td1' + name
-  }, typeof value === 'function' ? value() : value)];
+  var dataSource = _ref.dataSource,
+      _ref$labelKey = _ref.labelKey,
+      labelKey = _ref$labelKey === void 0 ? 'label' : _ref$labelKey,
+      _ref$valueKey = _ref.valueKey,
+      valueKey = _ref$valueKey === void 0 ? 'value' : _ref$valueKey;
+  return [React__default.createElement("th", {
+    key: 'td' + dataSource[labelKey]
+  }, typeof dataSource[labelKey] === 'function' ? dataSource[labelKey]() : dataSource[labelKey]), React__default.createElement("td", {
+    key: 'td1' + dataSource[valueKey]
+  }, typeof dataSource[valueKey] === 'function' ? dataSource[valueKey]() : dataSource[valueKey])];
 };
 
 Td.propTypes = {
-  nameClass: PropTypes.string,
-  valueClass: PropTypes.string
+  labelKey: PropTypes.string,
+  valueKey: PropTypes.string
 };
 
 var DetailTable =
@@ -221,32 +218,62 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(DetailTable)).call.apply(_getPrototypeOf2, [this].concat(args)));
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showDom", function (dataSource) {
+      var Data = [];
+
+      if (_this.props.mode === 'object' && Array.isArray(dataSource)) {
+        throw Error('使用对象模式，数据必须为object');
+      }
+
+      if (!Array.isArray(dataSource) && _this.props.mode !== 'object') {
+        throw Error('数据为对象时，mode需要为object');
+      }
+
+      if (_this.props.mode && _this.props.mode === 'object') {
+        for (var a in dataSource) {
+          Data.push({
+            label: a,
+            value: dataSource[a]
+          });
+        }
+      } else {
+        Data = _toConsumableArray(dataSource);
+      }
+
       var columnNumber = _this.props.columnNumber === undefined ? 1 : _this.props.columnNumber;
 
       if (columnNumber <= 0) {
         throw Error('列数必须大于0');
       }
 
-      var trLength = Math.ceil(dataSource.length / columnNumber);
-      var dom = [];
+      var array = [];
+      var trLength = Math.ceil(Data.length / columnNumber);
+      var remainder = Data.length % columnNumber; // 数据不足进行补充
 
-      var _loop = function _loop(i) {
-        dom.push(React__default.createElement("tr", {
-          key: 'tr' + i
-        }, dataSource.map(function (v, k) {
-          return k >= columnNumber * i && k < columnNumber * i + columnNumber && React__default.createElement(Td, _extends({}, _this.props, {
-            key: 'td' + k,
-            name: v.name,
-            value: v.value
-          }));
-        })));
-      };
-
-      for (var i = 0; i < trLength; i++) {
-        _loop(i);
+      if (remainder > 0) {
+        for (var b = 0; b < remainder; b++) {
+          Data.push({
+            name: '',
+            value: ''
+          });
+        }
       }
 
-      return dom;
+      for (var i = 0; i < trLength; i++) {
+        array.push(Data.slice(columnNumber * i, columnNumber * i + columnNumber));
+      }
+
+      return array.map(function (d, k) {
+        return React__default.createElement("tr", {
+          key: k
+        }, d.map(function (c, v) {
+          return React__default.createElement(Td, {
+            key: v,
+            dataSource: c,
+            labelKey: _this.props.labelKey,
+            valueKey: _this.props.valueKey
+          });
+        }));
+      });
     });
 
     return _this;
@@ -281,6 +308,7 @@ function (_React$Component) {
 }(React__default.Component);
 
 DetailTable.propTypes = {
+  mode: PropTypes.oneOf(['object', 'array']),
   columnNumber: PropTypes.number,
   dataSource: PropTypes.array,
   tableClass: PropTypes.string,
@@ -608,7 +636,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -899,6 +927,8 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     if (IteratorPrototype !== Object.prototype && IteratorPrototype.next) {
       // Set @@toStringTag to native iterators
       _setToStringTag(IteratorPrototype, TAG, true);
+      // fix for some old engines
+      if (!_library && typeof IteratorPrototype[ITERATOR] != 'function') _hide(IteratorPrototype, ITERATOR, returnThis);
     }
   }
   // fix Array#{values, @@iterator}.name in V8 / FF
@@ -907,7 +937,7 @@ var _iterDefine = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORC
     $default = function values() { return $native.call(this); };
   }
   // Define iterator
-  if ((FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
+  if ((!_library || FORCED) && (BUGGY || VALUES_BUG || !proto[ITERATOR])) {
     _hide(proto, ITERATOR, $default);
   }
   // Plug for library
@@ -52677,4 +52707,128 @@ EditTable.propTypes = {
   columns: PropTypes.array.isRequired
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel$1 as Panel, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable };
+var __rest = undefined && undefined.__rest || function (s, e) {
+    var t = {};
+    for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+        if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+    }return t;
+};
+function Divider$2(_a) {
+    var _classNames;
+
+    var _a$prefixCls = _a.prefixCls,
+        prefixCls = _a$prefixCls === undefined ? 'ant' : _a$prefixCls,
+        _a$type = _a.type,
+        type = _a$type === undefined ? 'horizontal' : _a$type,
+        _a$orientation = _a.orientation,
+        orientation = _a$orientation === undefined ? '' : _a$orientation,
+        className = _a.className,
+        children = _a.children,
+        dashed = _a.dashed,
+        restProps = __rest(_a, ["prefixCls", "type", "orientation", "className", "children", "dashed"]);
+
+    var orientationPrefix = orientation.length > 0 ? '-' + orientation : orientation;
+    var classString = classnames(className, prefixCls + '-divider', prefixCls + '-divider-' + type, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-divider-with-text' + orientationPrefix, children), _defineProperty$1(_classNames, prefixCls + '-divider-dashed', !!dashed), _classNames));
+    return createElement(
+        'div',
+        _extends$2({ className: classString }, restProps),
+        children && createElement(
+            'span',
+            { className: prefixCls + '-divider-inner-text' },
+            children
+        )
+    );
+}
+
+var Icon$1 = function Icon(props) {
+    var type = props.type,
+        _props$className = props.className,
+        className = _props$className === undefined ? '' : _props$className,
+        spin = props.spin;
+
+    var classString = classnames(_defineProperty$1({
+        anticon: true,
+        'anticon-spin': !!spin || type === 'loading'
+    }, 'anticon-' + type, true), className);
+    return createElement('i', _extends$2({}, omit(props, ['type', 'spin']), { className: classString }));
+};
+
+var up = {
+  transform: 'rotate(180deg)',
+  fontSize: 12,
+  marginLeft: 5,
+  verticalAlign: -1
+};
+var down = {
+  fontSize: 12,
+  marginLeft: 5,
+  verticalAlign: -1
+};
+
+var UpDown = function UpDown(_ref) {
+  var _ref$state = _ref.state,
+      state = _ref$state === void 0 ? 'up' : _ref$state;
+  return React__default.createElement(Icon$1, {
+    type: 'down',
+    className: down,
+    style: state === 'down' ? down : up
+  });
+};
+
+var McFileSet =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(McFileSet, _React$Component);
+
+  function McFileSet() {
+    var _getPrototypeOf2;
+
+    var _this;
+
+    _classCallCheck(this, McFileSet);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(McFileSet)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+      hidden: _this.props.display === undefined ? false : _this.props.display === 'hide'
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "showHideFun", function () {
+      _this.setState({
+        hidden: !_this.state.hidden
+      }, function () {
+        if (_this.props.onChange) {
+          _this.props.onChange(_this.state.hidden ? 'hide' : 'show');
+        }
+      });
+    });
+
+    return _this;
+  }
+
+  _createClass(McFileSet, [{
+    key: "render",
+    value: function render() {
+      return React__default.createElement("div", null, React__default.createElement(Divider$2, {
+        orientation: "left"
+      }, this.props.display === undefined ? this.props.title : React__default.createElement("a", {
+        onClick: this.showHideFun
+      }, this.props.title, React__default.createElement(UpDown, {
+        state: this.state.hidden ? 'up' : 'down'
+      }))), !this.state.hidden && this.props.children);
+    }
+  }]);
+
+  return McFileSet;
+}(React__default.Component);
+McFileSet.defaultProps = {
+  title: '标题'
+};
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel$1 as Panel, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable, McFileSet as FileSet };

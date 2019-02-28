@@ -11,6 +11,14 @@
       {
         "legacy": true
       }
+    ],
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "libraryDirectory": "es",
+        "style": "true"
+      }
     ]
   ],
   "env": {
