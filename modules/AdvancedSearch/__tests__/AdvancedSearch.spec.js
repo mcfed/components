@@ -31,6 +31,18 @@ describe("AdvancedSearchForm shallow render", () => {
     done()
   });
 
+  it("render with one children",(done)=>{
+    const wrapper =shallow(
+      <AdvancedSearchForm keysOption={[{
+        label:"name",
+        value:0
+      }]}>
+        <Input name="callState" label="呼叫类型"  />
+      </AdvancedSearchForm>
+    );
+    expect(wrapper.find('Input[name="callState"]').exists()).toBe(true)
+    done()
+  })
   it("render with childrens",(done)=>{
     const wrapper =shallow(
       <AdvancedSearchForm keysOption={[{

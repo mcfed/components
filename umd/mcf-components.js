@@ -37137,9 +37137,9 @@
         }
 
         if (this.state.expand == false) {
-          renderChildren = children.filter(function (ch, idx) {
+          renderChildren = [].concat(children).filter(function (ch, idx) {
             return idx < 3;
-          }); // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+          });
         } else if (this.props.showConfig) {
           //高级配置后，前三固定 后四配置
           renderChildren = React__default.Children.toArray(children).filter(function (ch, idx) {
