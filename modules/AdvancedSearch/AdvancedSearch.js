@@ -89,8 +89,7 @@ export default class AdvancedSearchForm extends React.Component {
       return (null)
     }
     if(this.state.expand==false ){
-      renderChildren = children.filter((ch,idx)=>idx<3)
-    // }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
+      renderChildren =[].concat(children).filter((ch,idx)=>idx<3)
     }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>{
         //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
