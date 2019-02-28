@@ -6317,7 +6317,7 @@ var types = {
  *  @param options The validation options.
  *  @param options.messages The validation messages.
  */
-function type$1(rule, value, source, errors, options) {
+function type(rule, value, source, errors, options) {
   if (rule.required && value === undefined) {
     required(rule, value, source, errors, options);
     return;
@@ -6442,7 +6442,7 @@ function pattern$1(rule, value, source, errors, options) {
 var rules = {
   required: required,
   whitespace: whitespace,
-  type: type$1,
+  type: type,
   range: range,
   'enum': enumerable,
   pattern: pattern$1
@@ -6772,7 +6772,7 @@ function required$1(rule, value, callback, source, options) {
   callback(errors);
 }
 
-function type$2(rule, value, callback, source, options) {
+function type$1(rule, value, callback, source, options) {
   var ruleType = rule.type;
   var errors = [];
   var validate = rule.required || !rule.required && source.hasOwnProperty(rule.field);
@@ -6801,9 +6801,9 @@ var validators = {
   'enum': enumerable$1,
   pattern: pattern$2,
   date: date,
-  url: type$2,
-  hex: type$2,
-  email: type$2,
+  url: type$1,
+  hex: type$1,
+  email: type$1,
   required: required$1
 };
 
@@ -37204,7 +37204,7 @@ function (_Component) {
         disabledProp = {
           disabled: disabled.apply(this, [formRef])
         };
-      } else if (disabled && type(disabled) === "boolean") {
+      } else if (disabled && typeof disabled === "boolean") {
         disabledProp = {
           disabled: disabled
         };
@@ -37228,7 +37228,8 @@ function (_Component) {
         var _field$props2 = field.props,
             _children = _field$props2.children,
             dislabled = _field$props2.dislabled,
-            _otherProps = _field$props2.otherProps;
+            _otherProps = _field$props2.otherProps,
+            _render = _field$props2.render;
         return React__default.createElement(WrapperDatePicker, Object.assign({}, _otherProps, disabledProp), field);
       } else {
         if (childData.length === 0) {
@@ -51655,7 +51656,7 @@ Panel$1.propTypes = {
   title: PropTypes.string,
   okText: PropTypes.string,
   cancelText: PropTypes.string,
-  footer: PropTypes.oneOfType([PropTypes.bool, PropTypes.element]),
+  footer: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func]),
   confirmLoading: PropTypes.bool,
   loading: PropTypes.bool
 };

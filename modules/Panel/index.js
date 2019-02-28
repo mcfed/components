@@ -75,7 +75,7 @@ Panel.propTypes = {
   title:PropTypes.string,
   okText:PropTypes.string,
   cancelText:PropTypes.string,
-  footer:PropTypes.oneOfType([PropTypes.bool,PropTypes.element]),
+  footer:PropTypes.oneOfType([PropTypes.bool,PropTypes.element,PropTypes.func]),
   confirmLoading:PropTypes.bool,
   loading:PropTypes.bool
 }

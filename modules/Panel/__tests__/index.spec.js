@@ -13,18 +13,43 @@ const setup = (props) => {
   }
 }
 
-describe('Panel 组件是否渲染', () => {
-  const { wrapper, props } = setup({ handleClick: jest.fn()});
+describe('Panel 组件是否渲染 default props', () => {
   // case1
   // 通过查找存在 Input,测试组件正常渲染
   it('Panel Component should be render', () => {
-    //.find(selector) 是 Enzyme shallow Rendering 提供的语法, 用于查找节点
-    // 详细用法见 Enzyme 文档 http://airbnb.io/enzyme/docs/api/shallow.html
-    console.log(wrapper)
-     expect(wrapper.find('.ant-panel-head').exists()).toBe(true);
-    // expect(wrapper.find('Button').length).toBe(3);
-    // expect(toJson(wrapper)).toMatchSnapshot();
+    const { wrapper, props } = setup({});
+     expect(wrapper.find('.ant-panel-head').exists()).toBe(false);
+     expect(wrapper.find('.ant-panel-body').exists()).toBe(true);
+     expect(wrapper.find('.ant-panel-footer').exists()).toBe(true);
   })
+
+  it('Panel Component should be with {title=title} render ',()=>{
+    const { wrapper, props } = setup({title:"title"});
+    expect(wrapper.find('.ant-panel-head').exists()).toBe(true);
+    expect(wrapper.find('.ant-panel-head-title').prop('children')).toBe("title");
+  })
+
+  it('Panel Component should be with {footer=false} render ',()=>{
+    const { wrapper, props } = setup({footer:false});
+    expect(wrapper.find('.ant-panel-footer').exists()).toBe(false);
+  })
+
+  it('Panel Component should be with {footer=()=><button/>} render ',()=>{
+    const { wrapper, props } = setup({footer:()=><button/>});
+    expect(wrapper.find('.ant-panel-footer').exists()).toBe(true);
+    expect(wrapper.find('.ant-panel-footer button').exists()).toBe(true);
+  })
+
+  it('Panel Component should be with {loading=true} render ',()=>{
+    const { wrapper, props } = setup({loading:true});
+    expect(wrapper.find("Spin").prop('spinning')).toBe(true)
+  })
+
+  it('Panel Component should be with {confirmLoading=true} render ',()=>{
+    const { wrapper, props } = setup({confirmLoading:true});
+    expect(wrapper.find('Button[type="primary"]').prop('loading')).toBe(true)
+  })
+
 
 })
 

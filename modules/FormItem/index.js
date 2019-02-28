@@ -99,7 +99,7 @@ export default class FormItem extends Component{
       disabledProp={
         disabled:disabled.apply(this,[formRef])
       }
-    }else if(disabled && type(disabled) ==="boolean"){
+    }else if(disabled && typeof(disabled) ==="boolean"){
       disabledProp={
         disabled:disabled
       }
@@ -117,7 +117,7 @@ export default class FormItem extends Component{
       }
     }
     if(field.type.name==="PickerWrapper"){
-      let {children,dislabled,otherProps}=field.props
+      let {children,dislabled,otherProps,render}=field.props
         return React.createElement(WrapperDatePicker,Object.assign({},otherProps,disabledProp),field)
     }else{
       if(childData.length===0){
