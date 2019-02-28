@@ -46,7 +46,9 @@
 | options | 传送渲染子节点数据 [] | Array  | -  |
 | renderItem | 渲染子节点数据，如Select.Option节点 | function(item) =>ReactNode | - |
 | containerTo | 是否基于parentNode 渲染getPopupContainer:triggerNode => triggerNode.parentNode | Boolean  | true |
-| hidden | hidden后页面不显示，也不做redux store传参值  | Boolean  | false |
+| hidden | hidden后页面不显示  | Boolean  | false |
+| disbled | 禁用表单项，也不做redux store传参值  | Boolean & funciton(form)  | false |
+| render | 不渲染表单项，也不做redux store传参值  | Boolean & funciton(form)  | false |
 | fetch | URL发起xhr请求获取options数据，提供renderItem 渲染节点| string:URL | - |
 
 

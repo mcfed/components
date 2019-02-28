@@ -6028,7 +6028,7 @@
    *  @param options The validation options.
    *  @param options.messages The validation messages.
    */
-  function type(rule, value, source, errors, options) {
+  function type$1(rule, value, source, errors, options) {
     if (rule.required && value === undefined) {
       required(rule, value, source, errors, options);
       return;
@@ -6153,7 +6153,7 @@
   var rules = {
     required: required,
     whitespace: whitespace,
-    type: type,
+    type: type$1,
     range: range,
     'enum': enumerable,
     pattern: pattern$1
@@ -6483,7 +6483,7 @@
     callback(errors);
   }
 
-  function type$1(rule, value, callback, source, options) {
+  function type$2(rule, value, callback, source, options) {
     var ruleType = rule.type;
     var errors = [];
     var validate = rule.required || !rule.required && source.hasOwnProperty(rule.field);
@@ -6512,9 +6512,9 @@
     'enum': enumerable$1,
     pattern: pattern$2,
     date: date,
-    url: type$1,
-    hex: type$1,
-    email: type$1,
+    url: type$2,
+    hex: type$2,
+    email: type$2,
     required: required$1
   };
 
@@ -36776,7 +36776,7 @@
         }
 
         if (field.props.fetch && typeof field.props.fetch === 'string' && field.props.fetch !== this.props.children.props.fetch) {
-          this.fetchData(field.props.fetch, field.props.fetchCallback);
+          this.fetchData(field.props.fetch, {}, field.props.fetchCallback);
         }
       }
     }, {
@@ -36790,7 +36790,7 @@
 
     }, {
       key: "fetchData",
-      value: function fetchData(fetchUrl, params) {
+      value: function fetchData(fetchUrl, params, callback) {
         var _this2 = this;
 
         // let body={}
@@ -36800,9 +36800,15 @@
           return json.json();
         }).then(function (result) {
           if (result.code == 0) {
-            _this2.setState({
-              childData: result.data.items
-            });
+            if (callback) {
+              _this2.setState({
+                childData: callback(result)
+              });
+            } else {
+              _this2.setState({
+                childData: result.data.items
+              });
+            }
           }
         });
       }
@@ -36817,12 +36823,28 @@
 
         var _field$props = field.props,
             defaultValue = _field$props.defaultValue,
-            otherProps = _objectWithoutProperties(_field$props, ["defaultValue"]); // console.log(ReactDOM.findDOMNode(this));
+            render = _field$props.render,
+            disabled = _field$props.disabled,
+            otherProps = _objectWithoutProperties(_field$props, ["defaultValue", "render", "disabled"]); // console.log(ReactDOM.findDOMNode(this));
         // getPopupContainer
 
 
+        var _this$context = this.context,
+            formRef = _this$context.formRef,
+            formLayout = _this$context.formLayout;
         var containerToProp = {};
         var treeDataProp = {};
+        var disabledProp = {};
+
+        if (disabled && typeof disabled === "function") {
+          disabledProp = {
+            disabled: disabled.apply(this, [formRef])
+          };
+        } else if (disabled && type(disabled) === "boolean") {
+          disabledProp = {
+            disabled: disabled
+          };
+        }
 
         if (containerTo && field.type === Select$1 && !field.props.changeCalendarContainer) {
           containerToProp = {
@@ -36841,19 +36863,20 @@
         if (field.type.name === "PickerWrapper") {
           var _field$props2 = field.props,
               _children = _field$props2.children,
+              dislabled = _field$props2.dislabled,
               _otherProps = _field$props2.otherProps;
-          return React__default.createElement(WrapperDatePicker, _otherProps, field);
+          return React__default.createElement(WrapperDatePicker, Object.assign({}, _otherProps, disabledProp), field);
         } else {
           if (childData.length === 0) {
-            return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+            return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp, disabledProp));
           } else if (field.props.renderItem) {
             return React__default.createElement(field.type, Object.assign({
               key: new Date().valueOf()
-            }, otherProps, containerToProp, treeDataProp), childData.map(function (d, idx) {
+            }, otherProps, containerToProp, treeDataProp, disabledProp), childData.map(function (d, idx) {
               return field.props.renderItem && field.props.renderItem(d, idx);
             }));
           } else {
-            return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp));
+            return React__default.createElement(field.type, Object.assign({}, otherProps, containerToProp, treeDataProp, disabledProp));
           }
         }
       }
@@ -36892,12 +36915,17 @@
         var _element$props2 = element.props,
             defaultValue = _element$props2.defaultValue,
             allowClear = _element$props2.allowClear,
-            otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear"]);
+            hidden = _element$props2.hidden,
+            disabled = _element$props2.disabled,
+            render = _element$props2.render,
+            otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear", "hidden", "disabled", "render"]);
 
-        var _this$context = this.context,
-            getFieldDecorator = _this$context.formRef.getFieldDecorator,
-            formLayout = _this$context.formLayout;
+        var _this$context2 = this.context,
+            formRef = _this$context2.formRef,
+            formLayout = _this$context2.formLayout;
+        var getFieldDecorator = formRef.getFieldDecorator;
         var styles = {};
+        var renderProps = true;
 
         if (element.type === Input$1 && element.props.type === "hidden") {
           styles = {
@@ -36913,14 +36941,19 @@
               display: "none"
             }
           };
+        } // console.log(typeof(hiddenProp))
+
+
+        if (render && typeof render === "boolean" && render === false || render && typeof render === "function" && render.apply(this, [formRef]) === false) {
+          renderProps = false;
         }
 
-        return React__default.createElement(Form$1.Item, _extends({
+        return renderProps ? React__default.createElement(Form$1.Item, _extends({
           label: label
-        }, Object.assign({}, {}, formLayout, this.props), styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
+        }, Object.assign({}, formLayout, this.props), styles), getFieldDecorator(name, _objectSpread({}, otherProps, {
           initialValue: defaultValue,
           hidden: element.props.hidden || false
-        }))(this.renderField()));
+        }))(this.renderField())) : null;
       }
     }]);
 
