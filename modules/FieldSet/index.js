@@ -14,7 +14,7 @@ const down = {
 const UpDown = ({state='up'})=>(
   <Icon type={'down'} className={down} style={state === 'down'? down : up}/>
 )
-class McFileSet extends React.Component {
+class FieldSet extends React.Component {
   state = {
     hidden: this.props.display===undefined ? false : this.props.display ==='hide',
   }
@@ -39,8 +39,8 @@ class McFileSet extends React.Component {
     )
   }
 }
-export default McFileSet
+export default FieldSet
 
-McFileSet.defaultProps = {
+FieldSet.defaultProps = {
   title: '标题'
 }

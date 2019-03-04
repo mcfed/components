@@ -4,11 +4,11 @@
 ## Usage
 ```
 
-<McFileSet title='标题' display='show' onChange={this.callBack}>
+<FieldSet title='标题' display='show' onChange={this.callBack}>
       <FormItem>
         <Input placeholder="Username" />
       </FormItem>
-</McFileSet>
+</FieldSet>
 
 ```
 ## Option
