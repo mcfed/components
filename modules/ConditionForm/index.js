@@ -1,5 +1,11 @@
 import { PureComponent } from 'react';
-import { Form, Input, Button, Col, Row, Select, Modal } from 'antd';
+import Form from 'antd/lib/form'
+import Input from 'antd/lib/input'
+import Button from 'antd/lib/button'
+import Col from 'antd/lib/col'
+import Row from 'antd/lib/row'
+import Select from 'antd/lib/select'
+import Modal from 'antd/lib/modal'
 import moment from 'moment';
 import PropTypes from 'prop-types'
 import { downList } from './data'
@@ -330,6 +336,11 @@ class ConditionForm extends PureComponent {
 ConditionForm.propTypes = {
   conditionSelect: PropTypes.array.isRequired, //传入的下拉列表框数组值
   callbackParentSql: PropTypes.func.isRequired, //把textarea输入框的值回传出去的回调方法
+}
+
+ConditionForm.defaultProps = {
+  conditionSelect: [],
+  callbackParentSql: function () {},
 }
 
 export default ConditionForm

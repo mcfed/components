@@ -1,4 +1,4 @@
-import React__default, { Component, cloneElement, Children, createElement } from 'react';
+import React__default, { Component, cloneElement, Children, PureComponent, createElement } from 'react';
 import PropTypes from 'prop-types';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default, { findDOMNode, createPortal } from 'react-dom';
@@ -52831,4 +52831,416 @@ FieldSet.defaultProps = {
   title: '标题'
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel$1 as Panel, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable, FieldSet };
+var downList = [{
+  label: '应用程序名',
+  value: ['IMP', 'EXP', 'DBLINK', 'JOB', 'PLSQLDEV', 'SQL DEVELOPER', 'TOAD', 'SQLPLUS']
+}, {
+  label: '执行结果',
+  value: ['成功', '失败']
+}, {
+  label: '时间域',
+  value: ['周末', '工作日非工作时间', '工作日']
+}, {
+  label: '审计级别',
+  value: ['高', '中', '低']
+}, {
+  label: '数据库类型',
+  value: ['Oracle', 'MySQL', 'SQL Server', 'DB2', 'Sybase', 'PostgreSQL', 'Hive', 'DaMeng', 'KingBase', 'Informix', 'Mariadb', 'GBase', 'GBase 8s 8.3']
+}];
+
+var TextArea$1 = Input$1.TextArea;
+var FormItem$3 = Form$1.Item;
+
+var ConditionForm =
+/*#__PURE__*/
+function (_PureComponent) {
+  _inherits(ConditionForm, _PureComponent);
+
+  function ConditionForm(props) {
+    var _this;
+
+    _classCallCheck(this, ConditionForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ConditionForm).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "state", {
+      conditionSelect: [],
+      selection: [],
+      isfirstSVList: false,
+      isMulti: false,
+      isShowSec: false,
+      isShowfirstSV: true
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "factorHandleChange", function (value) {
+      var setFieldsValue = _this.props.form.setFieldsValue;
+      var conditionSelect$$1 = _this.state.conditionSelect;
+
+      _this.setState({
+        isfirstSVList: false,
+        isShowSec: false
+      });
+
+      setFieldsValue({
+        'condition-selection': undefined,
+        'value-selection': undefined
+      }); //通过value反查对应的factorOperate
+
+      function getOperateByFac(value) {
+        for (var i = 0; i < conditionSelect$$1.length; i++) {
+          if (conditionSelect$$1[i].value == value) return conditionSelect$$1[i].factorOperate;
+        }
+
+        return '';
+      }
+
+      for (var i = 0; i < downList.length; i++) {
+        if (value == downList[i].label) {
+          _this.setState({
+            isfirstSVList: true,
+            firstSVList: downList[i].value.map(function (v, index) {
+              return React.createElement(Select$1.Option, {
+                key: index,
+                value: v
+              }, v);
+            })
+          });
+
+          break;
+        }
+      }
+
+      setFieldsValue({
+        'factorLabel': "$".concat(value)
+      });
+
+      _this.setState({
+        selection: getOperateByFac(value).split(',')
+      });
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "selectionHandleChange", function (value) {
+      var _this$props$form = _this.props.form,
+          setFieldsValue = _this$props$form.setFieldsValue,
+          getFieldValue = _this$props$form.getFieldValue;
+      setFieldsValue({
+        'condition-selection': "".concat(value)
+      });
+      var cs = getFieldValue('condition-selection');
+
+      if (cs == 'between') {
+        _this.setState({
+          isShowSec: true
+        });
+      } else {
+        _this.setState({
+          isShowSec: false
+        });
+      }
+
+      if (cs == 'is not null' || cs == 'is null') {
+        _this.setState({
+          isShowfirstSV: false
+        });
+
+        setFieldsValue({
+          'value-selection': undefined
+        });
+      } else {
+        _this.setState({
+          isShowfirstSV: true
+        });
+      } //三级下拉框多选
+
+
+      var cf = getFieldValue('condition-factor');
+      var cfMultArr = ['应用程序名', '执行结果', '时间域', '审计级别', '数据库类型']; //, '服务端IP',  '物理地址', '主机名'
+
+      if (cfMultArr.includes(cf) && (cs === 'in' || cs === 'not in')) {
+        _this.setState({
+          isMulti: true
+        }, setFieldsValue({
+          'value-selection': undefined
+        }));
+      } else {
+        _this.setState({
+          isMulti: false
+        }, setFieldsValue({
+          'value-selection': undefined
+        }));
+      }
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "addSql", function () {
+      var _this$props$form2 = _this.props.form,
+          getFieldValue = _this$props$form2.getFieldValue,
+          setFieldsValue = _this$props$form2.setFieldsValue;
+      var isShowfirstSV = _this.state.isShowfirstSV;
+      var cs = getFieldValue('condition-selection');
+      var vs = getFieldValue('value-selection');
+      var ao = getFieldValue('and-or');
+      var sqlTextarea = getFieldValue('sql-textarea');
+      var vs2 = getFieldValue('value-selection2'); //如果in 或not in要加括号 , 如果是空就空
+
+      var inSql = ''; //in 的情况要对每个逗号给出单引号
+
+      var isBrack = '';
+
+      if (!isShowfirstSV) ; else {
+        if (vs == '' || vs == undefined) {
+          Modal$1.error({
+            title: '系统提示',
+            okText: '确定',
+            content: "\u8BF7\u5C06\u6761\u4EF6\u586B\u5199\u5B8C\u6574\uFF01"
+          });
+          return;
+        }
+
+        if (!(vs instanceof Array) && vs != '' && vs != undefined) //下拉框选择就是数组, 否则就是输入框逗号隔开
+          vs = vs.split(',');
+        if (vs instanceof Array && vs.toString().includes(',')) //输入框本来用enter隔开, 现在需要用逗号隔开
+          vs = vs.toString().split(',');
+        console.log('vs', vs, cs, ao, "".concat(getFieldValue('factorLabel')), _this.validTime(vs[0]));
+        inSql = vs.length > 1 ? vs.reduce(function (ac, cv, ci) {
+          if (ci == 1) return "'".concat(ac, "','").concat(cv, "'");
+          return "".concat(ac, ",'").concat(cv, "'");
+        }) : "'".concat(vs, "'");
+        isBrack = cs == 'in' || cs == 'not in' ? "(".concat(inSql, ")") : vs == "" ? "" : "'".concat(vs, "'");
+      }
+
+      var vs2Sql = vs2 ? " and '".concat(vs2, "'") : "";
+
+      if (getFieldValue('factorLabel') == '$登录时间' || getFieldValue('factorLabel') == '$退出时间') {
+        if (!_this.validTime(vs[0]) || !_this.validTime(vs2) && cs == 'between') {
+          Modal$1.error({
+            title: '系统提示',
+            okText: '确定',
+            content: "\u65F6\u95F4\u683C\u5F0F\u4E0D\u6B63\u786E"
+          });
+          return;
+        }
+      }
+
+      if (getFieldValue('factorLabel') == '$返回/影响行数') {
+        if (!_this.validAllNaturalNum(vs[0]) || vs[0] > 2147483648 || vs[0] < -2147483648) {
+          Modal$1.error({
+            title: '系统提示',
+            okText: '确定',
+            content: "\u8F93\u5165\u7684\u8FD4\u56DE\uFF0F\u5F71\u54CD\u884C\u6570\u8D85\u51FA\u53D6\u503C\u8303\u56F4\u3002"
+          });
+          return;
+        }
+
+        if ((!_this.validAllNaturalNum(vs2) || vs2 > 2147483648 || vs2 < -2147483648) && cs == 'between') {
+          Modal$1.error({
+            title: '系统提示',
+            okText: '确定',
+            content: "\u8F93\u5165\u7684\u8FD4\u56DE\uFF0F\u5F71\u54CD\u884C\u6570\u8D85\u51FA\u53D6\u503C\u8303\u56F4\u3002"
+          });
+          return;
+        }
+      }
+
+      var sql = "\"".concat(getFieldValue('factorLabel'), "\" ").concat(cs, " ").concat(isBrack).concat(vs2Sql);
+
+      if (sql.includes('undefined')) {
+        Modal$1.error({
+          title: '系统提示',
+          okText: '确定',
+          content: "\u8BF7\u5C06\u6761\u4EF6\u586B\u5199\u5B8C\u6574\uFF01"
+        });
+        return;
+      }
+
+      var nextV = !sqlTextarea ? sql : sqlTextarea + " ".concat(ao, " ").concat(sql);
+      nextV = _this.convertValue(nextV);
+      setFieldsValue({
+        //and 或or 追加sqltest
+        'sql-textarea': nextV
+      });
+
+      _this.props.callbackParentSql(nextV);
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "convertValue", function (v) {
+      v = v.replace('成功', '0');
+      v = v.replace('失败', '1');
+      v = v.replace('高', '3');
+      v = v.replace('中', '2');
+      v = v.replace('低', '1');
+      return v;
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onTextChange", function (v) {
+      _this.setState({
+        sql: v
+      });
+
+      _this.props.callbackParentSql(v);
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "validTime", function (str) {
+      var regDate = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1} ([0-2][0-9]):([0-5][0-9]):([0-5][0-9])$/;
+      return regDate.test(str);
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "validAllNaturalNum", function (str) {
+      var re = /^-?[0-9]*$/; //判断字符串是否为正整数
+
+      if (!re.test(str)) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+
+    return _this;
+  }
+
+  _createClass(ConditionForm, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var conditionSelect$$1 = this.props.conditionSelect;
+      this.setState({
+        conditionSelect: conditionSelect$$1
+      });
+      console.log('conditionSelect', conditionSelect$$1);
+    }
+  }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+      //console.log('nextProps', nextProps)
+      this.setState({
+        conditionSelect: nextProps.conditionSelect
+      });
+    } //条件因子 下拉框点击事件
+
+  }, {
+    key: "render",
+    value: function render() {
+      var _this2 = this;
+
+      var getFieldDecorator = this.props.form.getFieldDecorator;
+      var _this$state = this.state,
+          conditionSelect$$1 = _this$state.conditionSelect,
+          selection = _this$state.selection,
+          isfirstSVList = _this$state.isfirstSVList,
+          firstSVList = _this$state.firstSVList,
+          isMulti = _this$state.isMulti,
+          isShowSec = _this$state.isShowSec,
+          isShowfirstSV = _this$state.isShowfirstSV; //console.log('conditionSelect', conditionSelect)
+      var conditionRender = conditionSelect$$1.map(function (v, i) {
+        return React.createElement(Select$1.Option, {
+          key: i,
+          value: v.value
+        }, v.label);
+      });
+      var selectionRender = selection.map(function (v, i) {
+        return React.createElement(Select$1.Option, {
+          key: i,
+          value: v
+        }, v);
+      });
+      var formItemLayout = {
+        labelCol: {
+          xs: {
+            span: 24
+          },
+          sm: {
+            span: 8
+          }
+        },
+        wrapperCol: {
+          xs: {
+            span: 24
+          },
+          sm: {
+            span: 12
+          }
+        }
+      };
+      return React.createElement("div", null, React.createElement(Row, {
+        gutter: 12
+      }, React.createElement(Col, {
+        md: 6
+      }, React.createElement(FormItem$3, _extends({}, formItemLayout, {
+        label: "\u6761\u4EF6\u56E0\u5B50"
+      }), getFieldDecorator('condition-factor')(React.createElement(Select$1, {
+        placeholder: "\u8BF7\u9009\u62E9",
+        onChange: this.factorHandleChange
+      }, conditionRender)))), React.createElement(Col, {
+        md: 3
+      }, getFieldDecorator('factorLabel')(React.createElement(Input$1, {
+        placeholder: "",
+        disabled: true
+      }))), React.createElement(Col, {
+        md: 3
+      }, React.createElement(FormItem$3, _extends({}, formItemLayout, {
+        label: ""
+      }), getFieldDecorator('condition-selection')(React.createElement(Select$1, {
+        placeholder: "\u8BF7\u9009\u62E9",
+        onChange: this.selectionHandleChange
+      }, selectionRender)))), isShowfirstSV ? React.createElement(Col, {
+        md: 3
+      }, getFieldDecorator('value-selection')(isfirstSVList ? React.createElement(Select$1, {
+        mode: isMulti ? "tags" : "combobox",
+        key: isMulti ? "tags" : "combobox",
+        placeholder: "\u8BF7\u9009\u62E9",
+        style: {
+          width: '100%',
+          marginRight: 5
+        }
+      }, firstSVList) : React.createElement(Input$1, {
+        placeholder: "\u8BF7\u8F93\u5165"
+      }))) : '', isShowSec ? React.createElement(Col, {
+        md: 4
+      }, React.createElement(FormItem$3, _extends({}, formItemLayout, {
+        label: "AND",
+        colon: false
+      }), getFieldDecorator('value-selection2')(React.createElement(Input$1, {
+        placeholder: "\u8BF7\u8F93\u5165"
+      })))) : '', React.createElement(Col, {
+        md: 5
+      }, getFieldDecorator('and-or', {
+        initialValue: 'AND'
+      })(React.createElement(Select$1, {
+        style: {
+          width: 80,
+          marginRight: 10
+        }
+      }, React.createElement(Select$1.Option, {
+        key: "and",
+        value: "AND"
+      }, "AND"), React.createElement(Select$1.Option, {
+        key: "or",
+        value: "OR"
+      }, "OR"))), React.createElement(Button, {
+        type: "primary",
+        onClick: this.addSql
+      }, "\u6DFB\u52A0"))), React.createElement(Row, null, React.createElement(Col, {
+        md: 18
+      }, getFieldDecorator('sql-textarea', {
+        onChange: function onChange(e) {
+          return _this2.onTextChange(e.target.value);
+        }
+      })(React.createElement(TextArea$1, {
+        rows: 4
+      })))));
+    }
+  }]);
+
+  return ConditionForm;
+}(PureComponent);
+
+ConditionForm.propTypes = {
+  conditionSelect: PropTypes.array.isRequired,
+  //传入的下拉列表框数组值
+  callbackParentSql: PropTypes.func.isRequired //把textarea输入框的值回传出去的回调方法
+
+};
+ConditionForm.defaultProps = {
+  conditionSelect: [],
+  callbackParentSql: function callbackParentSql() {}
+};
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel$1 as Panel, ModalAndView, TreeView, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm };
