@@ -36940,9 +36940,9 @@
 
         var _field$props = field.props,
             defaultValue = _field$props.defaultValue,
-            render = _field$props.render,
+            renderable = _field$props.renderable,
             disabled = _field$props.disabled,
-            otherProps = _objectWithoutProperties(_field$props, ["defaultValue", "render", "disabled"]); // console.log(ReactDOM.findDOMNode(this));
+            otherProps = _objectWithoutProperties(_field$props, ["defaultValue", "renderable", "disabled"]); // console.log(ReactDOM.findDOMNode(this));
         // getPopupContainer
 
 
@@ -36982,7 +36982,7 @@
               _children = _field$props2.children,
               dislabled = _field$props2.dislabled,
               _otherProps = _field$props2.otherProps,
-              _render = _field$props2.render;
+              _renderable = _field$props2.renderable;
           return React$1__default.createElement(WrapperDatePicker, Object.assign({}, _otherProps, disabledProp), field);
         } else {
           if (childData.length === 0) {
@@ -37035,8 +37035,8 @@
             allowClear = _element$props2.allowClear,
             hidden = _element$props2.hidden,
             disabled = _element$props2.disabled,
-            render = _element$props2.render,
-            otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear", "hidden", "disabled", "render"]);
+            renderable = _element$props2.renderable,
+            otherProps = _objectWithoutProperties(_element$props2, ["defaultValue", "allowClear", "hidden", "disabled", "renderable"]);
 
         var _this$context2 = this.context,
             formRef = _this$context2.formRef,
@@ -37062,7 +37062,7 @@
         } // console.log(typeof(hiddenProp))
 
 
-        if (render && typeof render === "boolean" && render === false || render && typeof render === "function" && render.apply(this, [formRef]) === false) {
+        if (renderable && typeof renderable === "boolean" && renderable === false || renderable && typeof renderable === "function" && renderable.apply(this, [formRef]) === false) {
           renderProps = false;
         }
 
@@ -52498,7 +52498,35 @@
     columns: PropTypes.array.isRequired
   };
 
-  var __rest = undefined && undefined.__rest || function (s, e) {
+  var divider = createCommonjsModule(function (module, exports) {
+
+  Object.defineProperty(exports, "__esModule", {
+      value: true
+  });
+
+
+
+  var _extends3 = _interopRequireDefault(_extends$1);
+
+
+
+  var _defineProperty3 = _interopRequireDefault(defineProperty$3);
+
+  exports['default'] = Divider;
+
+
+
+  var React = _interopRequireWildcard(React$1__default);
+
+
+
+  var _classnames2 = _interopRequireDefault(classnames);
+
+  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+  var __rest = function (s, e) {
       var t = {};
       for (var p in s) {
           if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -52506,7 +52534,7 @@
           if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
       }return t;
   };
-  function Divider$2(_a) {
+  function Divider(_a) {
       var _classNames;
 
       var _a$prefixCls = _a.prefixCls,
@@ -52521,30 +52549,21 @@
           restProps = __rest(_a, ["prefixCls", "type", "orientation", "className", "children", "dashed"]);
 
       var orientationPrefix = orientation.length > 0 ? '-' + orientation : orientation;
-      var classString = classnames(className, prefixCls + '-divider', prefixCls + '-divider-' + type, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-divider-with-text' + orientationPrefix, children), _defineProperty$1(_classNames, prefixCls + '-divider-dashed', !!dashed), _classNames));
-      return React$1.createElement(
+      var classString = (0, _classnames2['default'])(className, prefixCls + '-divider', prefixCls + '-divider-' + type, (_classNames = {}, (0, _defineProperty3['default'])(_classNames, prefixCls + '-divider-with-text' + orientationPrefix, children), (0, _defineProperty3['default'])(_classNames, prefixCls + '-divider-dashed', !!dashed), _classNames));
+      return React.createElement(
           'div',
-          _extends$2({ className: classString }, restProps),
-          children && React$1.createElement(
+          (0, _extends3['default'])({ className: classString }, restProps),
+          children && React.createElement(
               'span',
               { className: prefixCls + '-divider-inner-text' },
               children
           )
       );
   }
+  module.exports = exports['default'];
+  });
 
-  var Icon$1 = function Icon(props) {
-      var type = props.type,
-          _props$className = props.className,
-          className = _props$className === undefined ? '' : _props$className,
-          spin = props.spin;
-
-      var classString = classnames(_defineProperty$1({
-          anticon: true,
-          'anticon-spin': !!spin || type === 'loading'
-      }, 'anticon-' + type, true), className);
-      return React$1.createElement('i', _extends$2({}, omit(props, ['type', 'spin']), { className: classString }));
-  };
+  var Divider$2 = unwrapExports(divider);
 
   var up = {
     transform: 'rotate(180deg)',
@@ -52561,7 +52580,7 @@
   var UpDown = function UpDown(_ref) {
     var _ref$state = _ref.state,
         state = _ref$state === void 0 ? 'up' : _ref$state;
-    return React$1__default.createElement(Icon$1, {
+    return React$1__default.createElement(Icon, {
       type: 'down',
       className: down,
       style: state === 'down' ? down : up

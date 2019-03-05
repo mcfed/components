@@ -1,7 +1,9 @@
 
-import React from 'react';
-import {shallow,mount,render} from 'enzyme';
-import {Input,Select,DatePicker} from 'antd';
+import React from 'react'
+import {shallow,mount,render} from 'enzyme'
+import Input from 'antd/lib/input'
+import Select from 'antd/lib/select'
+import DatePicker from 'antd/lib/date-picker'
 import FormItem from '../index'
 
 const Option=Select.Option;
@@ -104,26 +106,26 @@ describe('FormItem Element 属性测试', () => {
     done()
   })
 
-  it('render 属性 boolean {true}',(done)=>{
-    const { wrapper, props } = setup(<Input render={true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+  it('renderable 属性 boolean {true}',(done)=>{
+    const { wrapper, props } = setup(<Input renderable={true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
     let element=wrapper.find("Input")
     expect(element.exists()).toBe(true)
     done()
   })
 
-  it.skip('render 属性 boolean {false}',(done)=>{
-    const { wrapper, props } = setup(<Input render={false} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+  it.skip('renderable 属性 boolean {false}',(done)=>{
+    const { wrapper, props } = setup(<Input renderable={false} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
     let element=wrapper.find("Input")
-    // expect(element.prop('render')).toBe(false)
+    // expect(element.prop('renderable')).toBe(false)
     // expect(element.exists()).toBe(false)
     done()
   })
 
-  it.skip('render 属性 function {false}',(done)=>{
-    const { wrapper, props } = setup(<Input render={(form)=>true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
+  it.skip('renderable 属性 function {false}',(done)=>{
+    const { wrapper, props } = setup(<Input renderable={(form)=>true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
     let element=wrapper.find("Input")
     // console.log(wrapper.prop("children"))
-    // expect(element.prop('render')).toBe(false)
+    // expect(element.prop('renderable')).toBe(false)
     // expect(element.exists()).toBe(false)
     done()
   })
