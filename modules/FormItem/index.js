@@ -87,7 +87,7 @@ export default class FormItem extends Component{
     let {children,containerTo} = this.props
     let {childData} = this.state;
     let field=children;
-    let {defaultValue,render,disabled,...otherProps}= field.props
+    let {defaultValue,renderable,disabled,...otherProps}= field.props
     // console.log(ReactDOM.findDOMNode(this));
     // getPopupContainer
     let {formRef,formLayout}= this.context
@@ -117,7 +117,7 @@ export default class FormItem extends Component{
       }
     }
     if(field.type.name==="PickerWrapper"){
-      let {children,dislabled,otherProps,render}=field.props
+      let {children,dislabled,otherProps,renderable}=field.props
         return React.createElement(WrapperDatePicker,Object.assign({},otherProps,disabledProp),field)
     }else{
       if(childData.length===0){
@@ -141,7 +141,7 @@ export default class FormItem extends Component{
   render(){
     let element=this.props.children
     let {name,label,format} = element.props
-    let {defaultValue,allowClear,hidden,disabled,render,...otherProps} =element.props
+    let {defaultValue,allowClear,hidden,disabled,renderable,...otherProps} =element.props
     let {formRef,formLayout}= this.context
     const {getFieldDecorator} = formRef
     let styles={}
@@ -158,8 +158,8 @@ export default class FormItem extends Component{
       }
     }
       // console.log(typeof(hiddenProp))
-    if((render && typeof(render)==="boolean" && render===false) ||
-        (render && typeof(render)==="function" && render.apply(this,[formRef])===false)){
+    if((renderable && typeof(renderable)==="boolean" && renderable===false) ||
+        (renderable && typeof(renderable)==="function" && renderable.apply(this,[formRef])===false)){
           renderProps=false
     }
     return renderProps?(<Form.Item label={label} {...Object.assign({},formLayout,this.props)} {...styles}>
