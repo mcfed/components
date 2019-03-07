@@ -12,6 +12,7 @@ export Panel from './Panel'
 export ModalAndView from './ModalAndView'
 //import SmartLink from './SmartLink'
 export TreeView from './TreeView'
+export TabsPanel from './TabsPanel'
 export PropertyTable from './PropertyTable'
 
 export EditTable from './EditTable'

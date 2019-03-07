@@ -8,7 +8,7 @@
   renderSearchFrom(){
     return (
     <ButtonGroups handleClick={action('button-click')}>
-      <Button actionkey="editAction" tooltext="编辑别乱点">编辑</Button>
+      <Button actionkey="editAction" tip="编辑别乱点">编辑</Button>
       <Button actionkey="deleteAction" confirm="是否确认删除？">删除</Button>
       <Button actionkey="disableAction" disabled>禁用</Button>
     </ButtonGroups >
