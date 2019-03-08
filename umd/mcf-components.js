@@ -37062,7 +37062,7 @@
         } // console.log(typeof(hiddenProp))
 
 
-        if (renderable && typeof renderable === "boolean" && renderable === false || renderable && typeof renderable === "function" && renderable.apply(this, [formRef]) === false) {
+        if (typeof renderable === "boolean" && renderable === false || typeof renderable === "function" && renderable.apply(this, [formRef]) === false) {
           renderProps = false;
         }
 

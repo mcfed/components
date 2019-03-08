@@ -158,8 +158,8 @@ export default class FormItem extends Component{
       }
     }
       // console.log(typeof(hiddenProp))
-    if((renderable && typeof(renderable)==="boolean" && renderable===false) ||
-        (renderable && typeof(renderable)==="function" && renderable.apply(this,[formRef])===false)){
+    if(( typeof(renderable)==="boolean" && renderable===false) ||
+        ( typeof(renderable)==="function" && renderable.apply(this,[formRef])===false)){
           renderProps=false
     }
     return renderProps?(<Form.Item label={label} {...Object.assign({},formLayout,this.props)} {...styles}>
