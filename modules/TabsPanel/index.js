@@ -1,5 +1,6 @@
 import React,{PureComponent} from 'react'
-import Panel from '../Panel'
+import PropTypes from 'prop-types'
+// import Panel from '../Panel'
 import Tabs from 'antd/lib/tabs'
 
 const TabPane = Tabs.TabPane;
@@ -19,13 +20,12 @@ export default class TabsPanel extends PureComponent{
     return str
   }
   onChange(activeKey){
-    const {history,match:{path,params}} = this.props
-    history.push(this.stringifyURL(path,Object.assign({},params,{type:activeKey})))
+    const {history,match:{path,params},paramName} = this.props
+    history.push(this.stringifyURL(path,Object.assign({},params,{[paramName]:activeKey})))
   }
   renderModule(child){
     const {children,...otherProps} = this.props
     const childProps = child.props
-    // console.log(childProps.children)
     return React.createElement(TabPane, {tab:childProps.title,key:childProps.path},
       typeof(childProps.children)==="function"?React.createElement(childProps.children,otherProps):React.cloneElement(childProps.children,otherProps)
     )
@@ -36,13 +36,24 @@ export default class TabsPanel extends PureComponent{
   }
 
   render(){
-    const {match:{params},defaultPath}= this.props
+    const {match:{params},defaultPath,paramName}= this.props
+    // console.log(params[paramName],Object.assign({},params,{[paramName]:1}))
     return(
-      <Panel >
-        <Tabs activeKey={params.type || defaultPath} animated={false} onChange={this.onChange.bind(this)}>
-          {this.renderPanes()}
-        </Tabs>
-      </Panel>
+      <Tabs activeKey={params[paramName] || defaultPath} animated={false} onChange={this.onChange.bind(this)}>
+        {this.renderPanes()}
+      </Tabs>
     )
   }
+}
+
+
+TabsPanel.propTypes = {
+  paramName:PropTypes.string,
+  defaultPath:PropTypes.string,
+  history:PropTypes.object
+}
+
+TabsPanel.defaultProps = {
+	paramName:'type',
+  defaultPath:undefined
 }
