@@ -1,13 +1,13 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react'), require('prop-types'), require('react-dom'), require('moment')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'react', 'prop-types', 'react-dom', 'moment'], factory) :
-  (factory((global.components = {}),global.React,global.PropTypes,global.ReactDOM,global.moment));
-}(this, (function (exports,React$1,PropTypes,ReactDOM,moment) { 'use strict';
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('react-dom'), require('react'), require('moment'), require('prop-types')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'react-dom', 'react', 'moment', 'prop-types'], factory) :
+  (factory((global.components = {}),global.ReactDOM,global.React,global.moment,global.PropTypes));
+}(this, (function (exports,ReactDOM,React$1,moment,PropTypes) { 'use strict';
 
-  var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
-  PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
   var ReactDOM__default = 'default' in ReactDOM ? ReactDOM['default'] : ReactDOM;
+  var React$1__default = 'default' in React$1 ? React$1['default'] : React$1;
   moment = moment && moment.hasOwnProperty('default') ? moment['default'] : moment;
+  PropTypes = PropTypes && PropTypes.hasOwnProperty('default') ? PropTypes['default'] : PropTypes;
 
   function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
@@ -51324,15 +51324,17 @@
           // if(true){
           newColumns = columns.filter(function (col) {
             return col.visible == true || col.visible == undefined; // return true
-          }).concat([{
-            title: " ",
-            filterDropdown: this.renderTableMenu(),
-            filterDropdownVisible: visible,
-            onFilterDropdownVisibleChange: this.onPopupVisibleChange.bind(this),
-            width: 30,
-            fixed: 'right',
-            type: 'config'
-          }]);
+          }); // .concat([{
+          //     title:" ",
+          //     filterDropdown:(
+          //       this.renderTableMenu()
+          //     ),
+          //     filterDropdownVisible:visible,
+          //     onFilterDropdownVisibleChange:this.onPopupVisibleChange.bind(this),
+          //     width:30,
+          //     fixed:'right',
+          //     type:'config'
+          // }])
         } else {
           newColumns = columns;
         } //console.log(newColumns,columns)

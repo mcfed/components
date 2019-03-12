@@ -178,17 +178,18 @@ class DataTable extends Component{
       newColumns =columns.filter((col)=>{
          return col.visible==true || col.visible==undefined
          // return true
-      }).concat([{
-          title:" ",
-          filterDropdown:(
-            this.renderTableMenu()
-          ),
-          filterDropdownVisible:visible,
-          onFilterDropdownVisibleChange:this.onPopupVisibleChange.bind(this),
-          width:30,
-          fixed:'right',
-          type:'config'
-      }])
+      })
+      // .concat([{
+      //     title:" ",
+      //     filterDropdown:(
+      //       this.renderTableMenu()
+      //     ),
+      //     filterDropdownVisible:visible,
+      //     onFilterDropdownVisibleChange:this.onPopupVisibleChange.bind(this),
+      //     width:30,
+      //     fixed:'right',
+      //     type:'config'
+      // }])
     }else{
       newColumns=columns
     }

@@ -1,8 +1,8 @@
-import React__default, { Component, cloneElement, Children, PureComponent, createElement } from 'react';
-import PropTypes from 'prop-types';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default, { findDOMNode, createPortal } from 'react-dom';
+import React__default, { Component, cloneElement, Children, PureComponent, createElement } from 'react';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -636,7 +636,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -51541,15 +51541,17 @@ function (_Component2) {
         // if(true){
         newColumns = columns.filter(function (col) {
           return col.visible == true || col.visible == undefined; // return true
-        }).concat([{
-          title: " ",
-          filterDropdown: this.renderTableMenu(),
-          filterDropdownVisible: visible,
-          onFilterDropdownVisibleChange: this.onPopupVisibleChange.bind(this),
-          width: 30,
-          fixed: 'right',
-          type: 'config'
-        }]);
+        }); // .concat([{
+        //     title:" ",
+        //     filterDropdown:(
+        //       this.renderTableMenu()
+        //     ),
+        //     filterDropdownVisible:visible,
+        //     onFilterDropdownVisibleChange:this.onPopupVisibleChange.bind(this),
+        //     width:30,
+        //     fixed:'right',
+        //     type:'config'
+        // }])
       } else {
         newColumns = columns;
       } //console.log(newColumns,columns)
