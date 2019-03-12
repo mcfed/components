@@ -5,23 +5,29 @@
 ```html
   import {TabsPanel,Panel} from 'mcf-components'
 
-  renderSearchFrom(){
+  function swtchTabsPanel(props){
     return (
-    <TabsPanel {...props}>
-     <Panel title="身份授权" path="identityAuth">
-       {
-        registerModule(import("./identityAuth"))
-       }
-     </Panel>
-     <Panel title="资产授权" path="assetAuth">
-       { registerModule(import("./assetAuth"))}
-     </Panel>
-     <Panel title="assetMember" path="assetMember">
-       { registerModule(import("./assetMember"))}
-     </Panel>
-    </TabsPanel>
+      <TabsPanel {...props}>
+       <Panel title="身份授权" path="identityAuth">
+         {
+          registerModule(import("./identityAuth"))
+         }
+       </Panel>
+       <Panel title="资产授权" path="assetAuth">
+         { registerModule(import("./assetAuth"))}
+       </Panel>
+       <Panel title="assetMember" path="assetMember">
+         { registerModule(import("./assetMember"))}
+       </Panel>
+       <Panel title="asset" path="assetMember">
+          <div>111</div>
+       </Panel>
+      </TabsPanel>
     )
   }
+
+  //router config
+  <Route path="/switch/:moduleType" component={swtchTabsPanel}/>
 ```
 
 
@@ -32,3 +38,4 @@
 | history | history 对象 | object | undefined | [x]|
 | match | 上级路由match对象 | object | undefined | [x] |
 | children |  节面页组件 | ReactNode | Panel | [x] |
+| paramName |  路由参数名称 | string | type | [] |

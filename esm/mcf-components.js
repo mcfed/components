@@ -53634,10 +53634,9 @@ function (_PureComponent) {
           history = _this$props.history,
           _this$props$match = _this$props.match,
           path = _this$props$match.path,
-          params = _this$props$match.params;
-      history.push(this.stringifyURL(path, Object.assign({}, params, {
-        type: activeKey
-      })));
+          params = _this$props$match.params,
+          paramName = _this$props.paramName;
+      history.push(this.stringifyURL(path, Object.assign({}, params, _defineProperty({}, paramName, activeKey))));
     }
   }, {
     key: "renderModule",
@@ -53646,8 +53645,7 @@ function (_PureComponent) {
           children = _this$props2.children,
           otherProps = _objectWithoutProperties(_this$props2, ["children"]);
 
-      var childProps = child.props; // console.log(childProps.children)
-
+      var childProps = child.props;
       return React__default.createElement(TabPane$1, {
         tab: childProps.title,
         key: childProps.path
@@ -53668,17 +53666,28 @@ function (_PureComponent) {
     value: function render() {
       var _this$props3 = this.props,
           params = _this$props3.match.params,
-          defaultPath = _this$props3.defaultPath;
-      return React__default.createElement(Panel$1, null, React__default.createElement(Tabs$1, {
-        activeKey: params.type || defaultPath,
+          defaultPath = _this$props3.defaultPath,
+          paramName = _this$props3.paramName; // console.log(params[paramName],Object.assign({},params,{[paramName]:1}))
+
+      return React__default.createElement(Tabs$1, {
+        activeKey: params[paramName] || defaultPath,
         animated: false,
         onChange: this.onChange.bind(this)
-      }, this.renderPanes()));
+      }, this.renderPanes());
     }
   }]);
 
   return TabsPanel;
 }(PureComponent);
+TabsPanel.propTypes = {
+  paramName: PropTypes.string,
+  defaultPath: PropTypes.string,
+  history: PropTypes.object
+};
+TabsPanel.defaultProps = {
+  paramName: 'type',
+  defaultPath: undefined
+};
 
 var PropertyTable =
 /*#__PURE__*/
