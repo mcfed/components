@@ -1,6 +1,6 @@
 {
   "name": "mcf-components",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "@mcf for crud",
   "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",

@@ -1,11 +1,6 @@
 import React from 'react'
 import propTypes from 'prop-types'
-import Table from 'antd/lib/table'
-import Form from 'antd/lib/form'
-import Popconfirm from 'antd/lib/popconfirm'
-import Button from 'antd/lib/button'
-import message from 'antd/lib/message'
-// import { Table, Popconfirm, Form, Button, message } from 'antd'
+import { Table, Popconfirm, Form, Button, message } from 'antd'
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
@@ -55,7 +50,7 @@ class EditableCell extends React.Component {
 class EditTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       data: [],
       editingKey: '',
       keyList: [],

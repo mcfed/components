@@ -1,11 +1,6 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import Button from 'antd/lib/button'
-import Icon from 'antd/lib/icon'
-import Tooltip from 'antd/lib/tooltip'
-import Menu from 'antd/lib/menu'
-import Dropdown from 'antd/lib/dropdown'
-import Modal from 'antd/lib/modal'
+import {Button,Icon,Tooltip,Menu,Dropdown,Modal} from 'antd'
 import './index.less'
 // import {hasPermission} from 'app/utils/ConfigUtils'
 

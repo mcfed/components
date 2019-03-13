@@ -1,7 +1,6 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import Button from 'antd/lib/button'
-import Spin from 'antd/lib/spin'
+import {Button,Spin} from 'antd'
 import './index.less'
 
 export default class Panel extends Component{
@@ -43,8 +42,8 @@ export default class Panel extends Component{
     // console.log(this.props)
     const defaultFooter=props.footer ? props.footer: (props)=>{
       return [
-        <Button loading={confirmLoading} onClick={onOk} type="primary">{okText}</Button>,
-        <Button onClick={onCancel}>{cancelText}</Button>
+        <Button key="submit" loading={confirmLoading} onClick={onOk} type="primary">{okText}</Button>,
+        <Button key="cancel" onClick={onCancel}>{cancelText}</Button>
       ]
     }
     if( props.footer !=false){
