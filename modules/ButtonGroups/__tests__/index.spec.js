@@ -6,8 +6,9 @@ import ButtonGroups,{Confirm} from '../index'
 
 const setup = (props) => {
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
-  const wrapper = shallow(<ButtonGroups {...props} >
+  const wrapper = shallow(<ButtonGroups {...props} viewMode='icon'>
       <Button actionkey="delete" tip="删除数据小心点">删除</Button>
+      <Button actionkey="icon" icon="edit">删除</Button>
       <Button actionkey="enabled" confirm="是否确定启用已选中的FTP服务器？" disabled={false}>启用</Button>
       <Button actionkey="hidden" permission={false}>不可见</Button>
       <Button actionkey="disabled" disabled={true}>禁用</Button>
@@ -26,7 +27,7 @@ describe('ButtonGroups 组件是否渲染', () => {
     //.find(selector) 是 Enzyme shallow Rendering 提供的语法, 用于查找节点
     // 详细用法见 Enzyme 文档 http://airbnb.io/enzyme/docs/api/shallow.html
     expect(wrapper.find('ButtonGroup').exists()).toBe(true);
-    expect(wrapper.find('Button').length).toBe(3);
+    expect(wrapper.find('Button').length).toBe(4);
     // expect(toJson(wrapper)).toMatchSnapshot();
   })
 
@@ -34,6 +35,18 @@ describe('ButtonGroups 组件是否渲染', () => {
     const buttonInst=wrapper.find('Button[actionkey="delete"]')
     expect(buttonInst.parent().exists()).toBe(true);
     expect(buttonInst.parent().prop('title')).toBe("删除数据小心点");
+  })
+
+  it('ButtonGroups Components children 设置了viewMode为icon 时 且 icon属性存在时正常获取icon属性 并 将button内的text节点置为空，保证只显示图片模式', () => {
+    const buttonIcons=wrapper.find('Button[actionkey="icon"]')
+    expect(buttonIcons.parent().exists()).toBe(true);
+    expect(buttonIcons.parent().prop('icon')).toBe("edit");
+  })
+
+  it('ButtonGroups Components children 设置了viewMode为icon 时 且 icon属性不存在时不获取icon属性', () => {
+    const buttonIcons=wrapper.find('Button[actionkey="delete"]')
+    expect(buttonIcons.parent().exists()).toBe(true);
+    expect(buttonIcons.parent().prop('icon')).toBe(undefined);
   })
 
   it('ButtonGroups Components children permission={false} 不渲染', () => {

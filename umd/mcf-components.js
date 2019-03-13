@@ -42065,18 +42065,40 @@
     }, {
       key: "renderReactElement",
       value: function renderReactElement(it, idx) {
-        var handleClick = this.props.handleClick;
+        var _this$props2 = this.props,
+            handleClick = _this$props2.handleClick,
+            viewMode = _this$props2.viewMode;
 
         var _it$props = it.props,
             tip = _it$props.tip,
             confirm = _it$props.confirm,
             placement = _it$props.placement,
+            icon$$1 = _it$props.icon,
             children = _it$props.children,
             block = _it$props.block,
             actionkey = _it$props.actionkey,
             disabled = _it$props.disabled,
             permission = _it$props.permission,
-            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "children", "block", "actionkey", "disabled", "permission"]);
+            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "icon", "children", "block", "actionkey", "disabled", "permission"]);
+
+        var iconProps = {
+          actionkey: actionkey,
+          disabled: disabled //tip提示判断，判断没有tip属性时缺省显示text内容
+
+        };
+        tip = !!tip ? tip : children; //非text文字模式下，显示icon图标，无icon属性设置时，只显示文字
+
+        if (viewMode === 'icon' || viewMode === 'both') {
+          if (!!icon$$1) {
+            iconProps = Object.assign(iconProps, {
+              icon: icon$$1
+            });
+          }
+
+          if (viewMode === 'icon') {
+            children = !!icon$$1 ? '' : children;
+          }
+        }
 
         if (confirm && !disabled) {
           return React$1__default.createElement(Confirm, Object.assign({}, {
@@ -42089,19 +42111,15 @@
             }
           }), React$1__default.createElement(Tooltip$1, Object.assign({}, {
             key: idx,
-            title: tip
-          }), React$1__default.createElement(Button, Object.assign({
-            actionkey: actionkey,
-            disabled: disabled
-          }, otherProps), children)));
+            title: tip,
+            icon: icon$$1
+          }), React$1__default.createElement(Button, Object.assign(iconProps, otherProps), children)));
         } else {
           return React$1__default.createElement(Tooltip$1, Object.assign({}, {
             key: idx,
-            title: tip
-          }), React$1__default.createElement(Button, Object.assign({
-            actionkey: actionkey,
-            disabled: disabled
-          }, otherProps, !disabled ? {
+            title: tip,
+            icon: icon$$1
+          }), React$1__default.createElement(Button, Object.assign(iconProps, otherProps, !disabled ? {
             onClick: function onClick() {
               handleClick(actionkey);
             }
@@ -42125,9 +42143,9 @@
       value: function renderMixButtonMenu() {
         var _this2 = this;
 
-        var _this$props2 = this.props,
-            children = _this$props2.children,
-            showSize = _this$props2.showSize;
+        var _this$props3 = this.props,
+            children = _this$props3.children,
+            showSize = _this$props3.showSize;
         var childrenArray = React$1__default.Children.toArray(children);
         var endArray = childrenArray.splice(showSize);
         return React$1__default.createElement("div", null, childrenArray // .filter((it)=>{
@@ -42159,10 +42177,10 @@
     }, {
       key: "renderChildren",
       value: function renderChildren() {
-        var _this$props3 = this.props,
-            children = _this$props3.children,
-            showSize = _this$props3.showSize,
-            mode = _this$props3.mode;
+        var _this$props4 = this.props,
+            children = _this$props4.children,
+            showSize = _this$props4.showSize,
+            mode = _this$props4.mode;
         var childrenArray = React$1__default.Children.toArray(children);
         return React$1__default.createElement(Button.Group, null, mode === 'ButtonGroup' ? this.renderButtonOnly() : this.renderMixButtonMenu());
       }
@@ -42180,6 +42198,7 @@
   /*
   * showSize:超过收起的数目
   * handleClick : 点击事件（需子元素以actionKey区分）
+  * viewMode : 按钮的展示模式，仅文字，仅图片，文字+图片
   * 子元素如需confirm确认 子元素自身添加confirm 属性 value为提醒文字
   * tip 为元素上移显示文字
   */
@@ -42190,11 +42209,13 @@
   ButtonGroups.propTypes = {
     showSize: PropTypes.number,
     handleClick: PropTypes.func,
+    viewMode: PropTypes.oneOf(['text', 'icon', 'both']),
     mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu'])
   };
   ButtonGroups.defaultProps = {
     showSize: 5,
     handleClick: function handleClick(actionkey) {},
+    viewMode: 'text',
     mode: 'ButtonGroup'
   };
 

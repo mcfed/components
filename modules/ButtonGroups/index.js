@@ -57,22 +57,38 @@ export default class ButtonGroups extends Component {
   }
 
   renderReactElement(it,idx){
-    let {handleClick} = this.props
-    let {tip,confirm,placement,children,block,actionkey,disabled,permission,...otherProps} = it.props
+    let {handleClick,viewMode} = this.props
+    let {tip,confirm,placement,icon,children,block,actionkey,disabled,permission,...otherProps} = it.props
+    let iconProps = {actionkey:actionkey,disabled:disabled}
+    
+    //tip提示判断，判断没有tip属性时缺省显示text内容
+    tip = !!tip ?  tip : children
 
-    if(confirm && !disabled){
+    //非text文字模式下，显示icon图标，无icon属性设置时，只显示文字
+    if(viewMode === 'icon' || viewMode === 'both'){
+      if(!!icon){
+        iconProps = Object.assign(iconProps,{icon:icon})
+      }
+      if(viewMode === 'icon'){
+        children = !!icon ? '': children    
+      }
+    }
+    
+    
+
+    if(confirm && !disabled){      
       return React.createElement(
         Confirm,
         Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
-        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip}),React.createElement(Button,Object.assign({actionkey:actionkey,disabled:disabled},otherProps),children))
+        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip,icon:icon}),React.createElement(Button,Object.assign(iconProps,otherProps),children))
       )
     }else{
       return React.createElement(
         Tooltip,
-        Object.assign({},{key:idx,title:tip}),
+        Object.assign({},{key:idx,title:tip,icon:icon}),
         React.createElement(
           Button,
-          Object.assign({actionkey:actionkey,disabled:disabled},otherProps,!disabled?{onClick:()=>{handleClick(actionkey)}}:{}),
+          Object.assign(iconProps,otherProps,!disabled?{onClick:()=>{handleClick(actionkey)}}:{}),
           children
         )
       )
@@ -148,16 +164,19 @@ export default class ButtonGroups extends Component {
 /*
 * showSize:超过收起的数目
 * handleClick : 点击事件（需子元素以actionKey区分）
+* viewMode : 按钮的展示模式，仅文字，仅图片，文字+图片
 * 子元素如需confirm确认 子元素自身添加confirm 属性 value为提醒文字
 * tip 为元素上移显示文字
 */
 ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
+  viewMode:PropTypes.oneOf(['text','icon','both']),
   mode:PropTypes.oneOf(['ButtonGroup','ButtonMenu'])
 }
 ButtonGroups.defaultProps = {
   showSize:5,
   handleClick:function(actionkey){},
+  viewMode:'text',
   mode:'ButtonGroup'
 }
