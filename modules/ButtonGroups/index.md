@@ -7,7 +7,8 @@
 
   renderSearchFrom(){
     return (
-    <ButtonGroups handleClick={action('button-click')}>
+    <ButtonGroups handleClick={action('button-click')} viewMode="icon">
+      <Button actionkey="add" icon="add">增加</Button>
       <Button actionkey="editAction" tip="编辑别乱点">编辑</Button>
       <Button actionkey="deleteAction" confirm="是否确认删除？">删除</Button>
       <Button actionkey="disableAction" disabled>禁用</Button>
@@ -23,6 +24,7 @@
 | - | - | - | - |
 | handleClick | 点击事件监听 | funciton | funciton(actionkey){} |
 | showSize | 最多显示个数 | number | 5 |
+| viewMode | button显示模式 `text` 、 `icon`、`both`  | string | "text" |
 | mode | 显示模式 `ButtonGroup` 和 `ButtonMenu`  | number | "ButtonGroup" |
 
 ## Button options
@@ -35,3 +37,4 @@
 | confirm | 确认处理框，点击后出现 配置属性文字内容 | string | - | [] |
 | tip | tip 提示性方字 | string | - | [] |
 | disabled | 可用性 | Boolean | false | [] |
+| icon | 图片 | string | - | [] |
