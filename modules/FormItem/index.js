@@ -1,10 +1,7 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
-import Select from 'antd/lib/select'
-import Input from 'antd/lib/input'
-import Form from 'antd/lib/form'
-import DatePicker from 'antd/lib/date-picker'
+import {Select,Input,Form,DatePicker} from 'antd'
 import fetch from 'cross-fetch'
 import WrapperDatePicker from '../WrapperDatePicker'
 import {TreeSelectPicker} from '../TreeView'
@@ -88,13 +85,11 @@ export default class FormItem extends Component{
     let {childData} = this.state;
     let field=children;
     let {defaultValue,renderable,disabled,...otherProps}= field.props
-    // console.log(ReactDOM.findDOMNode(this));
-    // getPopupContainer
     let {formRef,formLayout}= this.context
     let containerToProp={}
     let treeDataProp={}
     let disabledProp={}
-
+      // console.log(otherProps)
     if(disabled && typeof(disabled)==="function"){
       disabledProp={
         disabled:disabled.apply(this,[formRef])
@@ -104,7 +99,6 @@ export default class FormItem extends Component{
         disabled:disabled
       }
     }
-
 
     if(containerTo && field.type===Select && !field.props.changeCalendarContainer ){
       containerToProp={
@@ -116,6 +110,7 @@ export default class FormItem extends Component{
         treeData:this.loopTreeData(childData)
       }
     }
+    // console.log(containerToProp,field.type.name)
     if(field.type.name==="PickerWrapper"){
       let {children,dislabled,otherProps,renderable}=field.props
         return React.createElement(WrapperDatePicker,Object.assign({},otherProps,disabledProp),field)

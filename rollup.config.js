@@ -18,6 +18,9 @@ const globals = {
   "prop-types":"PropTypes",
   "react-dom":"ReactDOM",
   "moment":"moment",
+  "antd":"antd",
+  "cross-fetch":"fetch",
+  "classnames":"classNames",
   "fbjs/lib/ExecutionEnvironment":"canUseDOM"
 };
 

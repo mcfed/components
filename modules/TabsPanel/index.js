@@ -1,7 +1,7 @@
 import React,{PureComponent} from 'react'
 import PropTypes from 'prop-types'
 // import Panel from '../Panel'
-import Tabs from 'antd/lib/tabs'
+import {Tabs} from 'antd'
 
 const TabPane = Tabs.TabPane;
 

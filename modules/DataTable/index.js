@@ -1,12 +1,13 @@
 import React,{Component} from 'react'
 
-import Table from 'antd/lib/table'
-import Icon from 'antd/lib/icon'
-import Checkbox from 'antd/lib/checkbox'
-import Button from 'antd/lib/button'
-import Row from 'antd/lib/row'
-import Col from 'antd/lib/col'
-import Form from 'antd/lib/form'
+// import Table from 'antd/lib/table'
+// import Icon from 'antd/lib/icon'
+// import Checkbox from 'antd/lib/checkbox'
+// import Button from 'antd/lib/button'
+// import Row from 'antd/lib/row'
+// import Col from 'antd/lib/col'
+// import Form from 'antd/lib/form'
+import {Table,Icon,Checkbox,Button,Row,Col,Form} from 'antd'
 //import BaseForm,{FormItem} from 'components/BaseForm'
 
 class TableMenu extends Component{

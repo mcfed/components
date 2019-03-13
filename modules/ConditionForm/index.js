@@ -1,13 +1,7 @@
 import { PureComponent } from 'react';
-import Form from 'antd/lib/form'
-import Input from 'antd/lib/input'
-import Button from 'antd/lib/button'
-import Col from 'antd/lib/col'
-import Row from 'antd/lib/row'
-import Select from 'antd/lib/select'
-import Modal from 'antd/lib/modal'
-import moment from 'moment';
 import PropTypes from 'prop-types'
+import {Form,Input,Button,Col,Row,Select,Modal} from 'antd'
+import moment from 'moment';
 import { downList } from './data'
 const { TextArea } = Input;
 const FormItem = Form.Item;
