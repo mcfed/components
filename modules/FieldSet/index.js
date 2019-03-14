@@ -1,6 +1,6 @@
 import React from 'react'
-import Divider from 'antd/lib/divider';
-import Icon from 'antd/lib/icon';
+import {Divider,Icon} from 'antd'
+
 const up = {
   transform: 'rotate(180deg)',
   fontSize: 12,

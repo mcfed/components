@@ -1,9 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Row from 'antd/lib/row'
-import Col from 'antd/lib/col'
-import Icon from 'antd/lib/icon'
-import Button from 'antd/lib/button'
+import {Row,Col,Icon,Button} from 'antd'
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
@@ -11,8 +8,6 @@ import FormItem from '../FormItem'
 import Permission from '../Permission'
 import Locale from './locale.js'
 import style from  './AdvancedSearch.less'
-
-
 
 export default class AdvancedSearchForm extends React.Component {
   state = {
