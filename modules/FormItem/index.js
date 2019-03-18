@@ -100,12 +100,12 @@ export default class FormItem extends Component{
       }
     }
 
-    if(containerTo && field.type===Select && !field.props.changeCalendarContainer ){
+    if(containerTo && field.type.name==="Select" && !field.props.changeCalendarContainer ){
       containerToProp={
         getPopupContainer:triggerNode => triggerNode.parentNode
       }
     }
-    if(field.type == TreeSelectPicker){
+    if(field.type.name == "TreeSelectPicker"){
       treeDataProp={
         treeData:this.loopTreeData(childData)
       }
@@ -142,7 +142,7 @@ export default class FormItem extends Component{
     let styles={}
     let renderProps = true
 
-    if(element.type===Input && element.props.type==="hidden"){
+    if(element.type.name==="Input" && element.props.type==="hidden"){
       styles={
         style:{marginBottom:0}
       }
