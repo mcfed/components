@@ -5,6 +5,7 @@ import Input from 'antd/lib/input'
 import Select from 'antd/lib/select'
 import DatePicker from 'antd/lib/date-picker'
 import FormItem from '../index'
+import BaseForm from '../../BaseForm'
 
 const Option=Select.Option;
 const { RangePicker } = DatePicker
@@ -19,7 +20,14 @@ const setup = (children,props) => {
         }
       }
     },
-    formLayout:{}
+    formLayout:{
+      labelCol:{
+        span:3,
+      },
+      wrapperCol:{
+        span:18,
+      }
+    }
   }
   const wrapper = shallow(
     <FormItem>
@@ -31,6 +39,37 @@ const setup = (children,props) => {
     wrapper
   }
 }
+
+const setupForm = (children,props) => {
+  // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
+  const context={
+    formRef:{
+      getFieldDecorator(name,item){
+        return function(component){
+          return component
+        }
+      }
+    },
+    formLayout:{
+      labelCol:{
+        span:3,
+      },
+      wrapperCol:{
+        span:18,
+      }
+    }
+  }
+  const wrapper = shallow(
+    <BaseForm >
+        {children}
+    </BaseForm>
+  ,{context});
+  return {
+    props,
+    wrapper
+  }
+}
+
 
 
 describe('FormItem shallow render', () => {
@@ -140,6 +179,21 @@ describe('FormItem Element 属性测试', () => {
     // console.log(wrapper.prop("children"))
     // expect(element.prop('renderable')).toBe(false)
     // expect(element.exists()).toBe(false)
+    done()
+  })
+
+})
+
+describe('setupForm', () => {
+  it('BaseForm itemLayout',(done)=>{
+    const { wrapper, props } = setup(
+      <FormItem labelCol={{span: 3}} wrapperCol={{span:15}}>
+        <Input disabled={(form)=>true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />
+      </FormItem>
+    );
+    expect(wrapper.find("FormItem").at(1).prop("labelCol")).toEqual({span:3})
+    expect(wrapper.find("FormItem").at(1).prop("wrapperCol")).toEqual({span:15})
+    // expect(wrapper.find("FormItem").props())
     done()
   })
 
