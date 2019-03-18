@@ -65,16 +65,29 @@ describe('FormItem shallow render with Select', () => {
     done()
   })
 
-  it('FormItem render SELECT 带 fetch', (done) => {
-
-    const { wrapper, props } = setup(<Select name="select" label="select" fetch={"http://192.168.200.178:3000/mock/20/db-audit/svc_search_biz/backup/fileServers"}  />);
-  //  console.log(wrapper.state('childData'))
-    //expect(wrapper.state('childData').length).toBe(10)
+  it.skip('FormItem render SELECT 带 fetch', (done) => {
+    const options=[{
+      "label":"1","value":"1"
+    },{
+      "label":"2",value:"2"
+    },{
+      "label":"3",value:"3"
+    }]
+    const { wrapper, props } = setup(<Select name="select" label="select" fetch={options}  />);
+    const select =wrapper.find("Select")
+   // console.log(select.state('childData'))
+    // expect(select.state('childData').length).toBe(3)
     // expect(wrapper.find(Option).length).toBe(10)
     done()
   })
 
-  it('FormItem render DatePicker', (done) => {
+  it('FormItem render getPopupContainer',(done)=>{
+    const { wrapper, props } = setup(<Select name="select" label="select" />);
+    expect(wrapper.find("Select").props()).toHaveProperty("getPopupContainer")
+    done()
+  })
+
+  it.skip('FormItem render DatePicker', (done) => {
     const { wrapper, props } = setup(<DatePicker name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
    // console.log(wrapper.prop('children'))
     done()
