@@ -104,7 +104,7 @@ describe('FormItem shallow render with Select', () => {
     done()
   })
 
-  it.skip('FormItem render SELECT 带 fetch', (done) => {
+  it('FormItem render SELECT 带 fetch', (done) => {
     const options=[{
       "label":"1","value":"1"
     },{
@@ -114,9 +114,23 @@ describe('FormItem shallow render with Select', () => {
     }]
     const { wrapper, props } = setup(<Select name="select" label="select" fetch={options}  />);
     const select =wrapper.find("Select")
-   // console.log(select.state('childData'))
-    // expect(select.state('childData').length).toBe(3)
-    // expect(wrapper.find(Option).length).toBe(10)
+    done()
+  })
+
+  it('FormItem render SELECT 带 fetch url', (done) => {
+    const options=[{
+      "label":"1","value":"1"
+    },{
+      "label":"2",value:"2"
+    },{
+      "label":"3",value:"3"
+    }]
+    const { wrapper, props } = setup(<Select name="select" label="select" fetch={"http://192.168.200.178:3000/mock/63/capaa/v1/plugin/list"} fetchCallback={(result)=>{
+       console.log(result)
+       return result.data.pluginList
+     }
+     } />);
+    const select =wrapper.find("Select")
     done()
   })
 

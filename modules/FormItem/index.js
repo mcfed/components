@@ -6,7 +6,12 @@ import fetch from 'cross-fetch'
 import WrapperDatePicker from '../WrapperDatePicker'
 import {TreeSelectPicker} from '../TreeView'
 
+import { stringify } from 'qs'
+
 const Option=Select.Option
+
+
+
 
 export default class FormItem extends Component{
   constructor(props) {
@@ -22,9 +27,6 @@ export default class FormItem extends Component{
         childData:[]
       }
     }
-    if(typeof(field.props.fetch)=== 'string' && field.props.fetch.length>-1){
-        this.fetchData(field.props.fetch,field.props.params)
-    }
 
   }
 
@@ -39,19 +41,36 @@ export default class FormItem extends Component{
   componentWillReceiveProps(nextProps){
     let {children} = nextProps
     let field=children
+    let {formRef}= this.context
   //  console.log(JSON.stringify(field.props.options),JSON.stringify(this.props.children.props.options))
     if(JSON.stringify(field.props.options)!==JSON.stringify(this.props.children.props.options)){
       this.setState({
            childData:field.props.options
       });
     }
-
-    if(field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch)
+    if((field.props.fetch && typeof(field.props.fetch) === 'string' && field.props.fetch !==this.props.children.props.fetch) )
     {
-        this.fetchData(field.props.fetch,{},field.props.fetchCallback)
+        this.fetchData(field.props.fetch,field.props.params,field.props.fetchCallback)
+    }
+    if(field.props.params ){
+      if((typeof(field.props.params) ==="function" ) ||
+      (typeof(field.props.params) ==="string" && JSON.stringify(field.props.params) !==JSON.stringify(this.props.children.props.params))){
+        this.fetchData(field.props.fetch,field.props.params,field.props.fetchCallback)
+        // console.log("params")
+      }
     }
   }
-  componentWillMount() {
+  componentDidMount() {
+    let {children} = this.props
+    let field=children;
+    if(typeof(field.props.fetch)=== 'string' && field.props.fetch.length>-1 ){
+      if(field.props.params){
+        //规避 params 无法判断差异引起首次多发请求问题，
+        // 当fetch 与 params 属性同时配置，首次请求交由componentWillReceiveProps里方法进行发送
+      }else{
+        this.fetchData(field.props.fetch,field.props.params,field.props.fetchCallback)
+      }
+    }
   }
   /**
    * [fetchData 获取远程接口数据]
@@ -59,16 +78,28 @@ export default class FormItem extends Component{
    * @return {[type]}          [description]
    */
   fetchData(fetchUrl,params,callback){
-    // let body={}
-    fetch(fetchUrl,{
-      method:'GET'
+    // let body={}]
+    let {formRef}= this.context
+    let url
+    if(params){
+      if(typeof(params)==="function"){
+        url = [fetchUrl,stringify(params.apply(this,[formRef]))].join("?")
+      }else{
+        url = [fetchUrl,stringify(params)].join("?")
+      }
+    }else{
+      url=fetchUrl
+    }
+    fetch(url,{
+      method:'GET',
+
     }).then((json) => {
       return json.json()
     }).then(result=>{
       if(result.code==0){
         if(callback){
           this.setState({
-            childData:callback(result)
+            childData:callback(result,formRef)
           })
         }else{
           this.setState({
