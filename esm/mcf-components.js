@@ -596,7 +596,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -24592,7 +24592,7 @@ function (_Component) {
 
     _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onCheck", function (checkedKeys, e) {
       _this.setState({
-        checkedKeys: checkedKeys.checked
+        checkedKeys: checkedKeys
       }, function () {
         _this.props.onChange(_this.state.checkedKeys);
       });

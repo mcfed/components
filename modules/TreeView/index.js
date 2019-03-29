@@ -33,7 +33,7 @@ export default class TreeView extends Component {
 	}
 	onCheck = (checkedKeys, e) => {
 		this.setState({
-			checkedKeys: checkedKeys.checked
+			checkedKeys: checkedKeys
 		}, () => {
 			this.props.onChange(this.state.checkedKeys)
 		});

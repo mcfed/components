@@ -24240,7 +24240,7 @@
 
       _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onCheck", function (checkedKeys, e) {
         _this.setState({
-          checkedKeys: checkedKeys.checked
+          checkedKeys: checkedKeys
         }, function () {
           _this.props.onChange(_this.state.checkedKeys);
         });
