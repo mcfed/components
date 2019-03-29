@@ -24860,6 +24860,12 @@ function (_Component3) {
   return TrewViewPanel;
 }(Component);
 
+var index$3 = /*#__PURE__*/Object.freeze({
+  default: TreeView,
+  TreeSelectPicker: TreeSelectPicker,
+  TrewViewPanel: TrewViewPanel
+});
+
 var has$1 = Object.prototype.hasOwnProperty;
 
 var hexTable = (function () {
@@ -41299,4 +41305,4 @@ ConditionForm.defaultProps = {
   callbackParentSql: function callbackParentSql() {}
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm };
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm };

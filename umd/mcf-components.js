@@ -24508,6 +24508,12 @@
     return TrewViewPanel;
   }(React$1.Component);
 
+  var index$3 = /*#__PURE__*/Object.freeze({
+    default: TreeView,
+    TreeSelectPicker: TreeSelectPicker,
+    TrewViewPanel: TrewViewPanel
+  });
+
   var has$1 = Object.prototype.hasOwnProperty;
 
   var hexTable = (function () {
@@ -40948,7 +40954,7 @@
   exports.Permission = Permission;
   exports.Panel = Panel;
   exports.ModalAndView = ModalAndView;
-  exports.TreeView = TreeView;
+  exports.TreeView = index$3;
   exports.TabsPanel = TabsPanel;
   exports.PropertyTable = PropertyTable;
   exports.EditTable = EditTable;
