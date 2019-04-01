@@ -23,12 +23,12 @@ export default class TreeView extends Component {
 	}
 
 	loopTreeNode(data) {
-		let { renderNode } = this.props
+		let { renderItem } = this.props
 		return data.map((item) => {
 			if (item.children && item.children.length) {
-				return React.cloneElement(renderNode(item), {}, this.loopTreeNode(item.children))
+				return React.cloneElement(renderItem(item), {}, this.loopTreeNode(item.children))
 			}
-			return React.cloneElement(renderNode(item))
+			return React.cloneElement(renderItem(item))
 		})
 	}
 	onCheck = (checkedKeys, e) => {
@@ -49,12 +49,12 @@ export default class TreeView extends Component {
 
 	}
 	render() {
-		const { treeDataSource, treeConfig, isTreeInModal,value,onSelect,defaultKey } = this.props
+		const { treeData, treeConfig, isTreeInModal,value,onSelect,defaultKey } = this.props
 		const{checkedKeys}=this.state
 		return (
 		<div className="ant-tree-view">
 			<Tree  defaultExpandAll={true} defaultSelectedKeys={[checkedKeys]}  checkedKeys={checkedKeys} {...treeConfig} className={isTreeInModal?"tree-in-modal":''} defaultExpandAll={true} onCheck={this.onCheck} onSelect={this.onSelect}>
-				{this.loopTreeNode(treeDataSource)}
+				{this.loopTreeNode(treeData)}
 			</Tree>
 		</div>)
 	}

@@ -24279,20 +24279,20 @@
       value: function loopTreeNode(data) {
         var _this2 = this;
 
-        var renderNode = this.props.renderNode;
+        var renderItem = this.props.renderItem;
         return data.map(function (item) {
           if (item.children && item.children.length) {
-            return React$1__default.cloneElement(renderNode(item), {}, _this2.loopTreeNode(item.children));
+            return React$1__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children));
           }
 
-          return React$1__default.cloneElement(renderNode(item));
+          return React$1__default.cloneElement(renderItem(item));
         });
       }
     }, {
       key: "render",
       value: function render() {
         var _this$props = this.props,
-            treeDataSource = _this$props.treeDataSource,
+            treeData = _this$props.treeData,
             treeConfig = _this$props.treeConfig,
             isTreeInModal = _this$props.isTreeInModal,
             value = _this$props.value,
@@ -24310,7 +24310,7 @@
           defaultExpandAll: true,
           onCheck: this.onCheck,
           onSelect: this.onSelect
-        }), this.loopTreeNode(treeDataSource)));
+        }), this.loopTreeNode(treeData)));
       }
     }]);
 
@@ -25271,7 +25271,7 @@
           };
         }
 
-        if (field.type.name == "TreeSelectPicker") {
+        if (field.type.name == "TreeSelectPicker" || field.type.name == 'TreeView') {
           treeDataProp = {
             treeData: this.loopTreeData(childData)
           };

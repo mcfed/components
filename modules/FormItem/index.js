@@ -136,11 +136,12 @@ export default class FormItem extends Component{
         getPopupContainer:triggerNode => triggerNode.parentNode
       }
     }
-    if(field.type.name == "TreeSelectPicker"){
+    if(field.type.name == "TreeSelectPicker" || field.type.name == 'TreeView'){
       treeDataProp={
         treeData:this.loopTreeData(childData)
       }
     }
+
     // console.log(containerToProp,field.type.name)
     if(field.type.name==="PickerWrapper"){
       let {children,dislabled,otherProps,renderable}=field.props
