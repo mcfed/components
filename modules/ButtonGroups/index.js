@@ -53,7 +53,7 @@ export default class ButtonGroups extends Component {
 
   renderReactElement(it,idx){
     let {handleClick,viewMode} = this.props
-    let {tip,confirm,placement,icon,children,block,actionkey,disabled,permission,...otherProps} = it.props
+    let {tip,confirm,confirmTitle,placement,icon,children,block,actionkey,disabled,permission,...otherProps} = it.props
     let iconProps = {actionkey:actionkey,disabled:disabled}
     
     //tip提示判断，判断没有tip属性时缺省显示text内容
@@ -74,7 +74,7 @@ export default class ButtonGroups extends Component {
     if(confirm && !disabled){      
       return React.createElement(
         Confirm,
-        Object.assign({},{key:idx,title:"确认框",content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
+        Object.assign({},{key:idx,title:confirmTitle,content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
         React.createElement(Tooltip,Object.assign({},{key:idx,title:tip,icon:icon}),React.createElement(Button,Object.assign(iconProps,otherProps),children))
       )
     }else{

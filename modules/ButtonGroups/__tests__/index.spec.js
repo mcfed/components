@@ -56,6 +56,9 @@ describe('ButtonGroups 组件是否渲染', () => {
 
   it.skip('ButtonGroups Components menu 模式没有使用场景 先不实现用例', () => {
   })
+
+  it.skip('ButtonGroups Components confirmTitle 先不实现用例', () => {
+  })
 })
 
 

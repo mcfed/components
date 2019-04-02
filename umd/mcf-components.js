@@ -29641,6 +29641,7 @@
         var _it$props = it.props,
             tip = _it$props.tip,
             confirm = _it$props.confirm,
+            confirmTitle = _it$props.confirmTitle,
             placement = _it$props.placement,
             icon = _it$props.icon,
             children = _it$props.children,
@@ -29648,7 +29649,7 @@
             actionkey = _it$props.actionkey,
             disabled = _it$props.disabled,
             permission = _it$props.permission,
-            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "placement", "icon", "children", "block", "actionkey", "disabled", "permission"]);
+            otherProps = _objectWithoutProperties(_it$props, ["tip", "confirm", "confirmTitle", "placement", "icon", "children", "block", "actionkey", "disabled", "permission"]);
 
         var iconProps = {
           actionkey: actionkey,
@@ -29672,7 +29673,7 @@
         if (confirm && !disabled) {
           return React$1__default.createElement(Confirm, Object.assign({}, {
             key: idx,
-            title: "确认框",
+            title: confirmTitle,
             content: confirm,
             placement: placement,
             onConfirm: function onConfirm() {
