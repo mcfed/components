@@ -6,6 +6,7 @@
   "module": "esm/mcf-components.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "npm test -- --watch",
     "build": "rollup -c"
   },
   "keywords": [

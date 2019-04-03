@@ -12,6 +12,7 @@ const setup = (props) => {
       <Button actionkey="enabled" confirm="是否确定启用已选中的FTP服务器？" disabled={false}>启用</Button>
       <Button actionkey="hidden" permission={false}>不可见</Button>
       <Button actionkey="disabled" disabled={true}>禁用</Button>
+      <Button actionkey="confirmTitle" confirmTitle="我是confirmTitle" confirm='我是confirm content'>确认框标题</Button>
     </ButtonGroups>)
   return {
     props,
@@ -27,7 +28,7 @@ describe('ButtonGroups 组件是否渲染', () => {
     //.find(selector) 是 Enzyme shallow Rendering 提供的语法, 用于查找节点
     // 详细用法见 Enzyme 文档 http://airbnb.io/enzyme/docs/api/shallow.html
     expect(wrapper.find('ButtonGroup').exists()).toBe(true);
-    expect(wrapper.find('Button').length).toBe(4);
+    expect(wrapper.find('Button').length).toBe(5);
     // expect(toJson(wrapper)).toMatchSnapshot();
   })
 
@@ -57,7 +58,12 @@ describe('ButtonGroups 组件是否渲染', () => {
   it.skip('ButtonGroups Components menu 模式没有使用场景 先不实现用例', () => {
   })
 
-  it.skip('ButtonGroups Components confirmTitle 先不实现用例', () => {
+  it('ButtonGroups Components confirmTitle title和confirmTitle是否都匹配正确', () => {
+    const buttonDom=wrapper.find('Button[actionkey="confirmTitle"]');
+    expect(buttonDom.parent().exists()).toBe(true);
+    expect(buttonDom.parent().prop('title')).toBe("确认框标题");
+    expect(buttonDom.parent().prop('confirmTitle')).toBe("我是confirmTitle");
+    expect(buttonDom.parent().prop('confirm')).toBe("我是confirm content");
   })
 })
 
@@ -92,7 +98,18 @@ describe('ButtonGroups 事件响应处理',()=>{
     });
     wrapper.find('Button[actionkey="enabled"]').simulate('click')
     expect(handleClickMock.mock.calls.length).toBe(0);
-    wrapper.find('Confirm').prop('onConfirm').call()
+    wrapper.find('Confirm').first().prop('onConfirm').call()
     expect(handleClickMock.mock.calls[0][0]).toBe('enabled');
+  })
+
+  it('ButtonGroups 事件分发处理 点击[确认框标题]按钮带确认框',()=>{
+    const handleClickMock= jest.fn()
+    const { wrapper, props } = setup({
+      handleClick: handleClickMock
+    });
+    wrapper.find('Button[actionkey="confirmTitle"]').simulate('click')
+    expect(handleClickMock.mock.calls.length).toBe(0);
+    wrapper.find('Confirm').at(1).prop('onConfirm').call()
+    expect(handleClickMock.mock.calls[0][0]).toBe('confirmTitle');
   })
 })

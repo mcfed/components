@@ -75,7 +75,7 @@ export default class ButtonGroups extends Component {
       return React.createElement(
         Confirm,
         Object.assign({},{key:idx,title:confirmTitle,content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
-        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip,icon:icon}),React.createElement(Button,Object.assign(iconProps,otherProps),children))
+        React.createElement(Tooltip,Object.assign({},{key:idx,title:tip,icon:icon,confirmTitle:confirmTitle,confirm:confirm}),React.createElement(Button,Object.assign(iconProps,otherProps),children))
       )
     }else{
       return React.createElement(
