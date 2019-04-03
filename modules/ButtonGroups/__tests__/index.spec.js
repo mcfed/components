@@ -59,11 +59,16 @@ describe('ButtonGroups 组件是否渲染', () => {
   })
 
   it('ButtonGroups Components confirmTitle title和confirmTitle是否都匹配正确', () => {
+    //方法一
+    // const buttonDom=wrapper.find('Tooltip[title="确认框标题"]');
+    // expect(buttonDom.parent().exists()).toBe(true);
+    // expect(buttonDom.parent().prop('title')).toBe("我是confirmTitle");
+    // expect(buttonDom.parent().prop('content')).toBe("我是confirm content");
+    //方法二
     const buttonDom=wrapper.find('Button[actionkey="confirmTitle"]');
     expect(buttonDom.parent().exists()).toBe(true);
-    expect(buttonDom.parent().prop('title')).toBe("确认框标题");
-    expect(buttonDom.parent().prop('confirmTitle')).toBe("我是confirmTitle");
-    expect(buttonDom.parent().prop('confirm')).toBe("我是confirm content");
+    expect(buttonDom.parents('Confirm').prop('title')).toBe("我是confirmTitle");
+    expect(buttonDom.parents('Confirm').prop('content')).toBe("我是confirm content");
   })
 })
 

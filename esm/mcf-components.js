@@ -1,4 +1,4 @@
-import React__default, { Component, Children, PureComponent, createElement, cloneElement, isValidElement } from 'react';
+import React__default, { Component, Children, PureComponent, createElement, isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as ReactDOM from 'react-dom';
