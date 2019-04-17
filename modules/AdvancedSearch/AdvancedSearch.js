@@ -97,7 +97,7 @@ export default class AdvancedSearchForm extends React.Component {
       return (
         <Col span={8} key={i}>
           <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-            {React.cloneElement(it) }
+            {React.cloneElement(it,{allowClear: it.props.allowClear == false ? false : true}) }
           </FormItem>
         </Col>
       )
