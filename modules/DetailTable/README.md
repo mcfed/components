@@ -30,6 +30,7 @@ const add = {
 
 ```
 ## Option
+
 | 参数 | 说明 | 类型 |
 | - | - | - |
 |mode|支持数组模式和对象模式（'array',object）默认数组模式|string
