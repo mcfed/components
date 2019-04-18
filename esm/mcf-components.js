@@ -1,4 +1,4 @@
-import React__default, { Component, Children, PureComponent, createElement, isValidElement, cloneElement } from 'react';
+import React__default, { Component, Children, PureComponent, createElement, cloneElement, isValidElement } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as ReactDOM from 'react-dom';
@@ -596,7 +596,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -25931,7 +25931,9 @@ function (_React$Component) {
         }, formItemLayout, {
           containerTo: false,
           className: classNames$$1
-        }), React__default.cloneElement(it)));
+        }), React__default.cloneElement(it, {
+          allowClear: it.props.allowClear == false ? false : true
+        })));
       }); //return children;
     }
   }, {
@@ -41306,4 +41308,51 @@ ConditionForm.defaultProps = {
   callbackParentSql: function callbackParentSql() {}
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm };
+var ErrorBoundary =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(ErrorBoundary, _React$Component);
+
+  function ErrorBoundary(props) {
+    var _this;
+
+    _classCallCheck(this, ErrorBoundary);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(ErrorBoundary).call(this, props));
+    _this.state = {
+      error: null,
+      errorInfo: null
+    };
+    return _this;
+  }
+
+  _createClass(ErrorBoundary, [{
+    key: "componentDidCatch",
+    value: function componentDidCatch(error, errorInfo) {
+      // Catch errors in any components below and re-render with error message
+      this.setState({
+        error: error,
+        errorInfo: errorInfo
+      }); // You can also log error messages to an error reporting service here
+    }
+  }, {
+    key: "render",
+    value: function render$$1() {
+      if (this.state.errorInfo) {
+        // Error path
+        return React__default.createElement("div", null, React__default.createElement("h2", null, "\u51FA\u9519\u4E86."), React__default.createElement("details", {
+          style: {
+            whiteSpace: 'pre-wrap'
+          }
+        }, this.state.error && this.state.error.toString(), React__default.createElement("br", null), this.state.errorInfo.componentStack));
+      } // Normally, just render children
+
+
+      return this.props.children;
+    }
+  }]);
+
+  return ErrorBoundary;
+}(React__default.Component);
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary };

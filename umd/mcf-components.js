@@ -25579,7 +25579,9 @@
           }, formItemLayout, {
             containerTo: false,
             className: classNames$$1
-          }), React$1__default.cloneElement(it)));
+          }), React$1__default.cloneElement(it, {
+            allowClear: it.props.allowClear == false ? false : true
+          })));
         }); //return children;
       }
     }, {
@@ -40946,6 +40948,53 @@
     callbackParentSql: function callbackParentSql() {}
   };
 
+  var ErrorBoundary =
+  /*#__PURE__*/
+  function (_React$Component) {
+    _inherits(ErrorBoundary, _React$Component);
+
+    function ErrorBoundary(props) {
+      var _this;
+
+      _classCallCheck(this, ErrorBoundary);
+
+      _this = _possibleConstructorReturn(this, _getPrototypeOf(ErrorBoundary).call(this, props));
+      _this.state = {
+        error: null,
+        errorInfo: null
+      };
+      return _this;
+    }
+
+    _createClass(ErrorBoundary, [{
+      key: "componentDidCatch",
+      value: function componentDidCatch(error, errorInfo) {
+        // Catch errors in any components below and re-render with error message
+        this.setState({
+          error: error,
+          errorInfo: errorInfo
+        }); // You can also log error messages to an error reporting service here
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        if (this.state.errorInfo) {
+          // Error path
+          return React$1__default.createElement("div", null, React$1__default.createElement("h2", null, "\u51FA\u9519\u4E86."), React$1__default.createElement("details", {
+            style: {
+              whiteSpace: 'pre-wrap'
+            }
+          }, this.state.error && this.state.error.toString(), React$1__default.createElement("br", null), this.state.errorInfo.componentStack));
+        } // Normally, just render children
+
+
+        return this.props.children;
+      }
+    }]);
+
+    return ErrorBoundary;
+  }(React$1__default.Component);
+
   exports.AdvancedSearch = AdvancedSearchForm;
   exports.BaseForm = SubmitForm;
   exports.FormItem = FormItem$1;
@@ -40962,6 +41011,7 @@
   exports.DetailTable = DetailTable;
   exports.FieldSet = FieldSet;
   exports.ConditionForm = ConditionForm;
+  exports.ErrorBoundary = ErrorBoundary;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
