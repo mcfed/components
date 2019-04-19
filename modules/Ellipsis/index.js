@@ -1,5 +1,7 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Tooltip} from 'antd'
+import './index.less'
 
   /**
    * 超出截断
@@ -8,12 +10,12 @@ import {Tooltip} from 'antd'
    */
   class Ellipsis extends React.Component{
     render(){
-      let {text,tooltipText} =  this.props;
-      if(typeof tooltipText === 'undefined'){
-        tooltipText = text
+      let {text,tooltiptext} =  this.props;
+      if(typeof tooltiptext === 'undefined'){
+        tooltiptext = text
       }
       return(
-        <Tooltip placement="top" title={tooltipText} arrowPointAtCenter>
+        <Tooltip placement="top" title={tooltiptext} arrowPointAtCenter>
             <div className="td-ellipsis" {...Object.assign({},this.props)}>
                 {text}
             </div>
@@ -23,8 +25,8 @@ import {Tooltip} from 'antd'
   }
 
   Ellipsis.propTypes = {
-    text: propTypes.string.isRequired,
-    tooltipText: PropTypes.string
+    text: PropTypes.string.isRequired,
+    tooltiptext: PropTypes.string
   }  
   Ellipsis.defaultProps = {
     text: 'Ellipsis',

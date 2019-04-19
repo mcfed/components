@@ -596,7 +596,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: _library ? 'pure' : 'global',
+  mode: 'pure',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -41382,4 +41382,57 @@ function (_React$Component) {
   return ErrorBoundary;
 }(React__default.Component);
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary };
+var css$5 = ".td-ellipsis {\n  border-collapse: collapse;\n  white-space: nowrap;\n  overflow: hidden;\n  -o-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  /* max-width: 300px; */\n}\n";
+styleInject(css$5);
+
+/**
+ * 超出截断
+ * guor
+ * 2019-04-19 16:02:02
+ */
+
+var Ellipsis =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(Ellipsis, _React$Component);
+
+  function Ellipsis() {
+    _classCallCheck(this, Ellipsis);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(Ellipsis).apply(this, arguments));
+  }
+
+  _createClass(Ellipsis, [{
+    key: "render",
+    value: function render$$1() {
+      var _this$props = this.props,
+          text = _this$props.text,
+          tooltiptext = _this$props.tooltiptext;
+
+      if (typeof tooltiptext === 'undefined') {
+        tooltiptext = text;
+      }
+
+      return React__default.createElement(Tooltip$1, {
+        placement: "top",
+        title: tooltiptext,
+        arrowPointAtCenter: true
+      }, React__default.createElement("div", _extends({
+        className: "td-ellipsis"
+      }, Object.assign({}, this.props)), text));
+    }
+  }]);
+
+  return Ellipsis;
+}(React__default.Component);
+
+Ellipsis.propTypes = {
+  text: PropTypes.string.isRequired,
+  tooltiptext: PropTypes.string
+};
+Ellipsis.defaultProps = {
+  text: 'Ellipsis',
+  tooltipText: ''
+};
+
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary, Ellipsis };
