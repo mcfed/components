@@ -34,18 +34,6 @@ describe('Panel 组件是否渲染 default props', () => {
     const { wrapper, props } = setup({footer:false});
     expect(wrapper.find('.ant-panel-footer').exists()).toBe(false);
   })
-  
-  it('Panel Component should be with {footer=true} render ',()=>{
-    const { wrapper, props } = setup({footer:true});
-    expect(wrapper.find('.ant-panel-footer').exists()).toBe(true);
-  })
-
-
-  it('Panel Component should be with {footer=()=><button/>} render ',()=>{
-    const { wrapper, props } = setup({footer:()=><button/>});
-    expect(wrapper.find('.ant-panel-footer').exists()).toBe(true);
-    expect(wrapper.find('.ant-panel-footer button').exists()).toBe(true);
-  })
 
   it('Panel Component should be with {loading=true} render ',()=>{
     const { wrapper, props } = setup({loading:true});
@@ -56,11 +44,6 @@ describe('Panel 组件是否渲染 default props', () => {
     const { wrapper, props } = setup({confirmLoading:true});
     expect(wrapper.find('Button[type="primary"]').prop('loading')).toBe(true)
   })
-
-
-
-
-
 
   it('Panel Component LocaleReceiver must exist',(done)=>{
     const { wrapper, props } = setup();
