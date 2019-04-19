@@ -596,7 +596,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -25923,8 +25923,7 @@ function (_React$Component) {
       }
 
       return renderChildren.map(function (it, i) {
-        console.log(it.type === Input);
-
+        // console.log(it.type === Input)
         if (JSON.stringify(it.type) === JSON.stringify(Input)) {
           return React__default.createElement(Col, {
             span: 8,
@@ -38369,7 +38368,7 @@ function (_Component) {
     value: function renderFooter(locale) {
       var footer;
       var props = this.props;
-      var prefixCls = this.props.prefixCls; // console.log(this.props)
+      var prefixCls = this.props.prefixCls;
 
       if (props.footer != false) {
         footer = React__default.createElement("div", {

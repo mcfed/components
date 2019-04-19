@@ -25571,8 +25571,7 @@
         }
 
         return renderChildren.map(function (it, i) {
-          console.log(it.type === Input);
-
+          // console.log(it.type === Input)
           if (JSON.stringify(it.type) === JSON.stringify(Input)) {
             return React$1__default.createElement(Col, {
               span: 8,
@@ -38017,7 +38016,7 @@
       value: function renderFooter(locale) {
         var footer;
         var props = this.props;
-        var prefixCls = this.props.prefixCls; // console.log(this.props)
+        var prefixCls = this.props.prefixCls;
 
         if (props.footer != false) {
           footer = React$1__default.createElement("div", {
