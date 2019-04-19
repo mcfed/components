@@ -1,7 +1,10 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import {Button,Spin} from 'antd'
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
+import Locale from './locale.js'
 import './index.less'
+
 
 export default class Panel extends Component{
   renderHeader(){
@@ -34,32 +37,48 @@ export default class Panel extends Component{
     const {prefixCls} = this.props
     return  React.createElement("div", { className: prefixCls + '-body' }, props.children);
   }
-  renderFooter(){
-    let footer
 
+  renderFooterButton(locale){
+    const {onOk,onCancel,confirmLoading} = this.props
+    return [
+      <Button key="submit" loading={confirmLoading} onClick={onOk} type="primary">{locale.okText}</Button>,
+      <Button key="cancel" onClick={onCancel}>{locale.cancelText}</Button>
+    ]
+  }
+
+  renderFooterLocale(locale){
     const {props} = this
-    const {prefixCls,onOk,onCancel,okText,cancelText,confirmLoading} = this.props
+    return props.footer ? props.footer: this.renderFooterButton(locale);
+  }
+  
+  renderFooter(locale){
+    let footer
+    const {props} = this
+    const {prefixCls} = this.props
     // console.log(this.props)
-    const defaultFooter=props.footer ? props.footer: (props)=>{
-      return [
-        <Button key="submit" loading={confirmLoading} onClick={onOk} type="primary">{okText}</Button>,
-        <Button key="cancel" onClick={onCancel}>{cancelText}</Button>
-      ]
-    }
     if( props.footer !=false){
-      footer = React.createElement("div", { className: prefixCls + '-footer' }, defaultFooter());
+      footer = React.createElement("div", { className: prefixCls + '-footer' }, this.renderFooterLocale(locale));
     }
     return footer
   }
   render(){
-    const {prefixCls,loading} = this.props
+    const {prefixCls,loading,locale} = this.props
     return (
       <div className={`${prefixCls}-wrapper`}>
         <Spin spinning={loading}>
           <div className={`${prefixCls}`}>
             {this.renderHeader()}
             {this.renderBody()}
-            {this.renderFooter()}
+            {
+            React.createElement(
+              LocaleReceiver,
+              {
+                componentName:'Panel',
+                defaultLocale:Locale
+              },
+              this.renderFooter.bind(this)
+            )
+          }
           </div>
         </Spin>
       </div>
@@ -76,6 +95,7 @@ Panel.propTypes = {
   cancelText:PropTypes.string,
   footer:PropTypes.oneOfType([PropTypes.bool,PropTypes.element,PropTypes.func]),
   confirmLoading:PropTypes.bool,
+  locale:PropTypes.object,
   loading:PropTypes.bool
 }
 Panel.defaultProps = {
@@ -84,8 +104,5 @@ Panel.defaultProps = {
   loading:false,
   onCancel:function(){},
   title:"",
-  okText:"确认",
-  cancelText:"取消",
-  // footer:function(){},
   confirmLoading:false
 }
