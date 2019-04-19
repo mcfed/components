@@ -37938,6 +37938,11 @@
     columns: []
   });
 
+  var Locale$1 = {
+    okText: "确认",
+    cancelText: "取消"
+  };
+
   var css$4 = ".ant-panel-wrapper {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  background-color: #fff;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading > .ant-spin-container {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head {\n  display: flex;\n  padding: 16px 24px;\n  color: rgba(0, 0, 0, 0.65);\n  background: #fff;\n  border-bottom: 1px solid #e8e8e8;\n  border-radius: 4px 4px 0 0;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head .ant-panel-head-title {\n  margin: 0;\n  color: rgba(0, 0, 0, 0.85);\n  font-weight: 500;\n  font-size: 16px;\n  line-height: 22px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-body {\n  display: flex;\n  flex: 1;\n  overflow: auto;\n  flex-direction: column;\n  padding: 10px 16px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer {\n  padding: 10px 16px;\n  text-align: center;\n  border-top: 1px solid #e8e8e8;\n  border-radius: 0 0 4px 4px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer button {\n  margin: 0 4px;\n}\n";
   styleInject(css$4);
 
@@ -37985,34 +37990,41 @@
         }, props.children);
       }
     }, {
-      key: "renderFooter",
-      value: function renderFooter() {
-        var footer;
-        var props = this.props;
+      key: "renderFooterButton",
+      value: function renderFooterButton(locale) {
         var _this$props2 = this.props,
-            prefixCls = _this$props2.prefixCls,
             onOk = _this$props2.onOk,
             onCancel = _this$props2.onCancel,
-            okText = _this$props2.okText,
-            cancelText = _this$props2.cancelText,
-            confirmLoading = _this$props2.confirmLoading; // console.log(this.props)
-
-        var defaultFooter = props.footer ? props.footer : function (props) {
-          return [React$1__default.createElement(Button, {
-            key: "submit",
-            loading: confirmLoading,
-            onClick: onOk,
-            type: "primary"
-          }, okText), React$1__default.createElement(Button, {
-            key: "cancel",
-            onClick: onCancel
-          }, cancelText)];
-        };
+            confirmLoading = _this$props2.confirmLoading;
+        return [React$1__default.createElement(Button, {
+          key: "submit",
+          loading: confirmLoading,
+          onClick: onOk,
+          type: "primary"
+        }, locale.okText), React$1__default.createElement(Button, {
+          key: "cancel",
+          onClick: onCancel
+        }, locale.cancelText)];
+      }
+    }, {
+      key: "renderFooterLocale",
+      value: function renderFooterLocale(locale) {
+        var props = this.props;
+        return props.footer ? props.footer() : this.renderFooterButton(locale);
+      }
+    }, {
+      key: "renderFooter",
+      value: function renderFooter(locale) {
+        var footer;
+        var props = this.props;
+        var prefixCls = this.props.prefixCls; // console.log(this.props)
 
         if (props.footer != false) {
           footer = React$1__default.createElement("div", {
             className: prefixCls + '-footer'
-          }, defaultFooter());
+          }, this.renderFooterLocale(locale));
+        } else {
+          footer = null;
         }
 
         return footer;
@@ -38022,14 +38034,18 @@
       value: function render() {
         var _this$props3 = this.props,
             prefixCls = _this$props3.prefixCls,
-            loading = _this$props3.loading;
+            loading = _this$props3.loading,
+            locale = _this$props3.locale;
         return React$1__default.createElement("div", {
           className: "".concat(prefixCls, "-wrapper")
         }, React$1__default.createElement(Spin, {
           spinning: loading
         }, React$1__default.createElement("div", {
           className: "".concat(prefixCls)
-        }, this.renderHeader(), this.renderBody(), this.renderFooter())));
+        }, this.renderHeader(), this.renderBody(), React$1__default.createElement(LocaleReceiver, {
+          componentName: 'Panel',
+          defaultLocale: Locale$1
+        }, this.renderFooter.bind(this)))));
       }
     }]);
 
@@ -38043,6 +38059,7 @@
     cancelText: PropTypes.string,
     footer: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func]),
     confirmLoading: PropTypes.bool,
+    locale: PropTypes.object,
     loading: PropTypes.bool
   };
   Panel.defaultProps = {
@@ -38051,9 +38068,6 @@
     loading: false,
     onCancel: function onCancel() {},
     title: "",
-    okText: "确认",
-    cancelText: "取消",
-    // footer:function(){},
     confirmLoading: false
   };
 
