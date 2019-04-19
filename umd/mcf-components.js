@@ -37996,7 +37996,7 @@
       key: "renderFooterLocale",
       value: function renderFooterLocale(locale) {
         var props = this.props;
-        return props.footer ? props.footer : this.renderFooterButton(locale);
+        return props.footer ? props.footer() : this.renderFooterButton(locale);
       }
     }, {
       key: "renderFooter",
@@ -38009,6 +38009,8 @@
           footer = React$1__default.createElement("div", {
             className: prefixCls + '-footer'
           }, this.renderFooterLocale(locale));
+        } else {
+          footer = null;
         }
 
         return footer;

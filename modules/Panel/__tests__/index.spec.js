@@ -34,8 +34,14 @@ describe('Panel 组件是否渲染 default props', () => {
     const { wrapper, props } = setup({footer:false});
     expect(wrapper.find('.ant-panel-footer').exists()).toBe(false);
   })
+  
+  it('Panel Component should be with {footer=true} render ',()=>{
+    const { wrapper, props } = setup({footer:true});
+    expect(wrapper.find('.ant-panel-footer').exists()).toBe(true);
+  })
 
-  it.skip('Panel Component should be with {footer=()=><button/>} render ',()=>{
+
+  it('Panel Component should be with {footer=()=><button/>} render ',()=>{
     const { wrapper, props } = setup({footer:()=><button/>});
     expect(wrapper.find('.ant-panel-footer').exists()).toBe(true);
     expect(wrapper.find('.ant-panel-footer button').exists()).toBe(true);
@@ -53,6 +59,9 @@ describe('Panel 组件是否渲染 default props', () => {
 
 
 
+
+
+
   it('Panel Component LocaleReceiver must exist',(done)=>{
     const { wrapper, props } = setup();
     expect(wrapper.find('LocaleReceiver').exists()).toBe(true)
@@ -62,19 +71,20 @@ describe('Panel 组件是否渲染 default props', () => {
     done()
   })
 
-  it.skip("Panel instace renderFooterLocale ",(done)=>{
+  it("Panel instace renderFooterButton ",(done)=>{
     const { wrapper, props } = setup();
     // console.log(Locale)
     const locale={
       cancelText:"cancelText",
       okText:"okText"
     }
-    const footer = wrapper.instance().renderFooterLocale(locale)
-    const nodes=footer()
-    expect(nodes[0].props.children).toBe(locale.okText)
-    expect(nodes[1].props.children).toBe(locale.cancelText)
+    const footer = wrapper.instance().renderFooterButton(locale)
+    expect(footer[0].props.children).toBe(locale.okText)
+    expect(footer[1].props.children).toBe(locale.cancelText)
     done()
   })
+
+
 
 })
 

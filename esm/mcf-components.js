@@ -1,4 +1,4 @@
-import React__default, { Children, Component, PureComponent, createElement, isValidElement, cloneElement } from 'react';
+import React__default, { Component, Children, PureComponent, createElement, cloneElement, isValidElement } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as ReactDOM from 'react-dom';
@@ -38348,7 +38348,7 @@ function (_Component) {
     key: "renderFooterLocale",
     value: function renderFooterLocale(locale) {
       var props = this.props;
-      return props.footer ? props.footer : this.renderFooterButton(locale);
+      return props.footer ? props.footer() : this.renderFooterButton(locale);
     }
   }, {
     key: "renderFooter",
@@ -38361,6 +38361,8 @@ function (_Component) {
         footer = React__default.createElement("div", {
           className: prefixCls + '-footer'
         }, this.renderFooterLocale(locale));
+      } else {
+        footer = null;
       }
 
       return footer;
