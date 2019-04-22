@@ -2,6 +2,7 @@
 > 统一搜索组件集成事件处理工作。
 
 ## Usage
+> 新增布局 子元素增加 multiple 属性 ，宽度为原来的倍数 number类型
 >
 ```html
   import {AdvancedSearchForm} from 'mcf-components'
@@ -9,7 +10,7 @@
   renderSearchFrom(){
     return (
       <AdvancedSearch layout="horizontal" filterSubmitHandler={action('button-click')}>
-        <Input name="callState" label="呼叫类型"  />
+        <Input name="callState" label="呼叫类型"  multiple={2}/>
         <Select name="inputAcc" label="hr" />
       </AdvancedSearch>
     )

@@ -70,9 +70,9 @@ export default class AdvancedSearchForm extends React.Component {
 
   // To generate mock Form.Item
   getFields() {
-    const {children,layout,classNames} = this.props
+    const {children,layout,classNames,showExpand} = this.props
     let renderChildren;
-    const formItemLayout = layout && layout!=='inline'? {
+    let formItemLayout = layout && layout!=='inline'? {
       labelCol: {
         span: 8
       },
@@ -83,21 +83,34 @@ export default class AdvancedSearchForm extends React.Component {
     if(React.Children.count(children)===0){
       return (null)
     }
+
     if(this.state.expand==false ){
-      renderChildren =[].concat(children).filter((ch,idx)=>idx<3)
+      renderChildren =[].concat(children).filter((ch,idx)=>idx<showExpand)
     }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>{
         //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
-        return this.state.displayItem.indexOf(ch.props.name)>=0 || idx < this.props.showExpand
+        return this.state.displayItem.indexOf(ch.props.name)>=0 || idx < showExpand
       })
     }else{
-      renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
+      renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
-      // console.log(it.type === Input)
+
+      let multiple = it.props.multiple || 1
+      let labelNum = Math.round(8/multiple)
+      formItemLayout = Object.assign({},formItemLayout,{
+        labelCol:{
+          span:labelNum
+        },
+        wrapperCol:{
+          span: 24 - labelNum
+        }
+      })
+
+      // console.log(formItemLayout,multiple,it)
       if(JSON.stringify(it.type) === JSON.stringify(Input)){
         return (
-          <Col span={8} key={i}>
+          <Col span={ multiple ? 8 * multiple : 8 }  key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it) }
             </FormItem>
@@ -105,7 +118,7 @@ export default class AdvancedSearchForm extends React.Component {
         )
       }else{
         return (
-          <Col span={8} key={i}>
+          <Col span={ multiple ? 8 * multiple : 8 } key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
             </FormItem>
@@ -152,12 +165,13 @@ export default class AdvancedSearchForm extends React.Component {
   }
   renderSearchToolbar(locale){
     let {loading,expand} = this.state
-    const {children} = this.props
+    const {children,showExpand} = this.props
+    console.log(this)
     return (
       <div className="advanced-search-toolbar">
 				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
         {
-          children.length>3?
+          children.length>showExpand?
     				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?locale.upText:locale.downText}<Icon type={expand?"up":"down"} /></Button>
           :""
         }
@@ -191,7 +205,7 @@ AdvancedSearchForm.propTypes = {
   loading:PropTypes.bool,
   footer:PropTypes.element,
   locale:PropTypes.object,
-  showExpand:PropTypes.number
+  showExpand:PropTypes.number,
 }
 
 AdvancedSearchForm.defaultProps = {

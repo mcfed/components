@@ -25539,7 +25539,8 @@
         var _this$props = this.props,
             children = _this$props.children,
             layout = _this$props.layout,
-            classNames$$1 = _this$props.classNames;
+            classNames$$1 = _this$props.classNames,
+            showExpand = _this$props.showExpand;
         var renderChildren;
         var formItemLayout = layout && layout !== 'inline' ? {
           labelCol: {
@@ -25556,25 +25557,35 @@
 
         if (this.state.expand == false) {
           renderChildren = [].concat(children).filter(function (ch, idx) {
-            return idx < 3;
+            return idx < showExpand;
           });
         } else if (this.props.showConfig) {
           //高级配置后，前三固定 后四配置
           renderChildren = React$1__default.Children.toArray(children).filter(function (ch, idx) {
             //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
-            return _this2.state.displayItem.indexOf(ch.props.name) >= 0 || idx < _this2.props.showExpand;
+            return _this2.state.displayItem.indexOf(ch.props.name) >= 0 || idx < showExpand;
           });
         } else {
           renderChildren = React$1__default.Children.toArray(children).filter(function (ch, idx) {
-            return idx < _this2.props.showExpand + 4;
+            return idx < showExpand + 4;
           });
         }
 
         return renderChildren.map(function (it, i) {
-          // console.log(it.type === Input)
+          var multiple = it.props.multiple || 1;
+          var labelNum = Math.round(8 / multiple);
+          formItemLayout = Object.assign({}, formItemLayout, {
+            labelCol: {
+              span: labelNum
+            },
+            wrapperCol: {
+              span: 24 - labelNum
+            }
+          }); // console.log(formItemLayout,multiple,it)
+
           if (JSON.stringify(it.type) === JSON.stringify(Input)) {
             return React$1__default.createElement(Col, {
-              span: 8,
+              span: multiple ? 8 * multiple : 8,
               key: i
             }, React$1__default.createElement(FormItem$1, _extends({
               colon: true
@@ -25584,7 +25595,7 @@
             }), React$1__default.cloneElement(it)));
           } else {
             return React$1__default.createElement(Col, {
-              span: 8,
+              span: multiple ? 8 * multiple : 8,
               key: i
             }, React$1__default.createElement(FormItem$1, _extends({
               colon: true
@@ -25642,7 +25653,10 @@
         var _this$state = this.state,
             loading = _this$state.loading,
             expand = _this$state.expand;
-        var children = this.props.children;
+        var _this$props2 = this.props,
+            children = _this$props2.children,
+            showExpand = _this$props2.showExpand;
+        console.log(this);
         return React$1__default.createElement("div", {
           className: "advanced-search-toolbar"
         }, React$1__default.createElement(Button, {
@@ -25650,7 +25664,7 @@
           disabled: loading,
           onClick: this.handleSearch.bind(this),
           type: "primary"
-        }, locale.searchText), children.length > 3 ? React$1__default.createElement(Button, {
+        }, locale.searchText), children.length > showExpand ? React$1__default.createElement(Button, {
           type: "ghost",
           onClick: this.toggleExpand.bind(this)
         }, expand ? locale.upText : locale.downText, React$1__default.createElement(Icon, {
@@ -25660,13 +25674,13 @@
     }, {
       key: "render",
       value: function render() {
-        var _this$props2 = this.props,
-            showConfig = _this$props2.showConfig,
-            children = _this$props2.children,
-            className = _this$props2.className,
-            autoSubmitForm = _this$props2.autoSubmitForm,
-            layout = _this$props2.layout,
-            locale = _this$props2.locale;
+        var _this$props3 = this.props,
+            showConfig = _this$props3.showConfig,
+            children = _this$props3.children,
+            className = _this$props3.className,
+            autoSubmitForm = _this$props3.autoSubmitForm,
+            layout = _this$props3.layout,
+            locale = _this$props3.locale;
         return React$1__default.createElement("div", {
           className: classNames("advanced-search-panel", className)
         }, React$1__default.createElement(SubmitForm, {
@@ -38101,9 +38115,9 @@
         var _this$props2 = this.props,
             route = _this$props2.route,
             children = _this$props2.children,
-            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]);
+            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]); // console.log(children.props
 
-        console.log(children.props());
+
         return React$1__default.createElement(Modal, _extends({
           title: "title",
           visible: true,
