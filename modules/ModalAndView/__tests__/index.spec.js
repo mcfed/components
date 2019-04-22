@@ -57,7 +57,14 @@ describe("ModalAndView render", () => {
 
 describe("ModalAndView methods", () => {
 
-  it.skip("handleBackRoute is called", () => {
-      const {wrapper} = setup(<div>测试子元素</div>)
+  it("handleBackRoute is not called", () => {
+      const {wrapper} = setup(<div>测试子元素</div>,{
+        actions:{},
+        history:{},
+        router:{}
+      })
+      const backRouteFn = jest.fn()
+      wrapper.instance().handleBackRoute = backRouteFn
+      expect(backRouteFn.mock.calls.length).toBe(0)
   });
 });
