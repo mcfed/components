@@ -107,8 +107,8 @@ export default class AdvancedSearchForm extends React.Component {
         }
       })
 
-      // console.log(formItemLayout,multiple,it)
-      if(JSON.stringify(it.type) === JSON.stringify(Input)){
+      // console.log(it.type.name,123)
+      if(it.type.name === "Input"){
         return (
           <Col span={ multiple ? 8 * multiple : 8 }  key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
@@ -166,7 +166,7 @@ export default class AdvancedSearchForm extends React.Component {
   renderSearchToolbar(locale){
     let {loading,expand} = this.state
     const {children,showExpand} = this.props
-    console.log(this)
+    // console.log(this)
     return (
       <div className="advanced-search-toolbar">
 				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
