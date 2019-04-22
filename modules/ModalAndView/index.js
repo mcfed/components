@@ -14,7 +14,7 @@ class ModalAndView extends Component {
 
   render() {
     var {route, children,...otherProps} = this.props
-    console.log(children.props())
+    // console.log(children.props
     return (
       <Modal title={"title"} visible={true} maskClosable={false} onCancel={this.handleBackRoute.bind(this)} onOk={this.handleSaveRoute.bind(this)} {...otherProps}>
         {

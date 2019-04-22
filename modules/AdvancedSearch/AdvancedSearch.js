@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Row,Col,Icon,Button} from 'antd'
+import {Row,Col,Icon,Button,Input} from 'antd'
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
@@ -94,13 +94,24 @@ export default class AdvancedSearchForm extends React.Component {
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
-      return (
-        <Col span={8} key={i}>
-          <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-            {React.cloneElement(it) }
-          </FormItem>
-        </Col>
-      )
+      // console.log(it.type === Input)
+      if(JSON.stringify(it.type) === JSON.stringify(Input)){
+        return (
+          <Col span={8} key={i}>
+            <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+              {React.cloneElement(it) }
+            </FormItem>
+          </Col>
+        )
+      }else{
+        return (
+          <Col span={8} key={i}>
+            <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+              {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
+            </FormItem>
+          </Col>
+        )
+      }
     })
     //return children;
   }

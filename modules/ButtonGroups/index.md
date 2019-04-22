@@ -35,6 +35,7 @@
 | actionkey | 按钮事件类型名称，用于事件分发区分 | string | - | [x] |
 | permission | 按钮是可见 | Boolean | - | [] |
 | confirm | 确认处理框，点击后出现 配置属性文字内容 | string | - | [] |
+| confirmTitle | 确认处理框，点击后出现 配置标题文字内容 | string | - | [] |
 | tip | tip 提示性方字 | string | - | [] |
 | disabled | 可用性 | Boolean | false | [] |
 | icon | 图片 | string | - | [] |
