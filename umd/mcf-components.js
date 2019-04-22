@@ -24282,7 +24282,7 @@
         var renderItem = this.props.renderItem;
         return data.map(function (item) {
           if (item.children && item.children.length) {
-            return React$1__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children));
+            return React$1__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children || []));
           }
 
           return React$1__default.cloneElement(renderItem(item));
@@ -24310,7 +24310,7 @@
           defaultExpandAll: true,
           onCheck: this.onCheck,
           onSelect: this.onSelect
-        }), this.loopTreeNode(treeData)));
+        }), this.loopTreeNode(treeData || [])));
       }
     }]);
 
@@ -38101,9 +38101,9 @@
         var _this$props2 = this.props,
             route = _this$props2.route,
             children = _this$props2.children,
-            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]);
+            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]); // console.log(children.props
 
-        console.log(children.props());
+
         return React$1__default.createElement(Modal, _extends({
           title: "title",
           visible: true,
