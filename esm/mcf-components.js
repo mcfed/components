@@ -24634,7 +24634,7 @@ function (_Component) {
       var renderItem = this.props.renderItem;
       return data.map(function (item) {
         if (item.children && item.children.length) {
-          return React__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children));
+          return React__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children || []));
         }
 
         return React__default.cloneElement(renderItem(item));
@@ -24662,7 +24662,7 @@ function (_Component) {
         defaultExpandAll: true,
         onCheck: this.onCheck,
         onSelect: this.onSelect
-      }), this.loopTreeNode(treeData)));
+      }), this.loopTreeNode(treeData || [])));
     }
   }]);
 

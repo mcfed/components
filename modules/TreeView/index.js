@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import {Tree,Input,Button,TreeSelect} from 'antd'
 
+const TreeNode = Tree.TreeNode
+const DirectoryTree = Tree.DirectoryTree
 const Search = Input.Search;
-const { TreeNode,DirectoryTree } = Tree
 
 export default class TreeView extends Component {
 	// state = {
@@ -26,7 +27,7 @@ export default class TreeView extends Component {
 		let { renderItem } = this.props
 		return data.map((item) => {
 			if (item.children && item.children.length) {
-				return React.cloneElement(renderItem(item), {}, this.loopTreeNode(item.children))
+				return React.cloneElement(renderItem(item), {}, this.loopTreeNode(item.children||[]))
 			}
 			return React.cloneElement(renderItem(item))
 		})
@@ -54,7 +55,7 @@ export default class TreeView extends Component {
 		return (
 		<div className="ant-tree-view">
 			<Tree  defaultExpandAll={true} defaultSelectedKeys={[checkedKeys]}  checkedKeys={checkedKeys} {...treeConfig} className={isTreeInModal?"tree-in-modal":''} defaultExpandAll={true} onCheck={this.onCheck} onSelect={this.onSelect}>
-				{this.loopTreeNode(treeData)}
+				{this.loopTreeNode(treeData||[])}
 			</Tree>
 		</div>)
 	}
