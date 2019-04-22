@@ -96,8 +96,8 @@ export default class AdvancedSearchForm extends React.Component {
     }
     return renderChildren.map((it, i) => {
 
-      let multiple = it.props.multiple || 1
-      let labelNum = Math.round(8/multiple)
+      let columns = it.props.columns || 1
+      let labelNum = Math.round(8/columns)
       formItemLayout = Object.assign({},formItemLayout,{
         labelCol:{
           span:labelNum
@@ -110,7 +110,7 @@ export default class AdvancedSearchForm extends React.Component {
       // console.log(it.type.name,123)
       if(it.type.name === "Input"){
         return (
-          <Col span={ multiple ? 8 * multiple : 8 }  key={i}>
+          <Col span={ columns ? 8 * columns : 8 }  key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it) }
             </FormItem>
@@ -118,7 +118,7 @@ export default class AdvancedSearchForm extends React.Component {
         )
       }else{
         return (
-          <Col span={ multiple ? 8 * multiple : 8 } key={i}>
+          <Col span={ columns ? 8 * columns : 8 } key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
             </FormItem>
