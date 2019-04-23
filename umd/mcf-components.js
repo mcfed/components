@@ -37825,7 +37825,7 @@
 
       _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "state", {
         visible: false,
-        newColumns: [],
+        columns: [],
         displayColumns: []
       });
 
@@ -37895,12 +37895,13 @@
             pagination = _this$props3.pagination,
             showConfig = _this$props3.showConfig,
             page = _this$props3.page,
-            otherProps = _objectWithoutProperties(_this$props3, ["pagination", "showConfig", "page"]);
+            defaultSort = _this$props3.defaultSort,
+            otherProps = _objectWithoutProperties(_this$props3, ["pagination", "showConfig", "page", "defaultSort"]);
 
         var _this$state = this.state,
             visible = _this$state.visible,
             columns = _this$state.columns;
-        var newColumns;
+        var newColumns; // console.log(this.props,"datatablerender")
 
         if (showConfig) {
           // if(true){
@@ -37919,6 +37920,17 @@
           // }])
         } else {
           newColumns = columns;
+        }
+        /*增加是否有排序判断 增加列配置*/
+
+
+        if (defaultSort) {
+          newColumns = newColumns.map(function (it) {
+            defaultSort.columnKey == it.dataIndex ? it = Object.assign(it, {
+              defaultSortOrder: defaultSort.order
+            }) : null;
+            return it;
+          });
         } //console.log(newColumns,columns)
 
 
