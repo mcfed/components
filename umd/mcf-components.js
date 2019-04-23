@@ -197,6 +197,7 @@
     return [React$1__default.createElement("th", {
       key: 'td' + dataSource[labelKey]
     }, typeof dataSource[labelKey] === 'function' ? dataSource[labelKey]() : dataSource[labelKey]), React$1__default.createElement("td", {
+      colSpan: dataSource.colspan ? dataSource.colspan : null,
       key: 'td1' + dataSource[valueKey]
     }, typeof dataSource[valueKey] === 'function' ? dataSource[valueKey]() : dataSource[valueKey])];
   };
@@ -253,20 +254,29 @@
         }
 
         var array = [];
-        var trLength = Math.ceil(Data.length / columnNumber);
-        var remainder = Data.length % columnNumber; // 数据不足进行补充
 
-        if (remainder > 0) {
-          for (var b = 0; b < remainder; b++) {
-            Data.push({
-              name: '',
-              value: ''
-            });
+        while (Data.length > 0) {
+          var ar = [];
+
+          for (var i = 0; i < columnNumber; i++) {
+            var obj = Data.shift();
+
+            if (obj === undefined) {
+              obj = {
+                label: '',
+                value: ''
+              };
+            }
+
+            if (obj.colspan && obj.colspan > 0) {
+              ar.push(obj);
+              i = i + obj.colspan - 1;
+            } else {
+              ar.push(obj);
+            }
           }
-        }
 
-        for (var i = 0; i < trLength; i++) {
-          array.push(Data.slice(columnNumber * i, columnNumber * i + columnNumber));
+          array.push(ar);
         }
 
         return array.map(function (d, k) {
@@ -605,7 +615,7 @@
     return store[key] || (store[key] = value !== undefined ? value : {});
   })('versions', []).push({
     version: _core.version,
-    mode: _library ? 'pure' : 'global',
+    mode: 'pure',
     copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
   });
   });
@@ -37811,7 +37821,7 @@
 
       _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "state", {
         visible: false,
-        newColumns: [],
+        columns: [],
         displayColumns: []
       });
 
@@ -37881,12 +37891,13 @@
             pagination = _this$props3.pagination,
             showConfig = _this$props3.showConfig,
             page = _this$props3.page,
-            otherProps = _objectWithoutProperties(_this$props3, ["pagination", "showConfig", "page"]);
+            defaultSort = _this$props3.defaultSort,
+            otherProps = _objectWithoutProperties(_this$props3, ["pagination", "showConfig", "page", "defaultSort"]);
 
         var _this$state = this.state,
             visible = _this$state.visible,
             columns = _this$state.columns;
-        var newColumns;
+        var newColumns; // console.log(this.props,"datatablerender")
 
         if (showConfig) {
           // if(true){
@@ -37905,6 +37916,17 @@
           // }])
         } else {
           newColumns = columns;
+        }
+        /*增加是否有排序判断 增加列配置*/
+
+
+        if (defaultSort) {
+          newColumns = newColumns.map(function (it) {
+            defaultSort.columnKey == it.dataIndex ? it = Object.assign(it, {
+              defaultSortOrder: defaultSort.order
+            }) : null;
+            return it;
+          });
         } //console.log(newColumns,columns)
 
 
