@@ -25572,8 +25572,9 @@
         }
 
         return renderChildren.map(function (it, i) {
-          var multiple = it.props.multiple || 1;
-          var labelNum = Math.round(8 / multiple);
+          var columns = it.props.columns || 1;
+          var labelNum = Math.round(8 / columns),
+              spancols = 8 * columns;
           formItemLayout = Object.assign({}, formItemLayout, {
             labelCol: {
               span: labelNum
@@ -25585,7 +25586,7 @@
 
           if (it.type.name === "Input") {
             return React$1__default.createElement(Col, {
-              span: multiple ? 8 * multiple : 8,
+              span: spancols,
               key: i
             }, React$1__default.createElement(FormItem$1, _extends({
               colon: true
@@ -25595,7 +25596,7 @@
             }), React$1__default.cloneElement(it)));
           } else {
             return React$1__default.createElement(Col, {
-              span: multiple ? 8 * multiple : 8,
+              span: spancols,
               key: i
             }, React$1__default.createElement(FormItem$1, _extends({
               colon: true
