@@ -51,10 +51,10 @@ export default class Panel extends Component{
     return props.footer ? props.footer(): this.renderFooterButton(locale);
   }
   
-  renderFooter(locale){
+  renderFooter(){
     let footer
     const {props} = this
-    const {prefixCls} = this.props
+    const {prefixCls,locale} = this.props
     if( props.footer !=false){
       footer = React.createElement("div", { className: prefixCls + '-footer' }, this.renderFooterLocale(locale));
     }else{
@@ -75,7 +75,7 @@ export default class Panel extends Component{
               LocaleReceiver,
               {
                 componentName:'Panel',
-                defaultLocale:Locale
+                defaultLocale:locale || Locale
               },
               this.renderFooter.bind(this)
             )
