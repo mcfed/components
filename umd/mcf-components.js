@@ -25638,13 +25638,11 @@
       }
     }, {
       key: "renderSearchToolbar",
-      value: function renderSearchToolbar() {
+      value: function renderSearchToolbar(locale) {
         var _this$state = this.state,
             loading = _this$state.loading,
             expand = _this$state.expand;
-        var _this$props2 = this.props,
-            children = _this$props2.children,
-            locale = _this$props2.locale;
+        var children = this.props.children;
         return React$1__default.createElement("div", {
           className: "advanced-search-toolbar"
         }, React$1__default.createElement(Button, {
@@ -25662,13 +25660,14 @@
     }, {
       key: "render",
       value: function render() {
-        var _this$props3 = this.props,
-            showConfig = _this$props3.showConfig,
-            children = _this$props3.children,
-            className = _this$props3.className,
-            autoSubmitForm = _this$props3.autoSubmitForm,
-            layout = _this$props3.layout,
-            locale = _this$props3.locale;
+        var _this$props2 = this.props,
+            showConfig = _this$props2.showConfig,
+            children = _this$props2.children,
+            className = _this$props2.className,
+            autoSubmitForm = _this$props2.autoSubmitForm,
+            layout = _this$props2.layout,
+            locale = _this$props2.locale;
+        var defaultLocale = Object.assign({}, Locale, locale);
         return React$1__default.createElement("div", {
           className: classNames("advanced-search-panel", className)
         }, React$1__default.createElement(SubmitForm, {
@@ -25679,8 +25678,8 @@
           wrappedComponentRef: this.saveFormRef.bind(this)
         }, this.renderKeyword(), React$1__default.createElement(LocaleReceiver, {
           componentName: 'AdvancedSearch',
-          defaultLocale: locale || Locale
-        }, this.renderSearchToolbar.bind(this))));
+          defaultLocale: defaultLocale
+        }, this.renderSearchToolbar.bind(this, defaultLocale))));
       }
     }]);
 
@@ -38015,12 +38014,10 @@
       }
     }, {
       key: "renderFooter",
-      value: function renderFooter() {
+      value: function renderFooter(locale) {
         var footer;
         var props = this.props;
-        var _this$props3 = this.props,
-            prefixCls = _this$props3.prefixCls,
-            locale = _this$props3.locale;
+        var prefixCls = this.props.prefixCls;
 
         if (props.footer != false) {
           footer = React$1__default.createElement("div", {
@@ -38035,10 +38032,11 @@
     }, {
       key: "render",
       value: function render() {
-        var _this$props4 = this.props,
-            prefixCls = _this$props4.prefixCls,
-            loading = _this$props4.loading,
-            locale = _this$props4.locale;
+        var _this$props3 = this.props,
+            prefixCls = _this$props3.prefixCls,
+            loading = _this$props3.loading,
+            locale = _this$props3.locale;
+        var defaultLocale = Object.assign({}, Locale$1, locale);
         return React$1__default.createElement("div", {
           className: "".concat(prefixCls, "-wrapper")
         }, React$1__default.createElement(Spin, {
@@ -38047,8 +38045,8 @@
           className: "".concat(prefixCls)
         }, this.renderHeader(), this.renderBody(), React$1__default.createElement(LocaleReceiver, {
           componentName: 'Panel',
-          defaultLocale: locale || Locale$1
-        }, this.renderFooter.bind(this)))));
+          defaultLocale: defaultLocale
+        }, this.renderFooter.bind(this, defaultLocale)))));
       }
     }]);
 
