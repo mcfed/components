@@ -1,9 +1,9 @@
 import React from 'react'
 import {shallow,mount,render} from 'enzyme'
-import {Link} from 'react-router'
+// import {Link} from 'react-router'
 import SmartLink from '../index'
 
-// console.log(SmartLink)
+console.log(SmartLink)
 
 
 
@@ -17,15 +17,15 @@ const setup = (children,props)=>{
   }
 }
 
-describe("smartlink unit case",()=>{
+describe.skip("smartlink unit case",()=>{
 
 
   it("smartlink is based on link",()=>{
     const {wrapper,props} = setup(
-      (<div className="aa"></div>),
+      (<div></div>),
       {}
     )
 
-    expect(wrapper.find("div.aa").exists()).toBe(true)
+    expect(wrapper.find("Link").exists()).toBe(true)
   })
 })

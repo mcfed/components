@@ -4,10 +4,10 @@ module.exports = {
   testEnvironment: 'node', //default brower-like enviroment, 如果你搭建了一个node service node-like enviroment
   coverageThreshold: { //测试覆盖率, 阈值不满足，就返回测试失败
     global: {
-      branches: 60,
-      functions: 60,
-      lines: 60,
-      statements: 60,
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
     },
   },
   notify: false,

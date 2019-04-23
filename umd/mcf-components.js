@@ -197,6 +197,7 @@
     return [React$1__default.createElement("th", {
       key: 'td' + dataSource[labelKey]
     }, typeof dataSource[labelKey] === 'function' ? dataSource[labelKey]() : dataSource[labelKey]), React$1__default.createElement("td", {
+      colSpan: dataSource.colspan ? dataSource.colspan : null,
       key: 'td1' + dataSource[valueKey]
     }, typeof dataSource[valueKey] === 'function' ? dataSource[valueKey]() : dataSource[valueKey])];
   };
@@ -253,20 +254,29 @@
         }
 
         var array = [];
-        var trLength = Math.ceil(Data.length / columnNumber);
-        var remainder = Data.length % columnNumber; // 数据不足进行补充
 
-        if (remainder > 0) {
-          for (var b = 0; b < remainder; b++) {
-            Data.push({
-              name: '',
-              value: ''
-            });
+        while (Data.length > 0) {
+          var ar = [];
+
+          for (var i = 0; i < columnNumber; i++) {
+            var obj = Data.shift();
+
+            if (obj === undefined) {
+              obj = {
+                label: '',
+                value: ''
+              };
+            }
+
+            if (obj.colspan && obj.colspan > 0) {
+              ar.push(obj);
+              i = i + obj.colspan - 1;
+            } else {
+              ar.push(obj);
+            }
           }
-        }
 
-        for (var i = 0; i < trLength; i++) {
-          array.push(Data.slice(columnNumber * i, columnNumber * i + columnNumber));
+          array.push(ar);
         }
 
         return array.map(function (d, k) {
@@ -2105,6 +2115,534 @@
       xl: objectOrNumber,
       xxl: objectOrNumber
   };
+
+  function fixControlledValue(value) {
+      if (typeof value === 'undefined' || value === null) {
+          return '';
+      }
+      return value;
+  }
+
+  var Input = function (_React$Component) {
+      _inherits$1(Input, _React$Component);
+
+      function Input() {
+          _classCallCheck$1(this, Input);
+
+          var _this = _possibleConstructorReturn$1(this, (Input.__proto__ || Object.getPrototypeOf(Input)).apply(this, arguments));
+
+          _this.handleKeyDown = function (e) {
+              var _this$props = _this.props,
+                  onPressEnter = _this$props.onPressEnter,
+                  onKeyDown = _this$props.onKeyDown;
+
+              if (e.keyCode === 13 && onPressEnter) {
+                  onPressEnter(e);
+              }
+              if (onKeyDown) {
+                  onKeyDown(e);
+              }
+          };
+          _this.saveInput = function (node) {
+              _this.input = node;
+          };
+          return _this;
+      }
+
+      _createClass$1(Input, [{
+          key: 'focus',
+          value: function focus() {
+              this.input.focus();
+          }
+      }, {
+          key: 'blur',
+          value: function blur() {
+              this.input.blur();
+          }
+      }, {
+          key: 'getInputClassName',
+          value: function getInputClassName() {
+              var _classNames;
+
+              var _props = this.props,
+                  prefixCls = _props.prefixCls,
+                  size = _props.size,
+                  disabled = _props.disabled;
+
+              return classNames(prefixCls, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-sm', size === 'small'), _defineProperty$1(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty$1(_classNames, prefixCls + '-disabled', disabled), _classNames));
+          }
+      }, {
+          key: 'renderLabeledInput',
+          value: function renderLabeledInput(children) {
+              var _classNames3;
+
+              var props = this.props;
+              // Not wrap when there is not addons
+              if (!props.addonBefore && !props.addonAfter) {
+                  return children;
+              }
+              var wrapperClassName = props.prefixCls + '-group';
+              var addonClassName = wrapperClassName + '-addon';
+              var addonBefore = props.addonBefore ? React$1.createElement(
+                  'span',
+                  { className: addonClassName },
+                  props.addonBefore
+              ) : null;
+              var addonAfter = props.addonAfter ? React$1.createElement(
+                  'span',
+                  { className: addonClassName },
+                  props.addonAfter
+              ) : null;
+              var className = classNames(props.prefixCls + '-wrapper', _defineProperty$1({}, wrapperClassName, addonBefore || addonAfter));
+              var groupClassName = classNames(props.prefixCls + '-group-wrapper', (_classNames3 = {}, _defineProperty$1(_classNames3, props.prefixCls + '-group-wrapper-sm', props.size === 'small'), _defineProperty$1(_classNames3, props.prefixCls + '-group-wrapper-lg', props.size === 'large'), _classNames3));
+              // Need another wrapper for changing display:table to display:inline-block
+              // and put style prop in wrapper
+              if (addonBefore || addonAfter) {
+                  return React$1.createElement(
+                      'span',
+                      { className: groupClassName, style: props.style },
+                      React$1.createElement(
+                          'span',
+                          { className: className },
+                          addonBefore,
+                          React$1.cloneElement(children, { style: null }),
+                          addonAfter
+                      )
+                  );
+              }
+              return React$1.createElement(
+                  'span',
+                  { className: className },
+                  addonBefore,
+                  children,
+                  addonAfter
+              );
+          }
+      }, {
+          key: 'renderLabeledIcon',
+          value: function renderLabeledIcon(children) {
+              var _classNames4;
+
+              var props = this.props;
+
+              if (!('prefix' in props || 'suffix' in props)) {
+                  return children;
+              }
+              var prefix = props.prefix ? React$1.createElement(
+                  'span',
+                  { className: props.prefixCls + '-prefix' },
+                  props.prefix
+              ) : null;
+              var suffix = props.suffix ? React$1.createElement(
+                  'span',
+                  { className: props.prefixCls + '-suffix' },
+                  props.suffix
+              ) : null;
+              var affixWrapperCls = classNames(props.className, props.prefixCls + '-affix-wrapper', (_classNames4 = {}, _defineProperty$1(_classNames4, props.prefixCls + '-affix-wrapper-sm', props.size === 'small'), _defineProperty$1(_classNames4, props.prefixCls + '-affix-wrapper-lg', props.size === 'large'), _classNames4));
+              return React$1.createElement(
+                  'span',
+                  { className: affixWrapperCls, style: props.style },
+                  prefix,
+                  React$1.cloneElement(children, { style: null, className: this.getInputClassName() }),
+                  suffix
+              );
+          }
+      }, {
+          key: 'renderInput',
+          value: function renderInput() {
+              var _props2 = this.props,
+                  value = _props2.value,
+                  className = _props2.className;
+              // Fix https://fb.me/react-unknown-prop
+
+              var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'addonBefore', 'addonAfter', 'prefix', 'suffix']);
+              if ('value' in this.props) {
+                  otherProps.value = fixControlledValue(value);
+                  // Input elements must be either controlled or uncontrolled,
+                  // specify either the value prop, or the defaultValue prop, but not both.
+                  delete otherProps.defaultValue;
+              }
+              return this.renderLabeledIcon(React$1.createElement('input', _extends$2({}, otherProps, { className: classNames(this.getInputClassName(), className), onKeyDown: this.handleKeyDown, ref: this.saveInput })));
+          }
+      }, {
+          key: 'render',
+          value: function render() {
+              return this.renderLabeledInput(this.renderInput());
+          }
+      }]);
+
+      return Input;
+  }(React$1.Component);
+
+  Input.defaultProps = {
+      prefixCls: 'ant-input',
+      type: 'text',
+      disabled: false
+  };
+  Input.propTypes = {
+      type: PropTypes.string,
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      size: PropTypes.oneOf(['small', 'default', 'large']),
+      maxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      disabled: PropTypes.bool,
+      value: PropTypes.any,
+      defaultValue: PropTypes.any,
+      className: PropTypes.string,
+      addonBefore: PropTypes.node,
+      addonAfter: PropTypes.node,
+      prefixCls: PropTypes.string,
+      autosize: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+      onPressEnter: PropTypes.func,
+      onKeyDown: PropTypes.func,
+      onKeyUp: PropTypes.func,
+      onFocus: PropTypes.func,
+      onBlur: PropTypes.func,
+      prefix: PropTypes.node,
+      suffix: PropTypes.node
+  };
+
+  var Group = function Group(props) {
+      var _classNames;
+
+      var _props$prefixCls = props.prefixCls,
+          prefixCls = _props$prefixCls === undefined ? 'ant-input-group' : _props$prefixCls,
+          _props$className = props.className,
+          className = _props$className === undefined ? '' : _props$className;
+
+      var cls = classNames(prefixCls, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-lg', props.size === 'large'), _defineProperty$1(_classNames, prefixCls + '-sm', props.size === 'small'), _defineProperty$1(_classNames, prefixCls + '-compact', props.compact), _classNames), className);
+      return React$1.createElement(
+          'span',
+          { className: cls, style: props.style },
+          props.children
+      );
+  };
+
+  var __rest$4 = undefined && undefined.__rest || function (s, e) {
+      var t = {};
+      for (var p in s) {
+          if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+      }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+          if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
+      }return t;
+  };
+
+  var Search = function (_React$Component) {
+      _inherits$1(Search, _React$Component);
+
+      function Search() {
+          _classCallCheck$1(this, Search);
+
+          var _this = _possibleConstructorReturn$1(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+
+          _this.onSearch = function () {
+              var onSearch = _this.props.onSearch;
+
+              if (onSearch) {
+                  onSearch(_this.input.input.value);
+              }
+              _this.input.focus();
+          };
+          _this.saveInput = function (node) {
+              _this.input = node;
+          };
+          return _this;
+      }
+
+      _createClass$1(Search, [{
+          key: 'focus',
+          value: function focus() {
+              this.input.focus();
+          }
+      }, {
+          key: 'blur',
+          value: function blur() {
+              this.input.blur();
+          }
+      }, {
+          key: 'getButtonOrIcon',
+          value: function getButtonOrIcon() {
+              var _props = this.props,
+                  enterButton = _props.enterButton,
+                  prefixCls = _props.prefixCls,
+                  size = _props.size,
+                  disabled = _props.disabled;
+
+              if (!enterButton) {
+                  return React$1.createElement(Icon, { className: prefixCls + '-icon', type: 'search', key: 'searchIcon' });
+              }
+              var enterButtonAsElement = enterButton;
+              if (enterButtonAsElement.type === Button || enterButtonAsElement.type === 'button') {
+                  return React$1.cloneElement(enterButtonAsElement, enterButtonAsElement.type === Button ? {
+                      className: prefixCls + '-button',
+                      size: size,
+                      onClick: this.onSearch
+                  } : {
+                      onClick: this.onSearch
+                  });
+              }
+              return React$1.createElement(
+                  Button,
+                  { className: prefixCls + '-button', type: 'primary', size: size, disabled: disabled, onClick: this.onSearch, key: 'enterButton' },
+                  enterButton === true ? React$1.createElement(Icon, { type: 'search' }) : enterButton
+              );
+          }
+      }, {
+          key: 'render',
+          value: function render() {
+              var _classNames;
+
+              var _a = this.props,
+                  className = _a.className,
+                  prefixCls = _a.prefixCls,
+                  inputPrefixCls = _a.inputPrefixCls,
+                  size = _a.size,
+                  suffix = _a.suffix,
+                  enterButton = _a.enterButton,
+                  others = __rest$4(_a, ["className", "prefixCls", "inputPrefixCls", "size", "suffix", "enterButton"]);
+              delete others.onSearch;
+              var buttonOrIcon = this.getButtonOrIcon();
+              var searchSuffix = suffix ? [suffix, buttonOrIcon] : buttonOrIcon;
+              var inputClassName = classNames(prefixCls, className, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-enter-button', !!enterButton), _defineProperty$1(_classNames, prefixCls + '-' + size, !!size), _classNames));
+              return React$1.createElement(Input, _extends$2({ onPressEnter: this.onSearch }, others, { size: size, className: inputClassName, prefixCls: inputPrefixCls, suffix: searchSuffix, ref: this.saveInput }));
+          }
+      }]);
+
+      return Search;
+  }(React$1.Component);
+
+  Search.defaultProps = {
+      inputPrefixCls: 'ant-input',
+      prefixCls: 'ant-input-search',
+      enterButton: false
+  };
+
+  // Thanks to https://github.com/andreypopp/react-textarea-autosize/
+  /**
+   * calculateNodeHeight(uiTextNode, useCache = false)
+   */
+  var HIDDEN_TEXTAREA_STYLE = '\n  min-height:0 !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n';
+  var SIZING_STYLE = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'text-rendering', 'text-transform', 'width', 'text-indent', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
+  var computedStyleCache = {};
+  var hiddenTextarea = void 0;
+  function calculateNodeStyling(node) {
+      var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+      var nodeRef = node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
+      if (useCache && computedStyleCache[nodeRef]) {
+          return computedStyleCache[nodeRef];
+      }
+      var style = window.getComputedStyle(node);
+      var boxSizing = style.getPropertyValue('box-sizing') || style.getPropertyValue('-moz-box-sizing') || style.getPropertyValue('-webkit-box-sizing');
+      var paddingSize = parseFloat(style.getPropertyValue('padding-bottom')) + parseFloat(style.getPropertyValue('padding-top'));
+      var borderSize = parseFloat(style.getPropertyValue('border-bottom-width')) + parseFloat(style.getPropertyValue('border-top-width'));
+      var sizingStyle = SIZING_STYLE.map(function (name) {
+          return name + ':' + style.getPropertyValue(name);
+      }).join(';');
+      var nodeInfo = {
+          sizingStyle: sizingStyle,
+          paddingSize: paddingSize,
+          borderSize: borderSize,
+          boxSizing: boxSizing
+      };
+      if (useCache && nodeRef) {
+          computedStyleCache[nodeRef] = nodeInfo;
+      }
+      return nodeInfo;
+  }
+  function calculateNodeHeight(uiTextNode) {
+      var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var minRows = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+      var maxRows = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+      if (!hiddenTextarea) {
+          hiddenTextarea = document.createElement('textarea');
+          document.body.appendChild(hiddenTextarea);
+      }
+      // Fix wrap="off" issue
+      // https://github.com/ant-design/ant-design/issues/6577
+      if (uiTextNode.getAttribute('wrap')) {
+          hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap'));
+      } else {
+          hiddenTextarea.removeAttribute('wrap');
+      }
+      // Copy all CSS properties that have an impact on the height of the content in
+      // the textbox
+
+      var _calculateNodeStyling = calculateNodeStyling(uiTextNode, useCache),
+          paddingSize = _calculateNodeStyling.paddingSize,
+          borderSize = _calculateNodeStyling.borderSize,
+          boxSizing = _calculateNodeStyling.boxSizing,
+          sizingStyle = _calculateNodeStyling.sizingStyle;
+      // Need to have the overflow attribute to hide the scrollbar otherwise
+      // text-lines will not calculated properly as the shadow will technically be
+      // narrower for content
+
+
+      hiddenTextarea.setAttribute('style', sizingStyle + ';' + HIDDEN_TEXTAREA_STYLE);
+      hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
+      var minHeight = Number.MIN_SAFE_INTEGER;
+      var maxHeight = Number.MAX_SAFE_INTEGER;
+      var height = hiddenTextarea.scrollHeight;
+      var overflowY = void 0;
+      if (boxSizing === 'border-box') {
+          // border-box: add border, since height = content + padding + border
+          height = height + borderSize;
+      } else if (boxSizing === 'content-box') {
+          // remove padding, since height = content
+          height = height - paddingSize;
+      }
+      if (minRows !== null || maxRows !== null) {
+          // measure height of a textarea with a single row
+          hiddenTextarea.value = ' ';
+          var singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
+          if (minRows !== null) {
+              minHeight = singleRowHeight * minRows;
+              if (boxSizing === 'border-box') {
+                  minHeight = minHeight + paddingSize + borderSize;
+              }
+              height = Math.max(minHeight, height);
+          }
+          if (maxRows !== null) {
+              maxHeight = singleRowHeight * maxRows;
+              if (boxSizing === 'border-box') {
+                  maxHeight = maxHeight + paddingSize + borderSize;
+              }
+              overflowY = height > maxHeight ? '' : 'hidden';
+              height = Math.min(maxHeight, height);
+          }
+      }
+      // Remove scroll bar flash when autosize without maxRows
+      if (!maxRows) {
+          overflowY = 'hidden';
+      }
+      return { height: height, minHeight: minHeight, maxHeight: maxHeight, overflowY: overflowY };
+  }
+
+  function onNextFrame(cb) {
+      if (window.requestAnimationFrame) {
+          return window.requestAnimationFrame(cb);
+      }
+      return window.setTimeout(cb, 1);
+  }
+  function clearNextFrameAction(nextFrameId) {
+      if (window.cancelAnimationFrame) {
+          window.cancelAnimationFrame(nextFrameId);
+      } else {
+          window.clearTimeout(nextFrameId);
+      }
+  }
+
+  var TextArea = function (_React$Component) {
+      _inherits$1(TextArea, _React$Component);
+
+      function TextArea() {
+          _classCallCheck$1(this, TextArea);
+
+          var _this = _possibleConstructorReturn$1(this, (TextArea.__proto__ || Object.getPrototypeOf(TextArea)).apply(this, arguments));
+
+          _this.state = {
+              textareaStyles: {}
+          };
+          _this.resizeTextarea = function () {
+              var autosize = _this.props.autosize;
+
+              if (!autosize || !_this.textAreaRef) {
+                  return;
+              }
+              var minRows = autosize ? autosize.minRows : null;
+              var maxRows = autosize ? autosize.maxRows : null;
+              var textareaStyles = calculateNodeHeight(_this.textAreaRef, false, minRows, maxRows);
+              _this.setState({ textareaStyles: textareaStyles });
+          };
+          _this.handleTextareaChange = function (e) {
+              if (!('value' in _this.props)) {
+                  _this.resizeTextarea();
+              }
+              var onChange = _this.props.onChange;
+
+              if (onChange) {
+                  onChange(e);
+              }
+          };
+          _this.handleKeyDown = function (e) {
+              var _this$props = _this.props,
+                  onPressEnter = _this$props.onPressEnter,
+                  onKeyDown = _this$props.onKeyDown;
+
+              if (e.keyCode === 13 && onPressEnter) {
+                  onPressEnter(e);
+              }
+              if (onKeyDown) {
+                  onKeyDown(e);
+              }
+          };
+          _this.saveTextAreaRef = function (textArea) {
+              _this.textAreaRef = textArea;
+          };
+          return _this;
+      }
+
+      _createClass$1(TextArea, [{
+          key: 'componentDidMount',
+          value: function componentDidMount() {
+              this.resizeTextarea();
+          }
+      }, {
+          key: 'componentWillReceiveProps',
+          value: function componentWillReceiveProps(nextProps) {
+              // Re-render with the new content then recalculate the height as required.
+              if (this.props.value !== nextProps.value) {
+                  if (this.nextFrameActionId) {
+                      clearNextFrameAction(this.nextFrameActionId);
+                  }
+                  this.nextFrameActionId = onNextFrame(this.resizeTextarea);
+              }
+          }
+      }, {
+          key: 'focus',
+          value: function focus() {
+              this.textAreaRef.focus();
+          }
+      }, {
+          key: 'blur',
+          value: function blur() {
+              this.textAreaRef.blur();
+          }
+      }, {
+          key: 'getTextAreaClassName',
+          value: function getTextAreaClassName() {
+              var _props = this.props,
+                  prefixCls = _props.prefixCls,
+                  className = _props.className,
+                  disabled = _props.disabled;
+
+              return classNames(prefixCls, className, _defineProperty$1({}, prefixCls + '-disabled', disabled));
+          }
+      }, {
+          key: 'render',
+          value: function render() {
+              var props = this.props;
+              var otherProps = omit(props, ['prefixCls', 'onPressEnter', 'autosize']);
+              var style = _extends$2({}, props.style, this.state.textareaStyles);
+              // Fix https://github.com/ant-design/ant-design/issues/6776
+              // Make sure it could be reset when using form.getFieldDecorator
+              if ('value' in otherProps) {
+                  otherProps.value = otherProps.value || '';
+              }
+              return React$1.createElement('textarea', _extends$2({}, otherProps, { className: this.getTextAreaClassName(), style: style, onKeyDown: this.handleKeyDown, onChange: this.handleTextareaChange, ref: this.saveTextAreaRef }));
+          }
+      }]);
+
+      return TextArea;
+  }(React$1.Component);
+
+  TextArea.defaultProps = {
+      prefixCls: 'ant-input'
+  };
+
+  Input.Group = Group;
+  Input.Search = Search;
+  Input.TextArea = TextArea;
 
   var LocaleReceiver_1 = createCommonjsModule(function (module, exports) {
 
@@ -18282,7 +18820,7 @@
       }
   };
 
-  var __rest$4 = undefined && undefined.__rest || function (s, e) {
+  var __rest$5 = undefined && undefined.__rest || function (s, e) {
       var t = {};
       for (var p in s) {
           if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -18324,7 +18862,7 @@
                   className = _a$className === undefined ? '' : _a$className,
                   size = _a.size,
                   mode = _a.mode,
-                  restProps = __rest$4(_a, ["prefixCls", "className", "size", "mode"]);
+                  restProps = __rest$5(_a, ["prefixCls", "className", "size", "mode"]);
               var cls = classNames((_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty$1(_classNames, prefixCls + '-sm', size === 'small'), _classNames), className);
               var optionLabelProp = _this.props.optionLabelProp;
 
@@ -21606,7 +22144,7 @@
 
   Select$2.TreeNode = TreeNode$1;
 
-  var __rest$5 = undefined && undefined.__rest || function (s, e) {
+  var __rest$6 = undefined && undefined.__rest || function (s, e) {
       var t = {};
       for (var p in s) {
           if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
@@ -21636,7 +22174,7 @@
                   notFoundContent = _a.notFoundContent,
                   dropdownStyle = _a.dropdownStyle,
                   dropdownClassName = _a.dropdownClassName,
-                  restProps = __rest$5(_a, ["prefixCls", "className", "size", "notFoundContent", "dropdownStyle", "dropdownClassName"]);
+                  restProps = __rest$6(_a, ["prefixCls", "className", "size", "notFoundContent", "dropdownStyle", "dropdownClassName"]);
               var cls = classNames((_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty$1(_classNames, prefixCls + '-sm', size === 'small'), _classNames), className);
               var checkable = restProps.treeCheckable;
               if (checkable) {
@@ -21682,534 +22220,6 @@
       choiceTransitionName: 'zoom',
       showSearch: false
   };
-
-  function fixControlledValue(value) {
-      if (typeof value === 'undefined' || value === null) {
-          return '';
-      }
-      return value;
-  }
-
-  var Input = function (_React$Component) {
-      _inherits$1(Input, _React$Component);
-
-      function Input() {
-          _classCallCheck$1(this, Input);
-
-          var _this = _possibleConstructorReturn$1(this, (Input.__proto__ || Object.getPrototypeOf(Input)).apply(this, arguments));
-
-          _this.handleKeyDown = function (e) {
-              var _this$props = _this.props,
-                  onPressEnter = _this$props.onPressEnter,
-                  onKeyDown = _this$props.onKeyDown;
-
-              if (e.keyCode === 13 && onPressEnter) {
-                  onPressEnter(e);
-              }
-              if (onKeyDown) {
-                  onKeyDown(e);
-              }
-          };
-          _this.saveInput = function (node) {
-              _this.input = node;
-          };
-          return _this;
-      }
-
-      _createClass$1(Input, [{
-          key: 'focus',
-          value: function focus() {
-              this.input.focus();
-          }
-      }, {
-          key: 'blur',
-          value: function blur() {
-              this.input.blur();
-          }
-      }, {
-          key: 'getInputClassName',
-          value: function getInputClassName() {
-              var _classNames;
-
-              var _props = this.props,
-                  prefixCls = _props.prefixCls,
-                  size = _props.size,
-                  disabled = _props.disabled;
-
-              return classNames(prefixCls, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-sm', size === 'small'), _defineProperty$1(_classNames, prefixCls + '-lg', size === 'large'), _defineProperty$1(_classNames, prefixCls + '-disabled', disabled), _classNames));
-          }
-      }, {
-          key: 'renderLabeledInput',
-          value: function renderLabeledInput(children) {
-              var _classNames3;
-
-              var props = this.props;
-              // Not wrap when there is not addons
-              if (!props.addonBefore && !props.addonAfter) {
-                  return children;
-              }
-              var wrapperClassName = props.prefixCls + '-group';
-              var addonClassName = wrapperClassName + '-addon';
-              var addonBefore = props.addonBefore ? React$1.createElement(
-                  'span',
-                  { className: addonClassName },
-                  props.addonBefore
-              ) : null;
-              var addonAfter = props.addonAfter ? React$1.createElement(
-                  'span',
-                  { className: addonClassName },
-                  props.addonAfter
-              ) : null;
-              var className = classNames(props.prefixCls + '-wrapper', _defineProperty$1({}, wrapperClassName, addonBefore || addonAfter));
-              var groupClassName = classNames(props.prefixCls + '-group-wrapper', (_classNames3 = {}, _defineProperty$1(_classNames3, props.prefixCls + '-group-wrapper-sm', props.size === 'small'), _defineProperty$1(_classNames3, props.prefixCls + '-group-wrapper-lg', props.size === 'large'), _classNames3));
-              // Need another wrapper for changing display:table to display:inline-block
-              // and put style prop in wrapper
-              if (addonBefore || addonAfter) {
-                  return React$1.createElement(
-                      'span',
-                      { className: groupClassName, style: props.style },
-                      React$1.createElement(
-                          'span',
-                          { className: className },
-                          addonBefore,
-                          React$1.cloneElement(children, { style: null }),
-                          addonAfter
-                      )
-                  );
-              }
-              return React$1.createElement(
-                  'span',
-                  { className: className },
-                  addonBefore,
-                  children,
-                  addonAfter
-              );
-          }
-      }, {
-          key: 'renderLabeledIcon',
-          value: function renderLabeledIcon(children) {
-              var _classNames4;
-
-              var props = this.props;
-
-              if (!('prefix' in props || 'suffix' in props)) {
-                  return children;
-              }
-              var prefix = props.prefix ? React$1.createElement(
-                  'span',
-                  { className: props.prefixCls + '-prefix' },
-                  props.prefix
-              ) : null;
-              var suffix = props.suffix ? React$1.createElement(
-                  'span',
-                  { className: props.prefixCls + '-suffix' },
-                  props.suffix
-              ) : null;
-              var affixWrapperCls = classNames(props.className, props.prefixCls + '-affix-wrapper', (_classNames4 = {}, _defineProperty$1(_classNames4, props.prefixCls + '-affix-wrapper-sm', props.size === 'small'), _defineProperty$1(_classNames4, props.prefixCls + '-affix-wrapper-lg', props.size === 'large'), _classNames4));
-              return React$1.createElement(
-                  'span',
-                  { className: affixWrapperCls, style: props.style },
-                  prefix,
-                  React$1.cloneElement(children, { style: null, className: this.getInputClassName() }),
-                  suffix
-              );
-          }
-      }, {
-          key: 'renderInput',
-          value: function renderInput() {
-              var _props2 = this.props,
-                  value = _props2.value,
-                  className = _props2.className;
-              // Fix https://fb.me/react-unknown-prop
-
-              var otherProps = omit(this.props, ['prefixCls', 'onPressEnter', 'addonBefore', 'addonAfter', 'prefix', 'suffix']);
-              if ('value' in this.props) {
-                  otherProps.value = fixControlledValue(value);
-                  // Input elements must be either controlled or uncontrolled,
-                  // specify either the value prop, or the defaultValue prop, but not both.
-                  delete otherProps.defaultValue;
-              }
-              return this.renderLabeledIcon(React$1.createElement('input', _extends$2({}, otherProps, { className: classNames(this.getInputClassName(), className), onKeyDown: this.handleKeyDown, ref: this.saveInput })));
-          }
-      }, {
-          key: 'render',
-          value: function render() {
-              return this.renderLabeledInput(this.renderInput());
-          }
-      }]);
-
-      return Input;
-  }(React$1.Component);
-
-  Input.defaultProps = {
-      prefixCls: 'ant-input',
-      type: 'text',
-      disabled: false
-  };
-  Input.propTypes = {
-      type: PropTypes.string,
-      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      size: PropTypes.oneOf(['small', 'default', 'large']),
-      maxLength: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      disabled: PropTypes.bool,
-      value: PropTypes.any,
-      defaultValue: PropTypes.any,
-      className: PropTypes.string,
-      addonBefore: PropTypes.node,
-      addonAfter: PropTypes.node,
-      prefixCls: PropTypes.string,
-      autosize: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
-      onPressEnter: PropTypes.func,
-      onKeyDown: PropTypes.func,
-      onKeyUp: PropTypes.func,
-      onFocus: PropTypes.func,
-      onBlur: PropTypes.func,
-      prefix: PropTypes.node,
-      suffix: PropTypes.node
-  };
-
-  var Group = function Group(props) {
-      var _classNames;
-
-      var _props$prefixCls = props.prefixCls,
-          prefixCls = _props$prefixCls === undefined ? 'ant-input-group' : _props$prefixCls,
-          _props$className = props.className,
-          className = _props$className === undefined ? '' : _props$className;
-
-      var cls = classNames(prefixCls, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-lg', props.size === 'large'), _defineProperty$1(_classNames, prefixCls + '-sm', props.size === 'small'), _defineProperty$1(_classNames, prefixCls + '-compact', props.compact), _classNames), className);
-      return React$1.createElement(
-          'span',
-          { className: cls, style: props.style },
-          props.children
-      );
-  };
-
-  var __rest$6 = undefined && undefined.__rest || function (s, e) {
-      var t = {};
-      for (var p in s) {
-          if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-      }if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-          if (e.indexOf(p[i]) < 0) t[p[i]] = s[p[i]];
-      }return t;
-  };
-
-  var Search = function (_React$Component) {
-      _inherits$1(Search, _React$Component);
-
-      function Search() {
-          _classCallCheck$1(this, Search);
-
-          var _this = _possibleConstructorReturn$1(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
-
-          _this.onSearch = function () {
-              var onSearch = _this.props.onSearch;
-
-              if (onSearch) {
-                  onSearch(_this.input.input.value);
-              }
-              _this.input.focus();
-          };
-          _this.saveInput = function (node) {
-              _this.input = node;
-          };
-          return _this;
-      }
-
-      _createClass$1(Search, [{
-          key: 'focus',
-          value: function focus() {
-              this.input.focus();
-          }
-      }, {
-          key: 'blur',
-          value: function blur() {
-              this.input.blur();
-          }
-      }, {
-          key: 'getButtonOrIcon',
-          value: function getButtonOrIcon() {
-              var _props = this.props,
-                  enterButton = _props.enterButton,
-                  prefixCls = _props.prefixCls,
-                  size = _props.size,
-                  disabled = _props.disabled;
-
-              if (!enterButton) {
-                  return React$1.createElement(Icon, { className: prefixCls + '-icon', type: 'search', key: 'searchIcon' });
-              }
-              var enterButtonAsElement = enterButton;
-              if (enterButtonAsElement.type === Button || enterButtonAsElement.type === 'button') {
-                  return React$1.cloneElement(enterButtonAsElement, enterButtonAsElement.type === Button ? {
-                      className: prefixCls + '-button',
-                      size: size,
-                      onClick: this.onSearch
-                  } : {
-                      onClick: this.onSearch
-                  });
-              }
-              return React$1.createElement(
-                  Button,
-                  { className: prefixCls + '-button', type: 'primary', size: size, disabled: disabled, onClick: this.onSearch, key: 'enterButton' },
-                  enterButton === true ? React$1.createElement(Icon, { type: 'search' }) : enterButton
-              );
-          }
-      }, {
-          key: 'render',
-          value: function render() {
-              var _classNames;
-
-              var _a = this.props,
-                  className = _a.className,
-                  prefixCls = _a.prefixCls,
-                  inputPrefixCls = _a.inputPrefixCls,
-                  size = _a.size,
-                  suffix = _a.suffix,
-                  enterButton = _a.enterButton,
-                  others = __rest$6(_a, ["className", "prefixCls", "inputPrefixCls", "size", "suffix", "enterButton"]);
-              delete others.onSearch;
-              var buttonOrIcon = this.getButtonOrIcon();
-              var searchSuffix = suffix ? [suffix, buttonOrIcon] : buttonOrIcon;
-              var inputClassName = classNames(prefixCls, className, (_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-enter-button', !!enterButton), _defineProperty$1(_classNames, prefixCls + '-' + size, !!size), _classNames));
-              return React$1.createElement(Input, _extends$2({ onPressEnter: this.onSearch }, others, { size: size, className: inputClassName, prefixCls: inputPrefixCls, suffix: searchSuffix, ref: this.saveInput }));
-          }
-      }]);
-
-      return Search;
-  }(React$1.Component);
-
-  Search.defaultProps = {
-      inputPrefixCls: 'ant-input',
-      prefixCls: 'ant-input-search',
-      enterButton: false
-  };
-
-  // Thanks to https://github.com/andreypopp/react-textarea-autosize/
-  /**
-   * calculateNodeHeight(uiTextNode, useCache = false)
-   */
-  var HIDDEN_TEXTAREA_STYLE = '\n  min-height:0 !important;\n  max-height:none !important;\n  height:0 !important;\n  visibility:hidden !important;\n  overflow:hidden !important;\n  position:absolute !important;\n  z-index:-1000 !important;\n  top:0 !important;\n  right:0 !important\n';
-  var SIZING_STYLE = ['letter-spacing', 'line-height', 'padding-top', 'padding-bottom', 'font-family', 'font-weight', 'font-size', 'text-rendering', 'text-transform', 'width', 'text-indent', 'padding-left', 'padding-right', 'border-width', 'box-sizing'];
-  var computedStyleCache = {};
-  var hiddenTextarea = void 0;
-  function calculateNodeStyling(node) {
-      var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-
-      var nodeRef = node.getAttribute('id') || node.getAttribute('data-reactid') || node.getAttribute('name');
-      if (useCache && computedStyleCache[nodeRef]) {
-          return computedStyleCache[nodeRef];
-      }
-      var style = window.getComputedStyle(node);
-      var boxSizing = style.getPropertyValue('box-sizing') || style.getPropertyValue('-moz-box-sizing') || style.getPropertyValue('-webkit-box-sizing');
-      var paddingSize = parseFloat(style.getPropertyValue('padding-bottom')) + parseFloat(style.getPropertyValue('padding-top'));
-      var borderSize = parseFloat(style.getPropertyValue('border-bottom-width')) + parseFloat(style.getPropertyValue('border-top-width'));
-      var sizingStyle = SIZING_STYLE.map(function (name) {
-          return name + ':' + style.getPropertyValue(name);
-      }).join(';');
-      var nodeInfo = {
-          sizingStyle: sizingStyle,
-          paddingSize: paddingSize,
-          borderSize: borderSize,
-          boxSizing: boxSizing
-      };
-      if (useCache && nodeRef) {
-          computedStyleCache[nodeRef] = nodeInfo;
-      }
-      return nodeInfo;
-  }
-  function calculateNodeHeight(uiTextNode) {
-      var useCache = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      var minRows = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-      var maxRows = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-
-      if (!hiddenTextarea) {
-          hiddenTextarea = document.createElement('textarea');
-          document.body.appendChild(hiddenTextarea);
-      }
-      // Fix wrap="off" issue
-      // https://github.com/ant-design/ant-design/issues/6577
-      if (uiTextNode.getAttribute('wrap')) {
-          hiddenTextarea.setAttribute('wrap', uiTextNode.getAttribute('wrap'));
-      } else {
-          hiddenTextarea.removeAttribute('wrap');
-      }
-      // Copy all CSS properties that have an impact on the height of the content in
-      // the textbox
-
-      var _calculateNodeStyling = calculateNodeStyling(uiTextNode, useCache),
-          paddingSize = _calculateNodeStyling.paddingSize,
-          borderSize = _calculateNodeStyling.borderSize,
-          boxSizing = _calculateNodeStyling.boxSizing,
-          sizingStyle = _calculateNodeStyling.sizingStyle;
-      // Need to have the overflow attribute to hide the scrollbar otherwise
-      // text-lines will not calculated properly as the shadow will technically be
-      // narrower for content
-
-
-      hiddenTextarea.setAttribute('style', sizingStyle + ';' + HIDDEN_TEXTAREA_STYLE);
-      hiddenTextarea.value = uiTextNode.value || uiTextNode.placeholder || '';
-      var minHeight = Number.MIN_SAFE_INTEGER;
-      var maxHeight = Number.MAX_SAFE_INTEGER;
-      var height = hiddenTextarea.scrollHeight;
-      var overflowY = void 0;
-      if (boxSizing === 'border-box') {
-          // border-box: add border, since height = content + padding + border
-          height = height + borderSize;
-      } else if (boxSizing === 'content-box') {
-          // remove padding, since height = content
-          height = height - paddingSize;
-      }
-      if (minRows !== null || maxRows !== null) {
-          // measure height of a textarea with a single row
-          hiddenTextarea.value = ' ';
-          var singleRowHeight = hiddenTextarea.scrollHeight - paddingSize;
-          if (minRows !== null) {
-              minHeight = singleRowHeight * minRows;
-              if (boxSizing === 'border-box') {
-                  minHeight = minHeight + paddingSize + borderSize;
-              }
-              height = Math.max(minHeight, height);
-          }
-          if (maxRows !== null) {
-              maxHeight = singleRowHeight * maxRows;
-              if (boxSizing === 'border-box') {
-                  maxHeight = maxHeight + paddingSize + borderSize;
-              }
-              overflowY = height > maxHeight ? '' : 'hidden';
-              height = Math.min(maxHeight, height);
-          }
-      }
-      // Remove scroll bar flash when autosize without maxRows
-      if (!maxRows) {
-          overflowY = 'hidden';
-      }
-      return { height: height, minHeight: minHeight, maxHeight: maxHeight, overflowY: overflowY };
-  }
-
-  function onNextFrame(cb) {
-      if (window.requestAnimationFrame) {
-          return window.requestAnimationFrame(cb);
-      }
-      return window.setTimeout(cb, 1);
-  }
-  function clearNextFrameAction(nextFrameId) {
-      if (window.cancelAnimationFrame) {
-          window.cancelAnimationFrame(nextFrameId);
-      } else {
-          window.clearTimeout(nextFrameId);
-      }
-  }
-
-  var TextArea = function (_React$Component) {
-      _inherits$1(TextArea, _React$Component);
-
-      function TextArea() {
-          _classCallCheck$1(this, TextArea);
-
-          var _this = _possibleConstructorReturn$1(this, (TextArea.__proto__ || Object.getPrototypeOf(TextArea)).apply(this, arguments));
-
-          _this.state = {
-              textareaStyles: {}
-          };
-          _this.resizeTextarea = function () {
-              var autosize = _this.props.autosize;
-
-              if (!autosize || !_this.textAreaRef) {
-                  return;
-              }
-              var minRows = autosize ? autosize.minRows : null;
-              var maxRows = autosize ? autosize.maxRows : null;
-              var textareaStyles = calculateNodeHeight(_this.textAreaRef, false, minRows, maxRows);
-              _this.setState({ textareaStyles: textareaStyles });
-          };
-          _this.handleTextareaChange = function (e) {
-              if (!('value' in _this.props)) {
-                  _this.resizeTextarea();
-              }
-              var onChange = _this.props.onChange;
-
-              if (onChange) {
-                  onChange(e);
-              }
-          };
-          _this.handleKeyDown = function (e) {
-              var _this$props = _this.props,
-                  onPressEnter = _this$props.onPressEnter,
-                  onKeyDown = _this$props.onKeyDown;
-
-              if (e.keyCode === 13 && onPressEnter) {
-                  onPressEnter(e);
-              }
-              if (onKeyDown) {
-                  onKeyDown(e);
-              }
-          };
-          _this.saveTextAreaRef = function (textArea) {
-              _this.textAreaRef = textArea;
-          };
-          return _this;
-      }
-
-      _createClass$1(TextArea, [{
-          key: 'componentDidMount',
-          value: function componentDidMount() {
-              this.resizeTextarea();
-          }
-      }, {
-          key: 'componentWillReceiveProps',
-          value: function componentWillReceiveProps(nextProps) {
-              // Re-render with the new content then recalculate the height as required.
-              if (this.props.value !== nextProps.value) {
-                  if (this.nextFrameActionId) {
-                      clearNextFrameAction(this.nextFrameActionId);
-                  }
-                  this.nextFrameActionId = onNextFrame(this.resizeTextarea);
-              }
-          }
-      }, {
-          key: 'focus',
-          value: function focus() {
-              this.textAreaRef.focus();
-          }
-      }, {
-          key: 'blur',
-          value: function blur() {
-              this.textAreaRef.blur();
-          }
-      }, {
-          key: 'getTextAreaClassName',
-          value: function getTextAreaClassName() {
-              var _props = this.props,
-                  prefixCls = _props.prefixCls,
-                  className = _props.className,
-                  disabled = _props.disabled;
-
-              return classNames(prefixCls, className, _defineProperty$1({}, prefixCls + '-disabled', disabled));
-          }
-      }, {
-          key: 'render',
-          value: function render() {
-              var props = this.props;
-              var otherProps = omit(props, ['prefixCls', 'onPressEnter', 'autosize']);
-              var style = _extends$2({}, props.style, this.state.textareaStyles);
-              // Fix https://github.com/ant-design/ant-design/issues/6776
-              // Make sure it could be reset when using form.getFieldDecorator
-              if ('value' in otherProps) {
-                  otherProps.value = otherProps.value || '';
-              }
-              return React$1.createElement('textarea', _extends$2({}, otherProps, { className: this.getTextAreaClassName(), style: style, onKeyDown: this.handleKeyDown, onChange: this.handleTextareaChange, ref: this.saveTextAreaRef }));
-          }
-      }]);
-
-      return TextArea;
-  }(React$1.Component);
-
-  TextArea.defaultProps = {
-      prefixCls: 'ant-input'
-  };
-
-  Input.Group = Group;
-  Input.Search = Search;
-  Input.TextArea = TextArea;
 
   var objectDestructuringEmpty = createCommonjsModule(function (module, exports) {
 
@@ -24282,7 +24292,7 @@
         var renderItem = this.props.renderItem;
         return data.map(function (item) {
           if (item.children && item.children.length) {
-            return React$1__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children || []));
+            return React$1__default.cloneElement(renderItem(item), {}, _this2.loopTreeNode(item.children));
           }
 
           return React$1__default.cloneElement(renderItem(item));
@@ -24310,7 +24320,7 @@
           defaultExpandAll: true,
           onCheck: this.onCheck,
           onSelect: this.onSelect
-        }), this.loopTreeNode(treeData || [])));
+        }), this.loopTreeNode(treeData)));
       }
     }]);
 
@@ -25539,8 +25549,7 @@
         var _this$props = this.props,
             children = _this$props.children,
             layout = _this$props.layout,
-            classNames$$1 = _this$props.classNames,
-            showExpand = _this$props.showExpand;
+            classNames$$1 = _this$props.classNames;
         var renderChildren;
         var formItemLayout = layout && layout !== 'inline' ? {
           labelCol: {
@@ -25557,36 +25566,25 @@
 
         if (this.state.expand == false) {
           renderChildren = [].concat(children).filter(function (ch, idx) {
-            return idx < showExpand;
+            return idx < 3;
           });
         } else if (this.props.showConfig) {
           //高级配置后，前三固定 后四配置
           renderChildren = React$1__default.Children.toArray(children).filter(function (ch, idx) {
             //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
-            return _this2.state.displayItem.indexOf(ch.props.name) >= 0 || idx < showExpand;
+            return _this2.state.displayItem.indexOf(ch.props.name) >= 0 || idx < _this2.props.showExpand;
           });
         } else {
           renderChildren = React$1__default.Children.toArray(children).filter(function (ch, idx) {
-            return idx < showExpand + 4;
+            return idx < _this2.props.showExpand + 4;
           });
         }
 
         return renderChildren.map(function (it, i) {
-          var columns = it.props.columns || 1;
-          var labelNum = Math.round(8 / columns),
-              spancols = 8 * columns;
-          formItemLayout = Object.assign({}, formItemLayout, {
-            labelCol: {
-              span: labelNum
-            },
-            wrapperCol: {
-              span: 24 - labelNum
-            }
-          }); // console.log(it.type.name,123)
-
-          if (it.type.name === "Input") {
+          // console.log(it.type === Input)
+          if (JSON.stringify(it.type) === JSON.stringify(Input)) {
             return React$1__default.createElement(Col, {
-              span: spancols,
+              span: 8,
               key: i
             }, React$1__default.createElement(FormItem$1, _extends({
               colon: true
@@ -25596,7 +25594,7 @@
             }), React$1__default.cloneElement(it)));
           } else {
             return React$1__default.createElement(Col, {
-              span: spancols,
+              span: 8,
               key: i
             }, React$1__default.createElement(FormItem$1, _extends({
               colon: true
@@ -25654,10 +25652,7 @@
         var _this$state = this.state,
             loading = _this$state.loading,
             expand = _this$state.expand;
-        var _this$props2 = this.props,
-            children = _this$props2.children,
-            showExpand = _this$props2.showExpand; // console.log(this)
-
+        var children = this.props.children;
         return React$1__default.createElement("div", {
           className: "advanced-search-toolbar"
         }, React$1__default.createElement(Button, {
@@ -25665,7 +25660,7 @@
           disabled: loading,
           onClick: this.handleSearch.bind(this),
           type: "primary"
-        }, locale.searchText), children.length > showExpand ? React$1__default.createElement(Button, {
+        }, locale.searchText), children.length > 3 ? React$1__default.createElement(Button, {
           type: "ghost",
           onClick: this.toggleExpand.bind(this)
         }, expand ? locale.upText : locale.downText, React$1__default.createElement(Icon, {
@@ -25675,13 +25670,14 @@
     }, {
       key: "render",
       value: function render() {
-        var _this$props3 = this.props,
-            showConfig = _this$props3.showConfig,
-            children = _this$props3.children,
-            className = _this$props3.className,
-            autoSubmitForm = _this$props3.autoSubmitForm,
-            layout = _this$props3.layout,
-            locale = _this$props3.locale;
+        var _this$props2 = this.props,
+            showConfig = _this$props2.showConfig,
+            children = _this$props2.children,
+            className = _this$props2.className,
+            autoSubmitForm = _this$props2.autoSubmitForm,
+            layout = _this$props2.layout,
+            locale = _this$props2.locale;
+        var defaultLocale = Object.assign({}, Locale, locale);
         return React$1__default.createElement("div", {
           className: classNames("advanced-search-panel", className)
         }, React$1__default.createElement(SubmitForm, {
@@ -25692,8 +25688,8 @@
           wrappedComponentRef: this.saveFormRef.bind(this)
         }, this.renderKeyword(), React$1__default.createElement(LocaleReceiver, {
           componentName: 'AdvancedSearch',
-          defaultLocale: Locale
-        }, this.renderSearchToolbar.bind(this))));
+          defaultLocale: defaultLocale
+        }, this.renderSearchToolbar.bind(this, defaultLocale))));
       }
     }]);
 
@@ -38062,6 +38058,7 @@
             prefixCls = _this$props3.prefixCls,
             loading = _this$props3.loading,
             locale = _this$props3.locale;
+        var defaultLocale = Object.assign({}, Locale$1, locale);
         return React$1__default.createElement("div", {
           className: "".concat(prefixCls, "-wrapper")
         }, React$1__default.createElement(Spin, {
@@ -38070,8 +38067,8 @@
           className: "".concat(prefixCls)
         }, this.renderHeader(), this.renderBody(), React$1__default.createElement(LocaleReceiver, {
           componentName: 'Panel',
-          defaultLocale: Locale$1
-        }, this.renderFooter.bind(this)))));
+          defaultLocale: defaultLocale
+        }, this.renderFooter.bind(this, defaultLocale)))));
       }
     }]);
 
@@ -38128,9 +38125,9 @@
         var _this$props2 = this.props,
             route = _this$props2.route,
             children = _this$props2.children,
-            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]); // console.log(children.props
+            otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]);
 
-
+        console.log(children.props());
         return React$1__default.createElement(Modal, _extends({
           title: "title",
           visible: true,
