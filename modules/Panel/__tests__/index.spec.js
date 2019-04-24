@@ -67,7 +67,32 @@ describe('Panel 组件是否渲染 default props', () => {
     done()
   })
 
+  it('Panel Component has no locale',(done)=>{
+    const { wrapper, props } = setup();
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(Locale)
+    done()
+  })
 
+  it('Panel Component has locale with okText',(done)=>{
+    const { wrapper, props } = setup({locale:{okText:"测试"}});
+    const localeTest = {okText:"测试",cancelText:"取消"}
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
+
+  it('Panel Component has locale with okText and cancelText',(done)=>{
+    const { wrapper, props } = setup({locale:{okText:"测试",cancelText:"取消测试"}});
+    const localeTest = {okText:"测试",cancelText:"取消测试"}
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
+
+  it('Panel Component has locale and children is no exists',(done)=>{
+    const { wrapper, props } = setup({locale:{okText:"测试",cancelText:"取消测试",back:"返回"}});
+    const localeTest = {okText:"测试",cancelText:"取消测试",back:"返回"}
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
 
 })
 

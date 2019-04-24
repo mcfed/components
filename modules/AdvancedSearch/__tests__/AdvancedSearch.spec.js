@@ -6,6 +6,7 @@ import {
   Select,
 } from 'antd'
 import AdvancedSearchForm from '../AdvancedSearch'
+import Locale from '../locale'
 
 const setup = (props={}) => {
   // 模拟 props
@@ -165,4 +166,32 @@ describe("AdvancedSearchForm mount render and behavior", () => {
   })
 
   xit('expand AdvancedSearchForm by children than 3',()=>{})
+
+  it('AdvancedSearchForm Component has no locale',(done)=>{
+    const { wrapper, props } = setup();
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(Locale)
+    done()
+  })
+
+  it('AdvancedSearchForm Component has locale with searchText',(done)=>{
+    const { wrapper, props } = setup({locale:{searchText:"查询"}});
+    const localeTest = {searchText:"查询",resetText:"重置",upText:"收起",downText:"展开"}
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
+
+  it('AdvancedSearchForm Component has locale with all',(done)=>{
+    const { wrapper, props } = setup({locale:{searchText:"搜索1",resetText:"重置1",upText:"收起1",downText:"展开1"}});
+    const localeTest = {searchText:"搜索1",resetText:"重置1",upText:"收起1",downText:"展开1"}
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
+
+  it('AdvancedSearchForm Component has locale and children is no exists',(done)=>{
+    const { wrapper, props } = setup({locale:{searchText:"搜索1",resetText:"重置1",upText:"收起1",downText:"展开1",okText:"其他"}});
+    const localeTest = {searchText:"搜索1",resetText:"重置1",upText:"收起1",downText:"展开1",okText:"其他"}
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
+
 })
