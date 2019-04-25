@@ -72,7 +72,7 @@ export default class AdvancedSearchForm extends React.Component {
   getFields() {
     const {children,layout,classNames} = this.props
     let renderChildren;
-    const formItemLayout = layout && layout!=='inline'? {
+    let formItemLayout = layout && layout!=='inline'? {
       labelCol: {
         span: 8
       },
@@ -94,10 +94,24 @@ export default class AdvancedSearchForm extends React.Component {
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
+
+      let columns = it.props.columns || 1
+      let labelNum = Math.round(8/columns),
+        spancols = 8 * columns
+      formItemLayout = Object.assign({},formItemLayout,{
+        labelCol:{
+          span:labelNum
+        },
+        wrapperCol:{
+          span: 24 - labelNum
+        }
+      })
+
+
       // console.log(it.type === Input)
-      if(JSON.stringify(it.type) === JSON.stringify(Input)){
+      if(it.type.name === "Input"){
         return (
-          <Col span={8} key={i}>
+          <Col span={spancols} key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it) }
             </FormItem>
@@ -105,7 +119,7 @@ export default class AdvancedSearchForm extends React.Component {
         )
       }else{
         return (
-          <Col span={8} key={i}>
+          <Col span={spancols} key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
             </FormItem>
