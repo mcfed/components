@@ -606,7 +606,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: _library ? 'pure' : 'global',
+  mode: 'pure',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -41456,7 +41456,7 @@ Ellipsis.propTypes = {
 };
 Ellipsis.defaultProps = {
   text: 'Ellipsis',
-  tooltipText: ''
+  tooltiptext: ''
 };
 
 export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary, Ellipsis };

@@ -1,5 +1,5 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow,render,mount } from 'enzyme'
 import toJson from 'enzyme-to-json'
 import {Button} from 'antd'
 import Panel from '../index'
@@ -93,6 +93,17 @@ describe('Panel 组件是否渲染 default props', () => {
     expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
     done()
   })
+
+  it.skip('Panel Component render 测试',(done)=>{
+
+    const wrapperRender = render(<Panel locale={{okText:"测试",cancelText:"取消测试",back:"返回"}} >abc</Panel>);
+    const button = wrapperRender.find("button").children();
+    console.log(button.prop('span'))
+    // expect(wrapperRender.find("button").html()).toEqual('测试');
+    done()
+  })
+
+  mount
 
 })
 
