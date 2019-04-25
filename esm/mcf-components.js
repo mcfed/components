@@ -26016,6 +26016,7 @@ function (_React$Component) {
           loading = _this$state.loading,
           expand = _this$state.expand;
       var children = this.props.children;
+      var contextLocale = Object.assign({}, locale, this.props.locale);
       return React__default.createElement("div", {
         className: "advanced-search-toolbar"
       }, React__default.createElement(Button, {
@@ -26023,10 +26024,10 @@ function (_React$Component) {
         disabled: loading,
         onClick: this.handleSearch.bind(this),
         type: "primary"
-      }, locale.searchText), children.length > 3 ? React__default.createElement(Button, {
+      }, contextLocale.searchText), children.length > 3 ? React__default.createElement(Button, {
         type: "ghost",
         onClick: this.toggleExpand.bind(this)
-      }, expand ? locale.upText : locale.downText, React__default.createElement(Icon, {
+      }, expand ? contextLocale.upText : contextLocale.downText, React__default.createElement(Icon, {
         type: expand ? "up" : "down"
       })) : "");
     }
@@ -26040,7 +26041,6 @@ function (_React$Component) {
           autoSubmitForm = _this$props2.autoSubmitForm,
           layout = _this$props2.layout,
           locale = _this$props2.locale;
-      var defaultLocale = Object.assign({}, Locale, locale);
       return React__default.createElement("div", {
         className: classNames("advanced-search-panel", className)
       }, React__default.createElement(SubmitForm, {
@@ -26051,8 +26051,8 @@ function (_React$Component) {
         wrappedComponentRef: this.saveFormRef.bind(this)
       }, this.renderKeyword(), React__default.createElement(LocaleReceiver, {
         componentName: 'AdvancedSearch',
-        defaultLocale: defaultLocale
-      }, this.renderSearchToolbar.bind(this, defaultLocale))));
+        defaultLocale: Locale
+      }, this.renderSearchToolbar.bind(this))));
     }
   }]);
 
@@ -38403,11 +38403,12 @@ function (_Component) {
       var footer;
       var props = this.props;
       var prefixCls = this.props.prefixCls;
+      var contextLocale = Object.assign({}, locale, this.props.locale);
 
       if (props.footer != false) {
         footer = React__default.createElement("div", {
           className: prefixCls + '-footer'
-        }, this.renderFooterLocale(locale));
+        }, this.renderFooterLocale(contextLocale));
       } else {
         footer = null;
       }
@@ -38421,7 +38422,6 @@ function (_Component) {
           prefixCls = _this$props3.prefixCls,
           loading = _this$props3.loading,
           locale = _this$props3.locale;
-      var defaultLocale = Object.assign({}, Locale$1, locale);
       return React__default.createElement("div", {
         className: "".concat(prefixCls, "-wrapper")
       }, React__default.createElement(Spin, {
@@ -38430,8 +38430,8 @@ function (_Component) {
         className: "".concat(prefixCls)
       }, this.renderHeader(), this.renderBody(), React__default.createElement(LocaleReceiver, {
         componentName: 'Panel',
-        defaultLocale: defaultLocale
-      }, this.renderFooter.bind(this, defaultLocale)))));
+        defaultLocale: Locale$1
+      }, this.renderFooter.bind(this)))));
     }
   }]);
 

@@ -167,19 +167,19 @@ export default class AdvancedSearchForm extends React.Component {
   renderSearchToolbar(locale){
     let {loading,expand} = this.state
     const {children} = this.props
+    const contextLocale = Object.assign({},locale,this.props.locale)
     return (
       <div className="advanced-search-toolbar">
-				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
+				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{contextLocale.searchText}</Button>
         {
           children.length>3?
-    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?locale.upText:locale.downText}<Icon type={expand?"up":"down"} /></Button>
+    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?contextLocale.upText:contextLocale.downText}<Icon type={expand?"up":"down"} /></Button>
           :""
         }
       </div>)
   }
   render() {
     let {showConfig,children,className,autoSubmitForm,layout,locale} = this.props
-    let defaultLocale =  Object.assign({},Locale,locale)
     return (
       <div className={classNames("advanced-search-panel",className)}>
         <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
@@ -189,9 +189,9 @@ export default class AdvancedSearchForm extends React.Component {
               LocaleReceiver,
               {
                 componentName:'AdvancedSearch',
-                defaultLocale:defaultLocale
+                defaultLocale:Locale
               },
-              this.renderSearchToolbar.bind(this,defaultLocale)
+              this.renderSearchToolbar.bind(this)
             )
           }
         </SubmitForm>

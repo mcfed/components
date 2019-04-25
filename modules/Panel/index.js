@@ -54,17 +54,17 @@ export default class Panel extends Component{
   renderFooter(locale){
     let footer
     const {props} = this
-    const {prefixCls} = this.props    
+    const {prefixCls} = this.props  
+    const contextLocale = Object.assign({},locale,this.props.locale)
     if( props.footer !=false){
-      footer = React.createElement("div", { className: prefixCls + '-footer' }, this.renderFooterLocale(locale));
+      footer = React.createElement("div", { className: prefixCls + '-footer' }, this.renderFooterLocale(contextLocale));
     }else{
       footer=null
     }
     return footer
   }
   render(){
-    const {prefixCls,loading,locale} = this.props
-    let defaultLocale =  Object.assign({},Locale,locale)
+    const {prefixCls,loading,locale} = this.props    
     return (
       <div className={`${prefixCls}-wrapper`}>
         <Spin spinning={loading}>
@@ -76,9 +76,9 @@ export default class Panel extends Component{
               LocaleReceiver,
               {
                 componentName:'Panel',
-                defaultLocale:defaultLocale
+                defaultLocale:Locale
               },
-              this.renderFooter.bind(this,defaultLocale)
+              this.renderFooter.bind(this)
             )
           }
           </div>

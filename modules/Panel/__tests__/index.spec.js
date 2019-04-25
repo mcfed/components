@@ -102,9 +102,6 @@ describe('Panel 组件是否渲染 default props', () => {
     // expect(wrapperRender.find("button").html()).toEqual('测试');
     done()
   })
-
-  mount
-
 })
 
 
