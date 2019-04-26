@@ -76,12 +76,11 @@ describe('Panel 组件是否渲染 default props', () => {
 
 
 describe('panel 组件设置locale参数后返回值的验证 mount方式',()=>{
-  it.skip('locale传入okText时希望返回覆盖okText缺省值',(done)=>{
+  it('locale传入okText时希望返回覆盖okText缺省值',(done)=>{
     const wrapperDom = mount(<Panel locale={{okText:"测试"}} >abc</Panel>)
-    console.log(wrapperDom)
     const localeTest = Object.assign({},Locale,{okText:"测试"})
-    console.log(localeTest)
-    // expect(wrapperDom.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    expect(wrapperDom.find('Button').get(0).props.children).toEqual(localeTest.okText)
+    expect(wrapperDom.find('Button').get(1).props.children).toEqual(localeTest.cancelText)
     done()
   })
 })
