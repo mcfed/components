@@ -72,39 +72,16 @@ describe('Panel 组件是否渲染 default props', () => {
     expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(Locale)
     done()
   })
-
-  it('Panel Component has locale with okText',(done)=>{
-    const { wrapper, props } = setup({locale:{okText:"测试"}});
-    const localeTest = {okText:"测试",cancelText:"取消"}
-    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
-    done()
-  })
-
-  it('Panel Component has locale with okText and cancelText',(done)=>{
-    const { wrapper, props } = setup({locale:{okText:"测试",cancelText:"取消测试"}});
-    const localeTest = {okText:"测试",cancelText:"取消测试"}
-    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
-    done()
-  })
-
-  it('Panel Component has locale and children is no exists',(done)=>{
-    const { wrapper, props } = setup({locale:{okText:"测试",cancelText:"取消测试",back:"返回"}});
-    const localeTest = {okText:"测试",cancelText:"取消测试",back:"返回"}
-    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
-    done()
-  })
-
-  it.skip('Panel Component render 测试',(done)=>{
-
-    const wrapperRender = render(<Panel locale={{okText:"测试",cancelText:"取消测试",back:"返回"}} >abc</Panel>);
-    const button = wrapperRender.find("button").children();
-    console.log(button.prop('span'))
-    // expect(wrapperRender.find("button").html()).toEqual('测试');
-    done()
-  })
 })
 
 
-describe('ButtonGroups 事件响应处理',()=>{
-
+describe('panel 组件设置locale参数后返回值的验证 mount方式',()=>{
+  it.skip('locale传入okText时希望返回覆盖okText缺省值',(done)=>{
+    const wrapperDom = mount(<Panel locale={{okText:"测试"}} >abc</Panel>)
+    console.log(wrapperDom)
+    const localeTest = Object.assign({},Locale,{okText:"测试"})
+    console.log(localeTest)
+    // expect(wrapperDom.find('LocaleReceiver').prop('defaultLocale')).toEqual(localeTest)
+    done()
+  })
 })
