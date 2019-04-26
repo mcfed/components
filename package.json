@@ -1,6 +1,6 @@
 {
   "name": "mcf-components",
-  "version": "0.3.0",
+  "version": "v1.0.0-rc1",
   "description": "@mcf for crud",
   "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",
@@ -15,6 +15,10 @@
     "modules",
     "developer"
   ],
+  "repository": {
+    "type": "git",
+    "url": "http://git.mchz.com.cn/mcf/components.git"
+  },
   "author": "jaxchow",
   "license": "ISC",
   "devDependencies": {
