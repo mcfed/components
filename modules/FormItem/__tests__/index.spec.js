@@ -5,6 +5,7 @@ import Input from 'antd/lib/input'
 import Select from 'antd/lib/select'
 import DatePicker from 'antd/lib/date-picker'
 import FormItem from '../index'
+import BaseForm from '../../BaseForm'
 
 const Option=Select.Option;
 const { RangePicker } = DatePicker
@@ -19,7 +20,14 @@ const setup = (children,props) => {
         }
       }
     },
-    formLayout:{}
+    formLayout:{
+      labelCol:{
+        span:3,
+      },
+      wrapperCol:{
+        span:18,
+      }
+    }
   }
   const wrapper = shallow(
     <FormItem>
@@ -31,6 +39,37 @@ const setup = (children,props) => {
     wrapper
   }
 }
+
+const setupForm = (children,props) => {
+  // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
+  const context={
+    formRef:{
+      getFieldDecorator(name,item){
+        return function(component){
+          return component
+        }
+      }
+    },
+    formLayout:{
+      labelCol:{
+        span:3,
+      },
+      wrapperCol:{
+        span:18,
+      }
+    }
+  }
+  const wrapper = shallow(
+    <BaseForm >
+        {children}
+    </BaseForm>
+  ,{context});
+  return {
+    props,
+    wrapper
+  }
+}
+
 
 
 describe('FormItem shallow render', () => {
@@ -66,15 +105,42 @@ describe('FormItem shallow render with Select', () => {
   })
 
   it('FormItem render SELECT 带 fetch', (done) => {
-
-    const { wrapper, props } = setup(<Select name="select" label="select" fetch={"http://192.168.200.178:3000/mock/20/db-audit/svc_search_biz/backup/fileServers"}  />);
-  //  console.log(wrapper.state('childData'))
-    //expect(wrapper.state('childData').length).toBe(10)
-    // expect(wrapper.find(Option).length).toBe(10)
+    const options=[{
+      "label":"1","value":"1"
+    },{
+      "label":"2",value:"2"
+    },{
+      "label":"3",value:"3"
+    }]
+    const { wrapper, props } = setup(<Select name="select" label="select" fetch={options}  />);
+    const select =wrapper.find("Select")
     done()
   })
 
-  it('FormItem render DatePicker', (done) => {
+  it('FormItem render SELECT 带 fetch url', (done) => {
+    const options=[{
+      "label":"1","value":"1"
+    },{
+      "label":"2",value:"2"
+    },{
+      "label":"3",value:"3"
+    }]
+    const { wrapper, props } = setup(<Select name="select" label="select" fetch={"http://192.168.200.178:3000/mock/63/capaa/v1/plugin/list"} fetchCallback={(result)=>{
+       console.log(result)
+       return result.data.pluginList
+     }
+     } />);
+    const select =wrapper.find("Select")
+    done()
+  })
+
+  it('FormItem render getPopupContainer',(done)=>{
+    const { wrapper, props } = setup(<Select name="select" label="select" />);
+    expect(wrapper.find("Select").props()).toHaveProperty("getPopupContainer")
+    done()
+  })
+
+  it.skip('FormItem render DatePicker', (done) => {
     const { wrapper, props } = setup(<DatePicker name="select" label="DatePicker" defaultValue={"2018-12-12"} />);
    // console.log(wrapper.prop('children'))
     done()
@@ -127,6 +193,21 @@ describe('FormItem Element 属性测试', () => {
     // console.log(wrapper.prop("children"))
     // expect(element.prop('renderable')).toBe(false)
     // expect(element.exists()).toBe(false)
+    done()
+  })
+
+})
+
+describe('setupForm', () => {
+  it('BaseForm itemLayout',(done)=>{
+    const { wrapper, props } = setup(
+      <FormItem labelCol={{span: 3}} wrapperCol={{span:15}}>
+        <Input disabled={(form)=>true} name="select" label="DatePicker" defaultValue={"2018-12-12"} />
+      </FormItem>
+    );
+    expect(wrapper.find("FormItem").at(1).prop("labelCol")).toEqual({span:3})
+    expect(wrapper.find("FormItem").at(1).prop("wrapperCol")).toEqual({span:15})
+    // expect(wrapper.find("FormItem").props())
     done()
   })
 

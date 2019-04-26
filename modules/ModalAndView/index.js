@@ -14,15 +14,11 @@ class ModalAndView extends Component {
 
   render() {
     var {route, children,...otherProps} = this.props
-    console.log(Modal)
-    console.log(<div/>)
-  	console.log(this.props)
+    console.log(children.props())
     return (
       <Modal title={"title"} visible={true} maskClosable={false} onCancel={this.handleBackRoute.bind(this)} onOk={this.handleSaveRoute.bind(this)} {...otherProps}>
         {
-          React.cloneElement(children.type,Object.assign({},otherProps,{
-            ref:"formView"
-          }))
+          React.createElement(children,Object.assign({},otherProps))
         }
 
       </Modal>

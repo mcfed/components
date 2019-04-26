@@ -102,7 +102,7 @@ class TableMenu extends Component{
 class DataTable extends Component{
   state={
     visible:false,
-    newColumns:[],
+    columns:[],
     displayColumns:[]
   }
   static defaultProps={
@@ -171,9 +171,10 @@ class DataTable extends Component{
     )
   }
   render(){
-    let {pagination,showConfig,page,...otherProps}= this.props
+    let {pagination,showConfig,page,defaultSort,...otherProps}= this.props
     let {visible,columns}=this.state
     let newColumns;
+    // console.log(this.props,"datatablerender")
      if(showConfig){
     // if(true){
       newColumns =columns.filter((col)=>{
@@ -193,6 +194,13 @@ class DataTable extends Component{
       // }])
     }else{
       newColumns=columns
+    }
+    /*增加是否有排序判断 增加列配置*/
+    if(defaultSort){
+      newColumns = newColumns.map(it=>{
+        defaultSort.columnKey == it.dataIndex ? it = Object.assign(it,{defaultSortOrder:defaultSort.order}) : null
+        return it
+      })
     }
     //console.log(newColumns,columns)
     return (<Table {...otherProps} columns={newColumns} pagination={!pagination?false:Object.assign({},pagination,page)}/>)
