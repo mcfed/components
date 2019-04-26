@@ -10,26 +10,26 @@ import './index.less'
    */
   class Ellipsis extends React.Component{
     render(){
-      let {text,tooltiptext} =  this.props;
+      let {text,tooltiptext,...otherProps} =  this.props;
       if(typeof tooltiptext === 'undefined'){
         tooltiptext = text
       }
       return(
         <Tooltip placement="top" title={tooltiptext} arrowPointAtCenter>
-            <div className="td-ellipsis" {...Object.assign({},this.props)}>
+            <div className="td-ellipsis" {...Object.assign({},otherProps)}>
                 {text}
             </div>
         </Tooltip>
-      )          
+      )
     }
   }
 
   Ellipsis.propTypes = {
     text: PropTypes.string.isRequired,
     tooltiptext: PropTypes.string
-  }  
+  }
   Ellipsis.defaultProps = {
     text: 'Ellipsis',
-    tooltipText: ''
+    tooltiptext: ''
   }
   export default Ellipsis

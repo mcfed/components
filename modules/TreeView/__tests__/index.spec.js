@@ -4,6 +4,7 @@ import {shallow,mount,render} from 'enzyme'
 import {
   Input,
   Select,
+  Tree
 } from 'antd'
 import TreeView from '../index'
 
@@ -28,5 +29,20 @@ describe("TreeView shallow render", () => {
     // const { wrapper, props } = setup();
   //  expect(wrapper.instance()).toBeInstanceOf(TreeView)
     done()
+  });
+
+  it.skip("tree default render ", () => {
+    const { wrapper, props } = setup({
+      treeData:[{
+        value:"abc",
+        children:[{
+          value:"efg"
+        },{
+          value:"hij"
+        }]
+      }],
+      renderItem:(ita)=>{console.log(ita)}
+    });
+   expect(wrapper.instance()).toBeInstanceOf(TreeView)
   });
 })

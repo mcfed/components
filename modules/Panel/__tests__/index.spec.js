@@ -1,5 +1,5 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow,render,mount } from 'enzyme'
 import toJson from 'enzyme-to-json'
 import {Button} from 'antd'
 import Panel from '../index'
@@ -67,11 +67,20 @@ describe('Panel 组件是否渲染 default props', () => {
     done()
   })
 
-
-
+  it('Panel Component has no locale',(done)=>{
+    const { wrapper, props } = setup();
+    expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(Locale)
+    done()
+  })
 })
 
 
-describe('ButtonGroups 事件响应处理',()=>{
-
+describe('panel 组件设置locale参数后返回值的验证 mount方式',()=>{
+  it('locale传入okText时希望返回覆盖okText缺省值',(done)=>{
+    const wrapperDom = mount(<Panel locale={{okText:"测试"}} >abc</Panel>)
+    const localeTest = Object.assign({},Locale,{okText:"测试"})
+    expect(wrapperDom.find('Button').get(0).props.children).toEqual(localeTest.okText)
+    expect(wrapperDom.find('Button').get(1).props.children).toEqual(localeTest.cancelText)
+    done()
+  })
 })

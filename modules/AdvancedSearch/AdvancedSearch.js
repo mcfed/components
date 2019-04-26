@@ -72,7 +72,7 @@ export default class AdvancedSearchForm extends React.Component {
   getFields() {
     const {children,layout,classNames} = this.props
     let renderChildren;
-    const formItemLayout = layout && layout!=='inline'? {
+    let formItemLayout = layout && layout!=='inline'? {
       labelCol: {
         span: 8
       },
@@ -94,10 +94,24 @@ export default class AdvancedSearchForm extends React.Component {
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
+
+      let columns = it.props.columns || 1
+      let labelNum = Math.round(8/columns),
+        spancols = 8 * columns
+      formItemLayout = Object.assign({},formItemLayout,{
+        labelCol:{
+          span:labelNum
+        },
+        wrapperCol:{
+          span: 24 - labelNum
+        }
+      })
+
+
       // console.log(it.type === Input)
-      if(JSON.stringify(it.type) === JSON.stringify(Input)){
+      if(it.type.name === "Input"){
         return (
-          <Col span={8} key={i}>
+          <Col span={spancols} key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it) }
             </FormItem>
@@ -105,7 +119,7 @@ export default class AdvancedSearchForm extends React.Component {
         )
       }else{
         return (
-          <Col span={8} key={i}>
+          <Col span={spancols} key={i}>
             <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
               {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
             </FormItem>
@@ -153,19 +167,19 @@ export default class AdvancedSearchForm extends React.Component {
   renderSearchToolbar(locale){
     let {loading,expand} = this.state
     const {children} = this.props
+    const contextLocale = Object.assign({},locale,this.props.locale)
     return (
       <div className="advanced-search-toolbar">
-				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
+				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{contextLocale.searchText}</Button>
         {
           children.length>3?
-    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?locale.upText:locale.downText}<Icon type={expand?"up":"down"} /></Button>
+    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?contextLocale.upText:contextLocale.downText}<Icon type={expand?"up":"down"} /></Button>
           :""
         }
       </div>)
   }
   render() {
     let {showConfig,children,className,autoSubmitForm,layout,locale} = this.props
-    let defaultLocale =  Object.assign({},Locale,locale)
     return (
       <div className={classNames("advanced-search-panel",className)}>
         <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
@@ -175,9 +189,9 @@ export default class AdvancedSearchForm extends React.Component {
               LocaleReceiver,
               {
                 componentName:'AdvancedSearch',
-                defaultLocale:defaultLocale
+                defaultLocale:Locale
               },
-              this.renderSearchToolbar.bind(this,defaultLocale)
+              this.renderSearchToolbar.bind(this)
             )
           }
         </SubmitForm>
