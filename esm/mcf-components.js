@@ -1,4 +1,4 @@
-import React__default, { Component, Children, PureComponent, createElement, cloneElement, isValidElement } from 'react';
+import React__default, { Component, Children, PureComponent, createElement, isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import * as ReactDOM from 'react-dom';
@@ -606,7 +606,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -29946,6 +29946,12 @@ Modal.confirm = function (props) {
 var css$3 = ".button-groups .ant-btn-group > span {\n  vertical-align: top;\n}\n";
 styleInject(css$3);
 
+var Locale$1 = {
+  okText: "确认",
+  cancelText: "取消",
+  title: "确认框"
+};
+
 /*
 *children 1个 多个数据格式处理
 *
@@ -29964,26 +29970,36 @@ function (_Component) {
 
   _createClass(Confirm, [{
     key: "onConfirmClick",
-    value: function onConfirmClick() {
+    value: function onConfirmClick(locale) {
       var _this$props = this.props,
           onConfirm = _this$props.onConfirm,
           title = _this$props.title,
           content = _this$props.content;
+      var contextLocale = Object.assign({}, locale, this.props.locale);
       return Modal.confirm({
-        title: title || "确认框",
+        title: title || contextLocale.title,
         content: content,
-        okText: '确认',
+        okText: contextLocale.okText,
         onOk: onConfirm,
-        cancelText: '取消'
+        cancelText: contextLocale.cancelText
+      });
+    }
+  }, {
+    key: "renderConfirm",
+    value: function renderConfirm(locale) {
+      var children = this.props.children;
+      return React__default.cloneElement(children, {
+        onClick: this.onConfirmClick.bind(this, locale)
       });
     }
   }, {
     key: "render",
     value: function render$$1() {
-      var children = this.props.children;
-      return React__default.cloneElement(children, {
-        onClick: this.onConfirmClick.bind(this)
-      });
+      return React__default.createElement(LocaleReceiver, {
+        componentName: 'ButtonGroups',
+        defaultLocale: Locale$1
+      }, this.renderConfirm.bind(this) // React.cloneElement(children,{onClick:this.onConfirmClick.bind(_this)})
+      ); // return  React.cloneElement(children,{onClick:this.onConfirmClick.bind(this)})
     }
   }]);
 
@@ -30025,7 +30041,8 @@ function (_Component2) {
     value: function renderReactElement(it, idx) {
       var _this$props2 = this.props,
           handleClick = _this$props2.handleClick,
-          viewMode = _this$props2.viewMode;
+          viewMode = _this$props2.viewMode,
+          locale = _this$props2.locale;
 
       var _it$props = it.props,
           tip = _it$props.tip,
@@ -30061,6 +30078,7 @@ function (_Component2) {
 
       if (confirm && !disabled) {
         return React__default.createElement(Confirm, Object.assign({}, {
+          locale: locale,
           key: idx,
           title: confirmTitle,
           content: confirm,
@@ -30169,7 +30187,8 @@ ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick: PropTypes.func,
   viewMode: PropTypes.oneOf(['text', 'icon', 'both']),
-  mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu'])
+  mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu']),
+  locale: PropTypes.object
 };
 ButtonGroups.defaultProps = {
   showSize: 5,
@@ -38323,7 +38342,7 @@ _defineProperty(DataTable, "defaultProps", {
   columns: []
 });
 
-var Locale$1 = {
+var Locale$2 = {
   okText: "确认",
   cancelText: "取消"
 };
@@ -38430,7 +38449,7 @@ function (_Component) {
         className: "".concat(prefixCls)
       }, this.renderHeader(), this.renderBody(), React__default.createElement(LocaleReceiver, {
         componentName: 'Panel',
-        defaultLocale: Locale$1
+        defaultLocale: Locale$2
       }, this.renderFooter.bind(this)))));
     }
   }]);
