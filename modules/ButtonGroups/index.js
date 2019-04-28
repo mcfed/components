@@ -2,6 +2,8 @@ import React,{Component} from 'react'
 import PropTypes from 'prop-types'
 import {Button,Icon,Tooltip,Menu,Dropdown,Modal} from 'antd'
 import './index.less'
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
+import Locale from './locale.js'
 // import {hasPermission} from 'app/utils/ConfigUtils'
 
 /*
@@ -10,19 +12,33 @@ import './index.less'
 */
 
 export class Confirm extends Component{
-  onConfirmClick(){
+  onConfirmClick(locale){
     const {onConfirm,title,content}=this.props
+    const contextLocale = Object.assign({},locale,this.props.locale)
     return Modal.confirm({
-      title: title || "确认框",
+      title: title || contextLocale.title,
       content: content,
-      okText: '确认',
+      okText: contextLocale.okText,
       onOk:onConfirm,
-      cancelText: '取消'
+      cancelText: contextLocale.cancelText
     })
   }
-  render(){
+  renderConfirm(locale){
     let {children} =this.props
-    return  React.cloneElement(children,{onClick:this.onConfirmClick.bind(this)})
+    return React.cloneElement(children,{onClick:this.onConfirmClick.bind(this,locale)})
+  }
+  render(){
+    return React.createElement(
+        LocaleReceiver,
+        {
+          componentName:'ButtonGroups',
+          defaultLocale:Locale
+        },
+        this.renderConfirm.bind(this)
+        // React.cloneElement(children,{onClick:this.onConfirmClick.bind(_this)})
+      )
+    
+    // return  React.cloneElement(children,{onClick:this.onConfirmClick.bind(this)})
   }
 }
 
@@ -52,7 +68,7 @@ export default class ButtonGroups extends Component {
   }
 
   renderReactElement(it,idx){
-    let {handleClick,viewMode} = this.props
+    let {handleClick,viewMode,locale} = this.props
     let {tip,confirm,confirmTitle,placement,icon,children,block,actionkey,disabled,permission,...otherProps} = it.props
     let iconProps = {actionkey:actionkey,disabled:disabled}
     
@@ -74,7 +90,7 @@ export default class ButtonGroups extends Component {
     if(confirm && !disabled){      
       return React.createElement(
         Confirm,
-        Object.assign({},{key:idx,title:confirmTitle,content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
+        Object.assign({},{locale:locale,key:idx,title:confirmTitle,content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
         React.createElement(Tooltip,Object.assign({},{key:idx,title:tip,icon:icon}),React.createElement(Button,Object.assign(iconProps,otherProps),children))
       )
     }else{
@@ -167,7 +183,8 @@ ButtonGroups.propTypes = {
   showSize: PropTypes.number,
   handleClick:PropTypes.func,
   viewMode:PropTypes.oneOf(['text','icon','both']),
-  mode:PropTypes.oneOf(['ButtonGroup','ButtonMenu'])
+  mode:PropTypes.oneOf(['ButtonGroup','ButtonMenu']),
+  locale:PropTypes.object
 }
 ButtonGroups.defaultProps = {
   showSize:5,
