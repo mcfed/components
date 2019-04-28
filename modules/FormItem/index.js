@@ -144,7 +144,6 @@ export default class FormItem extends Component{
 
     // console.log(containerToProp,field.type.name)
     if(field.type.name==="PickerWrapper"){
-      let {children,dislabled,otherProps,renderable}=field.props
         return React.createElement(WrapperDatePicker,Object.assign({},otherProps,disabledProp),field)
     }else{
       if(childData.length===0){
