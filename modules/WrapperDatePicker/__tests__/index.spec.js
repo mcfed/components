@@ -36,3 +36,79 @@ describe('DatePicker 组件是否渲染', () => {
   })
 
 })
+
+describe("props format", () => {
+
+  it("DatePicker format 格式为YYYY-MM-DD", () => {
+    const {wrapper,props} = setup({
+      children:DatePicker,
+      value:'2019-04-20',
+      format:'YYYY-MM-DD'
+    })
+
+    expect(wrapper.state('value')).toEqual(moment(moment(props.value).format(props.format)))
+  });
+
+  it("DatePicker format 格式为YYYY-MM", () => {
+    const {wrapper,props} = setup({
+      children:DatePicker,
+      value:'2019-04-20',
+      format:'YYYY-MM'
+    })
+
+    expect(wrapper.state('value')).toEqual(moment(moment(props.value).format(props.format)))
+  });
+
+  it("DatePicker format 格式为YYYY", () => {
+    const {wrapper,props} = setup({
+      children:DatePicker,
+      value:'2019-04-20',
+      format:'YYYY'
+    })
+
+    expect(wrapper.state('value')).toEqual(moment(moment(props.value).format(props.format)))
+  });
+
+  it("RangePicker format 格式为YYYY-MM-DD", () => {
+    const {wrapper,props} = setup({
+      children:RangePicker,
+      value:['2019-04-18','2019-04-20'],
+      format:'YYYY-MM-DD'
+    })
+
+    expect(wrapper.state('value')).toEqual([moment(moment(props.value[0]).format(props.format)),moment(moment(props.value[1]).format(props.format))])
+  });
+  it("RangePicker format 格式为YYYY-MM", () => {
+    const {wrapper,props} = setup({
+      children:RangePicker,
+      value:['2019-04-18','2019-04-20'],
+      format:'YYYY-MM'
+    })
+
+    expect(wrapper.state('value')).toEqual([moment(moment(props.value[0]).format(props.format)),moment(moment(props.value[1]).format(props.format))])
+  });
+  it("RangePicker format 格式为YYYY", () => {
+    const {wrapper,props} = setup({
+      children:RangePicker,
+      value:['2019-04-18','2019-04-20'],
+      format:'YYYY'
+    })
+
+    expect(wrapper.state('value')).toEqual([moment(moment(props.value[0]).format(props.format)),moment(moment(props.value[1]).format(props.format))])
+  });
+});
+
+describe.skip("WrapperDatePicker valueFormat to whatever", () => {
+
+
+  it.skip("valueFormat to timestamp", () => {
+    const onchangeFn = jest.fn()
+    const {wrapper,props} = setup({
+      children:<RangePicker valueFormat="x" format="YYYY-MM-DD"/>,
+      onChange:(val)=>{return val}
+    })
+    wrapper.instance().onChange([moment('2019-04-18'),moment('2019-04-20')])
+    //[moment('2019-04-18').format('x'),moment('2019-04-20').format('x')]
+    expect(onchangeFn.mock.calls.length).toEqual(1)
+  });
+});
