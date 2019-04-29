@@ -606,7 +606,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -18876,8 +18876,8 @@ function (_Component) {
           valueFormat = _this$props2.valueFormat,
           otherProps = _objectWithoutProperties(_this$props2, ["children", "valueFormat"]);
 
-      var value = this.state.value;
-      console.log(value);
+      var value = this.state.value; // console.log(value)
+
       return React__default.cloneElement(children, _objectSpread({}, otherProps, {
         value: value,
         onChange: this.onChange.bind(this)

@@ -104,7 +104,7 @@ export default class WrapperDatePicker extends Component{
   render(){
     let {children,valueFormat,...otherProps}= this.props
     let {value}= this.state
-    console.log(value)
+    // console.log(value)
     return React.cloneElement(children,{...otherProps,value:value,onChange:this.onChange.bind(this)})
   }
 }

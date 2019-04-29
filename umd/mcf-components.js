@@ -18524,8 +18524,8 @@
             valueFormat = _this$props2.valueFormat,
             otherProps = _objectWithoutProperties(_this$props2, ["children", "valueFormat"]);
 
-        var value = this.state.value;
-        console.log(value);
+        var value = this.state.value; // console.log(value)
+
         return React$1__default.cloneElement(children, _objectSpread({}, otherProps, {
           value: value,
           onChange: this.onChange.bind(this)
