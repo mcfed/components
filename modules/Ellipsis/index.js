@@ -30,6 +30,5 @@ import './index.less'
   }
   Ellipsis.defaultProps = {
     text: 'Ellipsis',
-    tooltiptext: ''
   }
   export default Ellipsis
