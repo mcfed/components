@@ -1,8 +1,9 @@
 import React from 'react'
-import { shallow } from 'enzyme'
+import { shallow , mount} from 'enzyme'
 import toJson from 'enzyme-to-json'
 import {Button} from 'antd'
 import ButtonGroups,{Confirm} from '../index'
+import Locale from '../locale.js'
 
 const setup = (props) => {
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
@@ -107,14 +108,18 @@ describe('ButtonGroups 事件响应处理',()=>{
     expect(handleClickMock.mock.calls[0][0]).toBe('enabled');
   })
 
-  it('ButtonGroups 事件分发处理 点击[确认框标题]按钮带确认框',()=>{
-    const handleClickMock= jest.fn()
-    const { wrapper, props } = setup({
-      handleClick: handleClickMock
-    });
-    wrapper.find('Button[actionkey="confirmTitle"]').simulate('click')
-    expect(handleClickMock.mock.calls.length).toBe(0);
-    wrapper.find('Confirm').at(1).prop('onConfirm').call()
-    expect(handleClickMock.mock.calls[0][0]).toBe('confirmTitle');
+})
+
+describe('ButtonGroups 组件设置locale参数后返回值的验证 mount方式',()=>{
+  it('测试locale传参是否正确',(done)=>{
+    const wrapperDom = mount(<ButtonGroups locale={{okText:"测试"}} viewMode='icon'>
+      <Button actionkey="delete" tip="删除数据小心点" confirm="是否确定删除">删除</Button>
+    </ButtonGroups>)
+    // const localeTest = Object.assign({},Locale,{okText:"测试"})
+    expect(wrapperDom.prop("locale")).toEqual({okText:"测试"})
+
+    // wrapperDom.find('Button[actionkey="delete"]').simulate('click')
+    // console.log(wrapperDom.props())    
+    done()
   })
 })
