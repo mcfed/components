@@ -606,7 +606,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: _library ? 'pure' : 'global',
+  mode: 'pure',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -24677,8 +24677,16 @@ function (_Component) {
       }
     });
 
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this)), "onExpand", function (expandedKeys, e) {
+      // console.log(expandedKeys,'----',this.state.expandedKeys)
+      _this.setState({
+        expandedKeys: expandedKeys
+      });
+    });
+
     _this.state = {
-      checkedKeys: props.value
+      checkedKeys: props.value,
+      expandedKeys: []
     };
     return _this;
   }
@@ -24715,19 +24723,29 @@ function (_Component) {
           isTreeInModal = _this$props.isTreeInModal,
           value = _this$props.value,
           onSelect = _this$props.onSelect,
-          defaultKey = _this$props.defaultKey;
-      var checkedKeys = this.state.checkedKeys;
+          defaultKey = _this$props.defaultKey,
+          scrollHeight = _this$props.scrollHeight;
+      var _this$state = this.state,
+          checkedKeys = _this$state.checkedKeys,
+          expandedKeys = _this$state.expandedKeys; // console.log(treeData)
+      //style={{maxHeight:scrollHeight,overflowY:'auto',border:'1px solid #d9d9d9'}}
+
       return React__default.createElement("div", {
-        className: "ant-tree-view"
+        className: "ant-tree-view",
+        style: scrollHeight ? {
+          maxHeight: scrollHeight,
+          overflowY: 'auto',
+          border: '1px solid #d9d9d9'
+        } : {}
       }, React__default.createElement(Tree$2, _extends({
-        defaultExpandAll: true,
         defaultSelectedKeys: [checkedKeys],
         checkedKeys: checkedKeys
       }, treeConfig, {
+        expandedKeys: expandedKeys,
         className: isTreeInModal ? "tree-in-modal" : '',
-        defaultExpandAll: true,
         onCheck: this.onCheck,
-        onSelect: this.onSelect
+        onSelect: this.onSelect,
+        onExpand: this.onExpand
       }), this.loopTreeNode(treeData)));
     }
   }]);
@@ -24858,11 +24876,11 @@ function (_Component3) {
   }, {
     key: "onMouseHandler",
     value: function onMouseHandler(status) {
-      var _this$state = this.state,
-          key = _this$state.key,
-          inside = _this$state.inside,
-          label = _this$state.label,
-          value = _this$state.value;
+      var _this$state2 = this.state,
+          key = _this$state2.key,
+          inside = _this$state2.inside,
+          label = _this$state2.label,
+          value = _this$state2.value;
 
       if (label != "") {
         this.setState({
@@ -24877,11 +24895,11 @@ function (_Component3) {
           treeDataSource = _this$props3.treeDataSource,
           renderNode = _this$props3.renderNode; // console.log(treeDataSource)
 
-      var _this$state2 = this.state,
-          key = _this$state2.key,
-          inside = _this$state2.inside,
-          label = _this$state2.label,
-          value = _this$state2.value;
+      var _this$state3 = this.state,
+          key = _this$state3.key,
+          inside = _this$state3.inside,
+          label = _this$state3.label,
+          value = _this$state3.value;
 
       if (inside) {
         return React__default.createElement("div", {
@@ -24911,10 +24929,10 @@ function (_Component3) {
       var _this$props4 = this.props,
           treeDataSource = _this$props4.treeDataSource,
           renderNode = _this$props4.renderNode;
-      var _this$state3 = this.state,
-          key = _this$state3.key,
-          inside = _this$state3.inside,
-          label = _this$state3.label;
+      var _this$state4 = this.state,
+          key = _this$state4.key,
+          inside = _this$state4.inside,
+          label = _this$state4.label;
       return React__default.createElement("div", {
         className: ""
       }, React__default.createElement(Button, {
@@ -38560,7 +38578,6 @@ function (_Component) {
           children = _this$props2.children,
           otherProps = _objectWithoutProperties(_this$props2, ["route", "children"]);
 
-      console.log(children.props());
       return React__default.createElement(Modal, _extends({
         title: "title",
         visible: true,
@@ -41537,8 +41554,7 @@ Ellipsis.propTypes = {
   tooltiptext: PropTypes.string
 };
 Ellipsis.defaultProps = {
-  text: 'Ellipsis',
-  tooltiptext: ''
+  text: 'Ellipsis'
 };
 
 export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary, Ellipsis };

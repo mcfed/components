@@ -11,9 +11,11 @@ export default class TreeView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			checkedKeys: props.value
+			checkedKeys: props.value,
+			expandedKeys:[]
 		}
 	}
+
 	componentWillReceiveProps(nextProps) {
 		if(JSON.stringify(nextProps.value)!=JSON.stringify(this.props.value)){
 			this.setState({
@@ -48,12 +50,21 @@ export default class TreeView extends Component {
 		}
 
 	}
+
+	onExpand = (expandedKeys,e) => {
+		// console.log(expandedKeys,'----',this.state.expandedKeys)
+		this.setState({
+			expandedKeys:expandedKeys
+		})
+	}
 	render() {
-		const { treeData, treeConfig, isTreeInModal,value,onSelect,defaultKey } = this.props
-		const{checkedKeys}=this.state
+		const { treeData, treeConfig, isTreeInModal,value,onSelect,defaultKey ,scrollHeight} = this.props
+		const{checkedKeys,expandedKeys}=this.state
+		// console.log(treeData)
+		//style={{maxHeight:scrollHeight,overflowY:'auto',border:'1px solid #d9d9d9'}}
 		return (
-		<div className="ant-tree-view">
-			<Tree  defaultExpandAll={true} defaultSelectedKeys={[checkedKeys]}  checkedKeys={checkedKeys} {...treeConfig} className={isTreeInModal?"tree-in-modal":''} defaultExpandAll={true} onCheck={this.onCheck} onSelect={this.onSelect}>
+		<div className="ant-tree-view" style={ scrollHeight ? {maxHeight:scrollHeight,overflowY:'auto',border:'1px solid #d9d9d9'} : {}}>
+			<Tree  defaultSelectedKeys={[checkedKeys]}  checkedKeys={checkedKeys} {...treeConfig} expandedKeys={expandedKeys} className={isTreeInModal?"tree-in-modal":''} onCheck={this.onCheck} onSelect={this.onSelect} onExpand={this.onExpand} >
 				{this.loopTreeNode(treeData)}
 			</Tree>
 		</div>)
