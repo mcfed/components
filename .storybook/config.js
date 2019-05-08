@@ -3,6 +3,8 @@ import { addDecorator } from '@storybook/react';
 import { withConsole } from '@storybook/addon-console';//console
 import { withA11y } from '@storybook/addon-a11y';
 import { addParameters } from '@storybook/react';
+import { withTests } from '@storybook/addon-jest';
+import results from '../jest-test-results.json';
 
 const newViewports = {
     kindleFire2: {
@@ -27,8 +29,9 @@ function loadStories() {
   // You can require as many stories as you need.
 }
 
-addDecorator((storyFn, context) => withConsole()(storyFn)(context));
-addDecorator(withA11y)
-addParameters({ viewport: newViewports });
+addDecorator(withTests({results}));//jest
+addDecorator((storyFn, context) => withConsole()(storyFn)(context));//console
+addDecorator(withA11y)//ally
+addParameters({ viewport: newViewports });//view
 
 configure(loadStories, module);

@@ -1737,6 +1737,22 @@
   dependencies:
     global "^4.3.2"
 
+"@storybook/addon-jest@^5.0.11":
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/@storybook/addon-jest/-/addon-jest-5.0.11.tgz#a4a8407c036f77f7d2c07ac8257129b924c61ec6"
+  integrity sha512-EaOjTbaV39II8F7lSBQoFpDX+l6r7iWfJdSLm2v9t9LmmA7sg05eKsCGXBTieGvFeKuv33fXUlKyvCTcAVlYCQ==
+  dependencies:
+    "@storybook/addons" "5.0.11"
+    "@storybook/components" "5.0.11"
+    "@storybook/core-events" "5.0.11"
+    "@storybook/theming" "5.0.11"
+    core-js "^2.6.5"
+    global "^4.3.2"
+    prop-types "^15.6.2"
+    react "^16.8.1"
+    upath "^1.1.0"
+    util-deprecate "^1.0.2"
+
 "@storybook/addon-knobs@^5.0.11":
   version "5.0.11"
   resolved "https://registry.yarnpkg.com/@storybook/addon-knobs/-/addon-knobs-5.0.11.tgz#1f093560ceec78f4906e0575ded0ac03b4494b09"
@@ -14524,7 +14540,7 @@ unset-value@^1.0.0:
     has-value "^0.3.1"
     isobject "^3.0.0"
 
-upath@^1.1.1:
+upath@^1.1.0, upath@^1.1.1:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/upath/-/upath-1.1.2.tgz#3db658600edaeeccbe6db5e684d67ee8c2acd068"
   integrity sha512-kXpym8nmDmlCBr7nKdIx8P2jNBa+pBpIUFRnKJ4dr8htyYGJFokkr2ZvERRtUN+9SY+JqXouNgUPtv6JQva/2Q==
