@@ -67,6 +67,31 @@ describe('Panel 组件是否渲染 default props', () => {
     done()
   })
 
+  it("Panel instace render no footer", () => {
+    const {wrapper,props} = setup({
+      footer:false
+    });
+    const locale={
+      cancelText:"cancelText",
+      okText:"okText"
+    }
+    const footer = wrapper.instance().renderFooter()
+    expect(footer).toBe(null);
+  });
+
+  it("Panel instance renderFooterButton", () => {
+    const footerFn = jest.fn()
+    const {wrapper,props} = setup({
+      footer:footerFn
+    })
+    const locale={
+      cancelText:"cancelText",
+      okText:"okText"
+    }
+    const footer = wrapper.instance().renderFooterLocale(locale)
+    expect(footerFn.mock.calls.length).toBe(1)
+  });
+
   it('Panel Component has no locale',(done)=>{
     const { wrapper, props } = setup();
     expect(wrapper.find('LocaleReceiver').prop('defaultLocale')).toEqual(Locale)
