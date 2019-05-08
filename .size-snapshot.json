@@ -1,0 +1,40 @@
+{
+  "esm/mcf-components.js": {
+    "bundled": 1273569,
+    "minified": 591169,
+    "gzipped": 150892,
+    "treeshaked": {
+      "rollup": {
+        "code": 492814,
+        "import_statements": 373
+      },
+      "webpack": {
+        "code": 504103
+      }
+    }
+  },
+  "umd/mcf-components.js": {
+    "bundled": 1335807,
+    "minified": 501975,
+    "gzipped": 138958
+  },
+  "esm/mystorybook.js": {
+    "bundled": 1301101,
+    "minified": 605055,
+    "gzipped": 154120,
+    "treeshaked": {
+      "rollup": {
+        "code": 498984,
+        "import_statements": 357
+      },
+      "webpack": {
+        "code": 509456
+      }
+    }
+  },
+  "umd/mystorybook.js": {
+    "bundled": 1354730,
+    "minified": 508160,
+    "gzipped": 140881
+  }
+}
