@@ -9,6 +9,8 @@ module.exports = function({ config }) {
     include: path.resolve(__dirname, '../'), // this fixed it, I think.
     enforce: 'pre',
   });
-
+  config.resolve.alias = {
+      'mcf-components':  path.resolve(__dirname,'../../components'),  
+  };
   return config;
 };
