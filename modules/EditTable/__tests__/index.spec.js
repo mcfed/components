@@ -160,4 +160,14 @@ describe("editable method ", () => {
     wrapper.instance().addNew()
     expect(wrapper.state('data').length).toBe(dataSource.length + 1)
   });
+
+  it.skip("cancel 方法调用", () => {
+    const {wrapper,props} = setup()
+    const params = {
+      form:undefined,
+      key:'1'
+    }
+    wrapper.instance().cancel(params)
+    //判断 是否删除 逻辑？
+  });
 });
