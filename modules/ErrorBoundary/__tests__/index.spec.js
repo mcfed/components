@@ -16,6 +16,15 @@ const setup = (children,props)=>{
   }
 }
 
+class TestCom extends React.Component{
+  componentWillMount(){
+    throw Error("扔个错误")
+  }
+  render(){
+    return <div className="aa123">123</div>
+  }
+}
+
 
 describe("ErrorBoundary 正确性测试", () => {
 
@@ -28,8 +37,8 @@ describe("ErrorBoundary 正确性测试", () => {
     })
 
     it.skip("若自组件有错误则展示出错信息",()=>{
-      const {wrapper} = setup(
-        //如何测试出错
-      )
+      const {wrapper} = setup(<TestCom></TestCom>)
+
+      console.log(wrapper.find('.aa123').exists(),wrapper.find('.error-info').exists(),wrapper.state('errorInfo'))
     })
 });
