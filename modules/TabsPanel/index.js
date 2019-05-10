@@ -17,7 +17,7 @@ export default class TabsPanel extends PureComponent{
       }
       return replacement
     })
-    return str
+    // return str
   }
   onChange(activeKey){
     const {history,match:{path,params},paramName} = this.props

@@ -35,3 +35,57 @@ describe('TabPanel 组件是否渲染 default props', () => {
 
 describe('TabPanel 事件响应处理',()=>{
 })
+
+
+describe("TabPanel method test", () => {
+
+  const { wrapper, props } = setup({
+    paramName:"type",
+    match:{
+      path:"aa/:type",
+      params:{
+        type:1
+      }
+    }
+  });
+
+  it("stringifyURL 测试 str 不通过 直接返回str", () => {
+
+    expect(wrapper.instance().stringifyURL(false)).toBe(false)
+
+  });
+
+  it("stringifyURL 测试 str通过  返回替换后的字符", () => {
+    const str = '/a/:id/:name'
+    const options = {
+      id:'123',
+      name:'bob'
+    }
+    expect(wrapper.instance().stringifyURL(str,options)).toEqual(
+      str.replace(/:(\w+)/gi, function (match, p1) {
+        var replacement = options[p1]
+        return replacement
+      })
+    )
+  });
+
+
+  it("onchange 方法测试", () => {
+    const {wrapper,props} = setup({
+      history:[],
+      paramName:"type",
+      match:{
+        path:"aa/:type",
+        params:{
+          type:1
+        }
+      }
+    })
+    const activeKey = '123'
+
+    wrapper.instance().onChange(activeKey)
+    expect(props.history).toEqual(
+      [(wrapper.instance().stringifyURL(props.match.path,Object.assign({},props.match.params,{[props.paramName]:activeKey})))]
+    );
+  });
+});
