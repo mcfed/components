@@ -7,7 +7,7 @@ import SubmitForm from '../BaseForm'
 import FormItem from '../FormItem'
 import Permission from '../Permission'
 import Locale from './locale.js'
-// import style from  './AdvancedSearch.less'
+import style from  './AdvancedSearch.less'
 
 export default class AdvancedSearchForm extends React.Component {
   state = {

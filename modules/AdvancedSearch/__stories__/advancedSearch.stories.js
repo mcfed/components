@@ -1,20 +1,24 @@
 
 import React from 'react'
 import {Input,Select} from 'antd'
-import { storiesOf,addDecorator  } from '@storybook/react'
+import { storiesOf  } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-import { linkTo } from '@storybook/addon-links'
-import { withTests } from '@storybook/addon-jest'
-import { Button, Welcome } from '@storybook/react/demo'
+
 
 import AdvancedSearch from '../AdvancedSearch'
-// import results from '../.jest-test-results.json';
 
-storiesOf("搜索组件包装AdvancedSearch",module)
-
-  .add('advancedSearch',()=>
+storiesOf("查询栏组件",module)
+  .add('基础组件',()=>
     <AdvancedSearch filterSubmitHandler={action('button-click')}>
-      <Input name="callState" label="呼叫类型"  />
-      <Select name="inputAcc" label="hr" />
+      <Input name="name" label="姓名"  />
+      <Select name="type" label="类型" />
+    </AdvancedSearch>
+  )
+  .add('基础组件--3个以上查询条件时出现扩展',()=>
+    <AdvancedSearch filterSubmitHandler={action('button-click')}>
+      <Input name="name" label="姓名"  />
+      <Select name="type" label="类型"  />
+      <Select name="level" label="级别" />
+      <Select name="sex" label="性别" />
     </AdvancedSearch>
   )
