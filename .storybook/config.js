@@ -26,6 +26,7 @@ const newViewports = {
 function loadStories() {
   require('../stories/index.js');
   require('../stories/panel.stories.js');
+  require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
   // require('../node_modules/mcf-components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js');
   // You can require as many stories as you need.
 }

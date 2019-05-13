@@ -26,7 +26,7 @@
     "build": "rollup -c",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
-    "test:generate-output": "jest node_modules/mcf-components --json --outputFile=jest-test-results.json",
+    "test:generate-output": "./jest-test-results.sh",
     "prebuild:storybook": "npm run test:generate-output",
     "build:storybook": "build-storybook -c .storybook -o build/",
     "predeploy": "npm run build:storybook",

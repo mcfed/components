@@ -10,7 +10,7 @@ module.exports = function({ config }) {
     enforce: 'pre',
   });
   config.resolve.alias = {
-      'mcf-components':  path.resolve(__dirname,'../../components'),  
+      'mcf-components':  path.resolve(__dirname,'../packages/components'),  
   };
   return config;
 };

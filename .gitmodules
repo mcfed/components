@@ -1,0 +1,3 @@
+[submodule "packages/components"]
+	path = packages/components
+	url = http://git.mchz.com.cn/mcf/components.git
