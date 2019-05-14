@@ -1,12 +1,12 @@
-import { configure } from '@storybook/react';
-import { addDecorator } from '@storybook/react';
-import { withConsole } from '@storybook/addon-console';//console
-import { withA11y } from '@storybook/addon-a11y';
-import { addParameters } from '@storybook/react';
-import { withTests } from '@storybook/addon-jest';
-const { withPropsTable } = require('storybook-addon-react-docgen');
-import results from '../jest-test-results.json';
-
+import { configure } from '@storybook/react'
+import { addDecorator } from '@storybook/react'
+import { withConsole } from '@storybook/addon-console'//console
+import { withA11y } from '@storybook/addon-a11y'
+import { addParameters } from '@storybook/react'
+import { withTests } from '@storybook/addon-jest'
+const { withPropsTable } from 'storybook-addon-react-docgen'
+import results from '../jest-test-results.json'
+import '../src/index.less'
 const newViewports = {
     kindleFire2: {
       name: 'Kindle Fire 2',
@@ -26,9 +26,9 @@ const newViewports = {
 
 function loadStories() {
   require('../stories/index.js');
-  require('../stories/panel.stories.js');
+  // require('../stories/panel.stories.js');
   require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
-  // require('../node_modules/mcf-components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js');
+  require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
   // You can require as many stories as you need.
 }
 
