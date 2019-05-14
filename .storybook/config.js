@@ -4,6 +4,7 @@ import { withConsole } from '@storybook/addon-console';//console
 import { withA11y } from '@storybook/addon-a11y';
 import { addParameters } from '@storybook/react';
 import { withTests } from '@storybook/addon-jest';
+const { withPropsTable } = require('storybook-addon-react-docgen');
 import results from '../jest-test-results.json';
 
 const newViewports = {
@@ -31,6 +32,7 @@ function loadStories() {
   // You can require as many stories as you need.
 }
 
+addDecorator(withPropsTable)
 addDecorator(withTests({results}));//jest
 addDecorator((storyFn, context) => withConsole()(storyFn)(context));//console
 addDecorator(withA11y)//ally

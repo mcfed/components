@@ -17,7 +17,8 @@
     "mcf-components": "v1.0.0-rc1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.0.0",
+    "storybook-addon-react-docgen": "^1.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
