@@ -1,6 +1,6 @@
 import React from 'react';
 import { storiesOf } from '@storybook/react';
-import { withKnobs, text, boolean, number } from '@storybook/addon-knobs';
+import { withKnobs } from '@storybook/addon-knobs';
 import { actions } from '@storybook/addon-actions';
 import Readme from 'mcf-components/modules/Panel/index.md'
 import {Panel} from 'mcf-components'

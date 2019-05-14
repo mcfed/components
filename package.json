@@ -12,12 +12,17 @@
     "@storybook/addon-storysource": "^5.0.11",
     "@storybook/addon-viewport": "^5.0.11",
     "@storybook/react": "^5.0.11",
+    "antd": "^3.18.0",
     "babel-loader": "^8.0.5",
-    "jest": "22.4.3",
+    "css-loader": "^2.1.1",
+    "jest": "^24.8.0",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
     "mcf-components": "v1.0.0-rc1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.0.0",
+    "style-loader": "^0.23.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -27,6 +32,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
     "test:generate-output": "./jest-test-results.sh",
+    "test:generate-outputwindos": "./jest-test-results.bat",
     "prebuild:storybook": "npm run test:generate-output",
     "build:storybook": "build-storybook -c .storybook -o build/",
     "predeploy": "npm run build:storybook",

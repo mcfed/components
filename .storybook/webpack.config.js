@@ -9,6 +9,22 @@ module.exports = function({ config }) {
     include: path.resolve(__dirname, '../'), // this fixed it, I think.
     enforce: 'pre',
   });
+  config.module.rules.push({
+    test: /\.less$/,
+    use: [{
+      loader: 'style-loader' // creates style nodes from JS strings
+    }, {
+      loader: 'css-loader' // translates CSS into CommonJS
+    }, {
+      loader: 'less-loader', // compiles Less to CSS
+      options: {
+        paths: [
+          path.resolve(__dirname, 'src')
+        ],
+        javascriptEnabled: true,
+      }
+    }],
+  });
   config.resolve.alias = {
       'mcf-components':  path.resolve(__dirname,'../packages/components'),  
   };
