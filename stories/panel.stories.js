@@ -11,7 +11,7 @@ const eventsFromNames = actions('onClick', 'onMouseOver');
 const eventsFromObject = actions({ onClick: 'clicked', onMouseOver: 'hovered' });
 
 stories.addDecorator(withKnobs);//knobs
-stories.addParameters({ jest: ['Panel'] })//jest
+stories.addParameters({ jest: ['index.spec.js'] })//jest
 
 //story 
 stories.add('base panel', () => (
