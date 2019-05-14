@@ -5,6 +5,8 @@ import { withA11y } from '@storybook/addon-a11y'
 import { addParameters } from '@storybook/react'
 import { withTests } from '@storybook/addon-jest'
 import { withPropsTable } from 'storybook-addon-react-docgen'
+import { withKnobs } from '@storybook/addon-knobs'
+import { withSmartKnobs } from 'storybook-addon-smart-knobs'
 import results from '../jest-test-results.json'
 import '../src/index.less'
 const newViewports = {
@@ -32,6 +34,8 @@ function loadStories() {
   // You can require as many stories as you need.
 }
 
+addDecorator(withSmartKnobs)
+addDecorator(withKnobs)
 addDecorator(withPropsTable)
 addDecorator(withTests({results}));//jest
 addDecorator((storyFn, context) => withConsole()(storyFn)(context));//console

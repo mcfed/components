@@ -10761,6 +10761,10 @@ storybook-addon-react-docgen@^1.2.2:
     react-addons-create-fragment "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
+storybook-addon-smart-knobs@^4.1.2:
+  version "4.1.2"
+  resolved "http://192.168.200.178:4873/storybook-addon-smart-knobs/-/storybook-addon-smart-knobs-4.1.2.tgz#2bf2ee690ee1a1a0f1cd63761474ee6515184719"
+
 stream-browserify@^2.0.1:
   version "2.0.2"
   resolved "http://192.168.200.178:4873/stream-browserify/-/stream-browserify-2.0.2.tgz#87521d38a44aa7ee91ce1cd2a47df0cb49dd660b"
