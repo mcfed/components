@@ -5,3 +5,4 @@ import '@storybook/addon-notes/register';//notes(markdownNotes)
 import '@storybook/addon-a11y/register';//addons
 import '@storybook/addon-viewport/register';//viewport
 import '@storybook/addon-jest/register';//jest
+import 'storybook-addon-react-docgen/register' //react-docgen

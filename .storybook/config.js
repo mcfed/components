@@ -4,9 +4,9 @@ import { withConsole } from '@storybook/addon-console'//console
 import { withA11y } from '@storybook/addon-a11y'
 import { addParameters } from '@storybook/react'
 import { withTests } from '@storybook/addon-jest'
+import { withPropsTable } from 'storybook-addon-react-docgen'
 import results from '../jest-test-results.json'
 import '../src/index.less'
-
 const newViewports = {
     kindleFire2: {
       name: 'Kindle Fire 2',
@@ -25,14 +25,14 @@ const newViewports = {
   };
 
 function loadStories() {
-  // require('../stories/index.js');
-  require('../stories/smartKnobs.js');
-  // require('../stories/advancedSearch.stories.js');
-  // require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
+  require('../stories/index.js');
+  // require('../stories/panel.stories.js');
+  require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
   // require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
   // You can require as many stories as you need.
 }
 
+addDecorator(withPropsTable)
 addDecorator(withTests({results}));//jest
 addDecorator((storyFn, context) => withConsole()(storyFn)(context));//console
 addDecorator(withA11y)//ally
