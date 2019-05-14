@@ -6,6 +6,7 @@ import {
   Select,
 } from 'antd'
 import AdvancedSearchForm from '../AdvancedSearch'
+import Locale from '../locale'
 
 const setup = (props={}) => {
   // 模拟 props

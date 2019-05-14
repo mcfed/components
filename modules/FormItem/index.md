@@ -49,6 +49,8 @@
 | hidden | hidden后页面不显示  | Boolean  | false |
 | disbled | 禁用表单项，也不做redux store传参值  | Boolean & funciton(form)  | false |
 | renderable | 不渲染表单项，也不做redux store传参值  | Boolean & funciton(form)  | false |
+| params | fetch 传递参数，必需要返回object  | Boolean & funciton(form)  | false |
+| fetchCallback | fetch 回调处理数据，返回结果列表数据  | funciton(result)  | false |
 | fetch | URL发起xhr请求获取options数据，提供renderItem 渲染节点| string:URL | - |
 
 

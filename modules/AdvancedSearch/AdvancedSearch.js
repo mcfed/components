@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Row,Col,Icon,Button} from 'antd'
+import {Row,Col,Icon,Button,Input} from 'antd'
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
 import classNames from 'classnames'
 import SubmitForm from '../BaseForm'
@@ -72,7 +72,7 @@ export default class AdvancedSearchForm extends React.Component {
   getFields() {
     const {children,layout,classNames} = this.props
     let renderChildren;
-    const formItemLayout = layout && layout!=='inline'? {
+    let formItemLayout = layout && layout!=='inline'? {
       labelCol: {
         span: 8
       },
@@ -94,13 +94,38 @@ export default class AdvancedSearchForm extends React.Component {
       renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
     }
     return renderChildren.map((it, i) => {
-      return (
-        <Col span={8} key={i}>
-          <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-            {React.cloneElement(it) }
-          </FormItem>
-        </Col>
-      )
+
+      let columns = it.props.columns || 1
+      let labelNum = Math.round(8/columns),
+        spancols = 8 * columns
+      formItemLayout = Object.assign({},formItemLayout,{
+        labelCol:{
+          span:labelNum
+        },
+        wrapperCol:{
+          span: 24 - labelNum
+        }
+      })
+
+
+      // console.log(it.type === Input)
+      if(it.type.name === "Input"){
+        return (
+          <Col span={spancols} key={i}>
+            <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+              {React.cloneElement(it) }
+            </FormItem>
+          </Col>
+        )
+      }else{
+        return (
+          <Col span={spancols} key={i}>
+            <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
+              {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
+            </FormItem>
+          </Col>
+        )
+      }
     })
     //return children;
   }
@@ -142,12 +167,13 @@ export default class AdvancedSearchForm extends React.Component {
   renderSearchToolbar(locale){
     let {loading,expand} = this.state
     const {children} = this.props
+    const contextLocale = Object.assign({},locale,this.props.locale)
     return (
       <div className="advanced-search-toolbar">
-				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{locale.searchText}</Button>
+				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{contextLocale.searchText}</Button>
         {
           children.length>3?
-    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?locale.upText:locale.downText}<Icon type={expand?"up":"down"} /></Button>
+    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?contextLocale.upText:contextLocale.downText}<Icon type={expand?"up":"down"} /></Button>
           :""
         }
       </div>)

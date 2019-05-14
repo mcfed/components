@@ -1,11 +1,12 @@
 {
   "name": "mcf-components",
-  "version": "0.3.0",
+  "version": "1.0.0-rc1",
   "description": "@mcf for crud",
   "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "npm test -- --watch",
     "build": "rollup -c"
   },
   "keywords": [
@@ -14,6 +15,10 @@
     "modules",
     "developer"
   ],
+  "repository": {
+    "type": "git",
+    "url": "http://git.mchz.com.cn/mcf/components.git"
+  },
   "author": "jaxchow",
   "license": "ISC",
   "devDependencies": {
@@ -21,7 +26,8 @@
     "@babel/plugin-external-helpers": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.1.2",
-    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "7.0.0-beta.53",
@@ -53,6 +59,7 @@
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "16.3.0",
-    "react-dom": "16.3.0"
+    "react-dom": "16.3.0",
+    "react-router": "^5.0.0"
   }
 }

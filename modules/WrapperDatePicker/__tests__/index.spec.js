@@ -20,13 +20,14 @@ const setup = (props) => {
 
 describe('DatePicker 组件是否渲染', () => {
   const { wrapper, props } = setup({
-    children:DatePicker,
+    children:MonthPicker,
     value:'2018-12-12'
   });
   // case1
   // 通过查找存在 Input,测试组件正常渲染
-  it('DataTable Component should be render', () => {
-    expect(wrapper)
+  it.skip('DataTable Component should be render', () => {
+    // console.log(wrapper.find("input"))
+    expect(wrapper.find("div").exists()).toBe(true)
   })
 
   it('测试 props.value 自动转换moment 类型',()=>{

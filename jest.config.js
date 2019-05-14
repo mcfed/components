@@ -1,7 +1,8 @@
 module.exports = {
   bail: true, //遇上 test feature, 则Stop running test, 默认值是false
   cacheDirectory: './node_modules/.cache', //测试缓存数据的存储位置
-  testEnvironment: 'node', //default brower-like enviroment, 如果你搭建了一个node service node-like enviroment
+  // testEnvironment: 'node', //default brower-like enviroment, 如果你搭建了一个node service node-like enviroment
+  testEnvironment: 'jsdom', 
   coverageThreshold: { //测试覆盖率, 阈值不满足，就返回测试失败
     global: {
       branches: 90,
@@ -46,4 +47,5 @@ module.exports = {
     '<rootDir>/node_modules/(?!lodash-es)/',
     'babel-runtime',
   ],
+  testURL: "http://localhost/"
 }

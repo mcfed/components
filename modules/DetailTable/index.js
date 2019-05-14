@@ -22,16 +22,21 @@ class DetailTable extends React.Component {
       throw Error('列数必须大于0')
     }
     let array = []
-    let trLength = Math.ceil(Data.length / columnNumber)
-    let remainder = Data.length % columnNumber
-    // 数据不足进行补充
-    if(remainder > 0) {
-      for(let b = 0;b<remainder;b++) {
-        Data.push({name:'',value:''})
+    while (Data.length > 0) {
+      let ar = []
+      for (let i = 0; i< columnNumber;i++) {
+        let obj = Data.shift()
+        if(obj === undefined) {
+          obj = {label:'',value:''}
+        }
+        if(obj.colspan && obj.colspan > 0) {
+          ar.push(obj)
+          i = i + obj.colspan - 1
+        }else{
+          ar.push(obj)
+        }
       }
-    }
-    for (let i = 0;i < trLength; i++) {
-      array.push(Data.slice(columnNumber*i, columnNumber*i + columnNumber))
+      array.push(ar)
     }
     return array.map((d,k) => <tr key = {k}>{d.map((c,v)=><Td key={v} dataSource={c} labelKey={this.props.labelKey} valueKey={this.props.valueKey} />)}</tr>)
   }
