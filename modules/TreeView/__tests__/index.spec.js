@@ -24,14 +24,14 @@ const setup = (props={}) => {
 
 
 
-describe("TreeView shallow render", () => {
+describe.skip("TreeView shallow render", () => {
   it("render without params", (done) => {
-    // const { wrapper, props } = setup();
-  //  expect(wrapper.instance()).toBeInstanceOf(TreeView)
+    const { wrapper, props } = setup();
+   expect(wrapper.find(".ant-tree-view").exists()).toBe(true)
     done()
   });
 
-  it.skip("tree default render ", () => {
+  it("tree default render ", () => {
     const { wrapper, props } = setup({
       treeData:[{
         value:"abc",
@@ -45,4 +45,5 @@ describe("TreeView shallow render", () => {
     });
    expect(wrapper.instance()).toBeInstanceOf(TreeView)
   });
+
 })
