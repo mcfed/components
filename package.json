@@ -45,7 +45,9 @@
     "prebuild:storybook": "npm run test:generate-output",
     "build:storybook": "build-storybook -c .storybook -o build/",
     "predeploy": "npm run build:storybook",
-    "deploy": "gh-pages -d build/"
+    "deploy": "gh-pages -d build/",
+    "git:submodule": "./git-submodule.bat",
+    "git:pull": "./git-pull.bat"
   },
   "eslintConfig": {
     "extends": "react-app"

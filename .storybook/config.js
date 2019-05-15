@@ -27,10 +27,9 @@ const newViewports = {
   };
 
 function loadStories() {
-  require('../stories/index.js');
-  // require('../stories/panel.stories.js');
   require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
-  // require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
+  require('../packages/components/modules/FormItem/__stories__/FormItem.stories.js')
+  require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
   // You can require as many stories as you need.
 }
 
