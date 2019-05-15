@@ -28,8 +28,10 @@ const newViewports = {
 
 function loadStories() {
   require('../stories/index.js');
-  // require('../stories/panel.stories.js');
-  require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
+  require('../stories/panel.stories.js');
+  // require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
+  require('../packages/components/modules/ButtonGroups/__stories__/ButtonGroups.stories.js')
+  require('../packages/components/modules/DetailTable/__stories__/DetailTable.stories.js')
   // require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
   // You can require as many stories as you need.
 }
