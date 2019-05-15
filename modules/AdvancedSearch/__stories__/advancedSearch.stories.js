@@ -2,27 +2,30 @@
 import React from 'react'
 import {Input,Select} from 'antd'
 import { storiesOf  } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs';
-import AdvancedSearch from '../AdvancedSearch'
-import Readme from '../index.md';
+import { withKnobs } from '@storybook/addon-knobs'
+import {AdvancedSearch} from 'mcf-components'
+import { actions } from '@storybook/addon-actions'
+import Readme from '../index.md'
+// import Readme from 'mcf-components/modules/AdvancedSearch/index.md'
 
-stories.addDecorator(withKnobs);
+const stories = storiesOf('AdvancedSearch', module)
+const eventsFromNames = actions('onClick', 'onMouseOver')
+
+stories.addDecorator(withKnobs)
 stories.addParameters({ jest: ['AdvancedSearch.spec.js'] })
 
-storiesOf("查询栏组件",module)
-  .add('基础组件',()=>
-    <AdvancedSearch filterSubmitHandler={action('button-click')}>
-      <Input name="name" label="姓名"  />
-      <Select name="type" label="类型" />
-    </AdvancedSearch>,
-   { notes: { markdown: Readme }}
-  )
-  .add('基础组件--3个以上查询条件时出现扩展',()=>
-    <AdvancedSearch filterSubmitHandler={action('button-click')}>
-      <Input name="name" label="姓名"  />
-      <Select name="type" label="类型"  />
-      <Select name="level" label="级别" />
-      <Select name="sex" label="性别" />
-    </AdvancedSearch>,
-   { notes: { markdown: Readme }}
-  )
+stories.add('基础用法',() =>
+  <AdvancedSearch {...eventsFromNames}>
+    <Input name="name" label="姓名"  />
+  </AdvancedSearch>,
+  { notes: { markdown: Readme }}
+)
+stories.add('更多查询项时出现扩展',()=>
+  <AdvancedSearch {...eventsFromNames}>
+    <Input name="name" label="姓名"  />
+    <Select name="type" label="类型"  />
+    <Select name="level" label="级别" />
+    <Select name="sex" label="性别" />
+  </AdvancedSearch>,
+  { notes: { markdown: Readme }}
+)
