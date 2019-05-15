@@ -3,9 +3,10 @@ import React from 'react'
 import {Input,Select} from 'antd'
 import { storiesOf  } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
-import {AdvancedSearch} from 'mcf-components'
+// import {AdvancedSearch} from 'mcf-components'
+import AdvancedSearch from '../index'
 import { actions } from '@storybook/addon-actions'
-import Readme from '../index.md'
+import Readme from '../README.md'
 // import Readme from 'mcf-components/modules/AdvancedSearch/index.md'
 
 const stories = storiesOf('AdvancedSearch', module)

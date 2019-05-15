@@ -22,7 +22,7 @@
  | 参数 | 说明 | 类型 | 默认值 |
  | - | - | - | - |
  | prefixCls | ant-panel前缀  | string  | ant-panel |
- | onOK | 确定按钮响应事件 | function |  |
+ | onOK | 确定按钮响应事件 | function | 无效--待后续验证 |
  | onCancel | 取消按钮响应事件 | function |  |
  | title | panel面板标题 | string |  "" |
  | okText | 确认按钮文字自定义 | string |  无效--待后续验证 |
