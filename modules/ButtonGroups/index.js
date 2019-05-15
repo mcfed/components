@@ -37,7 +37,7 @@ export class Confirm extends Component{
         this.renderConfirm.bind(this)
         // React.cloneElement(children,{onClick:this.onConfirmClick.bind(_this)})
       )
-    
+
     // return  React.cloneElement(children,{onClick:this.onConfirmClick.bind(this)})
   }
 }
@@ -71,7 +71,7 @@ export default class ButtonGroups extends Component {
     let {handleClick,viewMode,locale} = this.props
     let {tip,confirm,confirmTitle,placement,icon,children,block,actionkey,disabled,permission,...otherProps} = it.props
     let iconProps = {actionkey:actionkey,disabled:disabled}
-    
+
     //tip提示判断，判断没有tip属性时缺省显示text内容
     tip = !!tip ?  tip : children
 
@@ -81,13 +81,13 @@ export default class ButtonGroups extends Component {
         iconProps = Object.assign(iconProps,{icon:icon})
       }
       if(viewMode === 'icon'){
-        children = !!icon ? '': children    
+        children = !!icon ? '': children
       }
     }
-    
-    
 
-    if(confirm && !disabled){      
+
+
+    if(confirm && !disabled){
       return React.createElement(
         Confirm,
         Object.assign({},{locale:locale,key:idx,title:confirmTitle,content:confirm,placement:placement,onConfirm:()=>{handleClick(actionkey)}}),
@@ -119,7 +119,7 @@ export default class ButtonGroups extends Component {
   renderMixButtonMenu(){
     let {children,showSize} = this.props
     let childrenArray = React.Children.toArray(children)
-
+    
     let endArray = childrenArray.splice(showSize)
 
     return (
