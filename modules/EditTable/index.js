@@ -235,6 +235,7 @@ class EditTable extends React.Component {
 
 EditTable.propTypes = {
   columns: propTypes.array.isRequired,
+  data: propTypes.array,
 }
 
 export default EditTable
