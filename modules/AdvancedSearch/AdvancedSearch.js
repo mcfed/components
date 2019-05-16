@@ -201,11 +201,20 @@ export default class AdvancedSearchForm extends React.Component {
 }
 
 AdvancedSearchForm.propTypes = {
+  /**
+  搜索按钮事件监听方法
+  **/
   filterSubmitHandler: PropTypes.func,
+  /**
+  是否显示配置项,配置搜索条件显示
+  **/
   showConfig:PropTypes.bool,
   loading:PropTypes.bool,
   footer:PropTypes.element,
   locale:PropTypes.object,
+  /**
+  是否收展，超过指定个数后隐藏
+  **/
   showExpand:PropTypes.number
 }
 

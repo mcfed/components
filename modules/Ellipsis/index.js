@@ -25,7 +25,13 @@ import './index.less'
   }
 
   Ellipsis.propTypes = {
+    /**
+    需要显示的text文本
+    **/
     text: PropTypes.string.isRequired,
+    /**
+    扩展显示的tooltipText文本，在出现text与tooltipText不一样的场景时使用
+    **/
     tooltiptext: PropTypes.string
   }
   Ellipsis.defaultProps = {

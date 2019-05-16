@@ -208,8 +208,18 @@ class DataTable extends Component{
 }
 
 DataTable.propTypes = {
+  /**
+    表格列的配置描述 同antd table columns
+  **/
   columns:PropTypes.array,
+  /**
+  数据数组，同antd table dataSource
+  **/
   dataSource:PropTypes.array,
+  /**
+  默认排序参数  {columnKey,order} columnkey代表需要排序的columns的dataIndex order 选项为‘descend ascend’之一
+  e.g. {columnKey:'name',order:'descend'}
+  **/
   defaultSort:PropTypes.object,
   // pagination:PropTypes.bool
 }

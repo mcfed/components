@@ -62,12 +62,33 @@ class DetailTable extends React.Component {
   }
 }
 DetailTable.propTypes ={
+  /**
+  支持数组模式和对象模式（'array',object）默认数组模式
+  **/
   mode: propTypes.oneOf(['object', 'array']),
+  /**
+  定义列数，不得小于0
+  **/
   columnNumber: propTypes.number,
+  /**
+  传递数据，根据类型传递相应的数据
+  **/
   dataSource: propTypes.array,
+  /**
+  表格外包div类名
+  **/
   tableClass: propTypes.string,
+  /**
+  表格title
+  **/
   title: propTypes.string,
+  /**
+  组模式下配置显示名称key值，默认label
+  **/
   labelKey: propTypes.string,
+  /**
+  数组模式下配置显示名称value值，默认value
+  **/
   valueKey: propTypes.string,
 }
 

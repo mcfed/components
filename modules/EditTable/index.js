@@ -234,7 +234,13 @@ class EditTable extends React.Component {
 }
 
 EditTable.propTypes = {
+  /**
+  表格列配置
+  **/
   columns: propTypes.array.isRequired,
+  /**
+  数据数组
+  **/
   data: propTypes.array,
 }
 

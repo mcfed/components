@@ -119,7 +119,7 @@ export default class ButtonGroups extends Component {
   renderMixButtonMenu(){
     let {children,showSize} = this.props
     let childrenArray = React.Children.toArray(children)
-    
+
     let endArray = childrenArray.splice(showSize)
 
     return (
@@ -180,9 +180,21 @@ export default class ButtonGroups extends Component {
 * tip 为元素上移显示文字
 */
 ButtonGroups.propTypes = {
+  /**
+   超过收起的数目
+  **/
   showSize: PropTypes.number,
+  /**
+   点击事件（需子元素以actionKey区分）
+  **/
   handleClick:PropTypes.func,
+  /**
+   按钮的展示模式，仅文字，仅图片，文字+图片
+  **/
   viewMode:PropTypes.oneOf(['text','icon','both']),
+  /**
+   显示模式 ButtonGroup 和 ButtonMenu
+  **/
   mode:PropTypes.oneOf(['ButtonGroup','ButtonMenu']),
   locale:PropTypes.object
 }

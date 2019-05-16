@@ -50,11 +50,11 @@ export default class Panel extends Component{
     const {props} = this
     return props.footer ? props.footer(): this.renderFooterButton(locale);
   }
-  
+
   renderFooter(locale){
     let footer
     const {props} = this
-    const {prefixCls} = this.props  
+    const {prefixCls} = this.props
     const contextLocale = Object.assign({},locale,this.props.locale)
     if( props.footer !=false){
       footer = React.createElement("div", { className: prefixCls + '-footer' }, this.renderFooterLocale(contextLocale));
@@ -64,7 +64,7 @@ export default class Panel extends Component{
     return footer
   }
   render(){
-    const {prefixCls,loading,locale} = this.props    
+    const {prefixCls,loading,locale} = this.props
     return (
       <div className={`${prefixCls}-wrapper`}>
         <Spin spinning={loading}>
@@ -90,14 +90,41 @@ export default class Panel extends Component{
 
 
 Panel.propTypes = {
+  /**
+  确定按钮响应事件
+  **/
   onOK: PropTypes.func,
+  /**
+  取消按钮响应事件
+  **/
   onCancel:PropTypes.func,
+  /**
+  panel面板标题
+  **/
   title:PropTypes.string,
+  /**
+  确认按钮文字自定义
+  **/
   okText:PropTypes.string,
+  /**
+  消按钮文字自定义
+  **/
   cancelText:PropTypes.string,
+  /**
+  自定义footer
+  **/
   footer:PropTypes.oneOfType([PropTypes.bool,PropTypes.element,PropTypes.func]),
+  /**
+  二次确认时的loading状态，true时确定操作按钮不可操作
+  **/
   confirmLoading:PropTypes.bool,
+  /**
+  国际化
+  **/
   locale:PropTypes.object,
+  /**
+  整个panel的loading状态，true时整个面板不能操作
+  **/
   loading:PropTypes.bool
 }
 Panel.defaultProps = {

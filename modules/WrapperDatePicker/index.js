@@ -110,5 +110,8 @@ export default class WrapperDatePicker extends Component{
 }
 
 WrapperDatePicker.propTypes = {
+  /**
+  组件传出的时间格式，同moment.format 格式
+  **/
   valueFormat:PropTypes.string,
 }
