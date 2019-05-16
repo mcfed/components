@@ -15,7 +15,7 @@ import './index.less'
         tooltiptext = text
       }
       return(
-        <Tooltip placement="top" title={tooltiptext} arrowPointAtCenter>
+        <Tooltip placement="bottomLeft" title={tooltiptext} arrowPointAtCenter>
             <div className="td-ellipsis" {...Object.assign({},otherProps)}>
                 {text}
             </div>
