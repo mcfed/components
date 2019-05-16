@@ -2,16 +2,12 @@
 import React from 'react'
 import {Input,Select} from 'antd'
 import { storiesOf  } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
 import BaseForm from '../../BaseForm/index'
 import FormItem from '../index'
-// import {BaseForm,FormItem} from 'mcf-components'
 import Readme from '../README.md'
-// import Readme from '../packages/components/modules/FormItem/index.md'
 
 const stories = storiesOf('FormItem', module)
 
-stories.addDecorator(withKnobs)
 stories.addParameters({ jest: ['FormItem.spec.js'] })
 
 const renderOptionItem = (item, idx) => {

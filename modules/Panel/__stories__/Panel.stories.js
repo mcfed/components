@@ -2,16 +2,12 @@
 import React from 'react'
 import {Button} from 'antd'
 import { storiesOf  } from '@storybook/react'
-import { withKnobs } from '@storybook/addon-knobs'
-// import {Panel} from 'mcf-components'
 import Panel from '../index'
 import Readme from '../README.md'
-// import Readme from '../packages/components/modules/Panel/README.md'
 import { action } from '@storybook/addon-actions';
 
 const stories = storiesOf('Panel', module)
 
-stories.addDecorator(withKnobs)
 stories.addParameters({ jest: ['Panel.spec.js'] })
 
 stories.add('基础用法',() =>{
