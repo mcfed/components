@@ -4,7 +4,7 @@ import { withKnobs, text, boolean, number } from '@storybook/addon-knobs';
 import { actions } from '@storybook/addon-actions';
 import { withSmartKnobs } from 'storybook-addon-smart-knobs'
 
-const stories = storiesOf('Storybook Knobs', module);
+const stories = storiesOf('Storybook demo', module);
 const eventsFromNames = actions('onClick', 'onMouseOver');
 const eventsFromObject = actions({ onClick: 'clicked', onMouseOver: 'hovered' });
 

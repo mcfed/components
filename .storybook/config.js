@@ -26,11 +26,17 @@ const newViewports = {
     },
   };
 
-function loadStories() {
-  require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
-  require('../packages/components/modules/FormItem/__stories__/FormItem.stories.js')
-  require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
-  // You can require as many stories as you need.
+// function loadStories() {
+//   require('../packages/components/modules/AdvancedSearch/__stories__/advancedSearch.stories.js')
+//   require('../packages/components/modules/FormItem/__stories__/FormItem.stories.js')
+//   require('../packages/components/modules/Panel/__stories__/Panel.stories.js')
+//   require('../packages/components/modules/WrapperDatePicker/__stories__/WrapperDatePicker.stories.js')
+//   // You can require as many stories as you need.
+// }
+
+const req = require.context('../packages/components/modules',true,/.stories.js$/)
+function loadStories(){
+  req.keys().forEach(fileName => req(fileName))
 }
 
 addDecorator(withSmartKnobs)
