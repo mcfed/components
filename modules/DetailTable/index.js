@@ -1,6 +1,9 @@
 import React from 'react'
 import Td from './td'
 import propTypes from 'prop-types'
+
+import './index.less'
+
 class DetailTable extends React.Component {
   showDom = (dataSource) => {
     let Data = []
@@ -63,11 +66,14 @@ DetailTable.propTypes ={
   columnNumber: propTypes.number,
   dataSource: propTypes.array,
   tableClass: propTypes.string,
-  title: propTypes.string
+  title: propTypes.string,
+  labelKey: propTypes.string,
+  valueKey: propTypes.string,
 }
 
 DetailTable.defaultProps={
   columnNumber:2,
+  title:"datailtable",
   tableClass:"ant-table ant-table-bordered ant-table-detail"
 }
 export default DetailTable

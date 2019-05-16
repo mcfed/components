@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-
+import PropTypes from 'prop-types'
 // import Table from 'antd/lib/table'
 // import Icon from 'antd/lib/icon'
 // import Checkbox from 'antd/lib/checkbox'
@@ -207,5 +207,11 @@ class DataTable extends Component{
   }
 }
 
+DataTable.propTypes = {
+  columns:PropTypes.array,
+  dataSource:PropTypes.array,
+  defaultSort:PropTypes.object,
+  // pagination:PropTypes.bool
+}
 
 export default DataTable

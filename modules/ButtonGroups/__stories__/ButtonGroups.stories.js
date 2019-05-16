@@ -9,11 +9,6 @@ import md from '../index.md'
 import ButtonGroups from '../index'
 
 const stories = storiesOf('ButtonGroups', module);
-const eventsFromNames = actions('onClick', 'onMouseOver');
-const eventsFromObject = actions({ onClick: 'clicked', onMouseOver: 'hovered' });
-
-stories.addDecorator(withKnobs);
-// stories.addDecorator(withSmartKnobs)
 stories.addParameters({ jest : ['ButtonGroups.spec.js'] })
 
 stories.add('基础使用',() => (
