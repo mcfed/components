@@ -39,7 +39,7 @@
     "test:watch": "npm test -- --watch",
     "build": "rollup -c",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "node start.js",
     "test:generate-output": "./jest-test-results.sh",
     "test:generate-outputwindos": "./jest-test-results.bat",
     "prebuild:storybook": "npm run test:generate-output",
