@@ -1,4 +1,4 @@
-import React,{Component} from 'react'
+import React, { Component } from "react";
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -11,7 +11,7 @@ export default class ErrorBoundary extends React.Component {
     this.setState({
       error: error,
       errorInfo: errorInfo
-    })
+    });
     // You can also log error messages to an error reporting service here
   }
 
@@ -21,7 +21,7 @@ export default class ErrorBoundary extends React.Component {
       return (
         <div>
           <h2>出错了.</h2>
-          <details style={{ whiteSpace: 'pre-wrap' }}>
+          <details style={{ whiteSpace: "pre-wrap" }}>
             {this.state.error && this.state.error.toString()}
             <br />
             {this.state.errorInfo.componentStack}
