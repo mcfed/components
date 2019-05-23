@@ -5,11 +5,15 @@
 ## Usage
 
 ```
-<McEllipsis text={text} tooltipText={tooltipText}></McEllipsis>
+<Ellipsis text={text} tooltiptext={tooltipText}></Ellipsis>
 
 ```
 
 ## Option
+| 参数 | 说明 | 类型 |
+| - | - | - |
+|text|需要显示的text文本| string|必填
+|tooltiptext|扩展显示的tooltiptext文本，在出现text与tooltiptext不一样的场景时使用|String|
 
 | 参数        | 说明                                                                       | 类型    |
 | ----------- | -------------------------------------------------------------------------- | ------- |
