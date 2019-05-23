@@ -1,4 +1,3 @@
-export DetailTable from "./DetailTable";
 export AdvancedSearch from "./AdvancedSearch";
 export BaseForm from "./BaseForm";
 export FormItem from "./FormItem";
