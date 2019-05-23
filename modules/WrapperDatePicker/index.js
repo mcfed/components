@@ -1,6 +1,6 @@
-import React,{Component} from 'react'
-import moment from 'moment'
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import moment from "moment";
+import PropTypes from "prop-types";
 
 export default class WrapperDatePicker extends Component{
 
@@ -71,59 +71,79 @@ export default class WrapperDatePicker extends Component{
     }
   }
 
-
-  onChange(date,dateString){
-    let {onChange,children} = this.props
+  onChange(date, dateString) {
+    let { onChange, children } = this.props;
     // const format=children.proxps.format
-    const {format,valueFormat} = children.props
-    if(date instanceof Array){
-      if(date.length==0){
-        this.setState({
-          value:date
-        },onChange(undefined))
-      }else{
+    const { format, valueFormat } = children.props;
+    if (date instanceof Array) {
+      if (date.length == 0) {
+        this.setState(
+          {
+            value: date
+          },
+          onChange(undefined)
+        );
+      } else {
         // console.log(format,date[0].format(format),date[1].format(format))
-        this.setState({
-          value:date
-        },()=>{
-          /*根据valueFormat判断是否需要转换输出格式，时间戳*/
-          if(valueFormat){
-            if(valueFormat.toLocaleLowerCase() === "x"){
-              onChange([ Number(moment(date[0].format(format)).format(valueFormat)),Number(moment(date[1].format(format)).format(valueFormat))])
-            }else{
-              onChange([ moment(date[0].format(format)).format(valueFormat),moment(date[1].format(format)).format(valueFormat)])
+        this.setState(
+          {
+            value: date
+          },
+          () => {
+            /*根据valueFormat判断是否需要转换输出格式，时间戳*/
+            if (valueFormat) {
+              if (valueFormat.toLocaleLowerCase() === "x") {
+                onChange([
+                  Number(moment(date[0].format(format)).format(valueFormat)),
+                  Number(moment(date[1].format(format)).format(valueFormat))
+                ]);
+              } else {
+                onChange([
+                  moment(date[0].format(format)).format(valueFormat),
+                  moment(date[1].format(format)).format(valueFormat)
+                ]);
+              }
+            } else {
+              onChange([date[0].format(format), date[1].format(format)]);
             }
-          }else{
-            onChange([date[0].format(format),date[1].format(format)])
           }
-
-        })
+        );
       }
-    }else{
-      this.setState({
-        value:date
-      },()=>{
-        if(valueFormat){
-          if(valueFormat.toLocaleLowerCase() === "x"){
-            onChange(Number(moment(date.format(format)).format(valueFormat)))
-          }else{
-            onChange(moment(date.format(format)).format(valueFormat))
+    } else {
+      this.setState(
+        {
+          value: date
+        },
+        () => {
+          if (valueFormat) {
+            if (valueFormat.toLocaleLowerCase() === "x") {
+              onChange(Number(moment(date.format(format)).format(valueFormat)));
+            } else {
+              onChange(moment(date.format(format)).format(valueFormat));
+            }
+          } else {
+            onChange(date.format(format));
           }
-        }else{
-          onChange(date.format(format))
         }
-      })
+      );
     }
   }
 
-  render(){
-    let {children,valueFormat,...otherProps}= this.props
-    let {value}= this.state
+  render() {
+    let { children, valueFormat, ...otherProps } = this.props;
+    let { value } = this.state;
     // console.log(value)
-    return React.cloneElement(children,{...otherProps,value:value,onChange:this.onChange.bind(this)})
+    return React.cloneElement(children, {
+      ...otherProps,
+      value: value,
+      onChange: this.onChange.bind(this)
+    });
   }
 }
 
 WrapperDatePicker.propTypes = {
-  valueFormat:PropTypes.string,
-}
+  /**
+  组件传出的时间格式，同moment.format 格式
+  **/
+  valueFormat: PropTypes.string
+};
