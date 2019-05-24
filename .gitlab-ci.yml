@@ -1,6 +1,7 @@
 stages:
   - test
   - compile
+  - release
 
 cache:
   key: ${CI_BUILD_REF_NAME}
@@ -26,3 +27,19 @@ build_job:
     - master
   tags:
     - master
+
+test_ci_push:
+  stage: release
+  only:
+    - master
+  tags:
+    - master
+  allow_failure: true
+  script:
+    - npm run build
+    - git config --global user.name "zhouhuan"
+    - git config --global user.email "zhouhuan@mchz.com.cn"
+    - git add --all
+    - git commit -m "GitLab Runner Complie Push"
+    - git push http://zhouhuan:qwCds6yJkgwwzREeYeW5@http://git.mchz.com.cn/mcf/components.git HEAD:master
+    - echo "push code success!"
