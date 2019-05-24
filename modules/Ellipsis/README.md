@@ -5,7 +5,7 @@
 ## Usage
 
 ```
-<McEllipsis text={text} tooltipText={tooltipText}></McEllipsis>
+<Ellipsis text={text} tooltiptext={tooltipText}></Ellipsis>
 
 ```
 
