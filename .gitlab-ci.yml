@@ -41,5 +41,5 @@ test_ci_push:
     - git config --global user.email "zhouhuan@mchz.com.cn"
     - git add --all
     - git commit -m "GitLab Runner Complie Push"
-    - git push http://zhouhuan:qwCds6yJkgwwzREeYeW5@http://git.mchz.com.cn/mcf/components.git HEAD:master
+    - git push http://zhouhuan:qwCds6yJkgwwzREeYeW5@git.mchz.com.cn/mcf/components.git HEAD:master
     - echo "push code success!"
