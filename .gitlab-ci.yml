@@ -18,13 +18,14 @@ test_job:
     - npm run test
   tags:
     - master
+    - develop
 
 build_job:
   stage: compile
   script:
     - npm run build
   only:
-    - master
+    - develop
   tags:
     - master
 
