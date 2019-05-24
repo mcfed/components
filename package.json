@@ -1,7 +1,7 @@
 {
   "name": "mcf-components",
-  "version": "v1.0.0",
-  "description": "@mcf for crud",
+  "version": "v1.2.0",
+  "description": "@mcf for components",
   "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "keywords": [
     "@mcf",
-    "CRUD",
+    "components",
     "modules",
     "developer"
   ],
