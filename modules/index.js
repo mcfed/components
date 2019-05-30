@@ -14,6 +14,7 @@ export ModalAndView from './ModalAndView'
 export * as TreeView from './TreeView'
 export TabsPanel from './TabsPanel'
 export PropertyTable from './PropertyTable'
+export TransferView from './TransferView'
 
 export EditTable from './EditTable'
 export DetailTable from './DetailTable'
