@@ -202,6 +202,36 @@ Td.propTypes = {
   valueKey: PropTypes.string
 };
 
+function styleInject(css, ref) {
+  if ( ref === void 0 ) ref = {};
+  var insertAt = ref.insertAt;
+
+  if (!css || typeof document === 'undefined') { return; }
+
+  var head = document.head || document.getElementsByTagName('head')[0];
+  var style = document.createElement('style');
+  style.type = 'text/css';
+
+  if (insertAt === 'top') {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+
+var css = ".ant-table-detail .ant-table-title {\n  font-size: 14px;\n  padding: 10px 0;\n  background-color: #f8f8f8;\n  color: #000;\n}\n.ant-table-detail .ant-table-title,\n.ant-table-detail .ant-table-content .ant-table-body table th,\n.ant-table-detail .ant-table-content .ant-table-body table td {\n  text-indent: 20px;\n}\n.ant-table-detail .ant-table-content .ant-table-body table {\n  border: 1px solid #f0f0f0;\n  border-collapse: collapse;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr:not(:last-of-type) {\n  border-bottom: 1px solid #f0f0f0;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr:hover td {\n  background-color: #fff;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr td {\n  padding: 9px 16px;\n  border: none;\n  white-space: normal;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr th {\n  padding: 9px 0;\n  font-weight: normal;\n  border: 1px solid #f0f0f0;\n  width: 18%;\n  color: #000;\n}\n";
+styleInject(css);
+
 var DetailTable =
 /*#__PURE__*/
 function (_React$Component) {
@@ -320,14 +350,44 @@ function (_React$Component) {
 }(React__default.Component);
 
 DetailTable.propTypes = {
+  /**
+  支持数组模式和对象模式（'array',object）默认数组模式
+  **/
   mode: PropTypes.oneOf(['object', 'array']),
+
+  /**
+  定义列数，不得小于0
+  **/
   columnNumber: PropTypes.number,
+
+  /**
+  传递数据，根据类型传递相应的数据
+  **/
   dataSource: PropTypes.array,
+
+  /**
+  表格外包div类名
+  **/
   tableClass: PropTypes.string,
-  title: PropTypes.string
+
+  /**
+  表格title
+  **/
+  title: PropTypes.string,
+
+  /**
+  组模式下配置显示名称key值，默认label
+  **/
+  labelKey: PropTypes.string,
+
+  /**
+  数组模式下配置显示名称value值，默认value
+  **/
+  valueKey: PropTypes.string
 };
 DetailTable.defaultProps = {
   columnNumber: 2,
+  title: "datailtable",
   tableClass: "ant-table ant-table-bordered ant-table-detail"
 };
 
@@ -606,7 +666,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -1173,7 +1233,7 @@ var _meta_5 = _meta.onFreeze;
 
 var defineProperty$4 = _objectDp.f;
 var _wksDefine = function (name) {
-  var $Symbol = _core.Symbol || (_core.Symbol = {});
+  var $Symbol = _core.Symbol || (_core.Symbol = _library ? {} : _global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$4($Symbol, name, { value: _wksExt.f(name) });
 };
 
@@ -2497,12 +2557,12 @@ function getWHIgnoreDisplay(elem) {
   return val;
 }
 
-function css(el, name, v) {
+function css$1(el, name, v) {
   var value = v;
   if ((typeof name === 'undefined' ? 'undefined' : _typeof$2(name)) === 'object') {
     for (var i in name) {
       if (name.hasOwnProperty(i)) {
-        css(el, i, name[i]);
+        css$1(el, i, name[i]);
       }
     }
     return undefined;
@@ -2532,7 +2592,7 @@ each(['width', 'height'], function (name) {
         if (isBorderBox) {
           val += getPBMWidth(elem, ['padding', 'border'], which, computedStyle);
         }
-        return css(elem, name, val);
+        return css$1(elem, name, val);
       }
       return undefined;
     }
@@ -2543,7 +2603,7 @@ each(['width', 'height'], function (name) {
 // 设置 elem 相对 elem.ownerDocument 的坐标
 function setOffset(elem, offset) {
   // set position first, in-case top/left are set even on static elem
-  if (css(elem, 'position') === 'static') {
+  if (css$1(elem, 'position') === 'static') {
     elem.style.position = 'relative';
   }
 
@@ -2554,11 +2614,11 @@ function setOffset(elem, offset) {
 
   for (key in offset) {
     if (offset.hasOwnProperty(key)) {
-      current = parseFloat(css(elem, key)) || 0;
+      current = parseFloat(css$1(elem, key)) || 0;
       ret[key] = current + offset[key] - old[key];
     }
   }
-  css(elem, ret);
+  css$1(elem, ret);
 }
 
 var util = _extends$3({
@@ -2576,7 +2636,7 @@ var util = _extends$3({
 
   isWindow: isWindow,
   each: each,
-  css: css,
+  css: css$1,
   clone: function clone(obj) {
     var ret = {};
     for (var i in obj) {
@@ -12245,12 +12305,12 @@ function forceRelayout(elem) {
   elem.style.display = originalStyle;
 }
 
-function css$1(el, name, v) {
+function css$2(el, name, v) {
   var value = v;
   if ((typeof name === 'undefined' ? 'undefined' : _typeof$3(name)) === 'object') {
     for (var i in name) {
       if (name.hasOwnProperty(i)) {
-        css$1(el, i, name[i]);
+        css$2(el, i, name[i]);
       }
     }
     return undefined;
@@ -12446,7 +12506,7 @@ function oppositeOffsetDirection(dir) {
 // 设置 elem 相对 elem.ownerDocument 的坐标
 function setLeftTop(elem, offset, option) {
   // set position first, in-case top/left are set even on static elem
-  if (css$1(elem, 'position') === 'static') {
+  if (css$2(elem, 'position') === 'static') {
     elem.style.position = 'relative';
   }
   var presetH = -999;
@@ -12493,7 +12553,7 @@ function setLeftTop(elem, offset, option) {
       }
     }
   }
-  css$1(elem, originalStyle);
+  css$2(elem, originalStyle);
   // force relayout
   forceRelayout(elem);
   if ('left' in offset || 'top' in offset) {
@@ -12511,7 +12571,7 @@ function setLeftTop(elem, offset, option) {
       }
     }
   }
-  css$1(elem, ret);
+  css$2(elem, ret);
 }
 
 function setTransform$1(elem, offset) {
@@ -12728,7 +12788,7 @@ each$1(['width', 'height'], function (name) {
         if (isBorderBox) {
           val += getPBMWidth$1(elem, ['padding', 'border'], which, computedStyle);
         }
-        return css$1(elem, name, val);
+        return css$2(elem, name, val);
       }
       return undefined;
     }
@@ -12765,7 +12825,7 @@ var utils = {
 
   isWindow: isWindow$1,
   each: each$1,
-  css: css$1,
+  css: css$2,
   clone: function clone(obj) {
     var i = void 0;
     var ret = {};
@@ -18888,6 +18948,9 @@ function (_Component) {
   return WrapperDatePicker;
 }(Component);
 WrapperDatePicker.propTypes = {
+  /**
+  组件传出的时间格式，同moment.format 格式
+  **/
   valueFormat: PropTypes.string
 };
 
@@ -25858,35 +25921,8 @@ var Locale = {
   downText: "展开"
 };
 
-function styleInject(css, ref) {
-  if ( ref === void 0 ) ref = {};
-  var insertAt = ref.insertAt;
-
-  if (!css || typeof document === 'undefined') { return; }
-
-  var head = document.head || document.getElementsByTagName('head')[0];
-  var style = document.createElement('style');
-  style.type = 'text/css';
-
-  if (insertAt === 'top') {
-    if (head.firstChild) {
-      head.insertBefore(style, head.firstChild);
-    } else {
-      head.appendChild(style);
-    }
-  } else {
-    head.appendChild(style);
-  }
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}
-
-var css$2 = ".advanced-search-panel {\n  flex-shrink: 0;\n  padding-right: 170px;\n  position: relative;\n}\n.advanced-search-panel .ant-col-8 .ant-form-item {\n  margin-bottom: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 4px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn {\n  margin: 0 5px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn-ghost {\n  border-width: 0;\n  padding-left: 0;\n  padding-right: 0;\n}\n.advanced-search-panel .advanced-search-toolbar .anticon-down {\n  cursor: pointer;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n";
-styleInject(css$2);
+var css$3 = ".advanced-search-panel {\n  flex-shrink: 0;\n  padding-right: 170px;\n  position: relative;\n}\n.advanced-search-panel .ant-col-8 .ant-form-item {\n  margin-bottom: 0;\n}\n.advanced-search-panel .ant-form-item-label {\n  line-height: 32px;\n}\n.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {\n  margin-right: -1px;\n  height: 32px;\n  border-radius: 4px 0 0 4px;\n}\n.advanced-search-panel .advanced-search-toolbar {\n  position: absolute;\n  right: 0;\n  top: 4px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn {\n  margin: 0 5px;\n}\n.advanced-search-panel .advanced-search-toolbar .ant-btn-ghost {\n  border-width: 0;\n  padding-left: 0;\n  padding-right: 0;\n}\n.advanced-search-panel .advanced-search-toolbar .anticon-down {\n  cursor: pointer;\n}\n.advanced-search-panel .ant-btn-circle {\n  border-width: 0;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {\n  overflow: hidden;\n  height: 30px;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {\n  position: absolute;\n  left: 0;\n  right: 0;\n  white-space: nowrap;\n}\n.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {\n  float: none;\n  margin-top: 8px;\n  display: inline-block;\n}\n";
+styleInject(css$3);
 
 var AdvancedSearchForm =
 /*#__PURE__*/
@@ -26128,11 +26164,22 @@ function (_React$Component) {
   return AdvancedSearchForm;
 }(React__default.Component);
 AdvancedSearchForm.propTypes = {
+  /**
+  搜索按钮事件监听方法
+  **/
   filterSubmitHandler: PropTypes.func,
+
+  /**
+  是否显示配置项,配置搜索条件显示
+  **/
   showConfig: PropTypes.bool,
   loading: PropTypes.bool,
   footer: PropTypes.element,
   locale: PropTypes.object,
+
+  /**
+  是否收展，超过指定个数后隐藏
+  **/
   showExpand: PropTypes.number
 };
 AdvancedSearchForm.defaultProps = {
@@ -30012,8 +30059,8 @@ Modal.confirm = function (props) {
     return confirm(config);
 };
 
-var css$3 = ".button-groups .ant-btn-group > span {\n  vertical-align: top;\n}\n";
-styleInject(css$3);
+var css$4 = ".button-groups .ant-btn-group > span {\n  vertical-align: top;\n}\n";
+styleInject(css$4);
 
 var Locale$1 = {
   okText: "确认",
@@ -30253,9 +30300,24 @@ function (_Component2) {
 _defineProperty(ButtonGroups, "contextTypes", {// appReducer:PropTypes.object
 });
 ButtonGroups.propTypes = {
+  /**
+   超过收起的数目
+  **/
   showSize: PropTypes.number,
+
+  /**
+   点击事件（需子元素以actionKey区分）
+  **/
   handleClick: PropTypes.func,
+
+  /**
+   按钮的展示模式，仅文字，仅图片，文字+图片
+  **/
   viewMode: PropTypes.oneOf(['text', 'icon', 'both']),
+
+  /**
+   显示模式 ButtonGroup 和 ButtonMenu
+  **/
   mode: PropTypes.oneOf(['ButtonGroup', 'ButtonMenu']),
   locale: PropTypes.object
 };
@@ -38411,13 +38473,32 @@ _defineProperty(DataTable, "defaultProps", {
   columns: []
 });
 
+DataTable.propTypes = {
+  /**
+    表格列的配置描述 同antd table columns
+  **/
+  columns: PropTypes.array,
+
+  /**
+  数据数组，同antd table dataSource
+  **/
+  dataSource: PropTypes.array,
+
+  /**
+  默认排序参数  {columnKey,order} columnkey代表需要排序的columns的dataIndex order 选项为‘descend ascend’之一
+  e.g. {columnKey:'name',order:'descend'}
+  **/
+  defaultSort: PropTypes.object // pagination:PropTypes.bool
+
+};
+
 var Locale$2 = {
   okText: "确认",
   cancelText: "取消"
 };
 
-var css$4 = ".ant-panel-wrapper {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  background-color: #fff;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading > .ant-spin-container {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head {\n  display: flex;\n  padding: 16px 24px;\n  color: rgba(0, 0, 0, 0.65);\n  background: #fff;\n  border-bottom: 1px solid #e8e8e8;\n  border-radius: 4px 4px 0 0;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head .ant-panel-head-title {\n  margin: 0;\n  color: rgba(0, 0, 0, 0.85);\n  font-weight: 500;\n  font-size: 16px;\n  line-height: 22px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-body {\n  display: flex;\n  flex: 1;\n  overflow: auto;\n  flex-direction: column;\n  padding: 10px 16px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer {\n  padding: 10px 16px;\n  text-align: center;\n  border-top: 1px solid #e8e8e8;\n  border-radius: 0 0 4px 4px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer button {\n  margin: 0 4px;\n}\n";
-styleInject(css$4);
+var css$5 = ".ant-panel-wrapper {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n  background-color: #fff;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper > .ant-spin-nested-loading > .ant-spin-container {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel {\n  display: flex;\n  flex-direction: column;\n  flex: 1;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head {\n  display: flex;\n  padding: 16px 24px;\n  color: rgba(0, 0, 0, 0.65);\n  background: #fff;\n  border-bottom: 1px solid #e8e8e8;\n  border-radius: 4px 4px 0 0;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-head .ant-panel-head-title {\n  margin: 0;\n  color: rgba(0, 0, 0, 0.85);\n  font-weight: 500;\n  font-size: 16px;\n  line-height: 22px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-body {\n  display: flex;\n  flex: 1;\n  overflow: auto;\n  flex-direction: column;\n  padding: 10px 16px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer {\n  padding: 10px 16px;\n  text-align: center;\n  border-top: 1px solid #e8e8e8;\n  border-radius: 0 0 4px 4px;\n}\n.ant-panel-wrapper .ant-panel .ant-panel-footer button {\n  margin: 0 4px;\n}\n";
+styleInject(css$5);
 
 var Panel =
 /*#__PURE__*/
@@ -38526,14 +38607,49 @@ function (_Component) {
   return Panel;
 }(Component);
 Panel.propTypes = {
+  /**
+  确定按钮响应事件
+  **/
   onOK: PropTypes.func,
+
+  /**
+  取消按钮响应事件
+  **/
   onCancel: PropTypes.func,
+
+  /**
+  panel面板标题
+  **/
   title: PropTypes.string,
+
+  /**
+  确认按钮文字自定义
+  **/
   okText: PropTypes.string,
+
+  /**
+  消按钮文字自定义
+  **/
   cancelText: PropTypes.string,
+
+  /**
+  自定义footer
+  **/
   footer: PropTypes.oneOfType([PropTypes.bool, PropTypes.element, PropTypes.func]),
+
+  /**
+  二次确认时的loading状态，true时确定操作按钮不可操作
+  **/
   confirmLoading: PropTypes.bool,
+
+  /**
+  国际化
+  **/
   locale: PropTypes.object,
+
+  /**
+  整个panel的loading状态，true时整个面板不能操作
+  **/
   loading: PropTypes.bool
 };
 Panel.defaultProps = {
@@ -39993,8 +40109,7 @@ function (_PureComponent) {
         }
 
         return replacement;
-      });
-      return str;
+      }); // return str
     }
   }, {
     key: "onChange",
@@ -40095,6 +40210,2340 @@ PropertyTable.propsType = {
   dataSource: PropTypes.array.isRequired,
   renderItem: PropTypes.func
 };
+
+var Search$2 = function (_React$Component) {
+    _inherits$1(Search, _React$Component);
+
+    function Search() {
+        _classCallCheck$1(this, Search);
+
+        var _this = _possibleConstructorReturn$1(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+
+        _this.handleChange = function (e) {
+            var onChange = _this.props.onChange;
+            if (onChange) {
+                onChange(e);
+            }
+        };
+        _this.handleClear = function (e) {
+            e.preventDefault();
+            var handleClear = _this.props.handleClear;
+            if (handleClear) {
+                handleClear(e);
+            }
+        };
+        return _this;
+    }
+
+    _createClass$1(Search, [{
+        key: 'render',
+        value: function render$$1() {
+            var _props = this.props,
+                placeholder = _props.placeholder,
+                value = _props.value,
+                prefixCls = _props.prefixCls;
+
+            var icon = value && value.length > 0 ? createElement(
+                'a',
+                { href: '#', className: prefixCls + '-action', onClick: this.handleClear },
+                createElement(Icon, { type: 'cross-circle' })
+            ) : createElement(
+                'span',
+                { className: prefixCls + '-action' },
+                createElement(Icon, { type: 'search' })
+            );
+            return createElement(
+                'div',
+                null,
+                createElement(Input, { placeholder: placeholder, className: prefixCls, value: value, ref: 'input', onChange: this.handleChange }),
+                icon
+            );
+        }
+    }]);
+
+    return Search;
+}(Component);
+
+Search$2.defaultProps = {
+    placeholder: ''
+};
+
+var eventlistener = createCommonjsModule(function (module, exports) {
+(function(root,factory){
+    {
+        module.exports = factory();
+    }
+}(commonjsGlobal, function () {
+	function wrap(standard, fallback) {
+		return function (el, evtName, listener, useCapture) {
+			if (el[standard]) {
+				el[standard](evtName, listener, useCapture);
+			} else if (el[fallback]) {
+				el[fallback]('on' + evtName, listener);
+			}
+		}
+	}
+
+    return {
+		add: wrap('addEventListener', 'attachEvent'),
+		remove: wrap('removeEventListener', 'detachEvent')
+	};
+}));
+});
+
+/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT$2 = 'Expected a function';
+
+/** Used as references for various `Number` constants. */
+var NAN$1 = 0 / 0;
+
+/** `Object#toString` result references. */
+var symbolTag$1 = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim$1 = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex$1 = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary$1 = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal$1 = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt$1 = parseInt;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal$1 = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+
+/** Detect free variable `self`. */
+var freeSelf$1 = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root$1 = freeGlobal$1 || freeSelf$1 || Function('return this')();
+
+/** Used for built-in method references. */
+var objectProto$g = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString$2 = objectProto$g.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax$2 = Math.max,
+    nativeMin$1 = Math.min;
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now$1 = function() {
+  return root$1.Date.now();
+};
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce$2(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT$2);
+  }
+  wait = toNumber$1(wait) || 0;
+  if (isObject$5(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax$2(toNumber$1(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        result = wait - timeSinceLastCall;
+
+    return maxing ? nativeMin$1(result, maxWait - timeSinceLastInvoke) : result;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now$1();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now$1());
+  }
+
+  function debounced() {
+    var time = now$1(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject$5(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike$4(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol$2(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike$4(value) && objectToString$2.call(value) == symbolTag$1);
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber$1(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol$2(value)) {
+    return NAN$1;
+  }
+  if (isObject$5(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject$5(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim$1, '');
+  var isBinary = reIsBinary$1.test(value);
+  return (isBinary || reIsOctal$1.test(value))
+    ? freeParseInt$1(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex$1.test(value) ? NAN$1 : +value);
+}
+
+var lodash_debounce = debounce$2;
+
+/**
+ * lodash (Custom Build) <https://lodash.com/>
+ * Build: `lodash modularize exports="npm" -o ./`
+ * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+ * Released under MIT license <https://lodash.com/license>
+ * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+ * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+ */
+
+/** Used as the `TypeError` message for "Functions" methods. */
+var FUNC_ERROR_TEXT$3 = 'Expected a function';
+
+/** Used as references for various `Number` constants. */
+var NAN$2 = 0 / 0;
+
+/** `Object#toString` result references. */
+var symbolTag$2 = '[object Symbol]';
+
+/** Used to match leading and trailing whitespace. */
+var reTrim$2 = /^\s+|\s+$/g;
+
+/** Used to detect bad signed hexadecimal string values. */
+var reIsBadHex$2 = /^[-+]0x[0-9a-f]+$/i;
+
+/** Used to detect binary string values. */
+var reIsBinary$2 = /^0b[01]+$/i;
+
+/** Used to detect octal string values. */
+var reIsOctal$2 = /^0o[0-7]+$/i;
+
+/** Built-in method references without a dependency on `root`. */
+var freeParseInt$2 = parseInt;
+
+/** Detect free variable `global` from Node.js. */
+var freeGlobal$2 = typeof commonjsGlobal == 'object' && commonjsGlobal && commonjsGlobal.Object === Object && commonjsGlobal;
+
+/** Detect free variable `self`. */
+var freeSelf$2 = typeof self == 'object' && self && self.Object === Object && self;
+
+/** Used as a reference to the global object. */
+var root$2 = freeGlobal$2 || freeSelf$2 || Function('return this')();
+
+/** Used for built-in method references. */
+var objectProto$h = Object.prototype;
+
+/**
+ * Used to resolve the
+ * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+ * of values.
+ */
+var objectToString$3 = objectProto$h.toString;
+
+/* Built-in method references for those with the same name as other `lodash` methods. */
+var nativeMax$3 = Math.max,
+    nativeMin$2 = Math.min;
+
+/**
+ * Gets the timestamp of the number of milliseconds that have elapsed since
+ * the Unix epoch (1 January 1970 00:00:00 UTC).
+ *
+ * @static
+ * @memberOf _
+ * @since 2.4.0
+ * @category Date
+ * @returns {number} Returns the timestamp.
+ * @example
+ *
+ * _.defer(function(stamp) {
+ *   console.log(_.now() - stamp);
+ * }, _.now());
+ * // => Logs the number of milliseconds it took for the deferred invocation.
+ */
+var now$2 = function() {
+  return root$2.Date.now();
+};
+
+/**
+ * Creates a debounced function that delays invoking `func` until after `wait`
+ * milliseconds have elapsed since the last time the debounced function was
+ * invoked. The debounced function comes with a `cancel` method to cancel
+ * delayed `func` invocations and a `flush` method to immediately invoke them.
+ * Provide `options` to indicate whether `func` should be invoked on the
+ * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+ * with the last arguments provided to the debounced function. Subsequent
+ * calls to the debounced function return the result of the last `func`
+ * invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the debounced function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.debounce` and `_.throttle`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to debounce.
+ * @param {number} [wait=0] The number of milliseconds to delay.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=false]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {number} [options.maxWait]
+ *  The maximum time `func` is allowed to be delayed before it's invoked.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new debounced function.
+ * @example
+ *
+ * // Avoid costly calculations while the window size is in flux.
+ * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+ *
+ * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+ * jQuery(element).on('click', _.debounce(sendMail, 300, {
+ *   'leading': true,
+ *   'trailing': false
+ * }));
+ *
+ * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+ * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+ * var source = new EventSource('/stream');
+ * jQuery(source).on('message', debounced);
+ *
+ * // Cancel the trailing debounced invocation.
+ * jQuery(window).on('popstate', debounced.cancel);
+ */
+function debounce$3(func, wait, options) {
+  var lastArgs,
+      lastThis,
+      maxWait,
+      result,
+      timerId,
+      lastCallTime,
+      lastInvokeTime = 0,
+      leading = false,
+      maxing = false,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT$3);
+  }
+  wait = toNumber$2(wait) || 0;
+  if (isObject$6(options)) {
+    leading = !!options.leading;
+    maxing = 'maxWait' in options;
+    maxWait = maxing ? nativeMax$3(toNumber$2(options.maxWait) || 0, wait) : maxWait;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+
+  function invokeFunc(time) {
+    var args = lastArgs,
+        thisArg = lastThis;
+
+    lastArgs = lastThis = undefined;
+    lastInvokeTime = time;
+    result = func.apply(thisArg, args);
+    return result;
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time;
+    // Start the timer for the trailing edge.
+    timerId = setTimeout(timerExpired, wait);
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result;
+  }
+
+  function remainingWait(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime,
+        result = wait - timeSinceLastCall;
+
+    return maxing ? nativeMin$2(result, maxWait - timeSinceLastInvoke) : result;
+  }
+
+  function shouldInvoke(time) {
+    var timeSinceLastCall = time - lastCallTime,
+        timeSinceLastInvoke = time - lastInvokeTime;
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+  }
+
+  function timerExpired() {
+    var time = now$2();
+    if (shouldInvoke(time)) {
+      return trailingEdge(time);
+    }
+    // Restart the timer.
+    timerId = setTimeout(timerExpired, remainingWait(time));
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined;
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time);
+    }
+    lastArgs = lastThis = undefined;
+    return result;
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      clearTimeout(timerId);
+    }
+    lastInvokeTime = 0;
+    lastArgs = lastCallTime = lastThis = timerId = undefined;
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(now$2());
+  }
+
+  function debounced() {
+    var time = now$2(),
+        isInvoking = shouldInvoke(time);
+
+    lastArgs = arguments;
+    lastThis = this;
+    lastCallTime = time;
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime);
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = setTimeout(timerExpired, wait);
+        return invokeFunc(lastCallTime);
+      }
+    }
+    if (timerId === undefined) {
+      timerId = setTimeout(timerExpired, wait);
+    }
+    return result;
+  }
+  debounced.cancel = cancel;
+  debounced.flush = flush;
+  return debounced;
+}
+
+/**
+ * Creates a throttled function that only invokes `func` at most once per
+ * every `wait` milliseconds. The throttled function comes with a `cancel`
+ * method to cancel delayed `func` invocations and a `flush` method to
+ * immediately invoke them. Provide `options` to indicate whether `func`
+ * should be invoked on the leading and/or trailing edge of the `wait`
+ * timeout. The `func` is invoked with the last arguments provided to the
+ * throttled function. Subsequent calls to the throttled function return the
+ * result of the last `func` invocation.
+ *
+ * **Note:** If `leading` and `trailing` options are `true`, `func` is
+ * invoked on the trailing edge of the timeout only if the throttled function
+ * is invoked more than once during the `wait` timeout.
+ *
+ * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+ * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+ *
+ * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+ * for details over the differences between `_.throttle` and `_.debounce`.
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Function
+ * @param {Function} func The function to throttle.
+ * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
+ * @param {Object} [options={}] The options object.
+ * @param {boolean} [options.leading=true]
+ *  Specify invoking on the leading edge of the timeout.
+ * @param {boolean} [options.trailing=true]
+ *  Specify invoking on the trailing edge of the timeout.
+ * @returns {Function} Returns the new throttled function.
+ * @example
+ *
+ * // Avoid excessively updating the position while scrolling.
+ * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
+ *
+ * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
+ * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
+ * jQuery(element).on('click', throttled);
+ *
+ * // Cancel the trailing throttled invocation.
+ * jQuery(window).on('popstate', throttled.cancel);
+ */
+function throttle$1(func, wait, options) {
+  var leading = true,
+      trailing = true;
+
+  if (typeof func != 'function') {
+    throw new TypeError(FUNC_ERROR_TEXT$3);
+  }
+  if (isObject$6(options)) {
+    leading = 'leading' in options ? !!options.leading : leading;
+    trailing = 'trailing' in options ? !!options.trailing : trailing;
+  }
+  return debounce$3(func, wait, {
+    'leading': leading,
+    'maxWait': wait,
+    'trailing': trailing
+  });
+}
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject$6(value) {
+  var type = typeof value;
+  return !!value && (type == 'object' || type == 'function');
+}
+
+/**
+ * Checks if `value` is object-like. A value is object-like if it's not `null`
+ * and has a `typeof` result of "object".
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+ * @example
+ *
+ * _.isObjectLike({});
+ * // => true
+ *
+ * _.isObjectLike([1, 2, 3]);
+ * // => true
+ *
+ * _.isObjectLike(_.noop);
+ * // => false
+ *
+ * _.isObjectLike(null);
+ * // => false
+ */
+function isObjectLike$5(value) {
+  return !!value && typeof value == 'object';
+}
+
+/**
+ * Checks if `value` is classified as a `Symbol` primitive or object.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+ * @example
+ *
+ * _.isSymbol(Symbol.iterator);
+ * // => true
+ *
+ * _.isSymbol('abc');
+ * // => false
+ */
+function isSymbol$3(value) {
+  return typeof value == 'symbol' ||
+    (isObjectLike$5(value) && objectToString$3.call(value) == symbolTag$2);
+}
+
+/**
+ * Converts `value` to a number.
+ *
+ * @static
+ * @memberOf _
+ * @since 4.0.0
+ * @category Lang
+ * @param {*} value The value to process.
+ * @returns {number} Returns the number.
+ * @example
+ *
+ * _.toNumber(3.2);
+ * // => 3.2
+ *
+ * _.toNumber(Number.MIN_VALUE);
+ * // => 5e-324
+ *
+ * _.toNumber(Infinity);
+ * // => Infinity
+ *
+ * _.toNumber('3.2');
+ * // => 3.2
+ */
+function toNumber$2(value) {
+  if (typeof value == 'number') {
+    return value;
+  }
+  if (isSymbol$3(value)) {
+    return NAN$2;
+  }
+  if (isObject$6(value)) {
+    var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+    value = isObject$6(other) ? (other + '') : other;
+  }
+  if (typeof value != 'string') {
+    return value === 0 ? value : +value;
+  }
+  value = value.replace(reTrim$2, '');
+  var isBinary = reIsBinary$2.test(value);
+  return (isBinary || reIsOctal$2.test(value))
+    ? freeParseInt$2(value.slice(2), isBinary ? 2 : 8)
+    : (reIsBadHex$2.test(value) ? NAN$2 : +value);
+}
+
+var lodash_throttle = throttle$1;
+
+var parentScroll = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var style = function style(element, prop) {
+  return typeof getComputedStyle !== 'undefined' ? getComputedStyle(element, null).getPropertyValue(prop) : element.style[prop];
+};
+
+var overflow = function overflow(element) {
+  return style(element, 'overflow') + style(element, 'overflow-y') + style(element, 'overflow-x');
+};
+
+var scrollParent = function scrollParent(element) {
+  if (!(element instanceof HTMLElement)) {
+    return window;
+  }
+
+  var parent = element;
+
+  while (parent) {
+    if (parent === document.body || parent === document.documentElement) {
+      break;
+    }
+
+    if (!parent.parentNode) {
+      break;
+    }
+
+    if (/(scroll|auto)/.test(overflow(parent))) {
+      return parent;
+    }
+
+    parent = parent.parentNode;
+  }
+
+  return window;
+};
+
+exports.default = scrollParent;
+});
+
+unwrapExports(parentScroll);
+
+var getElementPosition_1 = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getElementPosition;
+/*
+* Finds element's position relative to the whole document,
+* rather than to the viewport as it is the case with .getBoundingClientRect().
+*/
+function getElementPosition(element) {
+  var rect = element.getBoundingClientRect();
+
+  return {
+    top: rect.top + window.pageYOffset,
+    left: rect.left + window.pageXOffset
+  };
+}
+});
+
+unwrapExports(getElementPosition_1);
+
+var inViewport_1 = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = inViewport;
+
+
+
+var _getElementPosition2 = _interopRequireDefault(getElementPosition_1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var isHidden = function isHidden(element) {
+  return element.offsetParent === null;
+};
+
+function inViewport(element, container, customOffset) {
+  if (isHidden(element)) {
+    return false;
+  }
+
+  var top = void 0;
+  var bottom = void 0;
+  var left = void 0;
+  var right = void 0;
+
+  if (typeof container === 'undefined' || container === window) {
+    top = window.pageYOffset;
+    left = window.pageXOffset;
+    bottom = top + window.innerHeight;
+    right = left + window.innerWidth;
+  } else {
+    var containerPosition = (0, _getElementPosition2.default)(container);
+
+    top = containerPosition.top;
+    left = containerPosition.left;
+    bottom = top + container.offsetHeight;
+    right = left + container.offsetWidth;
+  }
+
+  var elementPosition = (0, _getElementPosition2.default)(element);
+
+  return top <= elementPosition.top + element.offsetHeight + customOffset.top && bottom >= elementPosition.top - customOffset.bottom && left <= elementPosition.left + element.offsetWidth + customOffset.left && right >= elementPosition.left - customOffset.right;
+}
+});
+
+unwrapExports(inViewport_1);
+
+var LazyLoad_1 = createCommonjsModule(function (module, exports) {
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+
+
+var _react2 = _interopRequireDefault(React__default);
+
+
+
+var _propTypes2 = _interopRequireDefault(PropTypes);
+
+
+
+
+
+
+
+var _lodash2 = _interopRequireDefault(lodash_debounce);
+
+
+
+var _lodash4 = _interopRequireDefault(lodash_throttle);
+
+
+
+var _parentScroll2 = _interopRequireDefault(parentScroll);
+
+
+
+var _inViewport2 = _interopRequireDefault(inViewport_1);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LazyLoad = function (_Component) {
+  _inherits(LazyLoad, _Component);
+
+  function LazyLoad(props) {
+    _classCallCheck(this, LazyLoad);
+
+    var _this = _possibleConstructorReturn(this, (LazyLoad.__proto__ || Object.getPrototypeOf(LazyLoad)).call(this, props));
+
+    _this.lazyLoadHandler = _this.lazyLoadHandler.bind(_this);
+
+    if (props.throttle > 0) {
+      if (props.debounce) {
+        _this.lazyLoadHandler = (0, _lodash2.default)(_this.lazyLoadHandler, props.throttle);
+      } else {
+        _this.lazyLoadHandler = (0, _lodash4.default)(_this.lazyLoadHandler, props.throttle);
+      }
+    }
+
+    _this.state = { visible: false };
+    return _this;
+  }
+
+  _createClass(LazyLoad, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      this._mounted = true;
+      var eventNode = this.getEventNode();
+
+      this.lazyLoadHandler();
+
+      if (this.lazyLoadHandler.flush) {
+        this.lazyLoadHandler.flush();
+      }
+
+      (0, eventlistener.add)(window, 'resize', this.lazyLoadHandler);
+      (0, eventlistener.add)(eventNode, 'scroll', this.lazyLoadHandler);
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps() {
+      if (!this.state.visible) {
+        this.lazyLoadHandler();
+      }
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(_nextProps, nextState) {
+      return nextState.visible;
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this._mounted = false;
+      if (this.lazyLoadHandler.cancel) {
+        this.lazyLoadHandler.cancel();
+      }
+
+      this.detachListeners();
+    }
+  }, {
+    key: 'getEventNode',
+    value: function getEventNode() {
+      return (0, _parentScroll2.default)((0, ReactDOM__default.findDOMNode)(this));
+    }
+  }, {
+    key: 'getOffset',
+    value: function getOffset() {
+      var _props = this.props,
+          offset = _props.offset,
+          offsetVertical = _props.offsetVertical,
+          offsetHorizontal = _props.offsetHorizontal,
+          offsetTop = _props.offsetTop,
+          offsetBottom = _props.offsetBottom,
+          offsetLeft = _props.offsetLeft,
+          offsetRight = _props.offsetRight,
+          threshold = _props.threshold;
+
+
+      var _offsetAll = threshold || offset;
+      var _offsetVertical = offsetVertical || _offsetAll;
+      var _offsetHorizontal = offsetHorizontal || _offsetAll;
+
+      return {
+        top: offsetTop || _offsetVertical,
+        bottom: offsetBottom || _offsetVertical,
+        left: offsetLeft || _offsetHorizontal,
+        right: offsetRight || _offsetHorizontal
+      };
+    }
+  }, {
+    key: 'lazyLoadHandler',
+    value: function lazyLoadHandler() {
+      if (!this._mounted) {
+        return;
+      }
+      var offset = this.getOffset();
+      var node = (0, ReactDOM__default.findDOMNode)(this);
+      var eventNode = this.getEventNode();
+
+      if ((0, _inViewport2.default)(node, eventNode, offset)) {
+        var onContentVisible = this.props.onContentVisible;
+
+
+        this.setState({ visible: true }, function () {
+          if (onContentVisible) {
+            onContentVisible();
+          }
+        });
+        this.detachListeners();
+      }
+    }
+  }, {
+    key: 'detachListeners',
+    value: function detachListeners() {
+      var eventNode = this.getEventNode();
+
+      (0, eventlistener.remove)(window, 'resize', this.lazyLoadHandler);
+      (0, eventlistener.remove)(eventNode, 'scroll', this.lazyLoadHandler);
+    }
+  }, {
+    key: 'render',
+    value: function render$$1() {
+      var _props2 = this.props,
+          children = _props2.children,
+          className = _props2.className,
+          height = _props2.height,
+          width = _props2.width;
+      var visible = this.state.visible;
+
+
+      var elStyles = { height: height, width: width };
+      var elClasses = 'LazyLoad' + (visible ? ' is-visible' : '') + (className ? ' ' + className : '');
+
+      return _react2.default.createElement(this.props.elementType, {
+        className: elClasses,
+        style: elStyles
+      }, visible && React__default.Children.only(children));
+    }
+  }]);
+
+  return LazyLoad;
+}(React__default.Component);
+
+exports.default = LazyLoad;
+
+
+LazyLoad.propTypes = {
+  children: _propTypes2.default.node.isRequired,
+  className: _propTypes2.default.string,
+  debounce: _propTypes2.default.bool,
+  elementType: _propTypes2.default.string,
+  height: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
+  offset: _propTypes2.default.number,
+  offsetBottom: _propTypes2.default.number,
+  offsetHorizontal: _propTypes2.default.number,
+  offsetLeft: _propTypes2.default.number,
+  offsetRight: _propTypes2.default.number,
+  offsetTop: _propTypes2.default.number,
+  offsetVertical: _propTypes2.default.number,
+  threshold: _propTypes2.default.number,
+  throttle: _propTypes2.default.number,
+  width: _propTypes2.default.oneOfType([_propTypes2.default.string, _propTypes2.default.number]),
+  onContentVisible: _propTypes2.default.func
+};
+
+LazyLoad.defaultProps = {
+  elementType: 'div',
+  debounce: true,
+  offset: 0,
+  offsetBottom: 0,
+  offsetHorizontal: 0,
+  offsetLeft: 0,
+  offsetRight: 0,
+  offsetTop: 0,
+  offsetVertical: 0,
+  throttle: 250
+};
+});
+
+var Lazyload = unwrapExports(LazyLoad_1);
+
+var Item = function (_React$Component) {
+    _inherits$1(Item, _React$Component);
+
+    function Item() {
+        _classCallCheck$1(this, Item);
+
+        return _possibleConstructorReturn$1(this, (Item.__proto__ || Object.getPrototypeOf(Item)).apply(this, arguments));
+    }
+
+    _createClass$1(Item, [{
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+            }
+
+            return PureRenderMixin.shouldComponentUpdate.apply(this, args);
+        }
+    }, {
+        key: 'render',
+        value: function render$$1() {
+            var _classNames;
+
+            var _props = this.props,
+                renderedText = _props.renderedText,
+                renderedEl = _props.renderedEl,
+                item = _props.item,
+                lazy = _props.lazy,
+                checked = _props.checked,
+                prefixCls = _props.prefixCls,
+                onClick = _props.onClick;
+
+            var className = classNames((_classNames = {}, _defineProperty$1(_classNames, prefixCls + '-content-item', true), _defineProperty$1(_classNames, prefixCls + '-content-item-disabled', item.disabled), _classNames));
+            var listItem = createElement(
+                'li',
+                { className: className, title: renderedText, onClick: item.disabled ? undefined : function () {
+                        return onClick(item);
+                    } },
+                createElement(Checkbox$1, { checked: checked, disabled: item.disabled }),
+                createElement(
+                    'span',
+                    null,
+                    renderedEl
+                )
+            );
+            var children = null;
+            if (lazy) {
+                var lazyProps = _extends$2({ height: 32, offset: 500, throttle: 0, debounce: false }, lazy);
+                children = createElement(
+                    Lazyload,
+                    lazyProps,
+                    listItem
+                );
+            } else {
+                children = listItem;
+            }
+            return children;
+        }
+    }]);
+
+    return Item;
+}(Component);
+
+function triggerEvent(el, type) {
+    if ('createEvent' in document) {
+        // modern browsers, IE9+
+        var e = document.createEvent('HTMLEvents');
+        e.initEvent(type, false, true);
+        el.dispatchEvent(e);
+    }
+}
+
+function noop$a() {}
+function isRenderResultPlainObject(result) {
+    return result && !isValidElement(result) && Object.prototype.toString.call(result) === '[object Object]';
+}
+
+var TransferList = function (_React$Component) {
+    _inherits$1(TransferList, _React$Component);
+
+    function TransferList(props) {
+        _classCallCheck$1(this, TransferList);
+
+        var _this = _possibleConstructorReturn$1(this, (TransferList.__proto__ || Object.getPrototypeOf(TransferList)).call(this, props));
+
+        _this.handleSelect = function (selectedItem) {
+            var checkedKeys = _this.props.checkedKeys;
+
+            var result = checkedKeys.some(function (key) {
+                return key === selectedItem.key;
+            });
+            _this.props.handleSelect(selectedItem, !result);
+        };
+        _this.handleFilter = function (e) {
+            _this.props.handleFilter(e);
+            if (!e.target.value) {
+                return;
+            }
+            // Manually trigger scroll event for lazy search bug
+            // https://github.com/ant-design/ant-design/issues/5631
+            _this.triggerScrollTimer = window.setTimeout(function () {
+                var transferNode = findDOMNode(_this);
+                var listNode = transferNode.querySelectorAll('.ant-transfer-list-content')[0];
+                if (listNode) {
+                    triggerEvent(listNode, 'scroll');
+                }
+            }, 0);
+        };
+        _this.handleClear = function () {
+            _this.props.handleClear();
+        };
+        _this.matchFilter = function (text, item) {
+            var _this$props = _this.props,
+                filter = _this$props.filter,
+                filterOption = _this$props.filterOption;
+
+            if (filterOption) {
+                return filterOption(filter, item);
+            }
+            return text.indexOf(filter) >= 0;
+        };
+        _this.renderItem = function (item) {
+            var _this$props$render = _this.props.render,
+                render$$1 = _this$props$render === undefined ? noop$a : _this$props$render;
+
+            var renderResult = render$$1(item);
+            var isRenderResultPlain = isRenderResultPlainObject(renderResult);
+            return {
+                renderedText: isRenderResultPlain ? renderResult.value : renderResult,
+                renderedEl: isRenderResultPlain ? renderResult.label : renderResult
+            };
+        };
+        _this.state = {
+            mounted: false
+        };
+        return _this;
+    }
+
+    _createClass$1(TransferList, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            this.timer = window.setTimeout(function () {
+                _this2.setState({
+                    mounted: true
+                });
+            }, 0);
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            clearTimeout(this.timer);
+            clearTimeout(this.triggerScrollTimer);
+        }
+    }, {
+        key: 'shouldComponentUpdate',
+        value: function shouldComponentUpdate() {
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+            }
+
+            return PureRenderMixin.shouldComponentUpdate.apply(this, args);
+        }
+    }, {
+        key: 'getCheckStatus',
+        value: function getCheckStatus(filteredDataSource) {
+            var checkedKeys = this.props.checkedKeys;
+
+            if (checkedKeys.length === 0) {
+                return 'none';
+            } else if (filteredDataSource.every(function (item) {
+                return checkedKeys.indexOf(item.key) >= 0;
+            })) {
+                return 'all';
+            }
+            return 'part';
+        }
+    }, {
+        key: 'render',
+        value: function render$$1() {
+            var _this3 = this;
+
+            var _props = this.props,
+                prefixCls = _props.prefixCls,
+                dataSource = _props.dataSource,
+                titleText = _props.titleText,
+                checkedKeys = _props.checkedKeys,
+                lazy = _props.lazy,
+                _props$body = _props.body,
+                body = _props$body === undefined ? noop$a : _props$body,
+                _props$footer = _props.footer,
+                footer = _props$footer === undefined ? noop$a : _props$footer,
+                showSearch = _props.showSearch,
+                style = _props.style,
+                filter = _props.filter,
+                searchPlaceholder = _props.searchPlaceholder,
+                notFoundContent = _props.notFoundContent,
+                itemUnit = _props.itemUnit,
+                itemsUnit = _props.itemsUnit,
+                onScroll = _props.onScroll;
+            // Custom Layout
+
+            var footerDom = footer(_extends$2({}, this.props));
+            var bodyDom = body(_extends$2({}, this.props));
+            var listCls = classNames(prefixCls, _defineProperty$1({}, prefixCls + '-with-footer', !!footerDom));
+            var filteredDataSource = [];
+            var totalDataSource = [];
+            var showItems = dataSource.map(function (item) {
+                var _renderItem = _this3.renderItem(item),
+                    renderedText = _renderItem.renderedText,
+                    renderedEl = _renderItem.renderedEl;
+
+                if (filter && filter.trim() && !_this3.matchFilter(renderedText, item)) {
+                    return null;
+                }
+                // all show items
+                totalDataSource.push(item);
+                if (!item.disabled) {
+                    // response to checkAll items
+                    filteredDataSource.push(item);
+                }
+                var checked = checkedKeys.indexOf(item.key) >= 0;
+                return createElement(Item, { key: item.key, item: item, lazy: lazy, renderedText: renderedText, renderedEl: renderedEl, checked: checked, prefixCls: prefixCls, onClick: _this3.handleSelect });
+            });
+            var unit = dataSource.length > 1 ? itemsUnit : itemUnit;
+            var search = showSearch ? createElement(
+                'div',
+                { className: prefixCls + '-body-search-wrapper' },
+                createElement(Search$2, { prefixCls: prefixCls + '-search', onChange: this.handleFilter, handleClear: this.handleClear, placeholder: searchPlaceholder, value: filter })
+            ) : null;
+            var listBody = bodyDom || createElement(
+                'div',
+                { className: showSearch ? prefixCls + '-body ' + prefixCls + '-body-with-search' : prefixCls + '-body' },
+                search,
+                createElement(
+                    Animate,
+                    { component: 'ul', componentProps: { onScroll: onScroll }, className: prefixCls + '-content', transitionName: this.state.mounted ? prefixCls + '-content-item-highlight' : '', transitionLeave: false },
+                    showItems
+                ),
+                createElement(
+                    'div',
+                    { className: prefixCls + '-body-not-found' },
+                    notFoundContent
+                )
+            );
+            var listFooter = footerDom ? createElement(
+                'div',
+                { className: prefixCls + '-footer' },
+                footerDom
+            ) : null;
+            var checkStatus = this.getCheckStatus(filteredDataSource);
+            var checkedAll = checkStatus === 'all';
+            var checkAllCheckbox = createElement(Checkbox$1, { ref: 'checkbox', checked: checkedAll, indeterminate: checkStatus === 'part', onChange: function onChange() {
+                    return _this3.props.handleSelectAll(filteredDataSource, checkedAll);
+                } });
+            return createElement(
+                'div',
+                { className: listCls, style: style },
+                createElement(
+                    'div',
+                    { className: prefixCls + '-header' },
+                    checkAllCheckbox,
+                    createElement(
+                        'span',
+                        { className: prefixCls + '-header-selected' },
+                        createElement(
+                            'span',
+                            null,
+                            (checkedKeys.length > 0 ? checkedKeys.length + '/' : '') + totalDataSource.length,
+                            ' ',
+                            unit
+                        ),
+                        createElement(
+                            'span',
+                            { className: prefixCls + '-header-title' },
+                            titleText
+                        )
+                    )
+                ),
+                listBody,
+                listFooter
+            );
+        }
+    }]);
+
+    return TransferList;
+}(Component);
+
+TransferList.defaultProps = {
+    dataSource: [],
+    titleText: '',
+    showSearch: false,
+    render: noop$a,
+    lazy: {}
+};
+
+function noop$b() {}
+
+var Operation = function (_React$Component) {
+  _inherits$1(Operation, _React$Component);
+
+  function Operation() {
+    _classCallCheck$1(this, Operation);
+
+    return _possibleConstructorReturn$1(this, (Operation.__proto__ || Object.getPrototypeOf(Operation)).apply(this, arguments));
+  }
+
+  _createClass$1(Operation, [{
+    key: 'render',
+    value: function render$$1() {
+      var _props = this.props,
+          _props$moveToLeft = _props.moveToLeft,
+          moveToLeft = _props$moveToLeft === undefined ? noop$b : _props$moveToLeft,
+          _props$moveToRight = _props.moveToRight,
+          moveToRight = _props$moveToRight === undefined ? noop$b : _props$moveToRight,
+          _props$leftArrowText = _props.leftArrowText,
+          leftArrowText = _props$leftArrowText === undefined ? '' : _props$leftArrowText,
+          _props$rightArrowText = _props.rightArrowText,
+          rightArrowText = _props$rightArrowText === undefined ? '' : _props$rightArrowText,
+          leftActive = _props.leftActive,
+          rightActive = _props.rightActive,
+          className = _props.className;
+
+      return createElement(
+        'div',
+        { className: className },
+        createElement(
+          Button,
+          { type: 'primary', size: 'small', disabled: !leftActive, onClick: moveToLeft, icon: 'left' },
+          leftArrowText
+        ),
+        createElement(
+          Button,
+          { type: 'primary', size: 'small', disabled: !rightActive, onClick: moveToRight, icon: 'right' },
+          rightArrowText
+        )
+      );
+    }
+  }]);
+
+  return Operation;
+}(Component);
+
+function noop$c() {}
+
+var Transfer = function (_React$Component) {
+    _inherits$1(Transfer, _React$Component);
+
+    function Transfer(props) {
+        _classCallCheck$1(this, Transfer);
+
+        var _this = _possibleConstructorReturn$1(this, (Transfer.__proto__ || Object.getPrototypeOf(Transfer)).call(this, props));
+
+        _this.moveTo = function (direction) {
+            var _this$props = _this.props,
+                _this$props$targetKey = _this$props.targetKeys,
+                targetKeys = _this$props$targetKey === undefined ? [] : _this$props$targetKey,
+                _this$props$dataSourc = _this$props.dataSource,
+                dataSource = _this$props$dataSourc === undefined ? [] : _this$props$dataSourc,
+                onChange = _this$props.onChange;
+            var _this$state = _this.state,
+                sourceSelectedKeys = _this$state.sourceSelectedKeys,
+                targetSelectedKeys = _this$state.targetSelectedKeys;
+
+            var moveKeys = direction === 'right' ? sourceSelectedKeys : targetSelectedKeys;
+            // filter the disabled options
+            var newMoveKeys = moveKeys.filter(function (key) {
+                return !dataSource.some(function (data) {
+                    return !!(key === data.key && data.disabled);
+                });
+            });
+            // move items to target box
+            var newTargetKeys = direction === 'right' ? newMoveKeys.concat(targetKeys) : targetKeys.filter(function (targetKey) {
+                return newMoveKeys.indexOf(targetKey) === -1;
+            });
+            // empty checked keys
+            var oppositeDirection = direction === 'right' ? 'left' : 'right';
+            _this.setState(_defineProperty$1({}, _this.getSelectedKeysName(oppositeDirection), []));
+            _this.handleSelectChange(oppositeDirection, []);
+            if (onChange) {
+                onChange(newTargetKeys, direction, newMoveKeys);
+            }
+        };
+        _this.moveToLeft = function () {
+            return _this.moveTo('left');
+        };
+        _this.moveToRight = function () {
+            return _this.moveTo('right');
+        };
+        _this.handleSelectAll = function (direction, filteredDataSource, checkAll) {
+            var originalSelectedKeys = _this.state[_this.getSelectedKeysName(direction)] || [];
+            var currentKeys = filteredDataSource.map(function (item) {
+                return item.key;
+            });
+            // Only operate current keys from original selected keys
+            var newKeys1 = originalSelectedKeys.filter(function (key) {
+                return currentKeys.indexOf(key) === -1;
+            });
+            var newKeys2 = [].concat(_toConsumableArray$1(originalSelectedKeys));
+            currentKeys.forEach(function (key) {
+                if (newKeys2.indexOf(key) === -1) {
+                    newKeys2.push(key);
+                }
+            });
+            var holder = checkAll ? newKeys1 : newKeys2;
+            _this.handleSelectChange(direction, holder);
+            if (!_this.props.selectedKeys) {
+                _this.setState(_defineProperty$1({}, _this.getSelectedKeysName(direction), holder));
+            }
+        };
+        _this.handleLeftSelectAll = function (filteredDataSource, checkAll) {
+            return _this.handleSelectAll('left', filteredDataSource, checkAll);
+        };
+        _this.handleRightSelectAll = function (filteredDataSource, checkAll) {
+            return _this.handleSelectAll('right', filteredDataSource, checkAll);
+        };
+        _this.handleFilter = function (direction, e) {
+            _this.setState(_defineProperty$1({}, direction + 'Filter', e.target.value));
+            if (_this.props.onSearchChange) {
+                _this.props.onSearchChange(direction, e);
+            }
+        };
+        _this.handleLeftFilter = function (e) {
+            return _this.handleFilter('left', e);
+        };
+        _this.handleRightFilter = function (e) {
+            return _this.handleFilter('right', e);
+        };
+        _this.handleClear = function (direction) {
+            _this.setState(_defineProperty$1({}, direction + 'Filter', ''));
+        };
+        _this.handleLeftClear = function () {
+            return _this.handleClear('left');
+        };
+        _this.handleRightClear = function () {
+            return _this.handleClear('right');
+        };
+        _this.handleSelect = function (direction, selectedItem, checked) {
+            var _this$state2 = _this.state,
+                sourceSelectedKeys = _this$state2.sourceSelectedKeys,
+                targetSelectedKeys = _this$state2.targetSelectedKeys;
+
+            var holder = direction === 'left' ? [].concat(_toConsumableArray$1(sourceSelectedKeys)) : [].concat(_toConsumableArray$1(targetSelectedKeys));
+            var index = holder.indexOf(selectedItem.key);
+            if (index > -1) {
+                holder.splice(index, 1);
+            }
+            if (checked) {
+                holder.push(selectedItem.key);
+            }
+            _this.handleSelectChange(direction, holder);
+            if (!_this.props.selectedKeys) {
+                _this.setState(_defineProperty$1({}, _this.getSelectedKeysName(direction), holder));
+            }
+        };
+        _this.handleLeftSelect = function (selectedItem, checked) {
+            return _this.handleSelect('left', selectedItem, checked);
+        };
+        _this.handleRightSelect = function (selectedItem, checked) {
+            return _this.handleSelect('right', selectedItem, checked);
+        };
+        _this.handleScroll = function (direction, e) {
+            var onScroll = _this.props.onScroll;
+
+            if (onScroll) {
+                onScroll(direction, e);
+            }
+        };
+        _this.handleLeftScroll = function (e) {
+            return _this.handleScroll('left', e);
+        };
+        _this.handleRightScroll = function (e) {
+            return _this.handleScroll('right', e);
+        };
+        _this.renderTransfer = function (locale) {
+            var _this$props2 = _this.props,
+                _this$props2$prefixCl = _this$props2.prefixCls,
+                prefixCls = _this$props2$prefixCl === undefined ? 'ant-transfer' : _this$props2$prefixCl,
+                className = _this$props2.className,
+                _this$props2$operatio = _this$props2.operations,
+                operations = _this$props2$operatio === undefined ? [] : _this$props2$operatio,
+                showSearch = _this$props2.showSearch,
+                notFoundContent = _this$props2.notFoundContent,
+                searchPlaceholder = _this$props2.searchPlaceholder,
+                body = _this$props2.body,
+                footer = _this$props2.footer,
+                listStyle = _this$props2.listStyle,
+                filterOption = _this$props2.filterOption,
+                render$$1 = _this$props2.render,
+                lazy = _this$props2.lazy;
+            var _this$state3 = _this.state,
+                leftFilter = _this$state3.leftFilter,
+                rightFilter = _this$state3.rightFilter,
+                sourceSelectedKeys = _this$state3.sourceSelectedKeys,
+                targetSelectedKeys = _this$state3.targetSelectedKeys;
+
+            var _this$splitDataSource = _this.splitDataSource(_this.props),
+                leftDataSource = _this$splitDataSource.leftDataSource,
+                rightDataSource = _this$splitDataSource.rightDataSource;
+
+            var leftActive = targetSelectedKeys.length > 0;
+            var rightActive = sourceSelectedKeys.length > 0;
+            var cls = classNames(className, prefixCls);
+            var titles = _this.getTitles(locale);
+            return createElement(
+                'div',
+                { className: cls },
+                createElement(TransferList, { prefixCls: prefixCls + '-list', titleText: titles[0], dataSource: leftDataSource, filter: leftFilter, filterOption: filterOption, style: listStyle, checkedKeys: sourceSelectedKeys, handleFilter: _this.handleLeftFilter, handleClear: _this.handleLeftClear, handleSelect: _this.handleLeftSelect, handleSelectAll: _this.handleLeftSelectAll, render: render$$1, showSearch: showSearch, searchPlaceholder: searchPlaceholder || locale.searchPlaceholder, notFoundContent: notFoundContent || locale.notFoundContent, itemUnit: locale.itemUnit, itemsUnit: locale.itemsUnit, body: body, footer: footer, lazy: lazy, onScroll: _this.handleLeftScroll }),
+                createElement(Operation, { className: prefixCls + '-operation', rightActive: rightActive, rightArrowText: operations[0], moveToRight: _this.moveToRight, leftActive: leftActive, leftArrowText: operations[1], moveToLeft: _this.moveToLeft }),
+                createElement(TransferList, { prefixCls: prefixCls + '-list', titleText: titles[1], dataSource: rightDataSource, filter: rightFilter, filterOption: filterOption, style: listStyle, checkedKeys: targetSelectedKeys, handleFilter: _this.handleRightFilter, handleClear: _this.handleRightClear, handleSelect: _this.handleRightSelect, handleSelectAll: _this.handleRightSelectAll, render: render$$1, showSearch: showSearch, searchPlaceholder: searchPlaceholder || locale.searchPlaceholder, notFoundContent: notFoundContent || locale.notFoundContent, itemUnit: locale.itemUnit, itemsUnit: locale.itemsUnit, body: body, footer: footer, lazy: lazy, onScroll: _this.handleRightScroll })
+            );
+        };
+        var _props$selectedKeys = props.selectedKeys,
+            selectedKeys = _props$selectedKeys === undefined ? [] : _props$selectedKeys,
+            _props$targetKeys = props.targetKeys,
+            targetKeys = _props$targetKeys === undefined ? [] : _props$targetKeys;
+
+        _this.state = {
+            leftFilter: '',
+            rightFilter: '',
+            sourceSelectedKeys: selectedKeys.filter(function (key) {
+                return targetKeys.indexOf(key) === -1;
+            }),
+            targetSelectedKeys: selectedKeys.filter(function (key) {
+                return targetKeys.indexOf(key) > -1;
+            })
+        };
+        return _this;
+    }
+
+    _createClass$1(Transfer, [{
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {
+            var _state = this.state,
+                sourceSelectedKeys = _state.sourceSelectedKeys,
+                targetSelectedKeys = _state.targetSelectedKeys;
+
+            if (nextProps.targetKeys !== this.props.targetKeys || nextProps.dataSource !== this.props.dataSource) {
+                // clear cached splited dataSource
+                this.splitedDataSource = null;
+                if (!nextProps.selectedKeys) {
+                    // clear key nolonger existed
+                    // clear checkedKeys according to targetKeys
+                    var dataSource = nextProps.dataSource,
+                        _nextProps$targetKeys = nextProps.targetKeys,
+                        targetKeys = _nextProps$targetKeys === undefined ? [] : _nextProps$targetKeys;
+
+                    var newSourceSelectedKeys = [];
+                    var newTargetSelectedKeys = [];
+                    dataSource.forEach(function (_ref) {
+                        var key = _ref.key;
+
+                        if (sourceSelectedKeys.includes(key) && !targetKeys.includes(key)) {
+                            newSourceSelectedKeys.push(key);
+                        }
+                        if (targetSelectedKeys.includes(key) && targetKeys.includes(key)) {
+                            newTargetSelectedKeys.push(key);
+                        }
+                    });
+                    this.setState({
+                        sourceSelectedKeys: newSourceSelectedKeys,
+                        targetSelectedKeys: newTargetSelectedKeys
+                    });
+                }
+            }
+            if (nextProps.selectedKeys) {
+                var _targetKeys = nextProps.targetKeys || [];
+                this.setState({
+                    sourceSelectedKeys: nextProps.selectedKeys.filter(function (key) {
+                        return !_targetKeys.includes(key);
+                    }),
+                    targetSelectedKeys: nextProps.selectedKeys.filter(function (key) {
+                        return _targetKeys.includes(key);
+                    })
+                });
+            }
+        }
+    }, {
+        key: 'splitDataSource',
+        value: function splitDataSource(props) {
+            if (this.splitedDataSource) {
+                return this.splitedDataSource;
+            }
+            var dataSource = props.dataSource,
+                rowKey = props.rowKey,
+                _props$targetKeys2 = props.targetKeys,
+                targetKeys = _props$targetKeys2 === undefined ? [] : _props$targetKeys2;
+
+            var leftDataSource = [];
+            var rightDataSource = new Array(targetKeys.length);
+            dataSource.forEach(function (record) {
+                if (rowKey) {
+                    record.key = rowKey(record);
+                }
+                // rightDataSource should be ordered by targetKeys
+                // leftDataSource should be ordered by dataSource
+                var indexOfKey = targetKeys.indexOf(record.key);
+                if (indexOfKey !== -1) {
+                    rightDataSource[indexOfKey] = record;
+                } else {
+                    leftDataSource.push(record);
+                }
+            });
+            this.splitedDataSource = {
+                leftDataSource: leftDataSource,
+                rightDataSource: rightDataSource
+            };
+            return this.splitedDataSource;
+        }
+    }, {
+        key: 'handleSelectChange',
+        value: function handleSelectChange(direction, holder) {
+            var _state2 = this.state,
+                sourceSelectedKeys = _state2.sourceSelectedKeys,
+                targetSelectedKeys = _state2.targetSelectedKeys;
+
+            var onSelectChange = this.props.onSelectChange;
+            if (!onSelectChange) {
+                return;
+            }
+            if (direction === 'left') {
+                onSelectChange(holder, targetSelectedKeys);
+            } else {
+                onSelectChange(sourceSelectedKeys, holder);
+            }
+        }
+    }, {
+        key: 'getTitles',
+        value: function getTitles(transferLocale) {
+            var props = this.props;
+
+            if (props.titles) {
+                return props.titles;
+            }
+            return transferLocale.titles;
+        }
+    }, {
+        key: 'getSelectedKeysName',
+        value: function getSelectedKeysName(direction) {
+            return direction === 'left' ? 'sourceSelectedKeys' : 'targetSelectedKeys';
+        }
+    }, {
+        key: 'render',
+        value: function render$$1() {
+            return createElement(
+                LocaleReceiver$1,
+                { componentName: 'Transfer', defaultLocale: defaultLocale.Transfer },
+                this.renderTransfer
+            );
+        }
+    }]);
+
+    return Transfer;
+}(Component);
+Transfer.List = TransferList;
+Transfer.Operation = Operation;
+Transfer.Search = Search$2;
+Transfer.defaultProps = {
+    dataSource: [],
+    render: noop$c,
+    showSearch: false
+};
+Transfer.propTypes = {
+    prefixCls: PropTypes.string,
+    dataSource: PropTypes.array,
+    render: PropTypes.func,
+    targetKeys: PropTypes.array,
+    onChange: PropTypes.func,
+    height: PropTypes.number,
+    listStyle: PropTypes.object,
+    className: PropTypes.string,
+    titles: PropTypes.array,
+    operations: PropTypes.array,
+    showSearch: PropTypes.bool,
+    filterOption: PropTypes.func,
+    searchPlaceholder: PropTypes.string,
+    notFoundContent: PropTypes.node,
+    body: PropTypes.func,
+    footer: PropTypes.func,
+    rowKey: PropTypes.func,
+    lazy: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+};
+
+var css$6 = ".mc-transfer{\n    color: deepskyblue\n}\n\n.mc-transfer .ant-transfer-list-content{\n    position: relative;\n}\n.mc-transfer .ant-transfer-list-content-item>span{\n    display: inline-block;\n    position: absolute;\n    right: 15px;\n    left: 30px;\n}\n.mc-transfer .ant-transfer-list-content-item{\n    text-overflow:inherit;\n}\n.mc-transfer .ant-transfer-list-footer div{\n    display: inline-block;\n}\n.mc-transfer .custom-item{\n    display: inline-flex;\n    -webkit-box-pack:justify;\n    -webkit-justify-content:space-between;\n    -ms-flex-pack:justify;\n    justify-content:space-between;\n    width: 100%;\n}\n.mc-transfer .custom-item>div{\n    display: inline-block;\n    text-align:center;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    vertical-align: bottom;\n}\n\n/* 穿梭框左侧 */\n.mc-transfer .ant-transfer-list:first-child .ant-transfer-list-header .header-item div:not(:first-child){\n    display:none;\n}\n.mc-transfer .ant-transfer-list:first-child .ant-transfer-list-content .custom-item div:not(:first-child){\n    display:none;\n}\n.mc-transfer .ant-transfer-list:first-child .ant-transfer-list-content .custom-item div:first-child{\n    max-width: 100%!important;\n}\n\n\n\n/* 穿梭框头部样式 */\n.mc-transfer .ant-transfer-list-header-selected{\n    display: inline-block;\n    width: 90%;\n    padding: 0 20px;\n}\n.mc-transfer .header-item{\n    display: inline-flex;\n    -webkit-box-pack:justify;\n    -webkit-justify-content:space-between;\n    -ms-flex-pack:justify;\n    justify-content:space-between;\n    width: 100%;\n}";
+styleInject(css$6);
+
+function noop$d() {} //默认list样式
+
+
+var defaultListStyle = {
+  width: 300,
+  height: 300
+};
+
+var NewTransferSearch =
+/*#__PURE__*/
+function (_Transfer$Search) {
+  _inherits(NewTransferSearch, _Transfer$Search);
+
+  function NewTransferSearch(props) {
+    var _this2;
+
+    _classCallCheck(this, NewTransferSearch);
+
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(NewTransferSearch).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this2)), "render", function () {
+      var _props = _this2.props,
+          placeholder = _props.placeholder,
+          value = _props.value,
+          prefixCls = _props.prefixCls;
+      var icon = value && value.length > 0 ? React__default.createElement('a', {
+        href: '#',
+        className: prefixCls + '-action',
+        onClick: _this2.handleClear
+      }, React__default.createElement(Icon, {
+        type: 'cross-circle'
+      })) : React__default.createElement('span', {
+        className: prefixCls + '-action'
+      }, React__default.createElement(Icon, {
+        type: 'search'
+      }));
+      return React__default.createElement('div', null, React__default.createElement(Input, {
+        placeholder: placeholder,
+        className: prefixCls,
+        value: value,
+        ref: function ref(_ref) {
+          _this2.refInput = _ref;
+        },
+        onChange: _this2.handleChange
+      }), icon);
+    });
+
+    _this2.refInput = React__default.createRef();
+    return _this2;
+  }
+
+  return NewTransferSearch;
+}(Transfer.Search);
+
+var NewTransferList =
+/*#__PURE__*/
+function (_Transfer$List) {
+  _inherits(NewTransferList, _Transfer$List);
+
+  function NewTransferList(props) {
+    var _this4;
+
+    _classCallCheck(this, NewTransferList);
+
+    _this4 = _possibleConstructorReturn(this, _getPrototypeOf(NewTransferList).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this4)), "getCheckStatus", function (filteredDataSource) {
+      var checkedKeys = _this4.props.checkedKeys;
+
+      if (checkedKeys.length === 0) {
+        return 'none';
+      } else if (filteredDataSource.every(function (item) {
+        return checkedKeys.indexOf(item.key) >= 0;
+      })) {
+        return 'all';
+      }
+
+      return 'part';
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this4)), "render", function () {
+      var _this3 = _assertThisInitialized(_assertThisInitialized(_this4));
+
+      var _props = _this4.props,
+          prefixCls = _props.prefixCls,
+          dataSource = _props.dataSource,
+          titleText = _props.titleText,
+          checkedKeys = _props.checkedKeys,
+          lazy = _props.lazy,
+          _props$body = _props.body,
+          body = _props$body === undefined ? noop$d : _props$body,
+          _props$footer = _props.footer,
+          footer = _props$footer === undefined ? noop$d : _props$footer,
+          showSearch = _props.showSearch,
+          style = _props.style,
+          filter = _props.filter,
+          searchPlaceholder = _props.searchPlaceholder,
+          notFoundContent = _props.notFoundContent,
+          itemUnit = _props.itemUnit,
+          itemsUnit = _props.itemsUnit,
+          onScroll = _props.onScroll; // Custom Layout
+      // console.log(_props)
+
+      var footerDom = footer(_extends$2({}, _this4.props));
+      var bodyDom = body(_extends$2({}, _this4.props));
+      var listCls = classNames(prefixCls, _defineProperty$1({}, prefixCls + '-with-footer', !!footerDom));
+      var filteredDataSource = [];
+      var totalDataSource = [];
+      var showItems = dataSource.map(function (item) {
+        var _renderItem = _this3.renderItem(item),
+            renderedText = _renderItem.renderedText,
+            renderedEl = _renderItem.renderedEl;
+
+        if (filter && filter.trim() && !_this3.matchFilter(renderedText, item)) {
+          return null;
+        } // all show items
+
+
+        totalDataSource.push(item);
+
+        if (!item.disabled) {
+          // response to checkAll items
+          filteredDataSource.push(item);
+        }
+
+        var checked = checkedKeys.indexOf(item.key) >= 0;
+        return React__default.createElement(Item, {
+          key: item.key,
+          item: item,
+          lazy: lazy,
+          renderedText: renderedText,
+          renderedEl: renderedEl,
+          checked: checked,
+          prefixCls: prefixCls,
+          onClick: _this3.handleSelect
+        });
+      });
+      var unit = dataSource.length > 1 ? itemsUnit : itemUnit;
+      var search = showSearch ? React__default.createElement('div', {
+        className: prefixCls + '-body-search-wrapper'
+      }, React__default.createElement(NewTransferSearch, {
+        prefixCls: prefixCls + '-search se',
+        onChange: _this4.handleFilter,
+        handleClear: _this4.handleClear,
+        placeholder: searchPlaceholder,
+        value: filter
+      })) : null;
+      var listBody = bodyDom || React__default.createElement('div', {
+        className: showSearch ? prefixCls + '-body ' + prefixCls + '-body-with-search' : prefixCls + '-body'
+      }, search, React__default.createElement(Animate, {
+        component: 'ul',
+        componentProps: {
+          onScroll: onScroll
+        },
+        className: prefixCls + '-content',
+        transitionName: _this4.state.mounted ? prefixCls + '-content-item-highlight' : '',
+        transitionLeave: false
+      }, showItems), React__default.createElement('div', {
+        className: prefixCls + '-body-not-found'
+      }, notFoundContent));
+      var listFooter = footerDom ? React__default.createElement('div', {
+        className: prefixCls + '-footer'
+      }, footerDom) : null;
+
+      var checkStatus = _this4.getCheckStatus(filteredDataSource);
+
+      var checkedAll = checkStatus === 'all';
+      var checkAllCheckbox = React__default.createElement(Checkbox$1, {
+        ref: function ref(_ref2) {
+          _this4.refCheckbox = _ref2;
+        },
+        checked: checkedAll,
+        indeterminate: checkStatus === 'part',
+        onChange: function onChange() {
+          return _this3.props.handleSelectAll(filteredDataSource, checkedAll);
+        }
+      }); // header 重写
+
+      var headerBody = _this4.props.header && _this4.props.header.map(function (value, i) {
+        return React__default.createElement("div", {
+          key: "".concat(value.text).concat(i)
+        }, value.text);
+      });
+
+      return React__default.createElement('div', {
+        className: listCls,
+        style: style
+      }, React__default.createElement('div', {
+        className: prefixCls + '-header'
+      }, checkAllCheckbox, React__default.createElement('span', {
+        className: prefixCls + '-header-selected'
+      }, React__default.createElement('span', null, (checkedKeys.length > 0 ? checkedKeys.length + '/' : '') + totalDataSource.length, ' ', unit), React__default.createElement('span', {
+        className: prefixCls + '-header-title'
+      }, titleText) // React.createElement(
+      //   'div',
+      //   { className: 'header-item' },
+      //   headerBody
+      // ),
+      )), listBody, listFooter);
+    });
+
+    _this4.refCheckbox = React__default.createRef();
+    return _this4;
+  }
+
+  return NewTransferList;
+}(Transfer.List);
+
+var NewTransfer =
+/*#__PURE__*/
+function (_Transfer2) {
+  _inherits(NewTransfer, _Transfer2);
+
+  function NewTransfer(props) {
+    var _this5;
+
+    _classCallCheck(this, NewTransfer);
+
+    _this5 = _possibleConstructorReturn(this, _getPrototypeOf(NewTransfer).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this5)), "renderTransfer", function (locale) {
+      var _this = _this5._this;
+      var _this$props2 = _this.props,
+          _this$props2$prefixCl = _this$props2.prefixCls,
+          prefixCls = _this$props2$prefixCl === undefined ? 'ant-transfer' : _this$props2$prefixCl,
+          className = _this$props2.className,
+          _this$props2$operatio = _this$props2.operations,
+          operations = _this$props2$operatio === undefined ? [] : _this$props2$operatio,
+          showSearch = _this$props2.showSearch,
+          notFoundContent = _this$props2.notFoundContent,
+          searchPlaceholder = _this$props2.searchPlaceholder,
+          body = _this$props2.body,
+          footer = _this$props2.footer,
+          listStyle = _this$props2.listStyle,
+          filterOption = _this$props2.filterOption,
+          render$$1 = _this$props2.render,
+          lazy = _this$props2.lazy;
+      var _this$state3 = _this.state,
+          leftFilter = _this$state3.leftFilter,
+          rightFilter = _this$state3.rightFilter,
+          sourceSelectedKeys = _this$state3.sourceSelectedKeys,
+          targetSelectedKeys = _this$state3.targetSelectedKeys;
+
+      var _this$splitDataSource = _this.splitDataSource(_this.props),
+          leftDataSource = _this$splitDataSource.leftDataSource,
+          rightDataSource = _this$splitDataSource.rightDataSource;
+
+      var leftActive = targetSelectedKeys.length > 0;
+      var rightActive = sourceSelectedKeys.length > 0;
+      var cls = classNames(className, prefixCls);
+
+      var titles = _this.getTitles(locale);
+
+      return React__default.createElement('div', {
+        className: cls
+      }, React__default.createElement(NewTransferList, {
+        prefixCls: prefixCls + '-list',
+        titleText: titles[0],
+        dataSource: leftDataSource,
+        filter: leftFilter,
+        filterOption: filterOption,
+        style: listStyle,
+        checkedKeys: sourceSelectedKeys,
+        handleFilter: _this.handleLeftFilter,
+        handleClear: _this.handleLeftClear,
+        handleSelect: _this.handleLeftSelect,
+        handleSelectAll: _this.handleLeftSelectAll,
+        render: render$$1,
+        showSearch: showSearch,
+        searchPlaceholder: searchPlaceholder || locale.searchPlaceholder,
+        notFoundContent: notFoundContent || locale.notFoundContent,
+        itemUnit: locale.itemUnit,
+        itemsUnit: locale.itemsUnit,
+        body: body,
+        footer: footer,
+        lazy: lazy,
+        onScroll: _this.handleLeftScroll
+      }), React__default.createElement(Operation, {
+        className: prefixCls + '-operation',
+        rightActive: rightActive,
+        rightArrowText: operations[0],
+        moveToRight: _this.moveToRight,
+        leftActive: leftActive,
+        leftArrowText: operations[1],
+        moveToLeft: _this.moveToLeft
+      }), React__default.createElement(NewTransferList, {
+        prefixCls: prefixCls + '-list',
+        titleText: titles[1],
+        dataSource: rightDataSource,
+        filter: rightFilter,
+        filterOption: filterOption,
+        style: listStyle,
+        checkedKeys: targetSelectedKeys,
+        handleFilter: _this.handleRightFilter,
+        handleClear: _this.handleRightClear,
+        handleSelect: _this.handleRightSelect,
+        handleSelectAll: _this.handleRightSelectAll,
+        render: render$$1,
+        showSearch: showSearch,
+        searchPlaceholder: searchPlaceholder || locale.searchPlaceholder,
+        notFoundContent: notFoundContent || locale.notFoundContent,
+        itemUnit: locale.itemUnit,
+        itemsUnit: locale.itemsUnit,
+        body: body,
+        footer: footer,
+        lazy: lazy,
+        onScroll: _this.handleRightScroll
+      }));
+    });
+
+    _this5._this = _possibleConstructorReturn$1(_assertThisInitialized(_assertThisInitialized(_this5)), (Transfer.__proto__ || Object.getPrototypeOf(Transfer)).call(_assertThisInitialized(_assertThisInitialized(_this5)), props));
+    return _this5;
+  }
+
+  _createClass(NewTransfer, [{
+    key: "render",
+    value: function render$$1() {
+      console.log('渲染一次');
+      return React__default.createElement(LocaleReceiver$1, {
+        componentName: 'Transfer',
+        defaultLocale: defaultLocale.Transfer
+      }, this.renderTransfer);
+    }
+  }]);
+
+  return NewTransfer;
+}(Transfer);
+
+var TransferView =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(TransferView, _React$Component);
+
+  function TransferView() {
+    var _getPrototypeOf2;
+
+    var _this6;
+
+    _classCallCheck(this, TransferView);
+
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this6 = _possibleConstructorReturn(this, (_getPrototypeOf2 = _getPrototypeOf(TransferView)).call.apply(_getPrototypeOf2, [this].concat(args)));
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this6)), "renderItem", function (item) {
+      var node = _this6.props.header.map(function (value, i) {
+        return React__default.createElement("div", {
+          style: {
+            maxWidth: value.width + 'px'
+          },
+          key: "".concat(value.text).concat(i),
+          title: typeof item[value.text] === 'string' ? item[value.text] : ''
+        }, item[value.text]);
+      });
+
+      var width = _this6.props.listStyle && _this6.props.listStyle.width || defaultListStyle.width;
+      var customLabel = React__default.createElement("div", {
+        className: "custom-item",
+        style: {
+          width: width - 60 + 'px'
+        }
+      }, node);
+      return {
+        label: customLabel,
+        // for displayed item
+        value: item[_this6.props.searchItem] // for filter matching
+
+      };
+    });
+
+    _defineProperty(_assertThisInitialized(_assertThisInitialized(_this6)), "footer", function () {
+      var headerBody = _this6.props.header.map(function (value, i) {
+        return React__default.createElement("div", {
+          key: "".concat(value.text).concat(i)
+        }, value.text);
+      });
+
+      return headerBody;
+    });
+
+    return _this6;
+  }
+
+  _createClass(TransferView, [{
+    key: "render",
+    value: function render$$1() {
+      return React__default.createElement(NewTransfer, {
+        className: "mc-transfer",
+        dataSource: this.props.dataSource,
+        listStyle: this.props.listStyle || defaultListStyle,
+        targetKeys: this.props.targetKeys,
+        onChange: this.props.onChange,
+        render: this.renderItem // footer={this.footer}
+        ,
+        onSelectChange: this.props.onSelectChange,
+        header: this.props.header,
+        showSearch: this.props.showSearch,
+        onSearch: this.props.onSearch,
+        titles: this.props.titles,
+        footer: this.props.footer
+      });
+    }
+  }]);
+
+  return TransferView;
+}(React__default.Component);
 
 var __rest$e = undefined && undefined.__rest || function (s, e) {
     var t = {};
@@ -40335,10 +42784,10 @@ Notice.defaultProps = {
 };
 
 var seed = 0;
-var now$1 = Date.now();
+var now$3 = Date.now();
 
 function getUuid() {
-  return 'rcNotification_' + now$1 + '_' + seed++;
+  return 'rcNotification_' + now$3 + '_' + seed++;
 }
 
 var Notification = function (_Component) {
@@ -40926,7 +43375,15 @@ function (_React$Component2) {
 }(React__default.Component);
 
 EditTable.propTypes = {
-  columns: PropTypes.array.isRequired
+  /**
+  表格列配置
+  **/
+  columns: PropTypes.array.isRequired,
+
+  /**
+  数据数组
+  **/
+  data: PropTypes.array
 };
 
 var __rest$f = undefined && undefined.__rest || function (s, e) {
@@ -41504,8 +43961,8 @@ function (_React$Component) {
   return ErrorBoundary;
 }(React__default.Component);
 
-var css$5 = ".td-ellipsis {\n  border-collapse: collapse;\n  white-space: nowrap;\n  overflow: hidden;\n  -o-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  /* max-width: 300px; */\n}\n";
-styleInject(css$5);
+var css$7 = ".td-ellipsis {\n  border-collapse: collapse;\n  white-space: nowrap;\n  overflow: hidden;\n  -o-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  /* max-width: 300px; */\n}\n";
+styleInject(css$7);
 
 /**
  * 超出截断
@@ -41537,7 +43994,7 @@ function (_React$Component) {
       }
 
       return React__default.createElement(Tooltip$1, {
-        placement: "top",
+        placement: "bottomLeft",
         title: tooltiptext,
         arrowPointAtCenter: true
       }, React__default.createElement("div", _extends({
@@ -41550,11 +44007,18 @@ function (_React$Component) {
 }(React__default.Component);
 
 Ellipsis.propTypes = {
+  /**
+  需要显示的text文本
+  **/
   text: PropTypes.string.isRequired,
+
+  /**
+  扩展显示的tooltipText文本，在出现text与tooltipText不一样的场景时使用
+  **/
   tooltiptext: PropTypes.string
 };
 Ellipsis.defaultProps = {
   text: 'Ellipsis'
 };
 
-export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary, Ellipsis };
+export { AdvancedSearchForm as AdvancedSearch, SubmitForm as BaseForm, FormItem$1 as FormItem, ButtonGroups, WrapperDatePicker, DataTable, Permission, Panel, ModalAndView, index$3 as TreeView, TabsPanel, PropertyTable, TransferView, EditTable, DetailTable, FieldSet, ConditionForm, ErrorBoundary, Ellipsis };
