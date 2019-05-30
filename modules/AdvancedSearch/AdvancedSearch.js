@@ -1,68 +1,68 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import {Row,Col,Icon,Button,Input} from 'antd'
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver'
-import classNames from 'classnames'
-import SubmitForm from '../BaseForm'
-import FormItem from '../FormItem'
-import Permission from '../Permission'
-import Locale from './locale.js'
-import style from  './AdvancedSearch.less'
+import React from "react";
+import PropTypes from "prop-types";
+import { Row, Col, Icon, Button, Input } from "antd";
+import LocaleReceiver from "antd/lib/locale-provider/LocaleReceiver";
+import classNames from "classnames";
+import SubmitForm from "../BaseForm";
+import FormItem from "../FormItem";
+import Permission from "../Permission";
+import Locale from "./locale.js";
+import style from "./AdvancedSearch.less";
 
 export default class AdvancedSearchForm extends React.Component {
   state = {
     expand: false,
-    defKeyType:null,
-    placeHolder:"",
-    items:[],
-    show:false,
-    displayItem:[]
-  }
+    defKeyType: null,
+    placeHolder: "",
+    items: [],
+    show: false,
+    displayItem: []
+  };
 
   constructor(props) {
     super(props);
-    this.state.loading=props.loading
+    this.state.loading = props.loading;
   }
 
-  handleSearch = (e,values) => {
-    e.preventDefault()
-    let {filterSubmitHandler} = this.props
-    if(values){
-      filterSubmitHandler.call(this,values);
-    }else{
+  handleSearch = (e, values) => {
+    e.preventDefault();
+    let { filterSubmitHandler } = this.props;
+    if (values) {
+      filterSubmitHandler.call(this, values);
+    } else {
       this.form.validateFieldsAndScroll((err, values) => {
         // console.log(this.form.getFieldsValue())
         // console.log(values)
-        filterSubmitHandler.call(this,values);
+        filterSubmitHandler.call(this, values);
+      });
+    }
+  };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.loading !== this.props.loading) {
+      this.setState({
+        loading: nextProps.loading
       });
     }
   }
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.loading !== this.props.loading){
-      this.setState({
-        loading:nextProps.loading
-      })
-    }
-  }
-
   handleReset = () => {
-    const form=this.form
-    const values=form.getFieldsValue();
-    let emptyValue={}
+    const form = this.form;
+    const values = form.getFieldsValue();
+    let emptyValue = {};
     // this.form.resetFields();
-    for(var v in values){
+    for (var v in values) {
       // console.log(v)
-      if(values.hasOwnProperty(v)){
-        emptyValue[v]=undefined
+      if (values.hasOwnProperty(v)) {
+        emptyValue[v] = undefined;
       }
     }
     // console.log(emptyValue)
-    form.setFieldsValue(emptyValue)
-  }
+    form.setFieldsValue(emptyValue);
+  };
 
-  toggleExpand(){
-    const {expand} = this.state;
+  toggleExpand() {
+    const { expand } = this.state;
     this.setState({
       expand: !expand
     });
@@ -70,130 +70,171 @@ export default class AdvancedSearchForm extends React.Component {
 
   // To generate mock Form.Item
   getFields() {
-    const {children,layout,classNames} = this.props
+    const { children, layout, classNames } = this.props;
     let renderChildren;
-    let formItemLayout = layout && layout!=='inline'? {
-      labelCol: {
-        span: 8
-      },
-      wrapperCol: {
-        span: 16
-      }
-    }:{};
-    if(React.Children.count(children)===0){
-      return (null)
+    let formItemLayout =
+      layout && layout !== "inline"
+        ? {
+            labelCol: {
+              span: 8
+            },
+            wrapperCol: {
+              span: 16
+            }
+          }
+        : {};
+    if (React.Children.count(children) === 0) {
+      return null;
     }
-    if(this.state.expand==false ){
-      renderChildren =[].concat(children).filter((ch,idx)=>idx<3)
-    }else if(this.props.showConfig){  //高级配置后，前三固定 后四配置
-      renderChildren = React.Children.toArray(children).filter((ch,idx)=>{
+    if (this.state.expand == false) {
+      renderChildren = [].concat(children).filter((ch, idx) => idx < 3);
+    } else if (this.props.showConfig) {
+      //高级配置后，前三固定 后四配置
+      renderChildren = React.Children.toArray(children).filter((ch, idx) => {
         //return this.state.displayItem.indexOf(ch.props.name)>=0 || idx<3
-        return this.state.displayItem.indexOf(ch.props.name)>=0 || idx < this.props.showExpand
-      })
-    }else{
-      renderChildren = React.Children.toArray(children).filter((ch,idx)=>idx< (this.props.showExpand + 4) )
+        return (
+          this.state.displayItem.indexOf(ch.props.name) >= 0 ||
+          idx < this.props.showExpand
+        );
+      });
+    } else {
+      renderChildren = React.Children.toArray(children).filter(
+        (ch, idx) => idx < this.props.showExpand + 4
+      );
     }
     return renderChildren.map((it, i) => {
-
-      let columns = it.props.columns || 1
-      let labelNum = Math.round(8/columns),
-        spancols = 8 * columns
-      formItemLayout = Object.assign({},formItemLayout,{
-        labelCol:{
-          span:labelNum
+      let columns = it.props.columns || 1;
+      let labelNum = Math.round(8 / columns),
+        spancols = 8 * columns;
+      formItemLayout = Object.assign({}, formItemLayout, {
+        labelCol: {
+          span: labelNum
         },
-        wrapperCol:{
+        wrapperCol: {
           span: 24 - labelNum
         }
-      })
-
+      });
 
       // console.log(it.type === Input)
-      if(it.type.name === "Input"){
+      if (it.type.name === "Input") {
         return (
           <Col span={spancols} key={i}>
-            <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-              {React.cloneElement(it) }
+            <FormItem
+              colon={true}
+              {...formItemLayout}
+              containerTo={false}
+              className={classNames}
+            >
+              {React.cloneElement(it)}
             </FormItem>
           </Col>
-        )
-      }else{
+        );
+      } else {
         return (
           <Col span={spancols} key={i}>
-            <FormItem colon={true} {...formItemLayout} containerTo={false} className={classNames}>
-              {React.cloneElement(it ,{allowClear : it.props.allowClear == false ? false : true }) }
+            <FormItem
+              colon={true}
+              {...formItemLayout}
+              containerTo={false}
+              className={classNames}
+            >
+              {React.cloneElement(it, {
+                allowClear: it.props.allowClear == false ? false : true
+              })}
             </FormItem>
           </Col>
-        )
+        );
       }
-    })
+    });
     //return children;
   }
 
-  onTypeChange(value,option){
+  onTypeChange(value, option) {
     this.setState({
-      placeHolder:option.props.placeholder
-    })
+      placeHolder: option.props.placeholder
+    });
   }
   handleAdvancedMenu(obj) {
-    if (obj.key === 'advanced') {
-      alert("call advanced")
-    } else if (obj.key === 'clear') {
-      this.handleReset()
-    } else if (obj.key === 'preview') {
-      alert("call restore")
+    if (obj.key === "advanced") {
+      alert("call advanced");
+    } else if (obj.key === "clear") {
+      this.handleReset();
+    } else if (obj.key === "preview") {
+      alert("call restore");
     }
   }
 
-  handleClose(){
+  handleClose() {
     this.setState({
-      show:false
-    })
+      show: false
+    });
   }
   saveFormRef(insta) {
-    if(insta){
+    if (insta) {
       this.form = insta.props.form;
     }
   }
 
-  renderKeyword(){
+  renderKeyword() {
     return (
       <Row gutter={20}>
         {/* this.renderKeyCatalog() */}
-        { this.getFields()}
+        {this.getFields()}
       </Row>
-    )
+    );
   }
-  renderSearchToolbar(locale){
-    let {loading,expand} = this.state
-    const {children} = this.props
-    const contextLocale = Object.assign({},locale,this.props.locale)
+  renderSearchToolbar(locale) {
+    let { loading, expand } = this.state;
+    const { children } = this.props;
+    const contextLocale = Object.assign({}, locale, this.props.locale);
     return (
       <div className="advanced-search-toolbar">
-				<Button htmlType="submit" disabled={loading} onClick={this.handleSearch.bind(this)} type="primary">{contextLocale.searchText}</Button>
-        {
-          children.length>3?
-    				<Button type="ghost" onClick={this.toggleExpand.bind(this)} >{expand?contextLocale.upText:contextLocale.downText}<Icon type={expand?"up":"down"} /></Button>
-          :""
-        }
-      </div>)
+        <Button
+          htmlType="submit"
+          disabled={loading}
+          onClick={this.handleSearch.bind(this)}
+          type="primary"
+        >
+          {contextLocale.searchText}
+        </Button>
+        {children.length > 3 ? (
+          <Button type="ghost" onClick={this.toggleExpand.bind(this)}>
+            {expand ? contextLocale.upText : contextLocale.downText}
+            <Icon type={expand ? "up" : "down"} />
+          </Button>
+        ) : (
+          ""
+        )}
+      </div>
+    );
   }
   render() {
-    let {showConfig,children,className,autoSubmitForm,layout,locale} = this.props
+    let {
+      showConfig,
+      children,
+      className,
+      autoSubmitForm,
+      layout,
+      locale
+    } = this.props;
     return (
-      <div className={classNames("advanced-search-panel",className)}>
-        <SubmitForm layout={layout} autoSubmitForm={autoSubmitForm} className="advanced-search-form" onSubmit={this.handleSearch.bind(this)} wrappedComponentRef={this.saveFormRef.bind(this)}>
-          { this.renderKeyword() }
-          {
-            React.createElement(
-              LocaleReceiver,
-              {
-                componentName:'AdvancedSearch',
-                defaultLocale:Locale
-              },
-              this.renderSearchToolbar.bind(this)
-            )
-          }
+      <div className={classNames("advanced-search-panel", className)}>
+        <SubmitForm
+          layout={layout}
+          autoSubmitForm={autoSubmitForm}
+          className="advanced-search-form"
+          onSubmit={this.handleSearch.bind(this)}
+          wrappedComponentRef={this.saveFormRef.bind(this)}
+        >
+          {this.renderKeyword()}
+          {React.createElement(
+            LocaleReceiver,
+            {
+              componentName: "AdvancedSearch",
+              defaultLocale: Locale
+            },
+            this.renderSearchToolbar.bind(this)
+          )}
         </SubmitForm>
       </div>
     );
@@ -208,23 +249,23 @@ AdvancedSearchForm.propTypes = {
   /**
   是否显示配置项,配置搜索条件显示
   **/
-  showConfig:PropTypes.bool,
-  loading:PropTypes.bool,
-  footer:PropTypes.element,
-  locale:PropTypes.object,
+  showConfig: PropTypes.bool,
+  loading: PropTypes.bool,
+  footer: PropTypes.element,
+  locale: PropTypes.object,
   /**
   是否收展，超过指定个数后隐藏
   **/
-  showExpand:PropTypes.number
-}
+  showExpand: PropTypes.number
+};
 
 AdvancedSearchForm.defaultProps = {
-  autoSubmitForm:false,
-  showConfig:false,
-  loading:false,
+  autoSubmitForm: false,
+  showConfig: false,
+  loading: false,
   filterSubmitHandler: function() {},
-	showExpand:3,
-	layout:'horizontal'
-}
+  showExpand: 3,
+  layout: "horizontal"
+};
 
 //export default AdvancedSearchForm = Form.create()(AdvancedSearchForm)

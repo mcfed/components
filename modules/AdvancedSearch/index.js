@@ -1,4 +1,3 @@
+import AdvancedSearchForm from "./AdvancedSearch";
 
-import AdvancedSearchForm  from './AdvancedSearch'
-
-export default AdvancedSearchForm
+export default AdvancedSearchForm;
