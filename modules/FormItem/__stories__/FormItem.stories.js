@@ -1,10 +1,9 @@
 import React from "react";
-import { Input, Select } from "antd";
+import { Input, Select,  } from "antd";
 import { storiesOf } from "@storybook/react";
 import BaseForm from "../../BaseForm/index";
 import FormItem from "../index";
 import Readme from "../README.md";
-
 const stories = storiesOf("FormItem", module);
 
 stories.addParameters({ jest: ["FormItem.spec.js"] });
@@ -28,6 +27,7 @@ stories.add(
       { value: 5, label: "test5" }
     ];
     return (
+      <div>
       <BaseForm>
         <FormItem>
           <Input name="input" placeholder="input基础用法示例" />
@@ -97,7 +97,10 @@ stories.add(
             }}
           />
         </FormItem>
+         
       </BaseForm>
+      
+      </div>
     );
   },
   { notes: { markdown: Readme } }
