@@ -60,7 +60,6 @@ export default class TimeRangePicker extends Component {
   render() {
     let {format} = this.props;
     let {startTime, endTime} = this.state;
-    console.log(startTime, endTime);
     return (
       <InputGroup compact className='TimeRangePicker-compact'>
         <TimePicker
