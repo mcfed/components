@@ -12,7 +12,7 @@ export default class TreeTile extends Component {
       indeterminate:false,
       checkAll: false,
       dataSourceKeys:[],
-      defaultCheckedKeys:[]
+      checkedKeys:[]
     }
   }
 
@@ -23,14 +23,14 @@ export default class TreeTile extends Component {
       dataSourceKeys
     });
 
-    let { defaultCheckedKeys } = this.props;
-    if (defaultCheckedKeys instanceof Array) {
+    let { checkedKeys } = this.props;
+    if (checkedKeys instanceof Array) {
       this.setState({
-        defaultCheckedKeys
+        checkedKeys
       });
     } else {
       this.setState({
-        defaultCheckedKeys: []
+        checkedKeys: []
       });
     } 
   }
@@ -55,13 +55,12 @@ export default class TreeTile extends Component {
         );
       }
       return <TreeNode {...item} />;
-    });
- 
+    }); 
 
   onCheckAll  = (e) => {
     let { dataSourceKeys } = this.state
     this.setState({
-      defaultCheckedKeys: e.target.checked ? dataSourceKeys : [],
+      checkedKeys: e.target.checked ? dataSourceKeys : [],
       indeterminate: false,
       checkAll: e.target.checked,
     });
@@ -70,7 +69,7 @@ export default class TreeTile extends Component {
   onCheck = checkedKeys  => {
     let { dataSourceKeys } = this.state
     this.setState({
-      defaultCheckedKeys: checkedKeys,
+      checkedKeys: checkedKeys,
       indeterminate: !!checkedKeys && checkedKeys.length!== 0 && checkedKeys.length < dataSourceKeys.length,
       checkAll: !!checkedKeys && checkedKeys.length === dataSourceKeys.length,
     });
@@ -78,22 +77,22 @@ export default class TreeTile extends Component {
 
   render() {
     const {title, dataSource} = this.props 
-    let { defaultCheckedKeys } = this.state
-    
-    console.log(defaultCheckedKeys)
+    console.log(dataSource)
+    let { checkedKeys } = this.state
     return (
       <Card size="small" title={title} extra={<Checkbox onChange={this.onCheckAll } indeterminate={this.state.indeterminate} checked={this.state.checkAll}>全选</Checkbox>} style={{ width: '100%' }}>
-         <Tree 
+         {!!dataSource && dataSource.length > 0 ? <Tree 
             className="treeTile"            
             name="tree"
             checkable
             blockNode={false}
             defaultExpandAll
             onCheck={this.onCheck}
-            defaultCheckedKeys={defaultCheckedKeys}
+            checkedKeys={checkedKeys}
           >
             {this.renderTreeNodes(dataSource)}
           </Tree>
+          :<p className="treeNoData">no data</p> }
       </Card>
     );
   }
@@ -101,12 +100,12 @@ export default class TreeTile extends Component {
 
 TreeTile.propTypes = {
   title: PropTypes.string,
-  defaultCheckedKeys: PropTypes.array,
+  checkedKeys: PropTypes.array,
   dataSource: PropTypes.array.isRequired
 };
 
 TreeTile.defaultProps = {
   title: "请选择",
-  defaultCheckedKeys: [],
+  checkedKeys: [],
   dataSource: []
 };
