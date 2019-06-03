@@ -77,7 +77,6 @@ export default class TreeTile extends Component {
 
   render() {
     const {title, dataSource} = this.props 
-    console.log(dataSource)
     let { checkedKeys } = this.state
     return (
       <Card size="small" title={title} extra={<Checkbox onChange={this.onCheckAll } indeterminate={this.state.indeterminate} checked={this.state.checkAll}>全选</Checkbox>} style={{ width: '100%' }}>
