@@ -72,6 +72,8 @@ export default class TreeTile extends Component {
       checkedKeys: checkedKeys,
       indeterminate: !!checkedKeys && checkedKeys.length!== 0 && checkedKeys.length < dataSourceKeys.length,
       checkAll: !!checkedKeys && checkedKeys.length === dataSourceKeys.length,
+    },() => {
+      this.props.onChange(checkedKeys);
     });
   };
 

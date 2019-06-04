@@ -1,8 +1,9 @@
 import React from "react";
-import { Input, Select,  } from "antd";
+import { Input, Select,Row,Button  } from "antd";
 import { storiesOf } from "@storybook/react";
 import BaseForm from "../../BaseForm/index";
 import FormItem from "../index";
+import TreeTile from "../../TreeTile/index"
 import Readme from "../README.md";
 const stories = storiesOf("FormItem", module);
 
@@ -15,6 +16,27 @@ const renderOptionItem = (item, idx) => {
     </Select.Option>
   );
 };
+
+const treeData = [
+  {
+    title: '基本信息',
+    key: 'baseInfo',
+    children: [
+      {title: '姓名', key: '1name'},
+      {title: '性别',key: '2sex'},
+      {title: '年龄',key: '3age'}
+    ]
+  },
+  {
+    title: '证件信息',
+    key: 'cardInfo',
+    children: [
+      { title: '身份证', key: 'idCard' },
+      { title: '医保卡', key: 'uIdCard' },
+      { title: '护照', key: 'passCard' }
+    ]
+  }
+];
 
 stories.add(
   "基础用法",
@@ -97,6 +119,17 @@ stories.add(
             }}
           />
         </FormItem>
+
+        {/* TreeTile 示例 */}
+        <FormItem>
+          <TreeTile
+            label="TreeTile用法示例"
+            name="TreeTile"
+            dataSource={treeData} 
+            title={"请选择XXXX"}            
+          />
+        </FormItem>
+
          
       </BaseForm>
       
