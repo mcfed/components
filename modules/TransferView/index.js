@@ -85,7 +85,7 @@ class NewTransferList extends Transfer.List {
 				notFoundContent = _props.notFoundContent,
 				itemUnit = _props.itemUnit,
 				itemsUnit = _props.itemsUnit,
-				onScroll = _props.onScroll,;
+				onScroll = _props.onScroll;
 		// Custom Layout
 		// console.log(_props)
 		var footerDom = footer(_extends({}, this.props));
