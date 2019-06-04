@@ -1,5 +1,3 @@
-import DetailTable from "./DetailTable";
-
 export AdvancedSearch from './AdvancedSearch'
 export BaseForm from './BaseForm'
 export FormItem from './FormItem'
@@ -24,3 +22,4 @@ export ErrorBoundary from './ErrorBoundary'
 export Ellipsis from './Ellipsis'
 export TimeRangePicker from './TimeRangePicker'
 export FormItemFixed from './FormItemFixed'
+export TreeTile from './TreeTile'
