@@ -5,7 +5,7 @@ import './style.less'
 
 const { TreeNode } = Tree;
 
-export default class TreeTile extends Component {
+class TreeTile extends Component {
   constructor(props) {
     super(props);
     this.state ={
@@ -110,3 +110,5 @@ TreeTile.defaultProps = {
   checkedKeys: [],
   dataSource: []
 };
+
+export default TreeTile;
