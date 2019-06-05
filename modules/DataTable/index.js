@@ -234,7 +234,7 @@ class DataTable extends Component {
     // console.log("newColumns", newColumns);
     return (
       <Table
-        key={defaultSort.columnKey}
+        key={defaultSort && defaultSort.columnKey}
         {...otherProps}
         columns={newColumns}
         pagination={!pagination ? false : Object.assign({}, pagination, page)}
