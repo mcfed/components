@@ -13,5 +13,8 @@ const setup = props => {
 };
 
 describe("TreeTile render 是否正确渲染", () => {
-  
+    it("TreeTile 标题参数不传时渲染是否正确", () => {
+        const { wrapper, props } = setup({});
+        expect(wrapper.find("Card").prop("title")).toBe("请选择");
+      });
 });
