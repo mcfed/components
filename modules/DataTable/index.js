@@ -222,6 +222,7 @@ class DataTable extends Component {
       newColumns = columns;
     }
     /*增加是否有排序判断 增加列配置*/
+    // console.log("defaultSort", defaultSort);
     if (defaultSort) {
       newColumns = newColumns.map(it => {
         defaultSort.columnKey == it.dataIndex
@@ -230,8 +231,10 @@ class DataTable extends Component {
         return it;
       });
     }
+    // console.log("newColumns", newColumns);
     return (
       <Table
+        key={defaultSort && defaultSort.columnKey}
         {...otherProps}
         columns={newColumns}
         pagination={!pagination ? false : Object.assign({}, pagination, page)}

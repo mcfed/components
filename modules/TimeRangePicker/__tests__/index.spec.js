@@ -24,7 +24,7 @@ describe("是否正确渲染", () => {
 
 });
 
-describe("方法测试", () => {
+describe.skip("方法测试", () => {
 
   it("如果没传value 则默认为空", () => {
     const {wrapper} = setup()
