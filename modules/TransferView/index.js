@@ -61,8 +61,8 @@ class NewTransferSearch extends Transfer.Search {
       placeholder = _props.placeholder,
       value = _props.value,
       selectData = _props.selectData,
+      defaultSelectValue = _props.defaultSelectValue,
       prefixCls = _props.prefixCls;
-
     var icon =
       value && value.length > 0
         ? React.createElement(
@@ -91,11 +91,11 @@ class NewTransferSearch extends Transfer.Search {
           Select,
           {
             onChange: this.handleSelect.bind(this),
-            defaultValue: 1,
+            defaultValue: defaultSelectValue,
             key: 'Select'
           },
-          selectData && selectData.map(item, i => (
-            <Select.Option value={i} key={i}>item</Select.Option>
+          selectData && selectData.map((item, i) => (
+            <Select.Option value={item} key={i}>{item}</Select.Option>
           ))
         ),
         React.createElement(Input, {
@@ -152,6 +152,7 @@ class NewTransferList extends Transfer.List {
       prefixCls = _props.prefixCls,
       dataSource = _props.dataSource,
       selectData = _props.selectData,
+      defaultSelectValue = _props.defaultSelectValue,
       titleText = _props.titleText,
       checkedKeys = _props.checkedKeys,
       lazy = _props.lazy,
@@ -215,6 +216,7 @@ class NewTransferList extends Transfer.List {
             handleClear: this.handleClear,
             placeholder: searchPlaceholder,
             selectData: selectData,
+            defaultSelectValue: defaultSelectValue,
             value: filter
           })
         )
@@ -352,6 +354,8 @@ class NewTransfer extends Transfer {
     var rightActive = sourceSelectedKeys.length > 0;
     var cls = classNames(className, prefixCls);
     var titles = _this.getTitles(locale);
+    var selectData = _this$props2.selectData;
+    var defaultSelectValue = _this$props2.defaultSelectValue;
     return React.createElement(
       "div",
       { className: cls },
@@ -359,6 +363,8 @@ class NewTransfer extends Transfer {
         prefixCls: prefixCls + "-list",
         titleText: titles[0],
         dataSource: leftDataSource,
+        selectData: selectData,
+        defaultSelectValue: defaultSelectValue,
         filter: leftFilter,
         filterOption: filterOption,
         style: listStyle,
@@ -391,6 +397,8 @@ class NewTransfer extends Transfer {
         prefixCls: prefixCls + "-list",
         titleText: titles[1],
         dataSource: rightDataSource,
+        selectData: selectData,
+        defaultSelectValue: defaultSelectValue,
         filter: rightFilter,
         filterOption: filterOption,
         style: listStyle,
@@ -425,7 +433,7 @@ class NewTransfer extends Transfer {
 
 class TransferView extends React.Component {
   renderItem = item => {
-    let node = this.props.header.map((value, i) => {
+    let node = this.props.header && this.props.header.map((value, i) => {
       return (
         <div
           style={{ maxWidth: value.width + "px" }}
