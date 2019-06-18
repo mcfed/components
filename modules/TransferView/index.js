@@ -470,3 +470,4 @@ class TransferView extends React.Component {
 }
 
 export default TransferView;
+   
