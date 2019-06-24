@@ -61,13 +61,13 @@ export default class WrapperDatePicker extends Component{
 
   translateVal2State (value,format) {
     if(value instanceof Array){
-      this.state={
+      this.setState({
         value: (value && value.length==2) ? [ moment(moment(value[0]).format(format)),moment(moment(value[1]).format(format))]:null
-      }
+      })
     }else{
-      this.state={
+      this.setState({
         value: (value && value!== "") ? new moment(value,format):null
-      }
+      })
     }
   }
 
