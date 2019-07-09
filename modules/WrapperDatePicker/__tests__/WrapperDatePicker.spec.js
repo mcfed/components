@@ -151,4 +151,46 @@ describe("WrapperDatePicker valueFormat to whatever", () => {
       Number(moment("2019").format("x"))
     ]);
   });
+
+  it("timeRange 打开", () => {
+    const onchangeFn = jest.fn();
+    const { wrapper, props } = setup({
+      children: <RangePicker valueFormat="x" timeRange={true} format="YYYY-MM-DD"/>,
+      onChange: onchangeFn
+    });
+    wrapper.instance().onChange([moment("2019-04-18"), moment("2019-04-20")]);
+    expect(onchangeFn.mock.calls[0][0]).toEqual([
+      Number(moment("2019-04-18").startOf('day').format("x")),
+      Number(moment("2019-04-20").endOf('day').format("x"))
+    ]);
+  });
+
+  it("timeRange 打开 timeRangeType 改为除day 之外的其他属性", () => {
+    const onchangeFn = jest.fn();
+    const timeRangeType = 'month'
+    const { wrapper, props } = setup({
+      children: <RangePicker valueFormat="x" timeRange={true} timeRangeType={timeRangeType} format="YYYY-MM-DD"/>,
+      onChange: onchangeFn
+    });
+    wrapper.instance().onChange([moment("2019-04-18"), moment("2019-04-20")]);
+    expect(onchangeFn.mock.calls[0][0]).toEqual([
+      Number(moment("2019-04-18").startOf(timeRangeType).format("x")),
+      Number(moment("2019-04-20").endOf(timeRangeType).format("x"))
+    ]);
+  });
+
+  it("valueFormat改为除x之外，timeRange 打开 timeRangeType 改为除day 之外的其他属性", () => {
+    const onchangeFn = jest.fn();
+    const timeRangeType = 'month'
+    const valueFormat = 'YYYY-MM-DD HH:mm:ss'
+    const { wrapper, props } = setup({
+      children: <RangePicker valueFormat={valueFormat} timeRange={true} timeRangeType={timeRangeType} format="YYYY-MM-DD"/>,
+      onChange: onchangeFn
+    });
+    wrapper.instance().onChange([moment("2019-04-18"), moment("2019-04-20")]);
+    expect(onchangeFn.mock.calls[0][0]).toEqual([
+      moment("2019-04-18").startOf(timeRangeType).format(valueFormat),
+      moment("2019-04-20").endOf(timeRangeType).format(valueFormat)
+    ]);
+  });
 });

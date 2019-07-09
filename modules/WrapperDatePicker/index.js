@@ -5,19 +5,24 @@ import PropTypes from "prop-types";
 export default class WrapperDatePicker extends Component {
   constructor(props) {
     super(props);
-    if(props.value instanceof Array){
-      this.state={
-        value: props.value && props.value.length == 2
-          ? [
-              moment(moment(props.value[0]).format(props.format)),
-              moment(moment(props.value[1]).format(props.format))
-            ]
-          : null
-      }
-    }else{
-      this.state={
-        value: (props.value && props.value!== "") ? new moment(props.value,props.format):null
-      }
+    if (props.value instanceof Array) {
+      // console.log('condtructor',props.value)
+      this.state = {
+        value:
+          props.value && props.value.length == 2
+            ? [
+                moment(moment(props.value[0]).format(props.format)),
+                moment(moment(props.value[1]).format(props.format))
+              ]
+            : null
+      };
+    } else {
+      this.state = {
+        value:
+          props.value && props.value !== ""
+            ? new moment(props.value, props.format)
+            : null
+      };
     }
   }
 
@@ -28,6 +33,7 @@ export default class WrapperDatePicker extends Component {
   }
 
   translateVal2State(value, format) {
+    // console.log('translateval',value)
     if (value instanceof Array) {
       this.setState({
         value:
@@ -48,7 +54,8 @@ export default class WrapperDatePicker extends Component {
   onChange(date, dateString) {
     let { onChange, children } = this.props;
     // const format=children.proxps.format
-    const { format, valueFormat } = children.props;
+    // wrapperdatepick 在formitem中是隐式调用的 所以只有children 的属性暴露出来
+    const { format, valueFormat, timeRange, timeRangeType } = children.props;
     if (date instanceof Array) {
       if (date.length == 0) {
         this.setState(
@@ -58,7 +65,7 @@ export default class WrapperDatePicker extends Component {
           onChange(undefined)
         );
       } else {
-        // console.log(format,date[0].format(format),date[1].format(format))
+        // console.log(format,date[0].format(format),date[1].format(format),valueFormat)
         this.setState(
           {
             value: date
@@ -67,15 +74,43 @@ export default class WrapperDatePicker extends Component {
             /*根据valueFormat判断是否需要转换输出格式，时间戳*/
             if (valueFormat) {
               if (valueFormat.toLocaleLowerCase() === "x") {
-                onChange([
-                  Number(moment(date[0].format(format)).format(valueFormat)),
-                  Number(moment(date[1].format(format)).format(valueFormat))
-                ]);
+                if (timeRange) {
+                  onChange([
+                    Number(
+                      moment(date[0].format(format))
+                        .startOf(timeRangeType || "day")
+                        .format(valueFormat)
+                    ),
+                    Number(
+                      moment(date[1].format(format))
+                        .endOf(timeRangeType || "day")
+                        .format(valueFormat)
+                    )
+                  ]);
+                } else {
+                  onChange([
+                    Number(moment(date[0].format(format)).format(valueFormat)),
+                    Number(moment(date[1].format(format)).format(valueFormat))
+                  ]);
+                }
               } else {
-                onChange([
-                  moment(date[0].format(format)).format(valueFormat),
-                  moment(date[1].format(format)).format(valueFormat)
-                ]);
+                if(timeRange){
+                  onChange([
+                    moment(date[0].format(format))
+                      .startOf(timeRangeType || "day")
+                      .format(valueFormat),
+                    moment(date[1].format(format))
+                      .endOf(timeRangeType || "day")
+                      .format(valueFormat)
+                  ]);
+                }else{
+                  onChange([
+                    moment(date[0].format(format))
+                      .format(valueFormat),
+                    moment(date[1].format(format))
+                      .format(valueFormat)
+                  ]);
+                }
               }
             } else {
               onChange([date[0].format(format), date[1].format(format)]);
