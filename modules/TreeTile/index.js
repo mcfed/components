@@ -59,10 +59,13 @@ class TreeTile extends Component {
 
   onCheckAll  = (e) => {
     let { dataSourceKeys } = this.state
+    let checkedKeys = e.target.checked ? dataSourceKeys : []
     this.setState({
-      checkedKeys: e.target.checked ? dataSourceKeys : [],
+      checkedKeys: checkedKeys,
       indeterminate: false,
       checkAll: e.target.checked,
+    },() => {
+      this.props.onChange(checkedKeys);
     });
   }
 
