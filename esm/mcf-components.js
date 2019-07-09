@@ -282,7 +282,7 @@ var store = _global[SHARED] || (_global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: _core.version,
-  mode: 'pure',
+  mode: _library ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 });
@@ -849,7 +849,7 @@ var _meta_5 = _meta.onFreeze;
 
 var defineProperty$4 = _objectDp.f;
 var _wksDefine = function (name) {
-  var $Symbol = _core.Symbol || (_core.Symbol = {});
+  var $Symbol = _core.Symbol || (_core.Symbol = _library ? {} : _global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty$4($Symbol, name, { value: _wksExt.f(name) });
 };
 
@@ -18611,18 +18611,6 @@ var WrapperDatePicker =
 function (_Component) {
   _inherits$1(WrapperDatePicker, _Component);
 
-  // constructor(props){
-  //   super(props)
-  //   if(props.value instanceof Array){
-  //     this.state={
-  //       value: (props.value && props.value.length==2) ? [new moment(props.value[0],props.format),new moment(props.value[1],props.format)]:null
-  //     }
-  //   }else{
-  //     this.state={
-  //       value: (props.value && props.value!== "") ? new moment(props.value,props.format):null
-  //     }
-  //   }
-  // }
   function WrapperDatePicker(props) {
     var _this;
 
@@ -18630,60 +18618,37 @@ function (_Component) {
 
     _this = _possibleConstructorReturn$1(this, _getPrototypeOf(WrapperDatePicker).call(this, props));
 
-    _this.translateVal2State(props.value, props.format); // if(props.value instanceof Array){
-    //   this.state={
-    //     value: (props.value && props.value.length==2) ? [ moment(moment(props.value[0]).format(props.format)),moment(moment(props.value[1]).format(props.format))]:null
-    //   }
-    // }else{
-    //   this.state={
-    //     value: (props.value && props.value!== "") ? new moment(props.value,props.format):null
-    //   }
-    // }
-
+    if (props.value instanceof Array) {
+      _this.state = {
+        value: props.value && props.value.length == 2 ? [moment__default(moment__default(props.value[0]).format(props.format)), moment__default(moment__default(props.value[1]).format(props.format))] : null
+      };
+    } else {
+      _this.state = {
+        value: props.value && props.value !== "" ? new moment__default(props.value, props.format) : null
+      };
+    }
 
     return _this;
-  } // componentWillReceiveProps(nextProps){
-  //   if(JSON.stringify(nextProps.value)!==JSON.stringify(this.props.value)){
-  //     if(nextProps.value instanceof Array){
-  //       console.log(nextProps.value)
-  //       this.setState({
-  //         value: (nextProps.value && nextProps.value.length==2 && nextProps.value[0]!=="" && nextProps.value[1] !=="") ? [new moment(nextProps.value[0],nextProps.format),new moment(nextProps.value[1],nextProps.format)]:null
-  //       })
-  //     }else{
-  //       this.setState({
-  //         value: (nextProps.value && nextProps.value!== "") ? new moment(nextProps.value,nextProps.format):null
-  //       })
-  //     }
-  //   }
-  // }
-
+  }
 
   _createClass$1(WrapperDatePicker, [{
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       if (JSON.stringify(nextProps.value) !== JSON.stringify(this.props.value)) {
-        this.translateVal2State(nextProps.value, nextProps.format); // if(nextProps.value instanceof Array){
-        //   this.setState({
-        //     value: (nextProps.value && nextProps.value.length==2 && nextProps.value[0]!=="" && nextProps.value[1] !=="") ? [ moment(moment(nextProps.value[0]).format(nextProps.format)),moment(moment(nextProps.value[1]).format(nextProps.format))]:null
-        //   })
-        // }else{
-        //   this.setState({
-        //     value: (nextProps.value && nextProps.value!== "") ? new moment(nextProps.value,nextProps.format):null
-        //   })
-        // }
+        this.translateVal2State(nextProps.value, nextProps.format);
       }
     }
   }, {
     key: "translateVal2State",
     value: function translateVal2State(value, format) {
       if (value instanceof Array) {
-        this.state = {
+        this.setState({
           value: value && value.length == 2 ? [moment__default(moment__default(value[0]).format(format)), moment__default(moment__default(value[1]).format(format))] : null
-        };
+        });
       } else {
-        this.state = {
+        this.setState({
           value: value && value !== "" ? new moment__default(value, format) : null
-        };
+        });
       }
     }
   }, {
@@ -46044,11 +46009,14 @@ function (_Component) {
 
     _defineProperty$1(_assertThisInitialized(_assertThisInitialized(_this)), "onCheckAll", function (e) {
       var dataSourceKeys = _this.state.dataSourceKeys;
+      var checkedKeys = e.target.checked ? dataSourceKeys : [];
 
       _this.setState({
-        checkedKeys: e.target.checked ? dataSourceKeys : [],
+        checkedKeys: checkedKeys,
         indeterminate: false,
         checkAll: e.target.checked
+      }, function () {
+        _this.props.onChange(checkedKeys);
       });
     });
 
