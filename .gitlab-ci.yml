@@ -7,8 +7,6 @@ cache:
   key: ${CI_BUILD_REF_NAME}
   paths:
     - node_modules/
-    - esm/
-    - umd/
 
 before_script:
   - npm install --save-dev
@@ -25,14 +23,6 @@ build_job:
   stage: compile
   script:
     - npm run build
-  only:
-    - master
-  tags:
-    - master
-
-publish_job:
-  stage: release
-  script:
     - npm publish
   only:
     - master
