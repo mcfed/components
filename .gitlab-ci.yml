@@ -25,13 +25,14 @@ build_job:
   script:
     - npm run build
   only:
-    - develop
+    - master
   tags:
     - master
 
 publish_job:
   stage: release
   script:
+    - npm run build
     - npm publish
   only:
     - master
