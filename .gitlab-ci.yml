@@ -17,8 +17,6 @@ build_job:
   stage: build
   script:
     - npm run build
-  cache:
-    untracked: true
   only:
     - master
   tags:
@@ -28,8 +26,6 @@ test_job:
   stage: test
   script:
     - npm run test
-  cache:
-    untracked: true
   tags:
     - master
     - develop
@@ -37,9 +33,9 @@ test_job:
 test_coverage:
   stage: test
   script:
-    - npm run test --coverage
-  cache:
-    untracked: true
+    - npm run build
+  only:
+    - master
   tags:
     - master
   coverage: /All files\s*\|\s*([\d\.]+)/
