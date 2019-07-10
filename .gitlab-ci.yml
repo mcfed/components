@@ -19,9 +19,7 @@ build_job:
     - master
   tags:
     - master
-  except:
-    changes:
-      - "*.md"
+
 
 test_job:
   stage: test
@@ -30,9 +28,7 @@ test_job:
   tags:
     - master
     - develop
-  except:
-    changes:
-      - "*.md"
+
 
 deploy_job:
   stage: deploy
@@ -42,6 +38,4 @@ deploy_job:
     - master
   tags:
     - master
-  except:
-    changes:
-      - "*.md"
+
