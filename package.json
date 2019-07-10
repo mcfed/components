@@ -1,6 +1,6 @@
 {
   "name": "mcf-components",
-  "version": "v1.2.4",
+  "version": "v1.2.5",
   "description": "@mcf for components",
   "main": "umd/mcf-components.js",
   "module": "esm/mcf-components.js",
@@ -50,9 +50,6 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-size-snapshot": "^0.7.0"
-  },
-  "peerDependencies": {
-    "antd": "3.5.1"
   },
   "dependencies": {
     "antd": "3.5.1",
