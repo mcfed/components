@@ -22,7 +22,6 @@ build_job:
   except:
     changes:
       - "*.md"
-      - ".*"
 
 test_job:
   stage: test
