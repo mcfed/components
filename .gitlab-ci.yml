@@ -35,10 +35,20 @@ test_job:
     - master
     - develop
 
+test_coverage:
+  stage: test
+  script:
+    - npm run test --coverage
+  cache:
+    untracked: true
+  tags:
+    - master
+  coverage: /All files\s*\|\s*([\d\.]+)/
 
 deploy_job:
   stage: deploy
   script:
+    - npm run build
     - npm publish
   only:
     - master
