@@ -32,6 +32,7 @@ build_job:
 publish_job:
   stage: release
   script:
+    - npm run build
     - npm publish
   only:
     - master
