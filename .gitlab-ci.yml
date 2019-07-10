@@ -1,7 +1,7 @@
 stages:
+  - build
   - test
-  - compile
-  - release
+  - deploy
 
 cache:
   key: ${CI_BUILD_REF_NAME}
@@ -11,6 +11,19 @@ cache:
 before_script:
   - npm install --save-dev
 
+build_job:
+  stage: build
+  script:
+    - npm run build
+  only:
+    - master
+  tags:
+    - master
+  except:
+    changes:
+      - "*.md"
+      - ".*"
+
 test_job:
   stage: test
   script:
@@ -18,13 +31,18 @@ test_job:
   tags:
     - master
     - develop
+  except:
+    changes:
+      - "*.md"
 
-build_job:
-  stage: compile
+deploy_job:
+  stage: deploy
   script:
-    - npm run build
     - npm publish
   only:
     - master
   tags:
     - master
+  except:
+    changes:
+      - "*.md"
