@@ -15,7 +15,6 @@
 
 <!-- Your comment below this -->
 
-# 1.2.4
+# 1.3.0
 
-- WrapperDatePicker 组件 新增 timeRange timeRangeType 属性，解决 moment 传送类型数值 [@shibo]
 - 重新修改打包机制，master 上使用自动化发布 [@zhouhuan]
