@@ -58,19 +58,19 @@ export default class TimeRangePicker extends Component {
   }
 
   render() {
-    let {format} = this.props;
+    let {value,onChange,id,label,...otherProps} = this.props;
     let {startTime, endTime} = this.state;
     return (
       <InputGroup compact className='TimeRangePicker-compact'>
         <TimePicker
+          {...otherProps}
           onChange={this.hanldeChange.bind(this, 'start')}
           value={startTime}
-          format={format}
         />
         <TimePicker
+          {...otherProps}
           onChange={this.hanldeChange.bind(this, 'end')}
           value={endTime}
-          format={format}
         />
       </InputGroup>
     );

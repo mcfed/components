@@ -53,7 +53,7 @@
 
 //转出以月为开始结束的时间
 <WrapperDatePicker name="datepicker">
-  <RangePicker valueFormat='x' timeRange={true} timeRangeType={month}/>
+  <RangePicker valueFormat='x' timeRange={true} timeRangeType='month'/>
 </WrapperDatePicker>
 ```
 
