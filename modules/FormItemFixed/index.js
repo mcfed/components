@@ -5,8 +5,8 @@ import "./index.less";
 
 export default class FormItemFixed extends Component {
   render() {
-    const firstChildType = this.props.children.length
-      ? typeof this.props.children[0]
+    const firstChildType = React.Children.toArray(this.props.children).length
+      ? typeof React.Children.toArray(this.props.children)[0]
       : "string";
     const isResetCss = this.props.isResetCss;
     return (
@@ -14,7 +14,7 @@ export default class FormItemFixed extends Component {
         className={classNames({
           "element-text-box": isResetCss,
           "element-noreset": !isResetCss,
-          isBeteen: firstChildType === "string"
+          "isBeteen": firstChildType === "string"
         })}
         style={this.props.style}
       >

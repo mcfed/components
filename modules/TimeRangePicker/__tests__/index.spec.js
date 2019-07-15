@@ -4,6 +4,26 @@ import { shallow } from "enzyme";
 import {TimePicker} from 'antd'
 import TimeRangePicker from "../index";
 
+jest.mock('moment', () => {
+  return jest.fn(() => {
+    return {
+      format: function() {
+        return '05/31/2019';
+      },
+      subtract:function() {
+        return {
+          startOf:function() {
+            return '05/31/2019';
+          },
+        }
+      },
+      endOf:function() {
+        return '05/31/2019';
+      }
+    };
+  });
+});
+
 const setup = props => {
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
   const wrapper = shallow(
@@ -24,7 +44,7 @@ describe("是否正确渲染", () => {
 
 });
 
-describe.skip("方法测试", () => {
+describe("方法测试", () => {
 
   it("如果没传value 则默认为空", () => {
     const {wrapper} = setup()
@@ -36,8 +56,8 @@ describe.skip("方法测试", () => {
     const {wrapper,props} = setup({
       value:['2019-05-20','2019-05-21']
     })
-    expect(wrapper.state('startTime')).toEqual(moment(props.value[0]));
-    expect(wrapper.state('endTime')).toEqual(moment(props.value[1]));
+    expect(JSON.stringify(wrapper.state('startTime'))).toEqual(JSON.stringify(moment(props.value[0])));
+    expect(JSON.stringify(wrapper.state('endTime'))).toEqual(JSON.stringify(moment(props.value[1])));
   });
 
   it("formatTime 方法测试", () => {
@@ -50,21 +70,51 @@ describe.skip("方法测试", () => {
 
   });
 
-  it("handleChange 方法 type 为start时", () => {
+  it("hanldeChange 方法 type 为start时", () => {
     const {wrapper,props} = setup({
       onChange:jest.fn()
     })
-    wrapper.instance().handleChange('start','2019-05-20')
+    wrapper.instance().hanldeChange('start','2019-05-20')
     expect(wrapper.state('startTime')).toEqual('2019-05-20');
     expect(props.onChange.mock.calls.length).toBe(1)
   });
 
-  it("handleChange 方法 type 为end时", () => {
+  it("hanldeChange 方法 type 为end时", () => {
     const {wrapper,props} = setup({
       onChange:jest.fn()
     })
-    wrapper.instance().handleChange('end','2019-05-20')
+    wrapper.instance().hanldeChange('end','2019-05-20')
     expect(wrapper.state('endTime')).toEqual('2019-05-20');
     expect(props.onChange.mock.calls.length).toBe(1)
+  });
+
+  it("hanldeChange 方法 type 为start时", () => {
+    const {wrapper,props} = setup({
+      onChange:jest.fn()
+    })
+    wrapper.instance().hanldeChange('start','')
+    expect(wrapper.state('startTime')).toEqual('');
+    expect(props.onChange.mock.calls.length).toBe(1)
+  });
+
+  it("hanldeChange 方法 type 为end时", () => {
+    const {wrapper,props} = setup({
+      onChange:jest.fn()
+    })
+    wrapper.instance().hanldeChange('end','')
+    expect(wrapper.state('endTime')).toEqual('');
+    expect(props.onChange.mock.calls.length).toBe(1)
+  });
+
+  it("componentWillReceiveProps 测试 ", () => {
+    const {wrapper} = setup({
+      value:['2019-05-31','2019-07-31']
+    })
+    const value = ['2019-06-31','2019-07-31']
+    expect(wrapper.instance().componentWillReceiveProps({
+      value:value
+    }))
+    expect(JSON.stringify(wrapper.state('startTime'))).toEqual(JSON.stringify(moment(value[0])));
+    expect(JSON.stringify(wrapper.state('endTime'))).toEqual(JSON.stringify(moment(value[1])));
   });
 });

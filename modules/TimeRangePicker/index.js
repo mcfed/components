@@ -11,6 +11,7 @@ export default class TimeRangePicker extends Component {
     this.state = {...this.translateTime(props.value)};
   }
   componentWillReceiveProps(nextProps) {
+    console.log(this.props.value,nextProps.value,JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value))
     if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
       this.setState({...this.translateTime(nextProps.value)});
     }
@@ -24,6 +25,7 @@ export default class TimeRangePicker extends Component {
   hanldeChange(type, val) {
     let {onChange} = this.props;
     val = val ? val : '';
+    console.log(type)
 
     if (type === 'start') {
       this.setState(
