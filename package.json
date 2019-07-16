@@ -2,8 +2,7 @@
   "name": "mcf-components",
   "version": "v1.3.0",
   "description": "@mcf for components",
-  "main": "umd/mcf-components.js",
-  "module": "esm/mcf-components.js",
+  "main": "cjs/mcf-components.js",
   "scripts": {
     "test": "jest",
     "test:watch": "npm test -- --watch",
@@ -49,7 +48,10 @@
     "rollup-plugin-notify": "^1.0.6",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.1.0",
-    "rollup-plugin-size-snapshot": "^0.7.0"
+    "rollup-plugin-size-snapshot": "^0.7.0",
+    "rollup-plugin-uglify": "^6.0.2",
+    "rollup-plugin-visualizer": "^2.4.4",
+    "source-map-explorer": "^2.0.1"
   },
   "peerDependencies": {
     "antd": "3.5.1"
@@ -61,7 +63,6 @@
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "16.3.0",
-    "react-dom": "16.3.0",
     "react-router": "^5.0.0"
   }
 }
