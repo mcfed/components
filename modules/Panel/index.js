@@ -82,11 +82,11 @@ export default class Panel extends Component {
     return footer;
   }
   render() {
-    const { prefixCls, loading, locale } = this.props;
+    const { prefixCls, loading, className } = this.props;
     return (
-      <div className={`${prefixCls}-wrapper`}>
+      <div className={`${prefixCls}-wrapper ${className}`}>
         <Spin spinning={loading}>
-          <div className={`${prefixCls}`}>
+          <div className={`${prefixCls} ${className}`}>
             {this.renderHeader()}
             {this.renderBody()}
             {React.createElement(
@@ -144,7 +144,11 @@ Panel.propTypes = {
   /**
   整个panel的loading状态，true时整个面板不能操作
   **/
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  /**
+   * Panel 增加自定义 className 名称，支持自定义样式 特殊化 使用
+   */
+  className: PropTypes.string
 };
 Panel.defaultProps = {
   prefixCls: "ant-panel",
@@ -152,5 +156,6 @@ Panel.defaultProps = {
   loading: false,
   onCancel: function() {},
   title: "",
-  confirmLoading: false
+  confirmLoading: false,
+  className: ""
 };
