@@ -77,3 +77,34 @@ stories.add("itemLayout change", () => {
     </BaseForm>
   );
 });
+
+stories.add("一行分栏", () => {
+  return (
+    <BaseForm colNumber={2}>
+      <FormItem>
+        <Input name="name" label="姓名" colNumber={1} />
+      </FormItem>
+      <FormItem>
+        <Input name="age" label="年龄" colNumber={8} />
+      </FormItem>
+      <FormItem>
+        <Input name="sex" label="性别" colNumber={8} />
+      </FormItem>
+      <FormItem>
+        <Input name="edu" label="学历" colNumber={8} />
+      </FormItem>
+      <FormItem>
+        <Input name="marry" label="婚否" colNumber={2} offsetNumber={8} />
+      </FormItem>
+      <FormItem>
+        <Input name="location" label="位置" />
+      </FormItem>
+      <FormItem>
+        <Input type="hidden" name="location1" />
+      </FormItem>
+      <FormItem>
+        <Input type="hidden" name="location2" />
+      </FormItem>
+    </BaseForm>
+  );
+});
