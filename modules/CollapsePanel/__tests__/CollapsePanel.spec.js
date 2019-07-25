@@ -29,17 +29,17 @@ const setup = props => {
 describe("CollapsePanel 组件方法测试", () => {
   it("componentDidMount 测试", () => {
     const { wrapper } = setup();
-    wrapper.setActiveStatus = jest.fn();
+    wrapper.instance().setActiveStatus = jest.fn();
     wrapper.instance().componentDidMount();
 
-    expect(wrapper.setActiveStatus).toHaveBeenCalled();
+    expect(wrapper.instance().setActiveStatus).toHaveBeenCalled();
   });
   it("componentWillReceiveProps 测试", () => {
     const { wrapper } = setup();
-    wrapper.setActiveStatus = jest.fn();
+    wrapper.instance().setActiveStatus = jest.fn();
     wrapper.instance().componentWillReceiveProps();
 
-    expect(wrapper.setActiveStatus).toHaveBeenCalled();
+    expect(wrapper.instance().setActiveStatus).toHaveBeenCalled();
   });
 
   it("isExtraIsReactDom 测试", () => {
