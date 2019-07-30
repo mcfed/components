@@ -75,5 +75,6 @@ CollapsePanel.propTypes = {
   closeValues: PropTypes.array
 };
 CollapsePanel.defaultProps = {
-  closeValues: []
+  closeValues: [],
+  prefixCls: "ant-collapse"
 };
