@@ -63,8 +63,15 @@ export default class CollapsePanel extends Component {
   render() {
     const { children, title, control, ...otherProps } = this.props;
     let { active } = this.state;
+    /**
+     * fixed ：如果children 没传  则不论active为什么  都不显示body
+     */
     return (
-      <Panel header={this.renderHeader()} {...otherProps} isActive={active}>
+      <Panel
+        header={this.renderHeader()}
+        {...otherProps}
+        isActive={children ? active : false}
+      >
         {children}
       </Panel>
     );

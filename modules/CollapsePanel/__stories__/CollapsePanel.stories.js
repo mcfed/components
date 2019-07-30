@@ -41,10 +41,7 @@ stories.add(
         control={123}
         showArrow={true}
         defaultActive={true}
-      >
-        <div>97897</div>
-        <h2>enlsdkf</h2>
-      </CollapsePanel>
+      />
     </BaseForm>
   ),
   { notes: { markdown: md } }
