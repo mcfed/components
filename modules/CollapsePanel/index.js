@@ -20,13 +20,24 @@ export default class CollapsePanel extends Component {
     this.setActiveStatus();
   }
   setActiveStatus() {
-    const { formRef } = this.context;
     const { control } = this.props;
     this.setState({
-      active: this.isExtraIsReactDom(control)
-        ? Boolean(formRef.getFieldValue(control.props.name))
-        : true
+      active: this.isExtraIsReactDom(control) ? this.fieldValueChange() : true
     });
+  }
+  fieldValueChange() {
+    const { formRef } = this.context;
+    const { control, closeValues } = this.props;
+    /**
+     * closeValues 关闭值数组【默认为空数组】
+     * 若closeValues 传入则判断值是否在该数组中 存在则返回false
+     * 若未传入则值转boolean
+     */
+    return closeValues.length
+      ? closeValues.filter(
+          it => it === formRef.getFieldValue(control.props.name)
+        ).length === 0
+      : Boolean(formRef.getFieldValue(control.props.name));
   }
   isExtraIsReactDom(extra) {
     return typeof extra === "object" && typeof extra.$$typeof === "symbol";
@@ -61,5 +72,8 @@ export default class CollapsePanel extends Component {
 }
 
 CollapsePanel.propTypes = {
-  // showExpand: PropTypes.number
+  closeValues: PropTypes.array
+};
+CollapsePanel.defaultProps = {
+  closeValues: []
 };

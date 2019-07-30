@@ -53,3 +53,4 @@
 | content     | panel content                              | any     | undefined |
 | forceRender | 被隐藏时是否渲染 DOM 结构                  | boolean | false     |
 | disabled    | 禁用后的面板展开与否将无法通过用户交互改变 | boolean | false     |
+| closeValues | 关闭值数组                                 | array   | []        |
