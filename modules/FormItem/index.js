@@ -259,29 +259,44 @@ export default class FormItem extends Component {
       styles = {
         style: { display: "none" }
       };
-    } else {
-      /*colNumber 和offsetNumber 控制表单多列位置*/
-      console.log(colNumber, otherProps.colNumber);
-      styles = {
-        style: {
-          width:
-            (
-              1 /
-              (otherProps.colNumber && typeof otherProps.colNumber === "number"
-                ? parseInt(otherProps.colNumber)
-                : colNumber)
-            ).toFixed(4) *
-              100 +
-            "%",
-          display: "inline-block",
-          marginLeft:
-            otherProps.offsetNumber &&
-            typeof otherProps.offsetNumber === "number"
-              ? (1 / parseInt(otherProps.offsetNumber)).toFixed(4) * 100 + "%"
-              : ""
-        }
-      };
     }
+    //
+    // let columns = element.props.colNumber || colNumber;
+    // let boxCols = 24 / (element.props.colNumber || colNumber);
+    // let labelNum = Math.round(8 / columns),
+    //   spancols = 8 * columns;
+    // formLayout = Object.assign({}, formLayout, {
+    //   labelCol: {
+    //     span: labelNum
+    //   },
+    //   wrapperCol: {
+    //     span: 24 - labelNum
+    //   }
+    // });
+
+    // else {
+    //   /*colNumber 和offsetNumber 控制表单多列位置*/
+    //   // console.log(colNumber, otherProps.colNumber);
+    //   styles = {
+    //     style: {
+    //       width:
+    //         (
+    //           1 /
+    //           (otherProps.colNumber && typeof otherProps.colNumber === "number"
+    //             ? parseInt(otherProps.colNumber)
+    //             : colNumber)
+    //         ).toFixed(4) *
+    //           100 +
+    //         "%",
+    //       display: "inline-block",
+    //       marginLeft:
+    //         otherProps.offsetNumber &&
+    //         typeof otherProps.offsetNumber === "number"
+    //           ? (1 / parseInt(otherProps.offsetNumber)).toFixed(4) * 100 + "%"
+    //           : ""
+    //     }
+    //   };
+    // }
 
     if (
       (typeof renderable === "boolean" && renderable === false) ||
