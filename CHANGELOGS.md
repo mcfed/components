@@ -18,3 +18,8 @@
 # 1.3.0
 
 - 重新修改打包机制，master 上使用自动化发布 [@zhouhuan]
+
+# 1.3.1
+
+- 新增 CollapsePanel 组件 [@shibo]
+- 新增 baseform 和 fromItem 协同工作属性 colNumber offsetNumber[@shibo]
