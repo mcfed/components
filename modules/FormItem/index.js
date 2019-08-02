@@ -120,17 +120,31 @@ export default class FormItem extends Component {
       })
       .then(result => {
         if (result.code == 0) {
-          if (callback) {
-            this.setState({
-              childData: callback(result, formRef)
-            });
-          } else {
-            this.setState({
-              childData: result.data.items
-            });
-          }
+          this.setChildData(
+            callback ? callback(result, formRef) : result.data.items
+          );
+          // if (callback) {
+          //   this.setState({
+          //     childData: callback(result, formRef)
+          //   });
+          // } else {
+          //   if (!(result.data.items instanceof Array)) {
+          //     throw `${fetchUrl}返回数据格式有误`;
+          //   }
+          //   this.setState({
+          //     childData: result.data.items || []
+          //   });
+          // }
         }
       });
+  }
+  setChildData(dataList) {
+    if (!(dataList instanceof Array)) {
+      throw `childData数据格式有误`;
+    }
+    this.setState({
+      childData: dataList || []
+    });
   }
   renderField() {
     let { children, containerTo } = this.props;
