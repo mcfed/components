@@ -138,7 +138,7 @@ export default class AdvancedSearchForm extends React.Component {
             <FormItem
               colon={true}
               {...formItemLayout}
-              containerTo={false}
+              containerTo={it.props.containerTo || true}
               className={classNames}
             >
               {React.cloneElement(it, {
