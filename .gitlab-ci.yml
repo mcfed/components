@@ -1,16 +1,24 @@
 stages:
+  - build
   - test
-  - compile
-  - release
+  - deploy
 
 cache:
   key: ${CI_BUILD_REF_NAME}
   paths:
     - node_modules/
-    - dist/
 
 before_script:
   - npm install --save-dev
+
+build_job:
+  stage: build
+  script:
+    - npm run build
+  only:
+    - master
+  tags:
+    - master
 
 test_job:
   stage: test
@@ -20,21 +28,12 @@ test_job:
     - master
     - develop
 
-build_job:
-  stage: compile
-  script:
-    - npm run build
-  only:
-    - master
-  tags:
-    - master
-
-publish_job:
-  stage: release
+deploy_job:
+  stage: deploy
   script:
     - npm run build
     - npm publish
   only:
-    - master
+    - tags
   tags:
     - master
