@@ -190,10 +190,10 @@ export default class FormItem extends Component {
           )
         );
       } else if (field.props.renderItem) {
+        // console.log(field);
         return React.createElement(
           field.type,
           Object.assign(
-            { key: new Date().valueOf() },
             otherProps,
             containerToProp,
             treeDataProp,
