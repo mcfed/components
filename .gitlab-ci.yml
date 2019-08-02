@@ -7,8 +7,6 @@ cache:
   key: ${CI_BUILD_REF_NAME}
   paths:
     - node_modules/
-    - esm/*
-    - umd/*
 
 before_script:
   - npm install --save-dev
@@ -21,6 +19,7 @@ build_job:
     - master
   tags:
     - master
+  coverage: /All files\s*\|\s*([\d\.]+)/
 
 test_job:
   stage: test
@@ -30,22 +29,12 @@ test_job:
     - master
     - develop
 
-test_coverage:
-  stage: test
-  script:
-    - npm run build
-  only:
-    - master
-  tags:
-    - master
-  coverage: /All files\s*\|\s*([\d\.]+)/
-
 deploy_job:
   stage: deploy
   script:
     - npm run build
     - npm publish
   only:
-    - master
+    - tags
   tags:
     - master
