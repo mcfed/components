@@ -31,7 +31,8 @@ export default class FormItem extends Component {
   };
   static contextTypes = {
     formRef: PropTypes.object,
-    formLayout: PropTypes.object
+    formLayout: PropTypes.object,
+    colNumber: PropTypes.number
   };
 
   componentWillReceiveProps(nextProps) {
@@ -244,7 +245,7 @@ export default class FormItem extends Component {
       renderable,
       ...otherProps
     } = element.props;
-    let { formRef, formLayout } = this.context;
+    let { formRef, formLayout, colNumber } = this.context;
     const { getFieldDecorator } = formRef;
     let styles = {};
     let renderProps = true;
@@ -258,8 +259,30 @@ export default class FormItem extends Component {
       styles = {
         style: { display: "none" }
       };
+    } else {
+      /*colNumber 和offsetNumber 控制表单多列位置*/
+      console.log(colNumber, otherProps.colNumber);
+      styles = {
+        style: {
+          width:
+            (
+              1 /
+              (otherProps.colNumber && typeof otherProps.colNumber === "number"
+                ? parseInt(otherProps.colNumber)
+                : colNumber)
+            ).toFixed(4) *
+              100 +
+            "%",
+          display: "inline-block",
+          marginLeft:
+            otherProps.offsetNumber &&
+            typeof otherProps.offsetNumber === "number"
+              ? (1 / parseInt(otherProps.offsetNumber)).toFixed(4) * 100 + "%"
+              : ""
+        }
+      };
     }
-    // console.log(typeof(hiddenProp))
+
     if (
       (typeof renderable === "boolean" && renderable === false) ||
       (typeof renderable === "function" &&

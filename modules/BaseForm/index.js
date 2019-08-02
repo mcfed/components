@@ -7,16 +7,19 @@ const FormCreate = Form.create;
 class BaseForm extends Component {
   static childContextTypes = {
     formRef: PropTypes.any,
-    formLayout: PropTypes.object
+    formLayout: PropTypes.object,
+    colNumber: PropTypes.number
   };
   static propTypes = {
     layout: PropTypes.oneOf(["horizontal", "inline", "vertical"]),
-    itemLayout: PropTypes.object
+    itemLayout: PropTypes.object,
+    colNumber: PropTypes.number
   };
 
   static defaultProps = {
     prefixCls: "ant-form",
     layout: "horizontal",
+    colNumber: 1,
     itemLayout: {
       labelCol: {
         span: 6
@@ -27,14 +30,21 @@ class BaseForm extends Component {
     }
   };
   getChildContext() {
-    var { form, itemLayout } = this.props;
+    var { form, itemLayout, colNumber } = this.props;
     return {
       formRef: form,
-      formLayout: itemLayout
+      formLayout: itemLayout,
+      colNumber: colNumber
     };
   }
   render() {
-    const { autoSubmitForm, itemLayout, children, ...otherProps } = this.props;
+    const {
+      autoSubmitForm,
+      itemLayout,
+      colNumber,
+      children,
+      ...otherProps
+    } = this.props;
     return React.createElement(Form, otherProps, children);
   }
 }
