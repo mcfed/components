@@ -61,6 +61,7 @@ describe("CollapsePanel 组件方法测试", () => {
       </FormItem>
     );
   });
+
   it("renderExtra 测试 control为text时", () => {
     const { wrapper } = setup({
       control: 123
@@ -123,5 +124,27 @@ describe("CollapsePanel 组件方法测试", () => {
     );
     wrapper.instance().fieldValueChange();
     expect(wrapper.state("active")).toEqual(true);
+  });
+
+  it("renderable 属性测试 renderable=false", () => {
+    const { wrapper } = setup({
+      renderable: false
+    });
+    // expect(wrapper).toEqual(null);
+    expect(wrapper.find("CollapsePanel").length).toEqual(0);
+  });
+  it("renderable 属性测试 renderable=true", () => {
+    const { wrapper } = setup({
+      renderable: true
+    });
+    // expect(wrapper).toEqual(null);
+    expect(wrapper.find("CollapsePanel").length).toEqual(1);
+  });
+  it("renderable 属性测试 函数返回true", () => {
+    const { wrapper } = setup({
+      renderable: () => true
+    });
+    // expect(wrapper).toEqual(null);
+    expect(wrapper.find("CollapsePanel").length).toEqual(1);
   });
 });
