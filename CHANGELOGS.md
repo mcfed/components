@@ -23,3 +23,7 @@
 
 - 新增 CollapsePanel 组件 [@shibo]
 - 新增 baseform 和 fromItem 协同工作属性 colNumber offsetNumber[@shibo]
+
+# 1.3.2
+
+- collapse panel 新增 renderable 属性 接受布尔值和函数 [@shibo]
