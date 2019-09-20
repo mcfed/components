@@ -85,12 +85,13 @@ export default class FormItem extends Component {
       if (field.props.params) {
         //规避 params 无法判断差异引起首次多发请求问题，
         // 当fetch 与 params 属性同时配置，首次请求交由componentWillReceiveProps里方法进行发送
-      } else {
         this.fetchData(
           field.props.fetch,
           field.props.params,
           field.props.fetchCallback
         );
+      } else {
+        this.fetchData(field.props.fetch, {}, field.props.fetchCallback);
       }
     }
   }
