@@ -46,13 +46,13 @@ describe("DetailTable method test", () => {
       },
       // dataSource:[1,2,3,4,5],
       mode: "object",
-      labelKey: "label",
+      labelKey: "name",
       valueKey: "value"
     });
 
     const result = [
-      [{ label: "a", value: 1 }, { label: "b", value: 2 }],
-      [{ label: "c", value: 3 }, { label: "", value: "" }]
+      [{ name: "a", value: 1 }, { name: "b", value: 2 }],
+      [{ name: "c", value: 3 }, { name: "", value: "" }]
     ];
 
     expect(wrapper.instance().showDom(props.dataSource)).toEqual(
@@ -71,7 +71,7 @@ describe("DetailTable method test", () => {
     );
   });
 
-  it('dataSource 不传入labelKey，valueKey,默认为label 和 value', () => {
+  it('dataSource 不传入labelKey，valueKey,默认为name 和 value', () => {
     const { wrapper, props } = setup({
       dataSource: {
         a: 1,
@@ -82,8 +82,8 @@ describe("DetailTable method test", () => {
     });
 
     const result = [
-      [{ label: "a", value: 1 }, { label: "b", value: 2 }],
-      [{ label: "c", value: 3 }, { label: "", value: "" }]
+      [{ name: "a", value: 1 }, { name: "b", value: 2 }],
+      [{ name: "c", value: 3 }, { name: "", value: "" }]
     ];
 
     expect(wrapper.instance().showDom(props.dataSource)).toEqual(
@@ -93,7 +93,7 @@ describe("DetailTable method test", () => {
             <Td
               key={v}
               dataSource={c}
-              labelKey="label"
+              labelKey="name"
               valueKey="value"
             />
           ))}
@@ -110,13 +110,13 @@ describe("DetailTable method test", () => {
         c: 3
       },
       mode: "object",
-      labelKey: "name",
+      labelKey: "labelKey",
       valueKey: "valueKey"
     });
 
     const result = [
-      [{ name: "a", valueKey: 1 }, { name: "b", valueKey: 2 }],
-      [{ name: "c", valueKey: 3 }, { name: "", valueKey: "" }]
+      [{ labelKey: "a", valueKey: 1 }, { labelKey: "b", valueKey: 2 }],
+      [{ labelKey: "c", valueKey: 3 }, { labelKey: "", valueKey: "" }]
     ];
 
     expect(wrapper.instance().showDom(props.dataSource)).toEqual(

@@ -108,7 +108,7 @@ DetailTable.defaultProps = {
   columnNumber: 2,
   title: "datailtable",
   tableClass: "ant-table ant-table-bordered ant-table-detail",
-  labelKey: 'label',
+  labelKey: 'name',
   valueKey: 'value'
 };
 export default DetailTable;
