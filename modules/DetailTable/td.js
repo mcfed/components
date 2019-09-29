@@ -1,7 +1,7 @@
 import React from "react";
 import propTypes from "prop-types";
 
-const Td = ({ dataSource, labelKey = "label", valueKey = "value" }) => {
+const Td = ({ dataSource, labelKey = dataSource[labelKey], valueKey = dataSource[valueKey] }) => {
   return [
     <th key={"td" + dataSource[labelKey]}>
       {typeof dataSource[labelKey] === "function"

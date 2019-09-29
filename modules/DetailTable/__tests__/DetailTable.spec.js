@@ -70,6 +70,70 @@ describe("DetailTable method test", () => {
       ))
     );
   });
+
+  it('dataSource 不传入labelKey，valueKey,默认为label 和 value', () => {
+    const { wrapper, props } = setup({
+      dataSource: {
+        a: 1,
+        b: 2,
+        c: 3
+      },
+      mode: "object",
+    });
+
+    const result = [
+      [{ label: "a", value: 1 }, { label: "b", value: 2 }],
+      [{ label: "c", value: 3 }, { label: "", value: "" }]
+    ];
+
+    expect(wrapper.instance().showDom(props.dataSource)).toEqual(
+      result.map((d, k) => (
+        <tr key={k}>
+          {d.map((c, v) => (
+            <Td
+              key={v}
+              dataSource={c}
+              labelKey="label"
+              valueKey="value"
+            />
+          ))}
+        </tr>
+      ))
+    );
+  })
+
+  it('dataSource 传入了自定义的labelKey，valueKey ', () => {
+    const { wrapper, props } = setup({
+      dataSource: {
+        a: 1,
+        b: 2,
+        c: 3
+      },
+      mode: "object",
+      labelKey: "name",
+      valueKey: "valueKey"
+    });
+
+    const result = [
+      [{ name: "a", valueKey: 1 }, { name: "b", valueKey: 2 }],
+      [{ name: "c", valueKey: 3 }, { name: "", valueKey: "" }]
+    ];
+
+    expect(wrapper.instance().showDom(props.dataSource)).toEqual(
+      result.map((d, k) => (
+        <tr key={k}>
+          {d.map((c, v) => (
+            <Td
+              key={v}
+              dataSource={c}
+              labelKey={props.labelKey}
+              valueKey={props.valueKey}
+            />
+          ))}
+        </tr>
+      ))
+    );
+  });
 });
 
 describe.skip("td test", () => {
