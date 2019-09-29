@@ -15,7 +15,7 @@ class DetailTable extends React.Component {
     }
     if (this.props.mode && this.props.mode === "object") {
       for (let a in dataSource) {
-        Data.push({ label: a, value: dataSource[a] });
+        Data.push({ [this.props.labelKey]: a, [this.props.valueKey]: dataSource[a] });
       }
     } else {
       Data = [...dataSource];
@@ -31,7 +31,7 @@ class DetailTable extends React.Component {
       for (let i = 0; i < columnNumber; i++) {
         let obj = Data.shift();
         if (obj === undefined) {
-          obj = { label: "", value: "" };
+          obj = { [this.props.labelKey]: "", [this.props.valueKey]: "" };
         }
         if (obj.colspan && obj.colspan > 0) {
           ar.push(obj);
@@ -107,6 +107,8 @@ DetailTable.propTypes = {
 DetailTable.defaultProps = {
   columnNumber: 2,
   title: "datailtable",
-  tableClass: "ant-table ant-table-bordered ant-table-detail"
+  tableClass: "ant-table ant-table-bordered ant-table-detail",
+  labelKey: 'label',
+  valueKey: 'value'
 };
 export default DetailTable;
