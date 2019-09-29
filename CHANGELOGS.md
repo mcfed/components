@@ -16,7 +16,7 @@
 <!-- Your comment below this -->
 # 1.3.4
 
-- 修正DetailTable 原datasource.name 不显示bug [@zhouhuan]
+- 修正DetailTable 原datasource.name 不显示bug [@lujianan]
 
 
 # 1.3.3
