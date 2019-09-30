@@ -25,3 +25,5 @@ export FormItemFixed from './FormItemFixed';
 export TreeTile from './TreeTile';
 
 export CollapsePanel from './CollapsePanel';
+
+export Step from './Step';
