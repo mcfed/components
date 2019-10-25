@@ -53,8 +53,9 @@ export class ExtraColumnForTest extends React.Component {
     );
   };
 
-  renderDomByType = type => {
+  renderDomByType = () => {
     let dom;
+    const type = this.props.type;
     switch (type) {
       case 'DatePicker':
         dom = this.renderDatePickerDom();
@@ -110,7 +111,7 @@ export class ExtraColumnForTest extends React.Component {
   };
 
   render() {
-    return this.renderDomByType(this.props.type);
+    return this.renderDomByType();
   }
 }
 
