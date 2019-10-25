@@ -1,10 +1,12 @@
 import React from "react";
 import propTypes from "prop-types";
 import { Table, Popconfirm, Form, Button, message } from "antd";
+import "./index.less";
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();
 
+/* istanbul ignore next */
 const EditableRow = ({ form, index, ...props }) => (
   <EditableContext.Provider value={form}>
     <tr {...props} />
@@ -13,7 +15,12 @@ const EditableRow = ({ form, index, ...props }) => (
 
 const EditableFormRow = Form.create()(EditableRow);
 
-class EditableCell extends React.Component {
+export class EditableCell extends React.Component {
+  onDoubleClick = td => {
+    const { record, changeColumnEditStatus } = this.props;
+    changeColumnEditStatus && changeColumnEditStatus(record, td.props);
+  };
+
   render() {
     const {
       editing,
@@ -23,23 +30,40 @@ class EditableCell extends React.Component {
       index,
       editDom,
       editConfig,
+      editingStatus,
+      changeColumnEditStatus,
+      clickEditable,
       ...restProps
     } = this.props;
     return (
       <EditableContext.Consumer>
         {form => {
           const { getFieldDecorator } = form;
+          /* istanbul ignore next */
           return (
-            <td {...restProps}>
+            <td
+              {...restProps}
+              onDoubleClick={
+                editing || editingStatus || !clickEditable
+                  ? () => {}
+                  : () => this.onDoubleClick(this)
+              }
+            >
               {editing ? (
                 <FormItem style={{ margin: 0 }}>
                   {getFieldDecorator(dataIndex, {
                     ...editConfig,
                     initialValue:
                       record[dataIndex] === ""
-                        ? editConfig.initialValue
+                        ? editConfig && editConfig.initialValue
                         : record[dataIndex]
-                  })(editDom())}
+                  })(
+                    editingStatus ? (
+                      editDom()
+                    ) : (
+                      <React.Fragment>{restProps.children}</React.Fragment>
+                    )
+                  )}
                 </FormItem>
               ) : (
                 restProps.children
@@ -114,6 +138,7 @@ class EditTable extends React.Component {
     };
   }
   componentDidMount() {
+    /* istanbul ignore else */
     if (this.props.columns && this.props.columns.length > 0) {
       this.setState(
         {
@@ -129,17 +154,56 @@ class EditTable extends React.Component {
       );
     }
   }
+  componentWillReceiveProps(nextprops) {
+    /* istanbul ignore else */
+    if (this.props.data != nextprops.data) {
+      this.setState({
+        data: nextprops.data
+      });
+    }
+  }
   isEditing = record => {
     return record.key === this.state.editingKey;
   };
 
-  edit(key) {
+  edit = key => {
     if (this.state.editingKey !== "") {
       message.error("请先保存编辑项再进行其他编辑操作！");
       return false;
     }
     this.setState({ editingKey: key });
+    this.activeStatus();
+  };
+
+  // 双击td事件
+  editColumn = key => {
+    if (this.state.editingKey !== "") {
+      message.error("请先保存编辑项再进行其他编辑操作！");
+      return false;
+    }
+    this.setState({ editingKey: key });
+  };
+
+  changeColumnEditStatus = (record, tdObject) => {
+    this.editColumn(record.key);
+    this.state.columns.map(item => {
+      /* istanbul ignore else */
+      if (item.dataIndex === tdObject.dataIndex) {
+        item.editingStatus = true;
+      }
+    });
+  };
+
+  revertStatus() {
+    // 恢复每一列的编辑状态，去除所有editingStatus
+    this.state.columns.map(item => (item.editingStatus = false));
   }
+
+  activeStatus() {
+    // 激活每一列的编辑状态，所有列editingStatus设为true
+    this.state.columns.map(item => (item.editingStatus = true));
+  }
+
   delete(key) {
     let newData = [...this.state.data];
     this.setState(
@@ -157,13 +221,28 @@ class EditTable extends React.Component {
       if (error) {
         return;
       }
+
+      // 其他组件的验证条件,每一行的所有组件都要验证通过才可以保存
+      let flag = false;
+      this.props.columns.forEach(column => {
+        form.getFieldInstance(column.key) &&
+          form.getFieldInstance(column.key).validateFields &&
+          form.getFieldInstance(column.key).validateFields((error, value) => {
+            if (error) {
+              flag = true;
+            }
+          });
+      });
+      if (flag) return;
+
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
-          ...row
+          ...row,
+          key: item.key
         });
         this.setState({ data: newData, editingKey: "" }, () => {
           this.props.onChange(newData);
@@ -174,6 +253,8 @@ class EditTable extends React.Component {
           this.props.onChange(newData);
         });
       }
+
+      this.revertStatus();
     });
   }
 
@@ -190,6 +271,8 @@ class EditTable extends React.Component {
       this.delete(key);
     }
     this.setState({ editingKey: "" });
+
+    this.revertStatus();
   };
   addNew = () => {
     if (this.state.editingKey !== "") {
@@ -201,6 +284,7 @@ class EditTable extends React.Component {
       key: key
     };
     let keyList = [...this.state.keyList];
+    /* istanbul ignore else */
     if (keyList.length > 1) {
       keyList.length = keyList.length - 1;
     }
@@ -213,6 +297,8 @@ class EditTable extends React.Component {
       data,
       editingKey: key
     });
+
+    this.activeStatus();
   };
   render() {
     const components = {
@@ -226,6 +312,7 @@ class EditTable extends React.Component {
       if (!col.editComponent) {
         return col;
       }
+      /* istanbul ignore next */
       return {
         ...col,
         onCell: record => ({
@@ -234,7 +321,10 @@ class EditTable extends React.Component {
           editDom: col.editComponent,
           dataIndex: col.dataIndex,
           title: col.title,
-          editing: this.isEditing(record)
+          editing: this.isEditing(record),
+          editingStatus: col.editingStatus,
+          changeColumnEditStatus: this.changeColumnEditStatus,
+          clickEditable: this.props.clickEditable
         })
       };
     });

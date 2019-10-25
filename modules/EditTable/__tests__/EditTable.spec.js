@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "antd";
 
 import EditTable from "../index";
+import { EditableCell } from "../index";
 
 const setup = props => {
   const columns = [
@@ -36,8 +37,17 @@ const setup = props => {
       address: "西湖区湖底公园1号"
     }
   ];
+
+  const defaultProps = {
+    onChange: jest.fn()
+  };
+
   const wrapper = shallow(
-    <EditTable data={dataSource} {...props} columns={columns} />
+    <EditTable
+      data={dataSource}
+      columns={columns}
+      {...Object.assign({}, defaultProps, props)}
+    />
   );
 
   return {
@@ -45,6 +55,21 @@ const setup = props => {
     props,
     dataSource,
     columns
+  };
+};
+
+const setupCell = props => {
+  const defaultProps = {
+    onChange: jest.fn()
+  };
+
+  const wrapper = shallow(
+    <EditableCell {...Object.assign({}, defaultProps, props)} />
+  );
+
+  return {
+    wrapper,
+    props
   };
 };
 
@@ -171,5 +196,271 @@ describe("editable method ", () => {
     };
     wrapper.instance().cancel(params);
     //判断 是否删除 逻辑？
+  });
+
+  it("editable true branch 测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const render = instance.state.columns.filter(
+      item => item.dataIndex === "操作"
+    )[0].render;
+    const record = {
+      key: "1"
+    };
+    instance.save = jest.fn();
+    instance.isEditing = jest.fn(() => true);
+    const renderWrapper = render("", record);
+    // dom 点击事件覆盖
+    renderWrapper.props.children.props.children[0].props
+      .children()
+      .props.onClick();
+    renderWrapper.props.children.props.children[1].props
+      .children()
+      .props.onConfirm();
+  });
+
+  it("editable false branch 测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const render = instance.state.columns.filter(
+      item => item.dataIndex === "操作"
+    )[0].render;
+    const record = {
+      key: "1"
+    };
+    const renderWrapper = render("", record);
+    // dom 点击事件覆盖
+    renderWrapper.props.children.props.children[0].props.onClick();
+    renderWrapper.props.children.props.children[1].props.onConfirm();
+  });
+
+  it("componentWillReceiveProps 生命周期测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const nextprops = {
+      data: [
+        {
+          key: "3",
+          name: "胡彦组",
+          age: 32,
+          address: "西湖区湖底公园1号"
+        }
+      ]
+    };
+    instance.componentWillReceiveProps(nextprops);
+  });
+
+  it("edit 方法测试,editingKey已存在branch", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const editingKey = "1";
+    instance.state.editingKey = "5";
+    const activeStatusSpy = jest.spyOn(instance, "activeStatus");
+    instance.edit(editingKey);
+    expect(instance.state.editingKey).toBe("5");
+    expect(activeStatusSpy).not.toHaveBeenCalledWith();
+  });
+
+  it("editColumn 方法测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const editingKey = 1;
+    instance.editColumn(editingKey);
+    expect(instance.state.editingKey).toBe(editingKey);
+  });
+
+  it("editColumn 方法测试,editingKey已存在branch", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const editingKey = "1";
+    instance.state.editingKey = "5";
+    instance.editColumn(editingKey);
+    expect(instance.state.editingKey).not.toBe(editingKey);
+  });
+
+  it("changeColumnEditStatus 方法测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const record = {
+      key: 1
+    };
+    const tdObject = {
+      dataIndex: "name"
+    };
+    const editColumnSpy = jest.spyOn(instance, "editColumn");
+    instance.changeColumnEditStatus(record, tdObject);
+    expect(editColumnSpy).toHaveBeenCalledWith(record.key);
+    expect(
+      instance.state.columns.filter(
+        item => item.dataIndex === tdObject.dataIndex
+      )[0].editingStatus
+    ).toBeTruthy();
+  });
+
+  it("revertStatus 方法测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    instance.revertStatus();
+    instance.state.columns.map(item => {
+      expect(item.editingStatus).toBeFalsy();
+    });
+  });
+
+  it("activeStatus 方法测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    instance.activeStatus();
+    instance.state.columns.map(item => {
+      expect(item.editingStatus).toBeTruthy();
+    });
+  });
+
+  it("save 方法测试", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const form = {
+      validateFields: jest.fn(cb => {
+        cb(false, null);
+      }),
+      getFieldInstance: jest.fn().mockReturnValue({
+        validateFields: jest.fn(cb => {
+          cb(false, null);
+        })
+      })
+    };
+    const key1 = "1";
+    const key2 = "110";
+    // 编辑保存
+    instance.save(form, key1);
+    // 保存新增项branch
+    instance.save(form, key2);
+  });
+
+  it("save 方法测试,第一个验证方法未通过branch", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const form = {
+      validateFields: jest.fn(cb => {
+        cb(true, null);
+      })
+    };
+    const key = "1";
+    instance.save(form, key);
+  });
+
+  it("save 方法测试,第二个验证方法未通过branch", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const form = {
+      validateFields: jest.fn(cb => {
+        cb(false, null);
+      }),
+      getFieldInstance: jest.fn().mockReturnValue({
+        validateFields: jest.fn(cb => {
+          cb(true, null);
+        })
+      })
+    };
+    const key = "1";
+    instance.save(form, key);
+  });
+
+  it("cancel 方法测试, 取消table的数据行branch", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const deleteSpy = jest.spyOn(instance, "delete");
+    const revertStatusSpy = jest.spyOn(instance, "revertStatus");
+    instance.cancel({}, "1");
+    expect(deleteSpy).not.toBeCalledWith("1");
+    expect(instance.state.editingKey).toBe("");
+    expect(revertStatusSpy).toBeCalled();
+  });
+
+  it("cancel 方法测试, 取消新增的数据行branch", () => {
+    const { wrapper } = setup();
+    const instance = wrapper.instance();
+    const deleteSpy = jest.spyOn(instance, "delete");
+    const revertStatusSpy = jest.spyOn(instance, "revertStatus");
+    instance.state.data.push({
+      key: "3",
+      name: "",
+      age: "",
+      address: ""
+    });
+    instance.cancel({}, "3");
+    expect(deleteSpy).toBeCalledWith("3");
+    expect(instance.state.editingKey).toBe("");
+    expect(revertStatusSpy).toBeCalled();
+  });
+
+  it("editComponent 存在情况测试", () => {
+    const props = {
+      columns: [
+        {
+          title: "姓名",
+          dataIndex: "name",
+          key: "name545555",
+          editComponent: <div></div>
+        },
+        {
+          title: "年龄",
+          dataIndex: "age",
+          key: "age"
+        },
+        {
+          title: "住址",
+          dataIndex: "address",
+          key: "address"
+        }
+      ]
+    };
+    setup(props);
+  });
+});
+
+describe("快照测试", () => {
+  it("Editable全页快照", () => {
+    const { wrapper } = setup();
+
+    expect(wrapper).toMatchSnapshot();
+  });
+
+  it("EditableCell全页快照", () => {
+    const { wrapper } = setupCell();
+
+    expect(wrapper).toMatchSnapshot();
+  });
+});
+
+describe("EditableCell 组件测试", () => {
+  it("onDoubleClick 方法测试", () => {
+    const { wrapper } = setupCell();
+    const instance = wrapper.instance();
+    instance.onDoubleClick();
+  });
+  it("onDoubleClick 方法测试，changeColumnEditStatus方法存在branch", () => {
+    const props = {
+      changeColumnEditStatus: jest.fn()
+    };
+    const { wrapper } = setupCell(props);
+    const instance = wrapper.instance();
+    const td = {
+      props: {}
+    };
+    instance.onDoubleClick(td);
+  });
+  it("render 方法测试", () => {
+    const props = {
+      editing: true,
+      dataIndex: "name",
+      record: {
+        name: "name"
+      }
+    };
+    const { wrapper } = setupCell(props);
+    const form = {
+      getFieldDecorator: () => jest.fn()
+    };
+    wrapper.props().children(form);
   });
 });

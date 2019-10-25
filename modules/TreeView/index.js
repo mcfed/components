@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { Tree, Input, Button, TreeSelect } from "antd";
 
 const Search = Input.Search;
-const { TreeNode, DirectoryTree } = Tree;
+const TreeNode = Tree.TreeNode;
+const DirectoryTree = Tree.DirectoryTree;
 
 export default class TreeView extends Component {
   // state = {
