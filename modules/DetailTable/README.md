@@ -1,7 +1,9 @@
 # DetailTable 组件
 
-> 详情表格组件，支持两种显示模式，对象和数组，支持数组配置显示key与value
+> 详情表格组件，支持两种显示  模式，对象和数组，支持数组配置  显示 key 与 value
+
 ## Usage
+
 ```
 const add = [
       {
@@ -29,13 +31,14 @@ const add = {
 <DetailTable tableClass={'table'} mode='object' labelKey={'label'} valueKey={'value'} dataSource={add} columnNumber={2} />
 
 ```
+
 ## Option
 
-| 参数 | 说明 | 类型 |
-| - | - | - |
-|mode|支持数组模式和对象模式（'array',object）默认数组模式|string
-|dataSource|传递数据，根据类型传递相应的数据|array,object|
-|columnNumber|定义列数，不得小于0|number|
-|tableClass|表格样式|string|
-|labelKey|数组模式下配置显示名称key值，默认label|string|
-|valueKey|数组模式下配置显示名称value值，默认value|string|
+| 参数         | 说明                                                 | 类型         |
+| ------------ | ---------------------------------------------------- | ------------ |
+| mode         | 支持数组模式和对象模式（'array',object）默认数组模式 | string       |
+| dataSource   | 传递数据， 根据类型传递相应的数据                    | array,object |
+| columnNumber | 定义列数，不得小于 0                                 | number       |  |
+| tableClass   | 表格  样式                                           | string       |
+| labelKey     | 数组模式下配置显示名称 key 值，默认 label            | string       |
+| valueKey     | 数组模式下配置显示名称 value 值，默认 value          | string       |

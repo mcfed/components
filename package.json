@@ -1,9 +1,9 @@
 {
   "name": "mcf-components",
-  "version": "1.0.0-rc1",
-  "description": "@mcf for crud",
+  "version": "v1.3.4",
+  "description": "@mcf for components",
   "main": "umd/mcf-components.js",
-  "module": "esm/mcf-components.js",
+  "module": "cjs/mcf-components.js",
   "scripts": {
     "test": "jest",
     "test:watch": "npm test -- --watch",
@@ -11,6 +11,7 @@
   },
   "keywords": [
     "@mcf",
+    "components",
     "CRUD",
     "modules",
     "developer"
@@ -37,7 +38,11 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.1",
+    "husky": "^2.3.0",
     "jest": "^22.4.3",
+    "lint-staged": "8.0.0",
+    "prettier": "^1.14.3",
+    "pretty-quick": "^1.4.1",
     "rollup": "^0.66.6",
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
@@ -48,14 +53,16 @@
     "rollup-plugin-notify": "^1.0.6",
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-replace": "^2.1.0",
-    "rollup-plugin-size-snapshot": "^0.7.0"
-  },
-  "peerDependencies": {
-    "antd": "3.5.1"
+    "rollup-plugin-size-snapshot": "^0.7.0",
+    "rollup-plugin-uglify": "^6.0.2",
+    "rollup-plugin-visualizer": "^2.4.4",
+    "source-map-explorer": "^2.0.1"
   },
   "dependencies": {
     "antd": "3.5.1",
+    "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
+    "indexof": "^0.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "react": "16.3.0",
