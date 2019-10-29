@@ -13,16 +13,14 @@ export default class SmartLink extends Component {
   handleClick(event) {
     const props = this.props;
     if (this.props.onClick) this.props.onClick(event);
-
     if (event.defaultPrevented) return;
 
     const { router } = this.context;
-    invariant(
-      router,
-      "<Link>s rendered outside of a router context cannot navigate."
-    );
-
-    if (isModifiedEvent(event) || !isLeftClickEvent(event)) return;
+    // invariant(
+    //   router,
+    //   "<Link>s rendered outside of a router context cannot navigate."
+    // );
+    // if (isModifiedEvent(event) || !isLeftClickEvent(event)) return;
 
     // If target prop is set (e.g. to "_blank"), let browser handle link.
     /* istanbul ignore if: untestable with Karma */
@@ -35,7 +33,7 @@ export default class SmartLink extends Component {
 
     event.preventDefault();
 
-    router.push(resolveToLocation(this.props.to, router));
+    router.push(this.resolveToLocation(this.props.to, router));
   }
   resolveToLocation(to, router) {
     // console.log(router,'router')
