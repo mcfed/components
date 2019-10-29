@@ -3434,6 +3434,10 @@ indexes-of@^1.0.1:
   version "1.0.1"
   resolved "http://192.168.200.178:4873/indexes-of/-/indexes-of-1.0.1.tgz#f30f716c8e2bd346c7b67d3df3915566a7c05607"
 
+indexof@^0.0.1:
+  version "0.0.1"
+  resolved "http://192.168.200.178:4873/indexof/-/indexof-0.0.1.tgz#82dc336d232b9062179d05ab3293a66059fd435d"
+
 inflight@^1.0.4:
   version "1.0.6"
   resolved "http://192.168.200.178:4873/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"

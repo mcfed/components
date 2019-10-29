@@ -19,6 +19,7 @@ build_job:
     - master
   tags:
     - master
+  coverage: /All files\s*\|\s*([\d\.]+)/
 
 test_job:
   stage: test

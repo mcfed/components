@@ -4,11 +4,26 @@
 
 ## useage
 
-当前版本未发布npm 仓库，需要git地址安装方式
-  `npm install git+http://jaxlab.asuscomm.com:30000/mcf/components.git`
+当前版本已发布 npm 仓库（私有仓库）
 
+- 添加.npmrc 文件
+  `registry=http://192.168.200.178:4873/`
+- 运行命令安装包
+  `npm install mcf-components`
 
-## develop
+## develop 规范要求
 
-  - 使用ANTD 组件 统一引入方法采用 lib 加载，因为打包方案rollup 不支持 babel-plugin-import 插件，无法完成 按包加载 ｀import {Button} from 'antd'｀-> `import Buttom from 'antd/lib/buttom'` 
-  - 组件开发统一使用`develop`分支下进行开发和提交，不直接提交`master`分支代码。`devdevelop`->`master` 合并机制每日手动合并一次
+- `创建新功能`分支来源 `master` 统一采用 `feature/组件英文名称` 上进行代码开发，开发完成后提交 `merge_request` ,合并成功后`owner`将删除当前分支
+- `修改BUG` 分支来源 `master` 统一采用 `hotfix/已有组件英文名称` 上进行代码开发，开发完成后提交 `merge_request` 合并成功后`owner`将删除当前分支
+- `master` 与 `develop` 不允许直接提交，统一采用 branch 开发后，提交`merge_request` 到 `develop` 请求合并代码审核。
+- CI 单元测试能过后才能提交代码合并请求，未通过一概不允许合并
+- 合并请求时请 清楚描述 修改内容 `add : 新增XXX组件`
+- 合并请求描述规范格式要求：`ADD:新增XXX组件`、`MODIFY:XXX组件增加单元测试`、`BUGFIXED:修改 XXX 组件 YYY bug`
+
+- 合并 master 规范：`master`禁止提交代码，只允许来源`develop`内容
+
+- 合并 发布版本内容 在`develop`分支工作
+  - 修改 changelogs.md 文件 将发布描述版本内容
+  - 修改 version 号 配置，防止合并到 `master` 后发起发布失败(已发布版本号不允许二次发布)
+  - 合并将要发布的版本内容合并
+  - 提交 `meger_request` 到 `master` 在`master`合并 CI 自动发版成功
