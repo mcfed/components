@@ -20,3 +20,58 @@ it.skip("RolePermission component", () => {
   //expect(tree).toThrow("RolePermission not has context appConfig props")
   //  expect(tree).toMatchSnapshot();
 });
+
+function setup(props, context) {
+  const wrapper = shallow(
+    <RolePermission {...props}>
+      <span>123</span>
+    </RolePermission>,
+    { context }
+  );
+  return {
+    wrapper,
+    props
+  };
+}
+
+describe("rolePermission test", () => {
+  it("appConfig == undefined ", () => {
+    const { wrapper } = setup(
+      {},
+      {
+        appConfig: undefined
+      }
+    );
+    expect(wrapper.contains(<span>123</span>)).toEqual(false);
+  });
+
+  it("appConfig != undefined roleName === appConfig.auth.authRole", () => {
+    const { wrapper } = setup(
+      { roleName: "aa" },
+      {
+        appConfig: {
+          auth: {
+            authRole: "aa"
+          }
+        }
+      }
+    );
+
+    expect(wrapper.contains(<span>123</span>)).toEqual(true);
+  });
+
+  it("appConfig != undefined roleName !== appConfig.auth.authRole", () => {
+    const { wrapper } = setup(
+      { roleName: "aa" },
+      {
+        appConfig: {
+          auth: {
+            authRole: "aa1"
+          }
+        }
+      }
+    );
+
+    expect(wrapper.contains(<span>123</span>)).toEqual(false);
+  });
+});
