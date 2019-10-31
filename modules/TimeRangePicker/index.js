@@ -1,25 +1,25 @@
-import React, { Component } from "react";
-import { TimePicker, Input } from "antd";
-import moment from "moment";
-import "./index.less";
+import React, {Component} from 'react';
+import {TimePicker, Input} from 'antd';
+import moment from 'moment';
+import './index.less';
 
 const InputGroup = Input.Group;
 
 export default class TimeRangePicker extends Component {
   constructor(props) {
     super(props);
-    this.state = { ...this.translateTime(props.value) };
+    this.state = {...this.translateTime(props.value)};
   }
   componentWillReceiveProps(nextProps) {
     // console.log(this.props.value,nextProps.value,JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value))
     if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
-      this.setState({ ...this.translateTime(nextProps.value) });
+      this.setState({...this.translateTime(nextProps.value)});
     }
   }
   translateTime(val) {
     return {
-      startTime: val && val[0] ? moment(val[0], ["hh:mm"]) : "",
-      endTime: val && val[1] ? moment(val[1], ["hh:mm"]) : ""
+      startTime: val && val[0] ? moment(val[0], ['hh:mm']) : '',
+      endTime: val && val[1] ? moment(val[1], ['hh:mm']) : ''
     };
   }
   hanldeChange(type, val) {
@@ -27,7 +27,7 @@ export default class TimeRangePicker extends Component {
     val = val ? val : "";
     // console.log(type)
 
-    if (type === "start") {
+    if (type === 'start') {
       this.setState(
         {
           startTime: val
@@ -39,7 +39,7 @@ export default class TimeRangePicker extends Component {
           ]);
         }
       );
-    } else if (type === "end") {
+    } else if (type === 'end') {
       this.setState(
         {
           endTime: val
@@ -55,23 +55,23 @@ export default class TimeRangePicker extends Component {
   }
 
   formatTime(momentTime) {
-    let { format } = this.props;
-    return momentTime ? moment(momentTime, ["hh:mm"]).format(format) : "";
+    let {format} = this.props;
+    return momentTime ? moment(momentTime, ['hh:mm']).format(format) : '';
   }
 
   render() {
     let { value, onChange, id, label, ...otherProps } = this.props;
     let { startTime, endTime } = this.state;
     return (
-      <InputGroup compact className="TimeRangePicker-compact">
+      <InputGroup compact className='TimeRangePicker-compact'>
         <TimePicker
           {...otherProps}
-          onChange={this.hanldeChange.bind(this, "start")}
+          onChange={this.hanldeChange.bind(this, 'start')}
           value={startTime}
         />
         <TimePicker
           {...otherProps}
-          onChange={this.hanldeChange.bind(this, "end")}
+          onChange={this.hanldeChange.bind(this, 'end')}
           value={endTime}
         />
       </InputGroup>
