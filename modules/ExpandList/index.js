@@ -27,8 +27,8 @@ class ExpandList extends React.Component {
   }
 
   getData = callback => {
-    const {fetchUrl} = this.props;
-    fetch(fetchUrl, {
+    const {fetchListUrl} = this.props;
+    fetch(fetchListUrl, {
       method: 'GET'
     })
       .then(json => {
@@ -36,7 +36,7 @@ class ExpandList extends React.Component {
       })
       .then(result => {
         if (result.code === 0) {
-          callback(result.data.data.items);
+          callback(result.data.items);
         }
       });
   };
