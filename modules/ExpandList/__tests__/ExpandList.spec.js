@@ -1,8 +1,5 @@
 import {shallow, mount, render} from 'enzyme';
 import React from 'react';
-// import axios from 'axios';
-
-// jest.mock('axios');
 
 import ExpandList from '../index';
 
