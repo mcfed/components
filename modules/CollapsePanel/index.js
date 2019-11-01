@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {Collapse} from 'antd';
-import PropTypes from 'prop-types';
-import FormItem from '../FormItem/index';
+import React, { Component } from "react";
+import { Collapse } from "antd";
+import PropTypes from "prop-types";
+import FormItem from "../FormItem/index";
 
-import './index.less';
+import "./index.less";
 const Panel = Collapse.Panel;
 
 export default class CollapsePanel extends Component {
@@ -20,14 +20,14 @@ export default class CollapsePanel extends Component {
     this.setActiveStatus();
   }
   setActiveStatus() {
-    const {control} = this.props;
+    const { control } = this.props;
     this.setState({
       active: this.isExtraIsReactDom(control) ? this.fieldValueChange() : true
     });
   }
   fieldValueChange() {
-    const {formRef} = this.context;
-    const {control, closeValues} = this.props;
+    const { formRef } = this.context;
+    const { control, closeValues } = this.props;
     /**
      * closeValues 关闭值数组【默认为空数组】
      * 若closeValues 传入则判断值是否在该数组中 存在则返回false
@@ -40,34 +40,34 @@ export default class CollapsePanel extends Component {
       : Boolean(formRef.getFieldValue(control.props.name));
   }
   isExtraIsReactDom(extra) {
-    return typeof extra === 'object' && typeof extra.$$typeof === 'symbol';
+    return typeof extra === "object" && typeof extra.$$typeof === "symbol";
   }
 
   renderHeader() {
-    let {title} = this.props;
+    let { title } = this.props;
     return (
-      <div className='CollapsePanel-header'>
-        <h5 className='CollapsePanel-title'>
+      <div className="CollapsePanel-header">
+        <h5 className="CollapsePanel-title">
           {title}
-          <div className='CollapsePanel-extra'>{this.renderExtra()}</div>
+          <div className="CollapsePanel-extra">{this.renderExtra()}</div>
         </h5>
       </div>
     );
   }
   renderExtra() {
-    let {control} = this.props;
+    let { control } = this.props;
     return this.isExtraIsReactDom(control)
       ? React.createElement(FormItem, {}, control)
       : control;
   }
   render() {
-    const {children, title, control, renderable, ...otherProps} = this.props;
-    const {formRef} = this.context;
-    let {active} = this.state;
+    const { children, title, control, renderable, ...otherProps } = this.props;
+    const { formRef } = this.context;
+    let { active } = this.state;
     let renderProps = true;
     if (
-      (typeof renderable === 'boolean' && renderable === false) ||
-      (typeof renderable === 'function' &&
+      (typeof renderable === "boolean" && renderable === false) ||
+      (typeof renderable === "function" &&
         renderable.apply(this, [formRef]) === false)
     ) {
       renderProps = false;
@@ -79,7 +79,8 @@ export default class CollapsePanel extends Component {
       <Panel
         header={this.renderHeader()}
         {...otherProps}
-        isActive={children ? active : false}>
+        isActive={children ? active : false}
+      >
         {children}
       </Panel>
     ) : null;
@@ -91,5 +92,5 @@ CollapsePanel.propTypes = {
 };
 CollapsePanel.defaultProps = {
   closeValues: [],
-  prefixCls: 'ant-collapse'
+  prefixCls: "ant-collapse"
 };
