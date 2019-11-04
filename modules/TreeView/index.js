@@ -90,7 +90,7 @@ export default class TreeView extends Component {
             : {}
         }>
         <Tree
-          defaultSelectedKeys={[checkedKeys]}
+          defaultSelectedKeys={checkedKeys}
           checkedKeys={checkedKeys}
           {...treeConfig}
           expandedKeys={expandedKeys}
