@@ -2,7 +2,7 @@ import React from 'react';
 import {List, Button} from 'antd';
 import PropTypes from 'prop-types';
 
-import Axios from 'axios';
+import fetch from 'cross-fetch';
 
 class ExpandList extends React.Component {
   state = {
@@ -28,9 +28,17 @@ class ExpandList extends React.Component {
 
   getData = callback => {
     const {fetchListUrl} = this.props;
-    Axios.get(fetchListUrl).then(d => {
-      callback(d.data.data.items);
-    });
+    fetch(fetchListUrl, {
+      method: 'GET'
+    })
+      .then(json => {
+        return json.json();
+      })
+      .then(result => {
+        if (result.code === 0) {
+          callback(result.data.items);
+        }
+      });
   };
 
   onLoadMore = () => {
