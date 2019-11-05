@@ -1,6 +1,6 @@
 {
   "name": "mcf-components",
-  "version": "v1.3.4",
+  "version": "v1.3.5",
   "description": "@mcf for components",
   "main": "umd/mcf-components.js",
   "module": "cjs/mcf-components.js",

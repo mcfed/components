@@ -14,10 +14,15 @@
 ## Master
 
 <!-- Your comment below this -->
+
+# 1.3.5
+
+- feat: expand list [@guorong]
+- feat: Layout 布局组件 [@shibo]
+
 # 1.3.4
 
-- 修正DetailTable 原datasource.name 不显示bug [@lujianan]
-
+- 修正 DetailTable 原 datasource.name 不显示 bug [@lujianan]
 
 # 1.3.3
 
