@@ -57,7 +57,15 @@ const treeData = [
       },
       {
         title: '0-0-2',
-        key: '0-0-2'
+        key: '0-0-2',
+        children: [
+          {title: '0-0-2-0', key: '0-0-2-0'},
+          {title: '0-0-2-1', key: '0-0-2-1'},
+        ]
+      },
+      {
+        title: '0-0-3',
+        key: '0-0-3'
       }
     ]
   },
@@ -71,8 +79,12 @@ const treeData = [
     ]
   },
   {
-    title: undefined,
+    title: '0-2',
     key: '0-2'
+  },
+  {
+    title: undefined,
+    key: '0-3'
   }
 ];
 

@@ -187,9 +187,10 @@ export class TrewViewPanel extends Component {
         item.children = this.filterTree(item.children, regexp);
       }
 
-      // console.log(item.title,regexp.test(item.title))
+      /* istanbul ignore next */
       return (
-        regexp.test(item.title) || (item.children && item.children.length > 0)
+        regexp.test(item.title) ||
+         (item.children && item.children.length > 0)
       );
     });
   }
