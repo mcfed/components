@@ -38,6 +38,17 @@ describe('ExpandList render 是否正确渲染', () => {
 });
 
 describe('方法测试全覆盖', () => {
+  it('getInitData 是否正确调用', () => {
+    const {wrapper} = setup({
+      pageSize: 2
+    });
+    wrapper.instance().state.current = 1;
+    wrapper.instance().state.initLoading = true;
+    wrapper.instance().getData = jest.fn();
+    wrapper.instance().getInitData();
+    expect(wrapper.instance().state.initLoading).toBe(true);
+  });
+
   it.skip('getData 测试回调函数应该能够被调用', () => {
     let mockFn = jest.fn();
     const resp = {data: {data: {}}};

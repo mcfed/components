@@ -14,11 +14,22 @@ class ExpandList extends React.Component {
   };
 
   componentDidMount() {
+    this.getInitData();
+  }
+
+  componentWillReceiveProps() {
+    this.getInitData();
+  }
+
+  getInitData() {
     const {pageSize} = this.props;
-    const {current} = this.state;
+    let {current, initLoading} = this.state;
     this.getData(res => {
+      if (current * pageSize < res.length) {
+        initLoading = false;
+      }
       this.setState({
-        initLoading: false,
+        initLoading,
         data: res.slice(0, current * pageSize),
         current: 1,
         list: res
@@ -65,8 +76,8 @@ class ExpandList extends React.Component {
     const {loading, data, initLoading} = this.state;
     const loadMore =
       !initLoading && !loading ? (
-        <div style={{textAlign: 'center'}}>
-          <Button onClick={this.onLoadMore}>加载更多</Button>
+        <div style={{textAlign: 'center', margin: 8}}>
+          <a onClick={this.onLoadMore}>加载更多</a>
         </div>
       ) : null;
 
