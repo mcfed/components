@@ -1,4 +1,4 @@
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Button, Col, Row, Select, Modal } from "antd";
 import moment from "moment";
