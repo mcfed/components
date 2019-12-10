@@ -40,6 +40,21 @@
 <WrapperDatePicker name="datepicker">
   <RangePicker />
 </WrapperDatePicker>
+
+//使用valueFormat 和 timeRange timeRangeType 转出需要的时间格式
+// timeRange 是否开启转换开始和结束增加HH:mm:ss 开始为00:00:00 结束为23:59:59
+//timeRangeType 以什么时间单位作为开始和结束类型（默认为天）  - day -month -year
+//
+
+//转出以天为开始结束的时间
+<WrapperDatePicker name="datepicker">
+  <RangePicker valueFormat='x' timeRange={true}/>
+</WrapperDatePicker>
+
+//转出以月为开始结束的时间
+<WrapperDatePicker name="datepicker">
+  <RangePicker valueFormat='x' timeRange={true} timeRangeType='month'/>
+</WrapperDatePicker>
 ```
 
 - WeekPicker
@@ -53,3 +68,5 @@
 ## Props
 
 > 暂时未扩展属性，可直接使用`DatePicker`,`MonthPicker`,`RangePicker`,`WeekPicker`内置属性。不在处于列举。
+
+>传入的自元素prop value 需为number类型的时间戳或 string类型的时间 若传入string类型的时戳会导致控件无法正常显示时间

@@ -1,28 +1,25 @@
-import { PureComponent } from "react";
+import React,{ PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Form, Input, Button, Col, Row, Select, Modal } from "antd";
-import moment from "moment";
 import { downList } from "./data";
-const { TextArea } = Input;
+//const { TextArea } = Input;
 const FormItem = Form.Item;
 class ConditionForm extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
   state = {
     conditionSelect: [],
     selection: [],
     isfirstSVList: false,
     isMulti: false,
     isShowSec: false,
-    isShowfirstSV: true
+    isShowfirstSV: true,
+    callbackArr:[]
   };
   componentDidMount() {
     let { conditionSelect } = this.props;
     this.setState({
       conditionSelect
     });
-    console.log("conditionSelect", conditionSelect);
+    //console.log("conditionSelect", conditionSelect);
   }
   componentWillReceiveProps(nextProps) {
     //console.log('nextProps', nextProps)
@@ -81,12 +78,12 @@ class ConditionForm extends PureComponent {
       "condition-selection": `${value}`
     });
     let cs = getFieldValue("condition-selection");
-    if (cs == "between") {
+    if (cs === "between") {
       this.setState({ isShowSec: true });
     } else {
       this.setState({ isShowSec: false });
     }
-    if (cs == "is not null" || cs == "is null") {
+    if (cs === "is not null" || cs === "is null") {
       this.setState({
         isShowfirstSV: false
       });
@@ -134,7 +131,7 @@ class ConditionForm extends PureComponent {
     let cs = getFieldValue("condition-selection");
     let vs = getFieldValue("value-selection");
     let ao = getFieldValue("and-or");
-    let sqlTextarea = getFieldValue("sql-textarea");
+    //let sqlTextarea = getFieldValue("sql-textarea");
     let vs2 = getFieldValue("value-selection2");
 
     //如果in 或not in要加括号 , 如果是空就空
@@ -157,14 +154,14 @@ class ConditionForm extends PureComponent {
       if (vs instanceof Array && vs.toString().includes(","))
         //输入框本来用enter隔开, 现在需要用逗号隔开
         vs = vs.toString().split(",");
-      console.log(
-        "vs",
-        vs,
-        cs,
-        ao,
-        `${getFieldValue("factorLabel")}`,
-        this.validTime(vs[0])
-      );
+      // console.log(
+      //   "vs",
+      //   vs,
+      //   cs,
+      //   ao,
+      //   `${getFieldValue("factorLabel")}`,
+      //   this.validTime(vs[0])
+      // );
       inSql =
         vs.length > 1
           ? vs.reduce((ac, cv, ci) => {
@@ -173,15 +170,15 @@ class ConditionForm extends PureComponent {
             })
           : `'${vs}'`;
       isBrack =
-        cs == "in" || cs == "not in" ? `(${inSql})` : vs == `` ? `` : `'${vs}'`;
+        cs === "in" || cs === "not in" ? `(${inSql})` : vs == `` ? `` : `'${vs}'`;
     }
 
     let vs2Sql = vs2 ? ` and '${vs2}'` : ``;
     if (
-      getFieldValue("factorLabel") == "$登录时间" ||
-      getFieldValue("factorLabel") == "$退出时间"
+      getFieldValue("factorLabel") === "$登录时间" ||
+      getFieldValue("factorLabel") === "$退出时间"
     ) {
-      if (!this.validTime(vs[0]) || (!this.validTime(vs2) && cs == "between")) {
+      if (!this.validTime(vs[0]) || (!this.validTime(vs2) && cs === "between")) {
         Modal.error({
           title: "系统提示",
           okText: "确定",
@@ -190,7 +187,7 @@ class ConditionForm extends PureComponent {
         return;
       }
     }
-    if (getFieldValue("factorLabel") == "$返回/影响行数") {
+    if (getFieldValue("factorLabel") === "$返回/影响行数") {
       if (
         !this.validAllNaturalNum(vs[0]) ||
         vs[0] > 2147483648 ||
@@ -207,7 +204,7 @@ class ConditionForm extends PureComponent {
         (!this.validAllNaturalNum(vs2) ||
           vs2 > 2147483648 ||
           vs2 < -2147483648) &&
-        cs == "between"
+        cs === "between"
       ) {
         Modal.error({
           title: "系统提示",
@@ -228,14 +225,19 @@ class ConditionForm extends PureComponent {
       return;
     }
 
-    let nextV = !sqlTextarea ? sql : sqlTextarea + ` ${ao} ${sql}`;
-    nextV = this.convertValue(nextV);
-    setFieldsValue({
-      //and 或or 追加sqltest
-      "sql-textarea": nextV
-    });
-
-    this.props.callbackParentSql(nextV);
+    //let nextV = !sqlTextarea ? sql : sqlTextarea + ` ${ao} ${sql}`;
+    //nextV = this.convertValue(nextV);
+    sql = this.convertValue(sql);
+    // setFieldsValue({
+    //   //and 或or 追加sqltest
+    //   "sql-textarea": nextV
+    // });
+    let {callbackArr} = this.state
+    if(callbackArr.length>0)
+      callbackArr.push(ao)
+    callbackArr.push(sql)
+    this.setState({callbackArr})
+    this.props.callbackParentSql(callbackArr);
   };
 
   convertValue = v => {
@@ -276,7 +278,6 @@ class ConditionForm extends PureComponent {
       isShowfirstSV
     } = this.state;
     //console.log('conditionSelect', conditionSelect)
-    var Now = new Date();
     const conditionRender = conditionSelect.map((v, i) => {
       return (
         <Select.Option key={i} value={v.value}>
@@ -378,13 +379,13 @@ class ConditionForm extends PureComponent {
             </Button>
           </Col>
         </Row>
-        <Row>
+        {/*<Row>
           <Col md={18}>
             {getFieldDecorator("sql-textarea", {
               onChange: e => this.onTextChange(e.target.value)
             })(<TextArea rows={4} />)}
           </Col>
-        </Row>
+        </Row>*/}
       </div>
     );
   }

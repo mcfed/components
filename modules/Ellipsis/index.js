@@ -15,7 +15,7 @@ class Ellipsis extends React.Component {
       tooltiptext = text;
     }
     return (
-      <Tooltip placement="bottomLeft" title={tooltiptext} arrowPointAtCenter>
+      <Tooltip autoAdjustOverflow title={tooltiptext} arrowPointAtCenter>
         <div className="td-ellipsis" {...Object.assign({}, otherProps)}>
           {text}
         </div>

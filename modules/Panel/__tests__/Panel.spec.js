@@ -36,6 +36,10 @@ describe("Panel 组件是否渲染 default props", () => {
     const { wrapper, props } = setup({ footer: false });
     expect(wrapper.find(".ant-panel-footer").exists()).toBe(false);
   });
+  it("Panel Component should be with extra render ", () => {
+    const { wrapper, props } = setup({ extra: "123" });
+    expect(wrapper.find(".ant-panel-extra").exists()).toBe(true);
+  });
 
   it("Panel Component should be with {loading=true} render ", () => {
     const { wrapper, props } = setup({ loading: true });

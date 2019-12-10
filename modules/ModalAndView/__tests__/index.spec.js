@@ -35,9 +35,28 @@ describe("modal render with props ", () => {
 });
 
 describe("modal method tobe called", () => {
-  it.skip("init modal method not be called", () => {
+  it("handleBackRoute 方法测试", () => {
+    const { wrapper, props } = setup(<Input />, {
+      actions: {
+        backRoute: jest.fn()
+      },
+      history: "111",
+      router: "222"
+    });
+    const instance = wrapper.instance();
+    instance.handleBackRoute();
+    expect(props.actions.backRoute).toHaveBeenCalled();
+  });
+
+  it("handleSaveRoute 方法测试", () => {
     const { wrapper, props } = setup(<Input />, {});
-    console.log(wrapper.instance().handleBackRoute.mock);
-    expect(wrapper.instance().handleSaveRoute).toHaveBeenCalled();
+    const instance = wrapper.instance();
+    instance.refs = {
+      formView: {
+        onSubmit: jest.fn()
+      }
+    };
+    instance.handleSaveRoute();
+    expect(instance.refs.formView.onSubmit).toHaveBeenCalled();
   });
 });

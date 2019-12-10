@@ -46,6 +46,7 @@ class FieldSet extends React.Component {
   }
 }
 export default FieldSet;
+export { UpDown, down, up };
 
 FieldSet.defaultProps = {
   title: "标题"

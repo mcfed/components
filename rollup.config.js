@@ -38,16 +38,16 @@ const commonjsOptions = {
 
 export default [{
   input,
-  output: { file: `esm/${pkg.name}.js`, format: "esm",name,globals },
+  output: { file: `cjs/${pkg.name}.js`, format: "cjs",name,globals },
   external:Object.keys(globals),
   plugins: [
-    nodeResolve(),
-    postcss({
-      plugins: []
-    }),
+    // nodeResolve(),
     babel(babelOptionsESM),
     commonjs(commonjsOptions),
     // replace({ "process.env.NODE_ENV": JSON.stringify("production") }),
+    postcss({
+      plugins: []
+    }),
     sizeSnapshot(),
     notify()
   ]

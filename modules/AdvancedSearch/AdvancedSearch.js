@@ -26,14 +26,17 @@ export default class AdvancedSearchForm extends React.Component {
 
   handleSearch = (e, values) => {
     e.preventDefault();
-    let { filterSubmitHandler } = this.props;
+    let { filterSubmitHandler, defaultParams } = this.props;
     if (values) {
-      filterSubmitHandler.call(this, values);
+      filterSubmitHandler.call(this, Object.assign({}, values, defaultParams));
     } else {
       this.form.validateFieldsAndScroll((err, values) => {
         // console.log(this.form.getFieldsValue())
         // console.log(values)
-        filterSubmitHandler.call(this, values);
+        filterSubmitHandler.call(
+          this,
+          Object.assign({}, values, defaultParams)
+        );
       });
     }
   };
@@ -135,7 +138,7 @@ export default class AdvancedSearchForm extends React.Component {
             <FormItem
               colon={true}
               {...formItemLayout}
-              containerTo={false}
+              containerTo={it.props.containerTo || true}
               className={classNames}
             >
               {React.cloneElement(it, {
@@ -253,6 +256,7 @@ AdvancedSearchForm.propTypes = {
   loading: PropTypes.bool,
   footer: PropTypes.element,
   locale: PropTypes.object,
+  defaultParams: PropTypes.object,
   /**
   是否收展，超过指定个数后隐藏
   **/
@@ -263,6 +267,7 @@ AdvancedSearchForm.defaultProps = {
   autoSubmitForm: false,
   showConfig: false,
   loading: false,
+  defaultParams: {},
   filterSubmitHandler: function() {},
   showExpand: 3,
   layout: "horizontal"

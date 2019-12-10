@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import toJson from "enzyme-to-json";
 import { Button } from "antd";
-import FieldSet from "../index";
+import FieldSet, { UpDown, down, up } from "../index";
 
 const setup = props => {
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
@@ -132,5 +132,27 @@ describe("fieldset 子元素Updown prop 取决于hide值", () => {
       display: "show"
     });
     expect(wrapper.find("UpDown").prop("state")).toBe("down");
+  });
+});
+
+describe("UpDown 组件测试", () => {
+  const setup = props => {
+    return shallow(<UpDown {...props} />);
+  };
+  it("state == up", () => {
+    const wrapper = setup({
+      state: "up"
+    });
+    expect(wrapper.find("Icon").prop("style")).toEqual(up);
+  });
+  it("state == down", () => {
+    const wrapper = setup({
+      state: "down"
+    });
+    expect(wrapper.find("Icon").prop("style")).toEqual(down);
+  });
+  it("state == undefined", () => {
+    const wrapper = setup();
+    expect(wrapper.find("Icon").prop("style")).toEqual(up);
   });
 });

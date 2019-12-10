@@ -1,60 +1,80 @@
-import React,{Component} from 'react'
-import {
-  TimePicker,
-  Input,
-} from 'antd'
-import PropTypes from 'prop-types'
-import moment from 'moment'
+import React, {Component} from 'react';
+import {TimePicker, Input} from 'antd';
+import moment from 'moment';
+import './index.less';
 
-const InputGroup = Input.Group
+const InputGroup = Input.Group;
 
-
-export default class TimeRangePicker extends Component{
-  constructor(props){
-    super(props)
-    this.state = {
-      startTime : props.value ? moment(props.value[0]) : "",
-      endTime : props.value ? moment(props.value[1]) : ""
+export default class TimeRangePicker extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {...this.translateTime(props.value)};
+  }
+  componentWillReceiveProps(nextProps) {
+    // console.log(this.props.value,nextProps.value,JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value))
+    if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
+      this.setState({...this.translateTime(nextProps.value)});
     }
   }
-  handleChange(type,val){
-    let {onChange} = this.props
+  translateTime(val) {
+    return {
+      startTime: val && val[0] ? moment(val[0], ['hh:mm']) : '',
+      endTime: val && val[1] ? moment(val[1], ['hh:mm']) : ''
+    };
+  }
+  hanldeChange(type, val) {
+    let { onChange } = this.props;
+    val = val ? val : "";
+    // console.log(type)
 
-    if(type === 'start'){
-      this.setState({
-        startTime:val
-      },()=>{
-        onChange([this.formatTime(this.state.startTime),this.formatTime(this.state.endTime)])
-      })
-    }else if(type === 'end'){
-      this.setState({
-        endTime:val
-      },()=>{
-        onChange([this.formatTime(this.state.startTime),this.formatTime(this.state.endTime)])
-      })
+    if (type === 'start') {
+      this.setState(
+        {
+          startTime: val
+        },
+        () => {
+          onChange([
+            this.formatTime(this.state.startTime),
+            this.formatTime(this.state.endTime)
+          ]);
+        }
+      );
+    } else if (type === 'end') {
+      this.setState(
+        {
+          endTime: val
+        },
+        () => {
+          onChange([
+            this.formatTime(this.state.startTime),
+            this.formatTime(this.state.endTime)
+          ]);
+        }
+      );
     }
-    // console.log(type,val)
   }
 
-  formatTime(momentTime){
-    let {format} = this.props
-    return moment(momentTime).format(format)
+  formatTime(momentTime) {
+    let {format} = this.props;
+    return momentTime ? moment(momentTime, ['hh:mm']).format(format) : '';
   }
 
-  render(){
-    let {format} = this.props
-    let {startTime, endTime} = this.state
-    return <InputGroup compact>
-      <TimePicker onChange={this.handleChange.bind(this,'start')} defaultValue={startTime} format={format}/>
-      <TimePicker onChange={this.handleChange.bind(this,'end')} defaultValue={endTime} format={format}/>
-    </InputGroup>
+  render() {
+    let { value, onChange, id, label, ...otherProps } = this.props;
+    let { startTime, endTime } = this.state;
+    return (
+      <InputGroup compact className='TimeRangePicker-compact'>
+        <TimePicker
+          {...otherProps}
+          onChange={this.hanldeChange.bind(this, 'start')}
+          value={startTime}
+        />
+        <TimePicker
+          {...otherProps}
+          onChange={this.hanldeChange.bind(this, 'end')}
+          value={endTime}
+        />
+      </InputGroup>
+    );
   }
-}
-
-TimeRangePicker.propTypes = {
-  value:PropTypes.array,
-  format:PropTypes.string,
-}
-TimeRangePicker.defaultProps = {
-  format:'YYYY-MM-DD'
 }

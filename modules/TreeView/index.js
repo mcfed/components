@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-import { Tree, Input, Button, TreeSelect } from "antd";
+import React, {Component} from 'react';
+import {Tree, Input, Button, TreeSelect} from 'antd';
 
 const Search = Input.Search;
-const { TreeNode, DirectoryTree } = Tree;
+const TreeNode = Tree.TreeNode;
+const DirectoryTree = Tree.DirectoryTree;
 
 export default class TreeView extends Component {
   // state = {
@@ -25,7 +26,7 @@ export default class TreeView extends Component {
   }
 
   loopTreeNode(data) {
-    let { renderItem } = this.props;
+    let {renderItem} = this.props;
     return data.map(item => {
       if (item.children && item.children.length) {
         return React.cloneElement(
@@ -50,8 +51,8 @@ export default class TreeView extends Component {
 
   onSelect = (selectedKeys, e, selectedNodes) => {
     // console.log(selectedKeys,e.node)
-    const { onSelect } = this.props;
-    this.setState({ selectedKeys });
+    const {onSelect} = this.props;
+    this.setState({selectedKeys});
     if (onSelect) {
       onSelect(e.node);
     }
@@ -73,32 +74,30 @@ export default class TreeView extends Component {
       defaultKey,
       scrollHeight
     } = this.props;
-    const { checkedKeys, expandedKeys } = this.state;
+    const {checkedKeys, expandedKeys} = this.state;
     // console.log(treeData)
     //style={{maxHeight:scrollHeight,overflowY:'auto',border:'1px solid #d9d9d9'}}
     return (
       <div
-        className="ant-tree-view"
+        className='ant-tree-view'
         style={
           scrollHeight
             ? {
                 maxHeight: scrollHeight,
-                overflowY: "auto",
-                border: "1px solid #d9d9d9"
+                overflowY: 'auto',
+                border: '1px solid #d9d9d9'
               }
             : {}
-        }
-      >
+        }>
         <Tree
-          defaultSelectedKeys={[checkedKeys]}
+          defaultSelectedKeys={checkedKeys}
           checkedKeys={checkedKeys}
           {...treeConfig}
           expandedKeys={expandedKeys}
-          className={isTreeInModal ? "tree-in-modal" : ""}
+          className={isTreeInModal ? 'tree-in-modal' : ''}
           onCheck={this.onCheck}
           onSelect={this.onSelect}
-          onExpand={this.onExpand}
-        >
+          onExpand={this.onExpand}>
           {this.loopTreeNode(treeData)}
         </Tree>
       </div>
@@ -115,7 +114,7 @@ export class TreeSelectPicker extends Component {
   }
   //
   onChange(value, label) {
-    const { onChange } = this.props;
+    const {onChange} = this.props;
     // console.log(value,label)
     this.setState(
       {
@@ -163,10 +162,10 @@ export class TreeSelectPicker extends Component {
 
 export class TrewViewPanel extends Component {
   state = {
-    key: "",
+    key: '',
     inside: false,
-    label: "",
-    value: ""
+    label: '',
+    value: ''
   };
   onSearch(value, event) {
     this.setState({
@@ -188,32 +187,33 @@ export class TrewViewPanel extends Component {
         item.children = this.filterTree(item.children, regexp);
       }
 
-      // console.log(item.title,regexp.test(item.title))
+      /* istanbul ignore next */
       return (
-        regexp.test(item.title) || (item.children && item.children.length > 0)
+        regexp.test(item.title) ||
+         (item.children && item.children.length > 0)
       );
     });
   }
   onMouseHandler(status) {
-    const { key, inside, label, value } = this.state;
-    if (label != "") {
+    const {key, inside, label, value} = this.state;
+    if (label != '') {
       this.setState({
         inside: !status
       });
     }
   }
   renderPanel() {
-    const { treeDataSource, renderNode } = this.props;
+    const {treeDataSource, renderNode} = this.props;
     // console.log(treeDataSource)
-    const { key, inside, label, value } = this.state;
+    const {key, inside, label, value} = this.state;
     if (inside) {
-      return <div className="">{label}</div>;
+      return <div className=''>{label}</div>;
     } else {
       return (
-        <div className="">
+        <div className=''>
           <Search
-            style={{ marginBottom: 8 }}
-            placeholder="Search"
+            style={{marginBottom: 8}}
+            placeholder='Search'
             onSearch={this.onSearch.bind(this)}
           />
           <TreeView
@@ -228,13 +228,13 @@ export class TrewViewPanel extends Component {
   }
   render() {
     // console.log(renderNode)
-    const { treeDataSource, renderNode } = this.props;
-    const { key, inside, label } = this.state;
+    const {treeDataSource, renderNode} = this.props;
+    const {key, inside, label} = this.state;
 
     return (
-      <div className="">
+      <div className=''>
         <Button onClick={this.onMouseHandler.bind(this, inside)}>
-          {!inside ? "收起" : "展开"}
+          {!inside ? '收起' : '展开'}
         </Button>
         {this.renderPanel()}
       </div>

@@ -1,79 +1,74 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Button, Spin } from "antd";
-import LocaleReceiver from "antd/lib/locale-provider/LocaleReceiver";
-import Locale from "./locale.js";
-import "./index.less";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {Button, Spin} from 'antd';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import Locale from './locale.js';
+import './index.less';
 
 export default class Panel extends Component {
   renderHeader() {
     let header;
-    const { prefixCls, title, extra } = this.props;
+    const {prefixCls, title, extra} = this.props;
     if (title || extra) {
       header = React.createElement(
-        "div",
-        { className: prefixCls + "-head" },
+        'div',
+        {className: prefixCls + '-head'},
         React.createElement(
-          "div",
-          { className: prefixCls + "-head-wrapper" },
+          'div',
+          {className: prefixCls + '-head-wrapper'},
           title &&
             React.createElement(
-              "div",
-              { className: prefixCls + "-head-title" },
+              'div',
+              {className: prefixCls + '-head-title'},
               title
             ),
           extra &&
-            React.createElement(
-              "div",
-              { className: prefixCls + "-extra" },
-              extra
-            )
+            React.createElement('div', {className: prefixCls + '-extra'}, extra)
         )
       );
     }
     return header;
   }
   renderBody() {
-    const { props } = this;
-    const { prefixCls } = this.props;
+    const {props} = this;
+    const {prefixCls} = this.props;
     return React.createElement(
-      "div",
-      { className: prefixCls + "-body" },
+      'div',
+      {className: prefixCls + '-body'},
       props.children
     );
   }
 
   renderFooterButton(locale) {
-    const { onOk, onCancel, confirmLoading } = this.props;
+    const {onOk, onCancel, confirmLoading} = this.props;
     return [
       <Button
-        key="submit"
+        key='submit'
         loading={confirmLoading}
         onClick={onOk}
-        type="primary"
-      >
+        type='primary'>
         {locale.okText}
       </Button>,
-      <Button key="cancel" onClick={onCancel}>
+      <Button key='cancel' onClick={onCancel}>
         {locale.cancelText}
       </Button>
     ];
   }
 
   renderFooterLocale(locale) {
-    const { props } = this;
+    const {props} = this;
     return props.footer ? props.footer() : this.renderFooterButton(locale);
   }
 
   renderFooter(locale) {
     let footer;
-    const { props } = this;
-    const { prefixCls } = this.props;
+    const {props} = this;
+    const {prefixCls} = this.props;
     const contextLocale = Object.assign({}, locale, this.props.locale);
     if (props.footer != false) {
       footer = React.createElement(
-        "div",
-        { className: prefixCls + "-footer" },
+        'div',
+        {className: prefixCls + '-footer'},
         this.renderFooterLocale(contextLocale)
       );
     } else {
@@ -82,17 +77,17 @@ export default class Panel extends Component {
     return footer;
   }
   render() {
-    const { prefixCls, loading, locale } = this.props;
+    const {prefixCls, loading, className} = this.props;
     return (
-      <div className={`${prefixCls}-wrapper`}>
+      <div className={`${prefixCls}-wrapper ${className}`}>
         <Spin spinning={loading}>
-          <div className={`${prefixCls}`}>
+          <div className={`${prefixCls} ${className}`}>
             {this.renderHeader()}
             {this.renderBody()}
             {React.createElement(
               LocaleReceiver,
               {
-                componentName: "Panel",
+                componentName: 'Panel',
                 defaultLocale: Locale
               },
               this.renderFooter.bind(this)
@@ -144,13 +139,18 @@ Panel.propTypes = {
   /**
   整个panel的loading状态，true时整个面板不能操作
   **/
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  /**
+   * Panel 增加自定义 className 名称，支持自定义样式 特殊化 使用
+   */
+  className: PropTypes.string
 };
 Panel.defaultProps = {
-  prefixCls: "ant-panel",
+  prefixCls: 'ant-panel',
   onOk: function() {},
   loading: false,
   onCancel: function() {},
-  title: "",
-  confirmLoading: false
+  title: '',
+  confirmLoading: false,
+  className: ''
 };
