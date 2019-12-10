@@ -109,7 +109,6 @@ class EditTable extends React.Component {
       if (error) {
         return;
       }
-      console.log(row)
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
@@ -122,7 +121,6 @@ class EditTable extends React.Component {
       } else {
         newData.push(row);
       }
-      console.log(newData)
       this.setState({ data: newData, editingKey: "" }, () => {
         this.props.onChange(newData);
       });
