@@ -15,66 +15,6 @@ const EditableRow = ({form, index, ...props}) => (
 
 const EditableFormRow = Form.create()(EditableRow);
 
-export class EditableCell extends React.Component {
-  onDoubleClick = td => {
-    const {record, changeColumnEditStatus} = this.props;
-    changeColumnEditStatus && changeColumnEditStatus(record, td.props);
-  };
-
-  render() {
-    const {
-      editing,
-      dataIndex,
-      title,
-      record,
-      index,
-      editDom,
-      editConfig,
-      editingStatus,
-      changeColumnEditStatus,
-      clickEditable,
-      ...restProps
-    } = this.props;
-    return (
-      <EditableContext.Consumer>
-        {form => {
-          const {getFieldDecorator} = form;
-          /* istanbul ignore next */
-          return (
-            <td
-              {...restProps}
-              onDoubleClick={
-                editing || editingStatus || !clickEditable
-                  ? () => {}
-                  : () => this.onDoubleClick(this)
-              }>
-              {editing ? (
-                <FormItem style={{margin: 0}}>
-                  {getFieldDecorator(dataIndex, {
-                    ...editConfig,
-                    initialValue:
-                      record[dataIndex] === ''
-                        ? editConfig && editConfig.initialValue
-                        : record[dataIndex]
-                  })(
-                    editingStatus ? (
-                      editDom()
-                    ) : (
-                      <React.Fragment>{restProps.children}</React.Fragment>
-                    )
-                  )}
-                </FormItem>
-              ) : (
-                restProps.children
-              )}
-            </td>
-          );
-        }}
-      </EditableContext.Consumer>
-    );
-  }
-}
-
 class EditTable extends React.Component {
   constructor(props) {
     super(props);
@@ -82,54 +22,7 @@ class EditTable extends React.Component {
       data: [],
       editingKey: '',
       keyList: [],
-      columns: [
-        {
-          title: '操作',
-          dataIndex: '操作',
-          render: (text, record) => {
-            const editable = this.isEditing(record);
-            return (
-              <div>
-                {editable ? (
-                  <span>
-                    <EditableContext.Consumer>
-                      {form => (
-                        <a
-                          onClick={() => this.save(form, record.key)}
-                          style={{marginRight: 8}}>
-                          保存
-                        </a>
-                      )}
-                    </EditableContext.Consumer>
-                    <EditableContext.Consumer>
-                      {form => (
-                        <Popconfirm
-                          title='确认取消?'
-                          onConfirm={() => this.cancel(form, record.key)}>
-                          <a>取消</a>
-                        </Popconfirm>
-                      )}
-                    </EditableContext.Consumer>
-                  </span>
-                ) : (
-                  <span>
-                    <a
-                      style={{marginRight: 8}}
-                      onClick={() => this.edit(record.key)}>
-                      编辑
-                    </a>
-                    <Popconfirm
-                      title='确认删除?'
-                      onConfirm={() => this.delete(record.key)}>
-                      <a>删除</a>
-                    </Popconfirm>
-                  </span>
-                )}
-              </div>
-            );
-          }
-        }
-      ]
+      columns: [ ]
     };
   }
   componentDidMount() {
@@ -216,20 +109,6 @@ class EditTable extends React.Component {
       if (error) {
         return;
       }
-
-      // 其他组件的验证条件,每一行的所有组件都要验证通过才可以保存
-      let flag = false;
-      this.props.columns.forEach(column => {
-        form.getFieldInstance(column.key) &&
-          form.getFieldInstance(column.key).validateFields &&
-          form.getFieldInstance(column.key).validateFields((error, value) => {
-            if (error) {
-              flag = true;
-            }
-          });
-      });
-      if (flag) return;
-
       const newData = [...this.state.data];
       const index = newData.findIndex(item => key === item.key);
       if (index > -1) {
@@ -239,17 +118,12 @@ class EditTable extends React.Component {
           ...row,
           key: item.key
         });
-        this.setState({data: newData, editingKey: ''}, () => {
-          this.props.onChange(newData);
-        });
       } else {
         newData.push(row);
-        this.setState({data: newData, editingKey: ''}, () => {
-          this.props.onChange(newData);
-        });
       }
-
-      this.revertStatus();
+      this.setState({ data: newData, editingKey: "" }, () => {
+        this.props.onChange(newData);
+      });
     });
   }
 
@@ -295,13 +169,51 @@ class EditTable extends React.Component {
 
     this.activeStatus();
   };
+
+  renderCell(text, record,cellConfig){
+    const {
+      dataIndex,
+      editComponent,
+      editConfig,
+    } = cellConfig;
+    const instance = this
+    const {mode} = this.props
+    return (<EditableContext.Consumer>
+        {form => {
+          const { getFieldDecorator } = form;
+          const component = editComponent(text, record, instance, form)
+          return (
+              <FormItem style={{ margin: 0 }}>
+                {getFieldDecorator(dataIndex, {
+                  ...editConfig,
+                  initialValue:
+                    record[dataIndex] === ""
+                      ? editConfig && editConfig.initialValue
+                      : record[dataIndex]
+                })(React.createElement(component.type, { ...component.props, ...(mode !== "row" ? { onChange: function (e) {
+                  // e is event
+                  if (e.target){
+                    form.setFieldsValue({[dataIndex]:e.target.value})
+                  }else{
+                    form.setFieldsValue({[dataIndex]:e})
+                  }
+                  instance.save(form, record.key)
+                  }}:{})}))}
+              </FormItem>
+          );
+        }}
+      </EditableContext.Consumer>)
+  }
+
   render() {
     const components = {
       body: {
         row: EditableFormRow,
-        cell: EditableCell
+        // cell: EditableCell
       }
     };
+    const {mode} = this.props
+    const instance = this
 
     const columns = this.state.columns.map(col => {
       if (!col.editComponent) {
@@ -310,17 +222,12 @@ class EditTable extends React.Component {
       /* istanbul ignore next */
       return {
         ...col,
-        onCell: record => ({
-          record,
-          editConfig: col.editConfig,
-          editDom: col.editComponent,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          editing: this.isEditing(record),
-          editingStatus: col.editingStatus,
-          changeColumnEditStatus: this.changeColumnEditStatus,
-          clickEditable: this.props.clickEditable
-        })
+        // onCellClick: (record,index)=>{
+        //   console.log(record,index)
+        // },
+        render:(text,row)=>{
+          return (mode==='full' || this.isEditing(row)) ? this.renderCell(text, row, col) : (col.render ? col.render(text, row, instance):text)
+        }
       };
     });
 
@@ -341,6 +248,10 @@ class EditTable extends React.Component {
   }
 }
 
+EditTable.defaultProps={
+  mode:"row"
+}
+
 EditTable.propTypes = {
   /**
   表格列配置
@@ -349,7 +260,8 @@ EditTable.propTypes = {
   /**
   数据数组
   **/
-  data: propTypes.array
+  data: propTypes.array,
+  mode: propTypes.oneOf(["full", "row"]),
 };
 
 export default EditTable;

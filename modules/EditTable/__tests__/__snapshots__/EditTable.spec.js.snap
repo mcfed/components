@@ -1,11 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`快照测试 EditableCell全页快照 1`] = `
-<ContextConsumer>
-  <Component />
-</ContextConsumer>
-`;
-
 exports[`快照测试 Editable全页快照 1`] = `
 <Table
   bordered={true}
@@ -27,17 +21,11 @@ exports[`快照测试 Editable全页快照 1`] = `
         "key": "address",
         "title": "住址",
       },
-      Object {
-        "dataIndex": "操作",
-        "render": [Function],
-        "title": "操作",
-      },
     ]
   }
   components={
     Object {
       "body": Object {
-        "cell": [Function],
         "row": [Function],
       },
     }

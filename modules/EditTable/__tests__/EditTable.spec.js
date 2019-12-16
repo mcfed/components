@@ -197,7 +197,7 @@ describe('editable method ', () => {
     //判断 是否删除 逻辑？
   });
 
-  it('editable true branch 测试', () => {
+  it.skip('editable true branch 测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const render = instance.state.columns.filter(
@@ -218,7 +218,7 @@ describe('editable method ', () => {
       .props.onConfirm();
   });
 
-  it('editable false branch 测试', () => {
+  it.skip('editable false branch 测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const render = instance.state.columns.filter(
@@ -422,44 +422,5 @@ describe('快照测试', () => {
     const {wrapper} = setup();
 
     expect(wrapper).toMatchSnapshot();
-  });
-
-  it('EditableCell全页快照', () => {
-    const {wrapper} = setupCell();
-
-    expect(wrapper).toMatchSnapshot();
-  });
-});
-
-describe('EditableCell 组件测试', () => {
-  it('onDoubleClick 方法测试', () => {
-    const {wrapper} = setupCell();
-    const instance = wrapper.instance();
-    instance.onDoubleClick();
-  });
-  it('onDoubleClick 方法测试，changeColumnEditStatus方法存在branch', () => {
-    const props = {
-      changeColumnEditStatus: jest.fn()
-    };
-    const {wrapper} = setupCell(props);
-    const instance = wrapper.instance();
-    const td = {
-      props: {}
-    };
-    instance.onDoubleClick(td);
-  });
-  it('render 方法测试', () => {
-    const props = {
-      editing: true,
-      dataIndex: 'name',
-      record: {
-        name: 'name'
-      }
-    };
-    const {wrapper} = setupCell(props);
-    const form = {
-      getFieldDecorator: () => jest.fn()
-    };
-    wrapper.props().children(form);
   });
 });
