@@ -15,12 +15,13 @@ stories.add(
   "基础使用(data为json)",
   () => {
     const dataSource = {
-      a: 1,
-      b: 2,
-      c: 3
+      '资产集合名称': '业务数据集合演示',
+      '集合类型': '敏感数据',
+      '资产类型': '表',
+      '资产目录': '敏感数据\电子病历'
     };
 
-    return <DetailTable mode="object" dataSource={dataSource} />;
+    return <DetailTable mode="object" dataSource={dataSource} columnNumber={3} title={'动态脱敏'}/>;
   },
   { notes: { markdown: md } }
 );
