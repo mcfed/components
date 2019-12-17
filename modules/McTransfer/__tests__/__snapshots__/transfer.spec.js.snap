@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`快照测试 全页快照 1`] = `
+<div
+  className="transfer"
+>
+  <SelectList
+    dataSource={Array []}
+    footer={[Function]}
+    handleSelect={[Function]}
+    itemUnit=""
+    itemsUnit=""
+    notFoundContent=""
+    render={[Function]}
+    rowHeight={1}
+    searchPlaceholder=""
+    selectedKeys={
+      Array [
+        "b",
+      ]
+    }
+    showHeader={true}
+    showSearch={false}
+    style={
+      Object {
+        "height": 300,
+        "width": 200,
+      }
+    }
+    titleText=""
+  />
+  <Operation
+    className="transfer-operation"
+    leftActive={false}
+    leftArrowText=""
+    moveToLeft={[Function]}
+    moveToRight={[Function]}
+    rightActive={true}
+    rightArrowText=""
+  />
+  <SelectList
+    dataSource={
+      Array [
+        Object {
+          "key": "a",
+        },
+      ]
+    }
+    footer={[Function]}
+    handleSelect={[Function]}
+    itemUnit=""
+    itemsUnit=""
+    notFoundContent=""
+    render={[Function]}
+    rowHeight={1}
+    searchPlaceholder=""
+    selectedKeys={Array []}
+    showHeader={true}
+    showSearch={false}
+    style={
+      Object {
+        "height": 300,
+        "width": 200,
+      }
+    }
+    titleText=""
+  />
+</div>
+`;

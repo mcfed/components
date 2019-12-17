@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`快照测试 全页快照 1`] = `
+<div
+  className=""
+>
+  <Button
+    disabled={false}
+    ghost={false}
+    loading={false}
+    onClick={[Function]}
+    prefixCls="ant-btn"
+    size="small"
+    type="primary"
+  >
+    <span>
+      <Icon
+        type="right"
+      />
+    </span>
+  </Button>
+  <Button
+    disabled={false}
+    ghost={false}
+    loading={false}
+    onClick={[Function]}
+    prefixCls="ant-btn"
+    size="small"
+    type="primary"
+  >
+    <span>
+      <Icon
+        type="left"
+      />
+    </span>
+  </Button>
+</div>
+`;
