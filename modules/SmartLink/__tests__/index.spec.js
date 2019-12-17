@@ -3,8 +3,10 @@ import { shallow, mount, render } from "enzyme";
 import { Link } from "react-router";
 import SmartLink from "../index";
 
-const setup = (children, props) => {
-  const wrapper = shallow(<SmartLink {...props}>{children}</SmartLink>);
+const setup = (children, props, context) => {
+  const wrapper = shallow(<SmartLink {...props}>{children}</SmartLink>, {
+    context
+  });
   return {
     wrapper,
     props
@@ -76,19 +78,103 @@ describe("smartlink unit case", () => {
     expect(params.to.mock.calls.length).toEqual(1);
   });
 
-  it.skip("smartlink hanldeclick event.preventDefault 调用", () => {
+  it("smartlink hanldeclick event.preventDefault 调用", () => {
     const { wrapper, props } = setup(<div />, {});
     const eventFn = jest.fn();
-    wrapper.instance().handleClick(eventFn);
-    expect(eventFn.mock.calls.length).toBe(1);
+    expect(wrapper.instance().handleClick({ defaultPrevented: eventFn })).toBe(
+      undefined
+    );
   });
 
-  it.skip("smartlink hanldeclick 若props传入onclick 则调用onclick", () => {
+  it("smartlink hanldeclick 若props传入onclick 则调用onclick", () => {
     const { wrapper, props } = setup(<div />, {
       onClick: jest.fn()
     });
     const eventFn = jest.fn();
-    wrapper.instance().handleClick(eventFn);
+    wrapper.instance().handleClick({ defaultPrevented: eventFn });
     expect(props.onClick.mock.calls.length).toBe(1);
+  });
+
+  it("smartlink hanldeclick 若props传入target 则调用event.preventDefault", () => {
+    const { wrapper, props } = setup(<div />, {
+      target: "tabs"
+    });
+    const eventFn = jest.fn();
+    wrapper.instance().handleClick({ preventDefault: eventFn });
+    expect(eventFn.mock.calls.length).toBe(1);
+  });
+
+  it("smartlink hanldeclick 若props传入target 直接return", () => {
+    const { wrapper, props } = setup(<div />, {
+      target: "tabs"
+    });
+    const eventFn = jest.fn();
+    expect(wrapper.instance().handleClick({ preventDefault: eventFn })).toBe(
+      undefined
+    );
+  });
+
+  it("smartlink hanldeclick 若props没传入target 则调用event.preventDefault 和router.push", () => {
+    const router = {
+      push: jest.fn(),
+      location: {
+        pathname: "/cde"
+      },
+      createHref: jest.fn()
+    };
+    const { wrapper, props } = setup(
+      <div />,
+      {
+        to: "aaa"
+      },
+      {
+        router: router
+      }
+    );
+    const eventFn = jest.fn();
+    wrapper.instance().handleClick({ preventDefault: eventFn });
+    expect(eventFn.mock.calls.length).toBe(1);
+    expect(router.push.mock.calls.length).toBe(1);
+  });
+});
+
+describe("router context 之前缺失test 补充", () => {
+  it("router 存在 to为false分支", () => {
+    const { wrapper, props } = setup(
+      <div />,
+      {
+        to: false,
+        isShow: true
+      },
+      {
+        router: {
+          location: {
+            pathname: "/cde"
+          }
+        }
+      }
+    );
+
+    expect(wrapper.find("a").prop("isShow")).toEqual(true);
+  });
+  it("router 存在 to为object分支", () => {
+    const router = {
+      location: {
+        pathname: "/cde"
+      },
+      createHref: jest.fn()
+    };
+    const { wrapper, props } = setup(
+      <div />,
+      {
+        to: "abc"
+      },
+      {
+        router: router
+      }
+    );
+
+    // expect(wrapper.prop("to")).toEqual("abc");
+    expect(router.createHref).toHaveBeenCalled();
   });
 });

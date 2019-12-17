@@ -1,20 +1,20 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Table, Icon, Checkbox, Button, Row, Col, Form } from "antd";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {Table, Icon, Checkbox, Button, Row, Col, Form} from 'antd';
 
-class TableMenu extends Component {
+export class TableMenu extends Component {
   state = {
     visible: true,
     columns: []
   };
   //请求远程数据接口
   componentWillMount() {
-    let { actions } = this.props;
+    let {actions} = this.props;
   }
   // //处理表格提交后动作
   handleOk() {
-    const { columns } = this.state;
-    const { onSelectChange, onClosePopup } = this.props;
+    const {columns} = this.state;
+    const {onSelectChange, onClosePopup} = this.props;
     //  console.log(columns)
     onSelectChange(columns);
     //  this.form.onSubmit()
@@ -22,13 +22,13 @@ class TableMenu extends Component {
   }
   saveFormRef = form => (this.form = form);
   handleSubmit(values) {
-    var { onSelectChange } = this.props;
+    var {onSelectChange} = this.props;
     this.setState({
       columns: values
     });
   }
   handleChange(values) {
-    const { onSelectChange } = this.props;
+    const {onSelectChange} = this.props;
     this.setState({
       columns: values
     });
@@ -54,34 +54,31 @@ class TableMenu extends Component {
     };
     return (
       <div
-        className=""
+        className=''
         style={{
           width: 400,
           height: 200,
-          padding: "10px",
-          border: "1px solid #cfdae5",
-          background: "#fff"
-        }}
-      >
-        <Form onSubmit={handleSubmit} ref={saveFormRef} layout="inline">
+          padding: '10px',
+          border: '1px solid #cfdae5',
+          background: '#fff'
+        }}>
+        <Form onSubmit={handleSubmit} ref={saveFormRef} layout='inline'>
           <Checkbox.Group
-            name="isShowArr"
-            style={{ width: "100%" }}
+            name='isShowArr'
+            style={{width: '100%'}}
             defaultValue={defaultValue}
-            onChange={this.handleChange.bind(this)}
-          >
+            onChange={this.handleChange.bind(this)}>
             <Row>
               {columns
                 .filter(it => {
-                  return it.title != "操作";
+                  return it.title != '操作';
                 })
                 .map((it, idx) => {
                   return (
                     <Col span={8} key={idx}>
                       <Checkbox
                         value={it.key}
-                        disabled={it.isRead == 1 ? true : false}
-                      >
+                        disabled={it.isRead == 1 ? true : false}>
                         {it.title}
                       </Checkbox>
                     </Col>
@@ -89,16 +86,15 @@ class TableMenu extends Component {
                 })}
             </Row>
           </Checkbox.Group>
-          <div style={{ textAlign: "right" }}>
-            <Button size="small" onClick={onClosePopup}>
+          <div style={{textAlign: 'right'}}>
+            <Button size='small' onClick={onClosePopup}>
               取消
             </Button>
             <Button
-              size="small"
-              type="primary"
+              size='small'
+              type='primary'
               onClick={this.handleOk.bind(this)}
-              style={{ marginLeft: "10px" }}
-            >
+              style={{marginLeft: '10px'}}>
               确定
             </Button>
           </div>
@@ -116,17 +112,17 @@ class DataTable extends Component {
   };
   static defaultProps = {
     page: {},
-    prefixCls: "ant-table",
+    prefixCls: 'ant-table',
     pagination: {
       showTotal: total => `共 ${total} 条`,
       // showQuickJumper:true,
-      size: "middle",
+      size: 'middle',
       showSizeChanger: true,
-      pageSizeOptions: ["10", "20", "50", "100"]
+      pageSizeOptions: ['10', '20', '50', '100']
     },
     //  scroll:{ y: 500 },
     style: {
-      width: "100%"
+      width: '100%'
     },
     showConfig: false,
     columns: []
@@ -141,7 +137,7 @@ class DataTable extends Component {
     this.state.columns = props.columns;
   }
   componentWillReceiveProps(nextProps) {
-    let { columns } = nextProps;
+    let {columns} = nextProps;
     this.setState({
       columns: columns
     });
@@ -173,11 +169,11 @@ class DataTable extends Component {
   }
 
   renderTableMenu() {
-    let { columns } = this.state;
+    let {columns} = this.state;
     var defaultValue = columns
       .filter(
         col =>
-          col.type != "config" &&
+          col.type != 'config' &&
           (col.visible === true || col.visible === undefined)
       )
       .map(col => col.key);
@@ -191,14 +187,8 @@ class DataTable extends Component {
     );
   }
   render() {
-    let {
-      pagination,
-      showConfig,
-      page,
-      defaultSort,
-      ...otherProps
-    } = this.props;
-    let { visible, columns } = this.state;
+    let {pagination, showConfig, page, defaultSort, ...otherProps} = this.props;
+    let {visible, columns} = this.state;
     let newColumns;
     // console.log(this.props,"datatablerender")
     if (showConfig) {
@@ -222,16 +212,19 @@ class DataTable extends Component {
       newColumns = columns;
     }
     /*增加是否有排序判断 增加列配置*/
+    // console.log("defaultSort", defaultSort);
     if (defaultSort) {
       newColumns = newColumns.map(it => {
         defaultSort.columnKey == it.dataIndex
-          ? (it = Object.assign(it, { defaultSortOrder: defaultSort.order }))
+          ? (it = Object.assign(it, {defaultSortOrder: defaultSort.order}))
           : null;
         return it;
       });
     }
+    // console.log("newColumns", newColumns);
     return (
       <Table
+        key={defaultSort && defaultSort.columnKey}
         {...otherProps}
         columns={newColumns}
         pagination={!pagination ? false : Object.assign({}, pagination, page)}
@@ -256,5 +249,4 @@ DataTable.propTypes = {
   defaultSort: PropTypes.object,
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
 };
-
 export default DataTable;

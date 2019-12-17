@@ -1,50 +1,50 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Tree, Card, Checkbox } from "antd";
-import './style.less'
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {Tree, Card, Checkbox} from 'antd';
+import './style.less';
 
-const { TreeNode } = Tree;
+const TreeNode = Tree.TreeNode;
 
-export default class TreeTile extends Component {
+class TreeTile extends Component {
   constructor(props) {
     super(props);
-    this.state ={
-      indeterminate:false,
+    this.state = {
+      indeterminate: false,
       checkAll: false,
-      dataSourceKeys:[],
-      defaultCheckedKeys:[]
-    }
+      dataSourceKeys: [],
+      checkedKeys: []
+    };
   }
 
   componentDidMount() {
-    let { dataSource } = this.props
-    let dataSourceKeys = this.getKeysFromMap(dataSource,[])
+    let {dataSource} = this.props;
+    let dataSourceKeys = this.getKeysFromMap(dataSource, []);
     this.setState({
       dataSourceKeys
     });
 
-    let { defaultCheckedKeys } = this.props;
-    if (defaultCheckedKeys instanceof Array) {
+    let {checkedKeys} = this.props;
+    if (checkedKeys instanceof Array) {
       this.setState({
-        defaultCheckedKeys
+        checkedKeys
       });
     } else {
       this.setState({
-        defaultCheckedKeys: []
+        checkedKeys: []
       });
-    } 
+    }
   }
 
-  getKeysFromMap = (data,dataSourceKeys) =>{
-    data.map((d) => {
-      if(!!d.children){
-        this.getKeysFromMap(d.children,dataSourceKeys)
+  getKeysFromMap = (data, dataSourceKeys) => {
+    data.map(d => {
+      if (!!d.children) {
+        this.getKeysFromMap(d.children, dataSourceKeys);
       }
-      dataSourceKeys.push(d.key)
-    })
-    return dataSourceKeys
-  }
-  
+      dataSourceKeys.push(d.key);
+    });
+    return dataSourceKeys;
+  };
+
   renderTreeNodes = data =>
     data.map(item => {
       if (item.children) {
@@ -56,44 +56,69 @@ export default class TreeTile extends Component {
       }
       return <TreeNode {...item} />;
     });
- 
 
-  onCheckAll  = (e) => {
-    let { dataSourceKeys } = this.state
-    this.setState({
-      defaultCheckedKeys: e.target.checked ? dataSourceKeys : [],
-      indeterminate: false,
-      checkAll: e.target.checked,
-    });
-  }
+  onCheckAll = e => {
+    let {dataSourceKeys} = this.state;
+    let checkedKeys = e.target.checked ? dataSourceKeys : [];
+    this.setState(
+      {
+        checkedKeys: checkedKeys,
+        indeterminate: false,
+        checkAll: e.target.checked
+      },
+      () => {
+        this.props.onChange(checkedKeys);
+      }
+    );
+  };
 
-  onCheck = checkedKeys  => {
-    let { dataSourceKeys } = this.state
-    this.setState({
-      defaultCheckedKeys: checkedKeys,
-      indeterminate: !!checkedKeys && checkedKeys.length!== 0 && checkedKeys.length < dataSourceKeys.length,
-      checkAll: !!checkedKeys && checkedKeys.length === dataSourceKeys.length,
-    });
+  onCheck = checkedKeys => {
+    let {dataSourceKeys} = this.state;
+    this.setState(
+      {
+        checkedKeys: checkedKeys,
+        indeterminate:
+          !!checkedKeys &&
+          checkedKeys.length !== 0 &&
+          checkedKeys.length < dataSourceKeys.length,
+        checkAll: !!checkedKeys && checkedKeys.length === dataSourceKeys.length
+      },
+      () => {
+        this.props.onChange(checkedKeys);
+      }
+    );
   };
 
   render() {
-    const {title, dataSource} = this.props 
-    let { defaultCheckedKeys } = this.state
-    
-    console.log(defaultCheckedKeys)
+    const {title, dataSource} = this.props;
+    let {checkedKeys} = this.state;
     return (
-      <Card size="small" title={title} extra={<Checkbox onChange={this.onCheckAll } indeterminate={this.state.indeterminate} checked={this.state.checkAll}>全选</Checkbox>} style={{ width: '100%' }}>
-         <Tree 
-            className="treeTile"            
-            name="tree"
+      <Card
+        size='small'
+        title={title}
+        extra={
+          <Checkbox
+            onChange={this.onCheckAll}
+            indeterminate={this.state.indeterminate}
+            checked={this.state.checkAll}>
+            全选
+          </Checkbox>
+        }
+        style={{width: '100%'}}>
+        {!!dataSource && dataSource.length > 0 ? (
+          <Tree
+            className='treeTile'
+            name='tree'
             checkable
             blockNode={false}
             defaultExpandAll
             onCheck={this.onCheck}
-            defaultCheckedKeys={defaultCheckedKeys}
-          >
+            checkedKeys={checkedKeys}>
             {this.renderTreeNodes(dataSource)}
           </Tree>
+        ) : (
+          <p className='treeNoData'>no data</p>
+        )}
       </Card>
     );
   }
@@ -101,12 +126,14 @@ export default class TreeTile extends Component {
 
 TreeTile.propTypes = {
   title: PropTypes.string,
-  defaultCheckedKeys: PropTypes.array,
+  checkedKeys: PropTypes.array,
   dataSource: PropTypes.array.isRequired
 };
 
 TreeTile.defaultProps = {
-  title: "请选择",
-  defaultCheckedKeys: [],
+  title: '请选择',
+  checkedKeys: [],
   dataSource: []
 };
+
+export default TreeTile;

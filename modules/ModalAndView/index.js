@@ -4,7 +4,7 @@ import { Modal } from "antd";
 class ModalAndView extends Component {
   handleBackRoute() {
     let { actions, history, router } = this.props;
-    //  actions.backRoute(router)
+    actions.backRoute(router);
   }
   handleSaveRoute() {
     let { formView } = this.refs;
