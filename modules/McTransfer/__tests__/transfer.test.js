@@ -77,7 +77,7 @@ const searchTransferProps = {
   rowHeight: 32
 };
 
-describe('Transfer', () => {
+describe.skip('Transfer', () => {
   it('should render correctly and should show sorted targetkeys', () => {
     const wrapper = render(<Transfer {...commonProps} />);
     expect(wrapper).toMatchSnapshot();
