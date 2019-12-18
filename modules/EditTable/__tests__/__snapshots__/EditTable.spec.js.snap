@@ -54,7 +54,7 @@ exports[`快照测试 Editable全页快照 1`] = `
   rowClassName="editable-row"
   rowKey="key"
   showHeader={true}
-  size="large"
+  size="default"
   useFixedHeader={false}
 />
 `;

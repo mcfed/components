@@ -14,8 +14,13 @@
     }
   },
   "umd/mcf-components.js": {
-    "bundled": 1505468,
-    "minified": 581198,
-    "gzipped": 158670
+    "bundled": 3009179,
+    "minified": 1460900,
+    "gzipped": 370623
+  },
+  "cjs/mcf-components.js": {
+    "bundled": 146284,
+    "minified": 79186,
+    "gzipped": 18661
   }
 }

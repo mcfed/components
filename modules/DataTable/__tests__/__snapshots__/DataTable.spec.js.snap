@@ -25,7 +25,7 @@ exports[`快照测试 DataTable 快照测试 1`] = `
   prefixCls="ant-table"
   rowKey="key"
   showHeader={true}
-  size="large"
+  size="default"
   style={
     Object {
       "width": "100%",

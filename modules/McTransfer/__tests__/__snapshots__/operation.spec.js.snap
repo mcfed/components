@@ -5,6 +5,7 @@ exports[`快照测试 全页快照 1`] = `
   className=""
 >
   <Button
+    block={false}
     disabled={false}
     ghost={false}
     loading={false}
@@ -20,6 +21,7 @@ exports[`快照测试 全页快照 1`] = `
     </span>
   </Button>
   <Button
+    block={false}
     disabled={false}
     ghost={false}
     loading={false}

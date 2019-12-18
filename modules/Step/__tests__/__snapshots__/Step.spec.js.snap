@@ -65,6 +65,7 @@ exports[`快照测试 全页快照 1`] = `
   />
   <ButtonGroup>
     <Button
+      block={false}
       ghost={false}
       loading={false}
       onClick={[Function]}
@@ -73,6 +74,7 @@ exports[`快照测试 全页快照 1`] = `
       下一步
     </Button>
     <Button
+      block={false}
       ghost={false}
       loading={false}
       onClick={[Function]}
