@@ -1,6 +1,6 @@
 {
   "name": "mcf-components",
-  "version": "v1.3.5",
+  "version": "1.4.0-rc1",
   "description": "@mcf for components",
   "main": "umd/mcf-components.js",
   "module": "cjs/mcf-components.js",
@@ -32,6 +32,8 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "7.0.0-beta.53",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^23.4.2",
     "babel-plugin-import": "^1.11.0",
@@ -58,10 +60,10 @@
     "rollup-plugin-visualizer": "^2.4.4",
     "source-map-explorer": "^2.0.1"
   },
+  "optionalDependencies": {
+    "antd": "3.9.0"
+  },
   "dependencies": {
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "antd": "3.5.1",
     "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
     "indexof": "^0.0.1",
