@@ -12,7 +12,7 @@ interface CollapsePanelState {
 interface CollapsePanelProps {
   title: string;
   renderable: boolean | Function;
-  control: React.ReactNode | React.ReactElement;
+  control: React.ReactElement;
   children: React.ReactNode;
   closeValues?: [];
 }
