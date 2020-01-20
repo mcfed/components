@@ -1,9 +1,9 @@
 import {shallow, mount, render} from 'enzyme';
 import React from 'react';
-import TreeTile from '../index';
-import {animationFrameScheduler} from 'rxjs';
+import TreeTile from '../index.tsx';
 
 const setup = props => {
+  const onChange = item => <div>{item}</div>;
   const wrapper = shallow(<TreeTile {...props} />);
   return {
     wrapper,

@@ -50,11 +50,16 @@ exports[`快照测试 Editable全页快照 1`] = `
   indentSize={20}
   loading={false}
   locale={Object {}}
-  prefixCls="ant-table"
   rowClassName="editable-row"
   rowKey="key"
   showHeader={true}
   size="default"
+  sortDirections={
+    Array [
+      "ascend",
+      "descend",
+    ]
+  }
   useFixedHeader={false}
 />
 `;
