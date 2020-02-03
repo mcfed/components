@@ -2,7 +2,7 @@ import { shallow, mount, render } from "enzyme";
 import React from "react";
 import { Tooltip } from "antd";
 
-import Ellipsis from "../index";
+import Ellipsis from "../index.tsx";
 
 const setup = props => {
   const wrapper = shallow(<Ellipsis {...props} />);
