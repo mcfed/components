@@ -117,6 +117,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     let {checkedKeys} = this.state;
     return (
       <Card
+        // @ts-ignore: 自定义属性，忽略检查
         size='small'
         title={title}
         extra={

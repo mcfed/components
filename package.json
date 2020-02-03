@@ -62,7 +62,7 @@
     "typescript": "^3.7.5"
   },
   "optionalDependencies": {
-    "antd": "3.15.0"
+    "antd": "3.9.0"
   },
   "dependencies": {
     "classnames": "^2.2.6",

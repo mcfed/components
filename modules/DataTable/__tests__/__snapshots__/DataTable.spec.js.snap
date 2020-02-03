@@ -26,12 +26,6 @@ exports[`快照测试 DataTable 快照测试 1`] = `
   rowKey="key"
   showHeader={true}
   size="default"
-  sortDirections={
-    Array [
-      "ascend",
-      "descend",
-    ]
-  }
   style={
     Object {
       "width": "100%",

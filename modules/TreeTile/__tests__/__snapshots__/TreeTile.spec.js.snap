@@ -7,6 +7,7 @@ exports[`快照测试 TreeTile 快照测试 1`] = `
       checked={false}
       indeterminate={false}
       onChange={[Function]}
+      prefixCls="ant-checkbox"
     >
       全选
     </Checkbox>
