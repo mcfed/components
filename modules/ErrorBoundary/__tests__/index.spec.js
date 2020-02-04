@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, enzyme, render } from "enzyme";
-import ErrorBoundary from "../index";
+import ErrorBoundary from "../index.tsx";
 
 const setup = (children, props) => {
   const wrapper = shallow(<ErrorBoundary {...props}>{children}</ErrorBoundary>);
