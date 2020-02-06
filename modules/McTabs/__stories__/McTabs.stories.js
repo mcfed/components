@@ -1,13 +1,15 @@
-import React, { PropTypes } from "react";
-import { storiesOf } from "@storybook/react";
-import { Input, Button } from "antd";
-import { BaseForm, FormItem, Panel } from "mcf-components";
+import React, {PropTypes} from 'react';
+import {storiesOf} from '@storybook/react';
+import {Input, Button} from 'antd';
+import BaseForm from '../../BaseForm';
+import FormItem from '../../FormItem';
+import Panel from '../../Panel';
 // import md from "../README.md";
 
-import McTabs from "../index";
+import McTabs from '../index';
 
-const stories = storiesOf("McTabs", module);
-stories.addParameters({ jest: ["McTabs.spec.js"] });
+const stories = storiesOf('McTabs', module);
+stories.addParameters({jest: ['McTabs.spec.js']});
 
 class Form1 extends React.Component {
   saveFormRef(form) {
@@ -15,29 +17,29 @@ class Form1 extends React.Component {
   }
   render() {
     return (
-      <BaseForm ref={this.saveFormRef.bind(this)} name="tab1">
+      <BaseForm ref={this.saveFormRef.bind(this)} name='tab1'>
         <FormItem>
           <Input
-            label="form1"
-            name="form1"
-            defaultValue=""
+            label='form1'
+            name='form1'
+            defaultValue=''
             rules={[
               {
                 required: true,
-                message: "必填1"
+                message: '必填1'
               }
             ]}
           />
         </FormItem>
         <FormItem>
           <Input
-            label="form2"
-            name="form2"
-            defaultValue=""
+            label='form2'
+            name='form2'
+            defaultValue=''
             rules={[
               {
                 required: true,
-                message: "必填2"
+                message: '必填2'
               }
             ]}
           />
@@ -52,16 +54,16 @@ class Form2 extends React.Component {
   }
   render() {
     return (
-      <BaseForm ref={this.saveFormRef.bind(this)} name="tab2">
+      <BaseForm ref={this.saveFormRef.bind(this)} name='tab2'>
         <FormItem>
           <Input
-            label="form2"
-            name="form2"
-            defaultValue=""
+            label='form2'
+            name='form2'
+            defaultValue=''
             rules={[
               {
                 required: true,
-                message: "必填2"
+                message: '必填2'
               }
             ]}
           />
@@ -76,16 +78,16 @@ class Form3 extends React.Component {
   }
   render() {
     return (
-      <BaseForm ref={this.saveFormRef.bind(this)} name="tab3">
+      <BaseForm ref={this.saveFormRef.bind(this)} name='tab3'>
         <FormItem>
           <Input
-            label="form3"
-            name="form3"
-            defaultValue=""
+            label='form3'
+            name='form3'
+            defaultValue=''
             rules={[
               {
                 required: true,
-                message: "必填3"
+                message: '必填3'
               }
             ]}
           />
@@ -95,23 +97,23 @@ class Form3 extends React.Component {
   }
 }
 
-const defaultActiveKey = "tab3";
+const defaultActiveKey = 'tab3';
 const tabsData = [
   {
-    text: "泰波一",
-    name: "tab1",
-    component: Form1,
+    text: '泰波一',
+    name: 'tab1',
+    component: Form1
     // disabled: true
   },
   {
-    text: "泰波二",
-    name: "tab2",
+    text: '泰波二',
+    name: 'tab2',
     // disabled: true,
     component: Form2
   },
   {
-    text: "泰波三",
-    name: "tab3",
+    text: '泰波三',
+    name: 'tab3',
     disabled: true,
     component: Form3
   }
@@ -168,19 +170,19 @@ const tabsData = [
 // }
 
 stories.add(
-  "基础使用",
+  '基础使用',
   () => {
     const myRef = React.createRef();
     const handleCancel = () => {
       // this.props.history.push('/')
-      console.log("cancel");
+      console.log('cancel');
     };
     const handleGonext = () => {
       // this.props.goRoutes('/')
-      console.log("gonext");
+      console.log('gonext');
     };
     const callback = e => {
-      console.log("切换到了" + e);
+      console.log('切换到了' + e);
     };
     const handleSubmit = values => {
       console.log(values);
@@ -188,10 +190,10 @@ stories.add(
     const renderFooter = () => {
       return (
         <React.Fragment>
-          <Button type="primary" onClick={() => myRef.current.handleSubmit()}>
+          <Button type='primary' onClick={() => myRef.current.handleSubmit()}>
             保存
           </Button>
-          <Button type="primary" onClick={handleGonext}>
+          <Button type='primary' onClick={handleGonext}>
             下一步
           </Button>
           <Button onClick={handleCancel}>取消</Button>

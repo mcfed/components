@@ -1,6 +1,7 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { FormItem, BaseForm } from "mcf-components";
+import React from 'react';
+import PropTypes from 'prop-types';
+import {FormItem} from '../FormItem';
+import {BaseForm} from '../BaseForm';
 // import {
 //   InputForm,
 //   SelectForm,
@@ -19,11 +20,11 @@ export default class DynamicForm extends React.Component {
   //   return map[item.component];
   // }
   render() {
-    const { formData, type, className, ...otherProp } = this.props;
+    const {formData, className, ...otherProp} = this.props;
     return (
       <BaseForm {...otherProp} className={className}>
         {formData.map(item => {
-          const { component, ...others } = item;
+          const {component, ...others} = item;
           // return <FormItem>{this.renderForm(item)}</FormItem>;
           return React.createElement(
             FormItem,
