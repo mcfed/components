@@ -4,7 +4,7 @@ import {Table, Form, Button, message} from 'antd';
 import './index.less';
 
 const FormItem = Form.Item;
-const EditableContext = React.createContext();
+const EditableContext = React.createContext({});
 
 /* istanbul ignore next */
 const EditableRow = ({form, index, ...props}) => (
@@ -15,16 +15,32 @@ const EditableRow = ({form, index, ...props}) => (
 
 const EditableFormRow = Form.create()(EditableRow);
 
-class EditTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      editingKey: '',
-      keyList: [],
-      columns: []
-    };
-  }
+declare type EditTableMode = 'full' | 'row';
+
+/**
+ * columns：表格列配置，必须
+ * data: 数据数组，必须
+ */
+interface EditTableProps {
+  columns: object[];
+  data: object[];
+  mode: EditTableMode;
+  onChange(data): void;
+}
+
+const initialState = {
+  data: [],
+  editingKey: '',
+  keyList: [],
+  columns: []
+};
+
+type State = typeof initialState;
+
+export default class EditTable extends React.Component<EditTableProps, State> {
+  static defaultProps = {
+    mode: 'row'
+  };
   componentDidMount() {
     /* istanbul ignore else */
     if (this.props.columns && this.props.columns.length > 0) {
@@ -143,6 +159,7 @@ class EditTable extends React.Component {
 
     this.revertStatus();
   };
+
   addNew = () => {
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行添加操作！');
@@ -176,7 +193,7 @@ class EditTable extends React.Component {
     const {mode} = this.props;
     return (
       <EditableContext.Consumer>
-        {form => {
+        {(form: {getFieldDecorator: Function; setFieldsValue: Function}) => {
           const {getFieldDecorator, setFieldsValue} = form;
           const component = editComponent(text, record, instance, form);
           return (
@@ -195,7 +212,7 @@ class EditTable extends React.Component {
                         onChange: function(e) {
                           // e is event
                           if (e.target) {
-                            setFieldsValue({[dataIndex]: e.target.value});
+                            setFieldsValue({[dataIndex]: e.target['value']});
                           } else {
                             setFieldsValue({[dataIndex]: e});
                           }
@@ -248,7 +265,7 @@ class EditTable extends React.Component {
         bordered
         dataSource={this.state.data}
         columns={columns}
-        rowClassName='editable-row'
+        rowClassName={(record: object, index: number) => 'editable-row'}
         footer={() => (
           <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
             新增
@@ -258,21 +275,3 @@ class EditTable extends React.Component {
     );
   }
 }
-
-EditTable.defaultProps = {
-  mode: 'row'
-};
-
-EditTable.propTypes = {
-  /**
-  表格列配置
-  **/
-  columns: propTypes.array.isRequired,
-  /**
-  数据数组
-  **/
-  data: propTypes.array,
-  mode: propTypes.oneOf(['full', 'row'])
-};
-
-export default EditTable;
