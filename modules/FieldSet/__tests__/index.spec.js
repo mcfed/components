@@ -2,7 +2,7 @@ import React from "react";
 import { shallow } from "enzyme";
 import toJson from "enzyme-to-json";
 import { Button } from "antd";
-import FieldSet, { UpDown, down, up } from "../index";
+import FieldSet, { UpDown, down, up } from "../index.tsx";
 
 const setup = props => {
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件
