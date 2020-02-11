@@ -1,5 +1,4 @@
 import React from 'react';
-import {Icon, Input} from 'antd';
 import PropTypes from 'prop-types';
 
 export default class Search extends React.Component {
