@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {FormItem} from '../FormItem';
-import {BaseForm} from '../BaseForm';
+import FormItem from '../FormItem';
+import BaseForm from '../BaseForm';
 // import {
 //   InputForm,
 //   SelectForm,
