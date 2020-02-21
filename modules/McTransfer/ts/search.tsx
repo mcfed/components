@@ -12,7 +12,7 @@ interface SearchProps {
   placeholder?: string;
   value?: any;
   prefixCls?: string;
-  onChange(e): void;
+  onChange(e: any): void;
   handleClear(): void;
   searchRender: any;
 }
@@ -25,7 +25,7 @@ export default class Search extends React.Component<SearchProps, State> {
   static defaultprops = {
     placeholder: ''
   };
-  handleChange = e => {
+  handleChange = (e: any) => {
     const onChange = this.props.onChange;
     /* istanbul ignore else */
     if (onChange) {
