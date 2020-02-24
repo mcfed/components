@@ -81,6 +81,8 @@ const initialState = {
   targetSelectedKeys: []
 };
 
+type DirectionType = 'left' | 'right';
+
 // Partial类型可以扩展state
 type State = Partial<typeof initialState>;
 
@@ -114,7 +116,7 @@ export default class Item extends React.Component<TransferProps, State> {
     this.initStateByProps(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: any) {
     /* istanbul ignore else */
     if (
       nextProps.dataSource.toString() !== this.props.dataSource.toString() ||
@@ -125,15 +127,15 @@ export default class Item extends React.Component<TransferProps, State> {
     }
   }
 
-  shouldComponentUpdate(...args) {
+  shouldComponentUpdate(...args: any) {
     return PureRenderMixin.shouldComponentUpdate.apply(this, args);
   }
 
-  getSelectedKeysName(direction) {
+  getSelectedKeysName(direction: DirectionType) {
     return direction === 'left' ? 'sourceSelectedKeys' : 'targetSelectedKeys';
   }
 
-  initStateByProps = (props, update?) => {
+  initStateByProps = (props: any, update?: any) => {
     const leftSource = [];
     const rightSrouce = new Array(props.targetKeys.length);
     const sourceSelectedKeys = [];
@@ -141,7 +143,7 @@ export default class Item extends React.Component<TransferProps, State> {
     const oldSourceSelectedKeys = this.state.sourceSelectedKeys;
     const oldTargetSelectedKeys = this.state.targetSelectedKeys;
 
-    props.dataSource.forEach(item => {
+    props.dataSource.forEach((item: any) => {
       /* istanbul ignore else */
       if (props.rowKey) {
         item.key = props.rowKey(item); // eslint-disable-line
@@ -177,7 +179,7 @@ export default class Item extends React.Component<TransferProps, State> {
 
     /* istanbul ignore else */
     if (props.selectedKeys) {
-      props.selectedKeys.forEach(key => {
+      props.selectedKeys.forEach((key: any) => {
         if (props.targetKeys.includes(key)) {
           targetSelectedKeys.push(key);
         } else {
@@ -194,7 +196,7 @@ export default class Item extends React.Component<TransferProps, State> {
     });
   };
 
-  handleSelect = (direction, selectedKeys) => {
+  handleSelect = (direction: DirectionType, selectedKeys: any[]) => {
     const leftKeys =
       direction === 'left' ? selectedKeys : this.state.sourceSelectedKeys;
     const rightKeys =
@@ -213,7 +215,7 @@ export default class Item extends React.Component<TransferProps, State> {
     }
   };
 
-  moveTo = direction => {
+  moveTo = (direction: DirectionType) => {
     /* istanbul ignore next */
     const {targetKeys = [], dataSource = [], onChange} = this.props;
     const {sourceSelectedKeys, targetSelectedKeys} = this.state;

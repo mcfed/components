@@ -32,7 +32,7 @@ interface ItemProps {
   renderedText?: string;
   renderedEl: React.ReactNode;
   checked?: boolean;
-  onClick(item): void;
+  onClick(item: object): void;
   prefixCls?: string;
   header?: any[];
   type: ItemType;
@@ -45,12 +45,12 @@ const initialState = {};
 type State = typeof initialState;
 
 export default class Item extends React.Component<ItemProps, State> {
-  shouldComponentUpdate(...args) {
+  shouldComponentUpdate(...args: object[]) {
     return PureRenderMixin.shouldComponentUpdate.apply(this, args);
   }
 
   //阻止select冒泡
-  stopPop = e => {
+  stopPop = (e: any) => {
     if (e && e.stopPropagation) {
       e.stopPropagation();
     } else if (window.event) {

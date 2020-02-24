@@ -107,7 +107,7 @@ export default class SelectList extends React.Component<
       this
     );
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: any) {
     /* istanbul ignore else */
     if (nextProps.dataSource !== this.props.dataSource) {
       if (this.state.filter !== '') {
@@ -119,7 +119,7 @@ export default class SelectList extends React.Component<
       }
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: any, nextState: any) {
     /* istanbul ignore else */
     if (
       this.shouldComponentUpdate(nextProps, nextState)
@@ -154,7 +154,7 @@ export default class SelectList extends React.Component<
     return 'part';
   }
 
-  handleSelect = selectedItem => {
+  handleSelect = (selectedItem: any) => {
     const {selectedKeys} = this.props;
     const hoder = [...selectedKeys];
     const index = hoder.indexOf(selectedItem.key);
@@ -166,7 +166,7 @@ export default class SelectList extends React.Component<
     this.props.handleSelect(hoder);
   };
 
-  handleSelectAll = checkAll => {
+  handleSelectAll = (checkAll: boolean) => {
     const {dataSource} = this.state;
     const {selectedKeys} = this.props;
     const hoder = [...selectedKeys];
@@ -192,14 +192,14 @@ export default class SelectList extends React.Component<
     this.props.handleSelect(hoder);
   };
 
-  handleFilterWapper = e => {
+  handleFilterWapper = (e: any) => {
     this.handleFilterWithDebounce(this.props.dataSource, e);
     this.setState({
       filter: e
     });
   };
 
-  matchFilter = (filter, item) => {
+  matchFilter = (filter: any, item: any) => {
     /* istanbul ignore else */
     if (this.props.filterOption) {
       return this.props.filterOption(filter, item);
@@ -208,7 +208,7 @@ export default class SelectList extends React.Component<
     return renderedText.indexOf(filter) >= 0;
   };
 
-  handleFilter = (dataSource, filter) => {
+  handleFilter = (dataSource: any[], filter: any) => {
     const showItems = [];
     dataSource.map(item => {
       /* istanbul ignore else */
@@ -237,7 +237,7 @@ export default class SelectList extends React.Component<
     });
   };
 
-  rowRenderer(record) {
+  rowRenderer(record: any) {
     const {_key, index, _isScrolling, _isVisible, _parent, style} = record;
     const {selectedKeys, header, type, rowKey, mode} = this.props;
     const item = this.state.dataSource[index];
@@ -268,7 +268,7 @@ export default class SelectList extends React.Component<
     );
   }
 
-  renderItem(item) {
+  renderItem(item: any) {
     /* istanbul ignore next */
     const {render = noop} = this.props;
     const renderResult = render(item);

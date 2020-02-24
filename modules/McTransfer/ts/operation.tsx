@@ -38,6 +38,7 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
       href=''
       type='primary'
       size='small'
+      // 3.16.3以下bug
       disabled={!leftActive}
       onClick={moveToLeft}>
       {
@@ -53,6 +54,7 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
       href=''
       type='primary'
       size='small'
+      // 3.16.3以下bug
       disabled={!rightActive}
       onClick={moveToRight}>
       {
