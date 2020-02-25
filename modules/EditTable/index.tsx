@@ -25,7 +25,7 @@ interface EditTableProps {
   columns: object[];
   data: object[];
   mode: EditTableMode;
-  onChange(data): void;
+  onChange(data: object): void;
 }
 
 const initialState = {
@@ -58,7 +58,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       );
     }
   }
-  componentWillReceiveProps(nextprops) {
+  componentWillReceiveProps(nextprops: any) {
     /* istanbul ignore else */
     if (this.props.data != nextprops.data) {
       this.setState({
@@ -66,11 +66,11 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       });
     }
   }
-  isEditing = record => {
+  isEditing = (record: any) => {
     return record.key === this.state.editingKey;
   };
 
-  edit = key => {
+  edit = (key: string) => {
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他编辑操作！');
       return false;
@@ -80,7 +80,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
   };
 
   // 双击td事件
-  editColumn = key => {
+  editColumn = (key: string) => {
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他编辑操作！');
       return false;
@@ -88,7 +88,10 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     this.setState({editingKey: key});
   };
 
-  changeColumnEditStatus = (record, tdObject) => {
+  changeColumnEditStatus = (
+    record: {key: string},
+    tdObject: {dataIndex: number}
+  ) => {
     this.editColumn(record.key);
     this.state.columns.map(item => {
       /* istanbul ignore else */
@@ -108,7 +111,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     this.state.columns.map(item => (item.editingStatus = true));
   }
 
-  delete(key) {
+  delete(key: string) {
     let newData = [...this.state.data];
     this.setState(
       {
@@ -120,8 +123,8 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       }
     );
   }
-  save(form, key) {
-    form.validateFields((error, row) => {
+  save(form: any, key: string) {
+    form.validateFields((error: any, row: object) => {
       if (error) {
         return;
       }
@@ -143,7 +146,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     });
   }
 
-  cancel = (form, key) => {
+  cancel = (form: any, key: string) => {
     let obj = this.state.data.filter(d => d.key === key)[0];
     let Bdelete = false;
     for (let b in obj) {
@@ -187,7 +190,15 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     this.activeStatus();
   };
 
-  renderCell(text, record, cellConfig) {
+  renderCell(
+    text: any,
+    record: any,
+    cellConfig: {
+      dataIndex: number;
+      editComponent: Function;
+      editConfig: {initialValue: any};
+    }
+  ) {
     const {dataIndex, editComponent, editConfig} = cellConfig;
     const instance = this;
     const {mode} = this.props;
@@ -249,7 +260,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
         // onCellClick: (record,index)=>{
         //   console.log(record,index)
         // },
-        render: (text, row) => {
+        render: (text: any, row: object) => {
           return mode === 'full' || this.isEditing(row)
             ? this.renderCell(text, row, col)
             : col.render
