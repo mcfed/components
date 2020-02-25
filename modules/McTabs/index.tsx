@@ -57,7 +57,7 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
       activeTabIndex: key
     });
   }
-  onChange = key => {
+  onChange = (key: string) => {
     this.setState({
       activeTabIndex: key
     });
@@ -75,7 +75,7 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
           {
             force: true
           },
-          (error, value) => {
+          (error: any, value: object) => {
             if (error) {
               errors.push({
                 tab: item.current.form.props.name,
@@ -95,7 +95,10 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
     }
     this.props.handleSubmit && this.props.handleSubmit(values);
   }
-  getTabPane(item, others) {
+  getTabPane(
+    item: {text: any; name: string; disabled: boolean; component: string},
+    others: object
+  ) {
     let ref = React.createRef();
     const {text, name, disabled, component} = item;
     this.myRef.push({ref: ref, disabled: disabled});

@@ -8,6 +8,8 @@ const ref = React.createRef();
  */
 interface MyStepsProps extends RouteComponentProps {
   steps: object[];
+  location: object;
+  history: any;
 }
 
 const initialState = {
@@ -24,7 +26,7 @@ class MySteps extends React.Component<MyStepsProps, State> {
   };
 
   componentWillMount() {
-    const currentStepRoute = this.props.location.pathname.slice(1);
+    const currentStepRoute = this.props.location['pathname'].slice(1);
 
     let currentStepNum = 1;
     this.props.steps.map((v: {path: string}, index) => {
@@ -39,7 +41,7 @@ class MySteps extends React.Component<MyStepsProps, State> {
     });
   }
 
-  goRoutes = step => {
+  goRoutes = (step: number) => {
     const {
       props: {steps}
     } = this;
