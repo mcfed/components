@@ -10,7 +10,7 @@ interface MyStepsProps {
   /**
     tab切换方法 配置，非必须
     **/
-  onChange(key: string): void;
+  onChange: (key: string) => void;
   /**
     tab数据 配置，必须
     **/
@@ -18,7 +18,7 @@ interface MyStepsProps {
   /**
     校验通过方法 配置，非必须
     **/
-  handleSubmit(values: object): void;
+  handleSubmit: (values: object) => void;
 }
 
 const initialState = {
