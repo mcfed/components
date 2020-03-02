@@ -25,7 +25,7 @@ interface EditTableProps {
   columns: object[];
   data: object[];
   mode: EditTableMode;
-  onChange(data: object): void;
+  onChange: (data: object) => void;
 }
 
 const initialState = {
