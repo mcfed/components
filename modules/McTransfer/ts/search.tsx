@@ -13,7 +13,7 @@ interface SearchProps {
   value?: any;
   prefixCls?: string;
   onChange(e: any): void;
-  handleClear(): void;
+  handleClear: () => void;
   searchRender: any;
 }
 

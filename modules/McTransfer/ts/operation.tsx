@@ -14,8 +14,8 @@ export function noop() {}
  */
 
 interface ItemProps {
-  moveToLeft(): void;
-  moveToRight(): void;
+  moveToLeft: () => void;
+  moveToRight: () => void;
   leftArrowText?: string;
   rightArrowText?: string;
   leftActive?: boolean;

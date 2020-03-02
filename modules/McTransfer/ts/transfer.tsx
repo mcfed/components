@@ -42,11 +42,16 @@ export function noop() {}
 
 interface TransferProps {
   dataSource: any[];
-  render(): void;
+  render: () => void;
   targetKeys?: any[];
   selectedKeys?: any[];
-  onChange(newTargetKeys, newTargetData, direction, newMoveKeys): void;
-  onSelectChange(leftKeys, rightKeys): void;
+  onChange: (
+    newTargetKeys: any[],
+    newTargetData: object,
+    direction: DirectionType,
+    newMoveKeys: any[]
+  ) => void;
+  onSelectChange: (leftKeys: any[], rightKeys: any[]) => void;
   listStyle: {
     height: number;
     width: string | number;
@@ -55,10 +60,10 @@ interface TransferProps {
   titles: any[];
   operations: any[];
   showSearch?: boolean;
-  filterOption(): void;
+  filterOption: () => void;
   rowHeight?: number;
-  footer(): React.ReactNode;
-  rowKey(): void;
+  footer: () => React.ReactNode;
+  rowKey: () => void;
   hideLeftSearch?: boolean;
   hideRightSearch?: boolean;
   locale: {
@@ -67,7 +72,7 @@ interface TransferProps {
     notFoundContent: string;
     searchPlaceholder: string;
   };
-  searchRender(): void;
+  searchRender: () => void;
   mode: ModeType;
   leftStyle?: object;
   rightStyle?: object;

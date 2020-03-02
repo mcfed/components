@@ -45,13 +45,13 @@ export function isRenderResultPlainObject(result) {
  */
 
 interface SelectListProps {
-  render(item): void;
-  searchRender(): void;
+  render: (item: object) => void;
+  searchRender: () => void;
   dataSource: any[];
   selectedKeys?: any[];
-  handleSelect(selectedKeys): void;
-  filterOption(ilter, item): void;
-  footer({}): React.ReactNode;
+  handleSelect: (selectedKeys: any[]) => void;
+  filterOption: (filter: any, item: object) => void;
+  footer: ({}) => React.ReactNode;
   showSearch: boolean;
   showHeader: boolean;
   itemUnit: string;
@@ -64,7 +64,7 @@ interface SelectListProps {
   };
   notFoundContent?: string;
   searchPlaceholder?: string;
-  rowKey(item): void;
+  rowKey: (item: object) => void;
   header: object[];
   type: ItemType;
   mode: ModeType;

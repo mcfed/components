@@ -32,7 +32,7 @@ interface ItemProps {
   renderedText?: string;
   renderedEl: React.ReactNode;
   checked?: boolean;
-  onClick(item: object): void;
+  onClick: (item: object) => void;
   prefixCls?: string;
   header?: any[];
   type: ItemType;
