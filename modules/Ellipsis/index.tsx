@@ -15,7 +15,7 @@ interface EllipsisProps {
  */
 export default class Ellipsis extends React.Component<EllipsisProps, {}> {
   static defaultProps = {
-    text: 'Ellipsis'
+    text: ''
   };
 
   render() {
