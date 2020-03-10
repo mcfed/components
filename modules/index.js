@@ -19,7 +19,7 @@ export DetailTable from './DetailTable';
 export FieldSet from './FieldSet';
 export ConditionForm from './ConditionForm';
 export ErrorBoundary from './ErrorBoundary';
-export Ellipsis from './Ellipsis';
+export Ellipsis from './Ellipsis/indexFun';
 export TimeRangePicker from './TimeRangePicker';
 export FormItemFixed from './FormItemFixed';
 export TreeTile from './TreeTile';
