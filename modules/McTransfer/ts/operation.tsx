@@ -35,7 +35,6 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
   } = props;
   const moveToLeftButton = (
     <Button
-      href=''
       type='primary'
       size='small'
       // 3.16.3以下bug
@@ -51,7 +50,6 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
   );
   const moveToRightButton = (
     <Button
-      href=''
       type='primary'
       size='small'
       // 3.16.3以下bug
