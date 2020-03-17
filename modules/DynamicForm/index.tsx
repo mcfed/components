@@ -11,10 +11,7 @@ interface DynamicFormProps {
   className?: string;
 }
 
-const initialState = {};
-
-type State = typeof initialState;
-
+interface State {}
 export default class DynamicForm extends React.Component<
   DynamicFormProps,
   State

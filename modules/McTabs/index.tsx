@@ -75,7 +75,7 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
           {
             force: true
           },
-          (error: any, value: object) => {
+          (error, value: object) => {
             if (error) {
               errors.push({
                 tab: item.current.form.props.name,
@@ -96,7 +96,7 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
     this.props.handleSubmit && this.props.handleSubmit(values);
   }
   getTabPane(
-    item: {text: any; name: string; disabled: boolean; component: string},
+    item: {text: string; name: string; disabled: boolean; component: string},
     others: object
   ) {
     let ref = React.createRef();
