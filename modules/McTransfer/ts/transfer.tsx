@@ -121,7 +121,7 @@ export default class Item extends React.Component<TransferProps, State> {
     this.initStateByProps(this.props);
   }
 
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps) {
     /* istanbul ignore else */
     if (
       nextProps.dataSource.toString() !== this.props.dataSource.toString() ||
@@ -132,7 +132,7 @@ export default class Item extends React.Component<TransferProps, State> {
     }
   }
 
-  shouldComponentUpdate(...args: any) {
+  shouldComponentUpdate(...args) {
     return PureRenderMixin.shouldComponentUpdate.apply(this, args);
   }
 
@@ -140,7 +140,7 @@ export default class Item extends React.Component<TransferProps, State> {
     return direction === 'left' ? 'sourceSelectedKeys' : 'targetSelectedKeys';
   }
 
-  initStateByProps = (props: any, update?: any) => {
+  initStateByProps = (props, update?: boolean) => {
     const leftSource = [];
     const rightSrouce = new Array(props.targetKeys.length);
     const sourceSelectedKeys = [];
@@ -148,7 +148,7 @@ export default class Item extends React.Component<TransferProps, State> {
     const oldSourceSelectedKeys = this.state.sourceSelectedKeys;
     const oldTargetSelectedKeys = this.state.targetSelectedKeys;
 
-    props.dataSource.forEach((item: any) => {
+    props.dataSource.forEach(item => {
       /* istanbul ignore else */
       if (props.rowKey) {
         item.key = props.rowKey(item); // eslint-disable-line
@@ -184,7 +184,7 @@ export default class Item extends React.Component<TransferProps, State> {
 
     /* istanbul ignore else */
     if (props.selectedKeys) {
-      props.selectedKeys.forEach((key: any) => {
+      props.selectedKeys.forEach((key: string) => {
         if (props.targetKeys.includes(key)) {
           targetSelectedKeys.push(key);
         } else {

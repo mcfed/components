@@ -107,7 +107,7 @@ export default class SelectList extends React.Component<
       this
     );
   }
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps) {
     /* istanbul ignore else */
     if (nextProps.dataSource !== this.props.dataSource) {
       if (this.state.filter !== '') {
@@ -119,7 +119,7 @@ export default class SelectList extends React.Component<
       }
     }
   }
-  shouldComponentUpdate(nextProps: any, nextState: any) {
+  shouldComponentUpdate(nextProps, nextState) {
     /* istanbul ignore else */
     if (
       this.shouldComponentUpdate(nextProps, nextState)
@@ -154,7 +154,7 @@ export default class SelectList extends React.Component<
     return 'part';
   }
 
-  handleSelect = (selectedItem: any) => {
+  handleSelect = (selectedItem: {key: string}) => {
     const {selectedKeys} = this.props;
     const hoder = [...selectedKeys];
     const index = hoder.indexOf(selectedItem.key);
@@ -192,14 +192,14 @@ export default class SelectList extends React.Component<
     this.props.handleSelect(hoder);
   };
 
-  handleFilterWapper = (e: any) => {
+  handleFilterWapper = e => {
     this.handleFilterWithDebounce(this.props.dataSource, e);
     this.setState({
       filter: e
     });
   };
 
-  matchFilter = (filter: any, item: any) => {
+  matchFilter = (filter: string, item) => {
     /* istanbul ignore else */
     if (this.props.filterOption) {
       return this.props.filterOption(filter, item);
@@ -208,7 +208,7 @@ export default class SelectList extends React.Component<
     return renderedText.indexOf(filter) >= 0;
   };
 
-  handleFilter = (dataSource: any[], filter: any) => {
+  handleFilter = (dataSource: any[], filter: string) => {
     const showItems = [];
     dataSource.map(item => {
       /* istanbul ignore else */
@@ -237,7 +237,7 @@ export default class SelectList extends React.Component<
     });
   };
 
-  rowRenderer(record: any) {
+  rowRenderer(record) {
     const {_key, index, _isScrolling, _isVisible, _parent, style} = record;
     const {selectedKeys, header, type, rowKey, mode} = this.props;
     const item = this.state.dataSource[index];
@@ -268,7 +268,7 @@ export default class SelectList extends React.Component<
     );
   }
 
-  renderItem(item: any) {
+  renderItem(item) {
     /* istanbul ignore next */
     const {render = noop} = this.props;
     const renderResult = render(item);
