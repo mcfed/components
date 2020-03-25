@@ -1,11 +1,12 @@
 import React from 'react';
-import Td from './td';
+// @ts-ignore
+import Td from './td.tsx';
 import './index.less';
 
-interface DetailProps {
-  mode: Array<any> | object;
+interface DetailProps<T = any> {
+  mode: 'array' | 'object';
   columnNumber: number;
-  dataSource: Array<any> | object;
+  dataSource: T[] | object;
   tableClass: string;
   title: string;
   labelKey: string;
@@ -22,13 +23,13 @@ export default class DetailTable extends React.Component<DetailProps, {}> {
   };
   showDom(dataSource: any) {
     let Data = [];
-    if (typeof this.props.mode === 'object' && Array.isArray(dataSource)) {
+    if (this.props.mode === 'object' && Array.isArray(dataSource)) {
       throw Error('使用对象模式，数据必须为object');
     }
-    if (!Array.isArray(dataSource) && typeof this.props.mode !== 'object') {
+    if (!Array.isArray(dataSource) && this.props.mode !== 'object') {
       throw Error('数据为对象时，mode需要为object');
     }
-    if (this.props.mode && typeof this.props.mode === 'object') {
+    if (this.props.mode && this.props.mode === 'object') {
       for (let a in dataSource) {
         Data.push({
           [this.props.labelKey]: a,
@@ -43,7 +44,7 @@ export default class DetailTable extends React.Component<DetailProps, {}> {
     if (columnNumber <= 0) {
       throw Error('列数必须大于0');
     }
-    let array: Array<any> = [];
+    let array: any[] = [];
     while (Data.length > 0) {
       let ar = [];
       for (let i = 0; i < columnNumber; i++) {
@@ -60,9 +61,9 @@ export default class DetailTable extends React.Component<DetailProps, {}> {
       }
       array.push(ar);
     }
-    return array.map((d: Array<any>, k: any) => (
+    return array.map((d: any[], k: any) => (
       <tr key={k}>
-        {d.map((c: Array<any>, v: any) => (
+        {d.map((c: any[], v: any) => (
           <Td
             key={v}
             dataSource={c}

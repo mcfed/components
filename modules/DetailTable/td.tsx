@@ -1,6 +1,12 @@
 import React, {useEffect} from 'react';
 
-const Td = ({dataSource, labelKey, valueKey}) => {
+interface TdProps<T = any> {
+  dataSource: T[] | T;
+  labelKey: string;
+  valueKey: string;
+}
+
+const Td = ({dataSource, labelKey, valueKey}: TdProps) => {
   useEffect(() => {}, [dataSource, labelKey, labelKey]);
 
   labelKey = dataSource[labelKey];
