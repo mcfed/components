@@ -23,7 +23,6 @@ export {default as Ellipsis} from './Ellipsis/indexFun';
 export {default as TimeRangePicker} from './TimeRangePicker';
 export {default as FormItemFixed} from './FormItemFixed';
 export {default as TreeTile} from './TreeTile';
-
 export {default as CollapsePanel} from './CollapsePanel';
 
 export {default as Step} from './Step';
