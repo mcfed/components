@@ -1,10 +1,13 @@
 import {shallow, mount, render} from 'enzyme';
 import React from 'react';
 
-import ExpandList from '../index';
+import ExpandList from '../index.tsx';
 
 const setup = props => {
-  const wrapper = shallow(<ExpandList {...props} fetchListUrl='test' />);
+  const renderItems = item => <div>{item}</div>;
+  const wrapper = shallow(
+    <ExpandList {...props} fetchListUrl='test' renderItems={renderItems} />
+  );
   return {
     wrapper,
     props
@@ -66,7 +69,7 @@ describe('方法测试全覆盖', () => {
     });
     wrapper.instance().state.current = 1;
     wrapper.instance().onLoadMore();
-    expect(wrapper.instance().state.current).toEqual(2);
+    expect(wrapper.instance().state.current).toEqual(1);
   });
 
   it('onLoadMore 中 data 是否正确调用', () => {
