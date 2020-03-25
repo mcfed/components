@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
+    "outDir": "./lib",
+    "module": "es6",
+    "moduleResolution": "node",
     "target": "es5",
-    "lib": [],
+    "lib": ["es5", "dom", "es6", "esnext"],
     "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
     "noEmit": true,
     "jsx": "react"
   },
-  "include": ["src"]
+  "include": ["modules"]
 }

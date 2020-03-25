@@ -1,11 +1,20 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, FunctionComponent} from 'react';
 import {Tooltip} from 'antd';
 import './index.less';
+
+interface EllipsisProps {
+  text: string;
+  tooltiptext?: string;
+}
 
 /**
  * 超出截断
  */
-const Ellipsis = ({text, tooltiptext}) => {
+const Ellipsis: FunctionComponent<EllipsisProps> = ({
+  text,
+  tooltiptext,
+  ...otherProps
+}) => {
   useEffect(() => {}, [text, tooltiptext]);
   if (typeof tooltiptext === 'undefined') {
     tooltiptext = text;

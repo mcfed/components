@@ -7,10 +7,11 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import localResolve from 'rollup-plugin-local-resolve';
 import notify from 'rollup-plugin-notify';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
+import typescript from '@rollup/plugin-typescript';
 
 import pkg from './package.json';
 const name = 'components';
-const input = './modules/index';
+const input = './modules/index.ts';
 
 const globals = {
   react: 'React',
@@ -42,6 +43,7 @@ export default [
     output: {file: `cjs/${pkg.name}.js`, format: 'cjs', name, globals},
     external: Object.keys(globals),
     plugins: [
+      typescript(),
       // nodeResolve(),
       babel(babelOptionsESM),
       commonjs(commonjsOptions),
@@ -58,6 +60,7 @@ export default [
     output: {file: `umd/${pkg.name}.js`, format: 'umd', name, globals},
     external: Object.keys(globals),
     plugins: [
+      typescript(),
       nodeResolve(),
       postcss({
         autoModules: false,
