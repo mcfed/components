@@ -1,19 +1,42 @@
 import React from 'react';
-import {Tabs} from 'antd';
-import PropTypes from 'prop-types';
-const {TabPane} = Tabs;
+import MyTabs from './tabs';
+const {TabPane} = MyTabs;
 
-export default class McTabs extends React.Component {
-  constructor(props) {
-    super();
-    this.myRef = [];
-    this.state = {
-      activeTabIndex: props.defaultActiveKey || ''
-    };
-  }
+interface MyStepsProps {
+  /**
+    默认选中tab 配置，非必须
+    **/
+  defaultActiveKey?: string;
+  /**
+    tab切换方法 配置，非必须
+    **/
+  onChange: (key: string) => void;
+  /**
+    tab数据 配置，必须
+    **/
+  tabsData: any[];
+  /**
+    校验通过方法 配置，非必须
+    **/
+  handleSubmit: (values: object) => void;
+}
+
+const initialState = {
+  activeTabIndex: ''
+};
+
+type State = typeof initialState;
+
+export default class MySteps extends React.Component<MyStepsProps, State> {
+  myRef = [];
+  static defaultProps = {
+    steps: []
+  };
+
   componentWillMount() {
     this.setActiveKey();
   }
+
   setActiveKey() {
     // 如果设置的defaultActiveKey状态为disabled或者没设置defaultActiveKey，则展示第一个非disabled的tab.
     const {tabsData} = this.props;
@@ -34,7 +57,7 @@ export default class McTabs extends React.Component {
       activeTabIndex: key
     });
   }
-  onChange = key => {
+  onChange = (key: string) => {
     this.setState({
       activeTabIndex: key
     });
@@ -52,7 +75,7 @@ export default class McTabs extends React.Component {
           {
             force: true
           },
-          (error, value) => {
+          (error, value: object) => {
             if (error) {
               errors.push({
                 tab: item.current.form.props.name,
@@ -72,7 +95,10 @@ export default class McTabs extends React.Component {
     }
     this.props.handleSubmit && this.props.handleSubmit(values);
   }
-  getTabPane(item, others) {
+  getTabPane(
+    item: {text: string; name: string; disabled: boolean; component: string},
+    others: object
+  ) {
     let ref = React.createRef();
     const {text, name, disabled, component} = item;
     this.myRef.push({ref: ref, disabled: disabled});
@@ -87,32 +113,9 @@ export default class McTabs extends React.Component {
     const {onChange, tabsData, ...others} = this.props;
     const {activeTabIndex} = this.state;
     return (
-      <Tabs name='tab' activeKey={activeTabIndex} onChange={this.onChange}>
+      <MyTabs name='tab' activeKey={activeTabIndex} onChange={this.onChange}>
         {tabsData.map(item => this.getTabPane(item, others))}
-      </Tabs>
+      </MyTabs>
     );
   }
 }
-
-McTabs.propTypes = {
-  /**
-  默认选中tab 配置
-  **/
-  defaultActiveKey: PropTypes.string,
-  /**
-  tab切换方法 配置
-  **/
-  onChange: PropTypes.func,
-  /**
-  tab数据 配置
-  **/
-  tabsData: PropTypes.array,
-  /**
-  校验通过方法 配置
-  **/
-  handleSubmit: PropTypes.func
-  /**
-  ref指向 配置， 需要初始化 myRef = React.createRef()
-  **/
-  // ref: PropTypes.Object
-};
