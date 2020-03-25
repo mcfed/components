@@ -1,6 +1,7 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import {Table, Form, Button, message} from 'antd';
+import {WrappedFormUtils} from 'antd/lib/form/Form';
 import './index.less';
 
 const FormItem = Form.Item;
@@ -28,14 +29,17 @@ interface EditTableProps {
   onChange: (data: object) => void;
 }
 
-const initialState = {
-  data: [],
-  editingKey: '',
-  keyList: [],
-  columns: []
-};
+interface State {
+  data: any[];
+  editingKey: string;
+  keyList: any[];
+  columns: any[];
+}
 
-type State = typeof initialState;
+interface ParamsObject {
+  data?: any[];
+  key?: string;
+}
 
 export default class EditTable extends React.Component<EditTableProps, State> {
   static defaultProps = {
@@ -58,7 +62,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       );
     }
   }
-  componentWillReceiveProps(nextprops: any) {
+  componentWillReceiveProps(nextprops: ParamsObject) {
     /* istanbul ignore else */
     if (this.props.data != nextprops.data) {
       this.setState({
@@ -66,7 +70,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       });
     }
   }
-  isEditing = (record: any) => {
+  isEditing = (record: ParamsObject) => {
     return record.key === this.state.editingKey;
   };
 
@@ -90,7 +94,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
 
   changeColumnEditStatus = (
     record: {key: string},
-    tdObject: {dataIndex: number}
+    tdObject: {dataIndex: string}
   ) => {
     this.editColumn(record.key);
     this.state.columns.map(item => {
@@ -123,8 +127,8 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       }
     );
   }
-  save(form: any, key: string) {
-    form.validateFields((error: any, row: object) => {
+  save(form: WrappedFormUtils, key: string) {
+    form.validateFields((error, row) => {
       if (error) {
         return;
       }
@@ -146,7 +150,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     });
   }
 
-  cancel = (form: any, key: string) => {
+  cancel = (form: WrappedFormUtils, key: string) => {
     let obj = this.state.data.filter(d => d.key === key)[0];
     let Bdelete = false;
     for (let b in obj) {
@@ -191,12 +195,12 @@ export default class EditTable extends React.Component<EditTableProps, State> {
   };
 
   renderCell(
-    text: any,
-    record: any,
+    text,
+    record,
     cellConfig: {
-      dataIndex: number;
       editComponent: Function;
-      editConfig: {initialValue: any};
+      dataIndex: string;
+      editConfig;
     }
   ) {
     const {dataIndex, editComponent, editConfig} = cellConfig;
@@ -204,7 +208,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     const {mode} = this.props;
     return (
       <EditableContext.Consumer>
-        {(form: {getFieldDecorator: Function; setFieldsValue: Function}) => {
+        {(form: WrappedFormUtils) => {
           const {getFieldDecorator, setFieldsValue} = form;
           const component = editComponent(text, record, instance, form);
           return (
