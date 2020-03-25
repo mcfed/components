@@ -62,7 +62,7 @@
     "rollup-plugin-uglify": "^6.0.2",
     "rollup-plugin-visualizer": "^2.4.4",
     "source-map-explorer": "^2.0.1",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.5"
   },
   "optionalDependencies": {
     "antd": "3.9.0"

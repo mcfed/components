@@ -1294,10 +1294,12 @@ array-ify@^1.0.0:
 array-tree-filter@^1.0.0:
   version "1.0.1"
   resolved "http://192.168.200.178:4873/array-tree-filter/-/array-tree-filter-1.0.1.tgz#0a8ad1eefd38ce88858632f9cc0423d7634e4d5d"
+  integrity sha1-CorR7v04zoiFhjL5zAQj12NOTV0=
 
 array-tree-filter@^2.0.0:
   version "2.1.0"
   resolved "http://192.168.200.178:4873/array-tree-filter/-/array-tree-filter-2.1.0.tgz#873ac00fec83749f255ac8dd083814b4f6329190"
+  integrity sha512-4ROwICNlNw/Hqa9v+rk5h22KjmzB1JGTMVKP2AKJBOCgb0yL0ASf0+YvCcLNNwquOHNX48jkeZIJ3a+oOQqKcw==
 
 array-union@^1.0.1, array-union@^1.0.2:
   version "1.0.2"
@@ -1793,6 +1795,7 @@ btoa@^1.2.1:
 buffer-from@1.x, buffer-from@^1.0.0:
   version "1.1.1"
   resolved "http://192.168.200.178:4873/buffer-from/-/buffer-from-1.1.1.tgz#32713bc028f75c02fdb710d7c7bcec1f2c6070ef"
+  integrity sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
 
 buffer-xor@^1.0.3:
   version "1.0.3"
@@ -2252,6 +2255,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
 create-react-class@^15.5.2, create-react-class@^15.5.3, create-react-class@^15.6.0:
   version "15.6.3"
   resolved "http://192.168.200.178:4873/create-react-class/-/create-react-class-15.6.3.tgz#2d73237fb3f970ae6ebe011a9e66f46dbca80036"
+  integrity sha512-M+/3Q6E6DLO6Yx3OwrWjwHBnvfXXYA7W+dFjt/ZDBemHO1DDZhsalX/NUtnTYclN6GfnBDRh4qRHjcDHmlJBJg==
   dependencies:
     fbjs "^0.8.9"
     loose-envify "^1.3.1"
@@ -2320,9 +2324,17 @@ crypto-browserify@^3.11.0:
     randombytes "^2.0.0"
     randomfill "^1.0.3"
 
-css-animation@1.x, css-animation@^1.2.5, css-animation@^1.3.2:
+css-animation@1.x, css-animation@^1.3.2:
   version "1.5.0"
   resolved "http://192.168.200.178:4873/css-animation/-/css-animation-1.5.0.tgz#c96b9097a5ef74a7be8480b45cc44e4ec6ca2bf5"
+  dependencies:
+    babel-runtime "6.x"
+    component-classes "^1.2.5"
+
+css-animation@^1.2.5:
+  version "1.6.1"
+  resolved "http://192.168.200.178:4873/css-animation/-/css-animation-1.6.1.tgz#162064a3b0d51f958b7ff37b3d6d4de18e17039e"
+  integrity sha1-FiBko7DVH5WLf/N7PW1N4Y4XA54=
   dependencies:
     babel-runtime "6.x"
     component-classes "^1.2.5"
@@ -2828,6 +2840,7 @@ enhanced-resolve@^4.1.0:
 enquire.js@^2.1.1, enquire.js@^2.1.6:
   version "2.1.6"
   resolved "http://192.168.200.178:4873/enquire.js/-/enquire.js-2.1.6.tgz#3e8780c9b8b835084c3f60e166dbc3c2a3c89814"
+  integrity sha1-PoeAybi4NQhMP2DhZtvDwqPImBQ=
 
 entities@^1.1.1, entities@~1.1.1:
   version "1.1.2"
@@ -4031,6 +4044,7 @@ is-module@^1.0.0:
 is-negative-zero@^2.0.0:
   version "2.0.0"
   resolved "http://192.168.200.178:4873/is-negative-zero/-/is-negative-zero-2.0.0.tgz#9553b121b0fac28869da9ed459e20c7543788461"
+  integrity sha1-lVOxIbD6wohp2p7UWeIMdUN4hGE=
 
 is-number-object@^1.0.3:
   version "1.0.3"
@@ -4934,6 +4948,7 @@ lodash.keys@^3.1.2:
 lodash.memoize@4.x, lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "http://192.168.200.178:4873/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
+  integrity sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=
 
 lodash.sortby@^4.7.0:
   version "4.7.0"
@@ -5286,6 +5301,7 @@ mixin-deep@^1.2.0:
 mkdirp@0.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@~0.5.1:
   version "0.5.1"
   resolved "http://192.168.200.178:4873/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
+  integrity sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   dependencies:
     minimist "0.0.8"
 
@@ -6484,7 +6500,7 @@ rc-align@^2.4.0, rc-align@^2.4.1:
     prop-types "^15.5.8"
     rc-util "^4.0.4"
 
-rc-animate@2.x, rc-animate@^2.3.0, rc-animate@^2.4.1:
+rc-animate@2.x, rc-animate@^2.3.0:
   version "2.8.3"
   resolved "http://192.168.200.178:4873/rc-animate/-/rc-animate-2.8.3.tgz#80d45402f35d3617276fc14810fb8a635fe90dc0"
   dependencies:
@@ -6495,7 +6511,7 @@ rc-animate@2.x, rc-animate@^2.3.0, rc-animate@^2.4.1:
     raf "^3.4.0"
     react-lifecycles-compat "^3.0.4"
 
-rc-animate@^2.10.1:
+rc-animate@^2.10.1, rc-animate@^2.4.1:
   version "2.10.2"
   resolved "http://192.168.200.178:4873/rc-animate/-/rc-animate-2.10.2.tgz#217fdc76ff26cbf425a5caf87cc8a36ba4598456"
   integrity sha512-cE/A7piAzoWFSgUD69NmmMraqCeqVBa51UErod8NS3LUEqWfppSVagHfa0qHAlwPVPiIBg3emRONyny3eiH0Dg==
@@ -6612,6 +6628,7 @@ rc-editor-core@~0.8.3:
 rc-editor-mention@^1.0.2:
   version "1.1.13"
   resolved "http://192.168.200.178:4873/rc-editor-mention/-/rc-editor-mention-1.1.13.tgz#9f1cab1065f86b01523840321790c2ab12ac5e8b"
+  integrity sha1-nxyrEGX4awFSOEAyF5DCqxKsXos=
   dependencies:
     babel-runtime "^6.23.0"
     classnames "^2.2.5"
@@ -6623,8 +6640,9 @@ rc-editor-mention@^1.0.2:
     rc-editor-core "~0.8.3"
 
 rc-form@^2.1.0:
-  version "2.4.8"
-  resolved "http://192.168.200.178:4873/rc-form/-/rc-form-2.4.8.tgz#79a1f124d4fa81dff2af2992e94aa3e58cad683c"
+  version "2.4.11"
+  resolved "http://192.168.200.178:4873/rc-form/-/rc-form-2.4.11.tgz#61ee3ae579259684ae30f2c48f55f0f23a5d3d08"
+  integrity sha512-8BL+FNlFLTOY/A5X6tU35GQJLSIpsmqpwn/tFAYQTczXc4dMJ33ggtH248Cum8+LS0jLTsJKG2L4Qp+1CkY+sA==
   dependencies:
     async-validator "~1.11.3"
     babel-runtime "6.x"
@@ -6632,6 +6650,7 @@ rc-form@^2.1.0:
     dom-scroll-into-view "1.x"
     hoist-non-react-statics "^3.3.0"
     lodash "^4.17.4"
+    rc-util "^4.15.3"
     warning "^4.0.3"
 
 rc-hammerjs@~0.6.0:
@@ -6645,6 +6664,7 @@ rc-hammerjs@~0.6.0:
 rc-input-number@~4.0.0:
   version "4.0.13"
   resolved "http://192.168.200.178:4873/rc-input-number/-/rc-input-number-4.0.13.tgz#18ac305bf07b6771ad0e4edc97b1e1bbb9b71918"
+  integrity sha512-IaFEomBmAn0Lyurxn7DvgmpIaS+asa3DY4rX8x4qscRiBvEMPr8b17lUkc5xI2ajXa/m0fx0zYcq4bPHAIS7fQ==
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.0"
@@ -6705,6 +6725,7 @@ rc-pagination@~1.17.0:
 rc-progress@~2.2.2:
   version "2.2.7"
   resolved "http://192.168.200.178:4873/rc-progress/-/rc-progress-2.2.7.tgz#e650928c83f54da876f39b957a680afa01b490f8"
+  integrity sha512-uLHHpQO4/yFa/AX6Uw2dJFUIfAkfI6430h0a1XJX/A0Ja0wmuwjEa03biuKfKwwqz2skFiAaXco1GlgaJK9mKA==
   dependencies:
     babel-runtime "6.x"
     prop-types "^15.5.8"
@@ -6712,6 +6733,7 @@ rc-progress@~2.2.2:
 rc-rate@~2.4.0:
   version "2.4.3"
   resolved "http://192.168.200.178:4873/rc-rate/-/rc-rate-2.4.3.tgz#70434905faf84c9a0694bec4bdbd9b9a9099318f"
+  integrity sha512-MyE0toUYgAFpy4ONbammAkktwlPmmoOAazWWmae8iz2KaJ4Pj3itN1DgAcamfIdpyDe97drldY2l7AvCg1fUSQ==
   dependencies:
     babel-runtime "^6.26.0"
     classnames "^2.2.5"
@@ -6740,6 +6762,7 @@ rc-select@~8.2.3:
 rc-slider@~8.6.0:
   version "8.6.13"
   resolved "http://192.168.200.178:4873/rc-slider/-/rc-slider-8.6.13.tgz#88a8150c2dda6709f3f119135de11fba80af765b"
+  integrity sha1-iKgVDC3aZwnz8RkTXeEfuoCvdls=
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.5"
@@ -6811,6 +6834,7 @@ rc-time-picker@~3.4.0:
 rc-tooltip@^3.7.0, rc-tooltip@~3.7.0:
   version "3.7.3"
   resolved "http://192.168.200.178:4873/rc-tooltip/-/rc-tooltip-3.7.3.tgz#280aec6afcaa44e8dff0480fbaff9e87fc00aecc"
+  integrity sha512-dE2ibukxxkrde7wH9W8ozHKUO4aQnPZ6qBHtrTH9LoO836PjDdiaWO73fgPB05VfJs9FbZdmGPVEbXCeOP99Ww==
   dependencies:
     babel-runtime "6.x"
     prop-types "^15.5.8"
@@ -6940,6 +6964,7 @@ react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.6:
 react-lazy-load@^3.0.12:
   version "3.0.13"
   resolved "http://192.168.200.178:4873/react-lazy-load/-/react-lazy-load-3.0.13.tgz#3b0a92d336d43d3f0d73cbe6f35b17050b08b824"
+  integrity sha1-OwqS0zbUPT8Nc8vm81sXBQsIuCQ=
   dependencies:
     eventlistener "0.0.1"
     lodash.debounce "^4.0.0"
@@ -6997,6 +7022,7 @@ react-router@^5.0.0:
 react-slick@~0.23.1:
   version "0.23.2"
   resolved "http://192.168.200.178:4873/react-slick/-/react-slick-0.23.2.tgz#8d8bdbc77a6678e8ad36f50c32578c7c0f1c54f6"
+  integrity sha512-fM6DXX7+22eOcYE9cgaXUfioZL/Zw6fwS6aPMDBt0kLHl4H4fFNEbp4JsJQdEWMLUNFtUytNcvd9KRml22Tp5w==
   dependencies:
     classnames "^2.2.5"
     enquire.js "^2.1.6"
@@ -8355,10 +8381,10 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "http://192.168.200.178:4873/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^3.7.4:
-  version "3.7.4"
-  resolved "http://192.168.200.178:4873/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
-  integrity sha512-A25xv5XCtarLwXpcDNZzCGvW2D1S3/bACratYBx2sax8PefsFhlYmkQicKHvpYflFS8if4zne5zT5kpJ7pzuvw==
+typescript@^3.7.5:
+  version "3.7.5"
+  resolved "http://192.168.200.178:4873/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
+  integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
 
 ua-parser-js@^0.7.18:
   version "0.7.20"
@@ -8524,6 +8550,7 @@ walker@~1.0.5:
 warning@2.x:
   version "2.1.0"
   resolved "http://192.168.200.178:4873/warning/-/warning-2.1.0.tgz#21220d9c63afc77a8c92111e011af705ce0c6901"
+  integrity sha1-ISINnGOvx3qMkhEeARr3Bc4MaQE=
   dependencies:
     loose-envify "^1.0.0"
 
@@ -8724,6 +8751,7 @@ yallist@^3.0.0, yallist@^3.0.2, yallist@^3.0.3:
 yargs-parser@10.x, yargs-parser@^10.0.0:
   version "10.1.0"
   resolved "http://192.168.200.178:4873/yargs-parser/-/yargs-parser-10.1.0.tgz#7202265b89f7e9e9f2e5765e0fe735a905edbaa8"
+  integrity sha512-VCIyR1wJoEBZUqk5PA+oOBF6ypbwh5aNB3I50guxAL/quggdfs4TtNHQrSazFA3fYZ+tEqfs0zIGlv0c/rgjbQ==
   dependencies:
     camelcase "^4.1.0"
 
