@@ -14,7 +14,7 @@ interface CollapsePanelProps {
   renderable: boolean | Function;
   control: React.ReactElement;
   children: React.ReactNode;
-  closeValues?: [];
+  closeValues?: any[];
 }
 
 interface ICollapsePanel {

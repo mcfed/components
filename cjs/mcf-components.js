@@ -41,12 +41,8 @@ var LocaleReceiver$1 = _interopDefault(
   require('antd/es/locale-provider/LocaleReceiver')
 );
 var defaultLocale = _interopDefault(require('antd/es/locale-provider/default'));
-var _message = _interopDefault(require('antd/es/message'));
-var _Divider = _interopDefault(require('antd/es/divider'));
 var antd = require('antd');
 var _TimePicker = _interopDefault(require('antd/es/time-picker'));
-var _Card = _interopDefault(require('antd/es/card'));
-var _Collapse = _interopDefault(require('antd/es/collapse'));
 var _Steps = _interopDefault(require('antd/es/steps'));
 
 function _typeof(obj) {
@@ -252,33 +248,6 @@ function _possibleConstructorReturn(self, call) {
   }
 
   return _assertThisInitialized(self);
-}
-
-function _toConsumableArray(arr) {
-  return (
-    _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread()
-  );
-}
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++)
-      arr2[i] = arr[i];
-
-    return arr2;
-  }
-}
-
-function _iterableToArray(iter) {
-  if (
-    Symbol.iterator in Object(iter) ||
-    Object.prototype.toString.call(iter) === '[object Arguments]'
-  )
-    return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError('Invalid attempt to spread non-iterable instance');
 }
 
 var FormCreate = _Form.create;
@@ -2517,10 +2486,10 @@ var DataTable =
       },
       {
         key: 'onPopupVisibleChange',
-        value: function onPopupVisibleChange(_boolean) {
+        value: function onPopupVisibleChange(boolean) {
           // console.log('show',arguments)
           this.setState({
-            visible: _boolean
+            visible: boolean
           });
         }
       },
@@ -5203,434 +5172,371 @@ var TransferView =
     return TransferView;
   })(React__default.Component);
 
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this file except in compliance with the License. You may obtain a copy of the
+License at http://www.apache.org/licenses/LICENSE-2.0
+
+THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
+WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
+MERCHANTABLITY OR NON-INFRINGEMENT.
+
+See the Apache Version 2.0 License for specific language governing permissions
+and limitations under the License.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+  extendStatics =
+    Object.setPrototypeOf ||
+    ({__proto__: []} instanceof Array &&
+      function(d, b) {
+        d.__proto__ = b;
+      }) ||
+    function(d, b) {
+      for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    };
+  return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+  extendStatics(d, b);
+  function __() {
+    this.constructor = d;
+  }
+  d.prototype =
+    b === null ? Object.create(b) : ((__.prototype = b.prototype), new __());
+}
+
+var __assign = function() {
+  __assign =
+    Object.assign ||
+    function __assign(t) {
+      for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s)
+          if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+      return t;
+    };
+  return __assign.apply(this, arguments);
+};
+
+function __rest(s, e) {
+  var t = {};
+  for (var p in s)
+    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+      t[p] = s[p];
+  if (s != null && typeof Object.getOwnPropertySymbols === 'function')
+    for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+      if (
+        e.indexOf(p[i]) < 0 &&
+        Object.prototype.propertyIsEnumerable.call(s, p[i])
+      )
+        t[p[i]] = s[p[i]];
+    }
+  return t;
+}
+
+function __spreadArrays() {
+  for (var s = 0, i = 0, il = arguments.length; i < il; i++)
+    s += arguments[i].length;
+  for (var r = Array(s), k = 0, i = 0; i < il; i++)
+    for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+      r[k] = a[j];
+  return r;
+}
+
 var css$4 =
   '.ant-table-tbody > .editable-row > td {\n  padding: 20px 20px;\n}\n.editable-row .ant-form-explain {\n  position: absolute;\n}\n.editable-row .ExtraColumn .ant-form-explain {\n  position: inherit;\n}\n';
 styleInject(css$4);
 
-var FormItem$1 = _Form.Item;
-var EditableContext = React__default.createContext();
+var FormItem$1 = antd.Form.Item;
+var EditableContext = React__default.createContext({});
 /* istanbul ignore next */
-
-var EditableRow = function EditableRow(_ref) {
-  var form = _ref.form,
-    index = _ref.index,
-    props = _objectWithoutProperties(_ref, ['form', 'index']);
-
+var EditableRow = function(_a) {
+  var form = _a.form,
+    index = _a.index,
+    props = __rest(_a, ['form', 'index']);
   return React__default.createElement(
     EditableContext.Provider,
-    {
-      value: form
-    },
-    React__default.createElement('tr', props)
+    {value: form},
+    React__default.createElement('tr', __assign({}, props))
   );
 };
-
-var EditableFormRow = _Form.create()(EditableRow);
-
-var EditTable =
-  /*#__PURE__*/
-  (function(_React$Component) {
-    _inherits(EditTable, _React$Component);
-
-    function EditTable(props) {
-      var _this;
-
-      _classCallCheck(this, EditTable);
-
-      _this = _possibleConstructorReturn(
-        this,
-        _getPrototypeOf(EditTable).call(this, props)
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'isEditing', function(
-        record
-      ) {
-        return record.key === _this.state.editingKey;
-      });
-
-      _defineProperty(_assertThisInitialized(_this), 'edit', function(key) {
-        if (_this.state.editingKey !== '') {
-          _message.error('请先保存编辑项再进行其他编辑操作！');
-
-          return false;
-        }
-
-        _this.setState({
-          editingKey: key
-        });
-
-        _this.activeStatus();
-      });
-
-      _defineProperty(_assertThisInitialized(_this), 'editColumn', function(
-        key
-      ) {
-        if (_this.state.editingKey !== '') {
-          _message.error('请先保存编辑项再进行其他编辑操作！');
-
-          return false;
-        }
-
-        _this.setState({
-          editingKey: key
-        });
-      });
-
-      _defineProperty(
-        _assertThisInitialized(_this),
-        'changeColumnEditStatus',
-        function(record, tdObject) {
-          _this.editColumn(record.key);
-
-          _this.state.columns.map(function(item) {
-            /* istanbul ignore else */
-            if (item.dataIndex === tdObject.dataIndex) {
-              item.editingStatus = true;
-            }
-          });
-        }
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'cancel', function(
-        form,
-        key
-      ) {
-        var obj = _this.state.data.filter(function(d) {
-          return d.key === key;
-        })[0];
-
-        var Bdelete = false;
-
-        for (var b in obj) {
-          if (obj[b] === '') {
-            Bdelete = true;
-            break;
-          }
-        }
-
-        if (Bdelete) {
-          _this['delete'](key);
-        }
-
-        _this.setState({
-          editingKey: ''
-        });
-
-        _this.revertStatus();
-      });
-
-      _defineProperty(_assertThisInitialized(_this), 'addNew', function() {
-        if (_this.state.editingKey !== '') {
-          _message.error('请先保存编辑项再进行添加操作！');
-
-          return false;
-        }
-
-        var key =
-          new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
-        var obj = {
-          key: key
-        };
-
-        var keyList = _toConsumableArray(_this.state.keyList);
+var EditableFormRow = antd.Form.create()(EditableRow);
+var EditTable = /** @class */ (function(_super) {
+  __extends(EditTable, _super);
+  function EditTable() {
+    var _this = (_super !== null && _super.apply(this, arguments)) || this;
+    _this.isEditing = function(record) {
+      return record.key === _this.state.editingKey;
+    };
+    _this.edit = function(key) {
+      if (_this.state.editingKey !== '') {
+        antd.message.error('请先保存编辑项再进行其他编辑操作！');
+        return false;
+      }
+      _this.setState({editingKey: key});
+      _this.activeStatus();
+    };
+    // 双击td事件
+    _this.editColumn = function(key) {
+      if (_this.state.editingKey !== '') {
+        antd.message.error('请先保存编辑项再进行其他编辑操作！');
+        return false;
+      }
+      _this.setState({editingKey: key});
+    };
+    _this.changeColumnEditStatus = function(record, tdObject) {
+      _this.editColumn(record.key);
+      _this.state.columns.map(function(item) {
         /* istanbul ignore else */
-
-        if (keyList.length > 1) {
-          keyList.length = keyList.length - 1;
+        if (item.dataIndex === tdObject.dataIndex) {
+          item.editingStatus = true;
         }
-
-        keyList.forEach(function(d) {
-          obj[d] = '';
-        });
-
-        var data = _toConsumableArray(_this.state.data);
-
-        data.push(obj);
-
-        _this.setState({
-          data: data,
-          editingKey: key
-        });
-
-        _this.activeStatus();
       });
-
-      _this.state = {
-        data: [],
-        editingKey: '',
-        keyList: [],
-        columns: []
-      };
-      return _this;
-    }
-
-    _createClass(EditTable, [
-      {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-          var _this2 = this;
-
-          /* istanbul ignore else */
-          if (this.props.columns && this.props.columns.length > 0) {
-            this.setState(
-              {
-                data: this.props.data === undefined ? [] : this.props.data,
-                columns: [].concat(
-                  _toConsumableArray(this.props.columns),
-                  _toConsumableArray(this.state.columns)
-                )
-              },
-              function() {
-                var keyList = _this2.state.columns.map(function(c) {
-                  return c.dataIndex;
-                });
-
-                _this2.setState({
-                  keyList: keyList
-                });
-              }
-            );
-          }
-        }
-      },
-      {
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps(nextprops) {
-          /* istanbul ignore else */
-          if (this.props.data != nextprops.data) {
-            this.setState({
-              data: nextprops.data
-            });
-          }
-        }
-      },
-      {
-        key: 'revertStatus',
-        value: function revertStatus() {
-          // 恢复每一列的编辑状态，去除所有editingStatus
-          this.state.columns.map(function(item) {
-            return (item.editingStatus = false);
-          });
-        }
-      },
-      {
-        key: 'activeStatus',
-        value: function activeStatus() {
-          // 激活每一列的编辑状态，所有列editingStatus设为true
-          this.state.columns.map(function(item) {
-            return (item.editingStatus = true);
-          });
-        }
-      },
-      {
-        key: 'delete',
-        value: function _delete(key) {
-          var _this3 = this;
-
-          var newData = _toConsumableArray(this.state.data);
-
-          this.setState(
-            {
-              data: newData.filter(function(c) {
-                return c.key !== key;
-              }),
-              editingKey: ''
-            },
-            function() {
-              _this3.props.onChange(_this3.state.data);
-            }
-          );
-        }
-      },
-      {
-        key: 'save',
-        value: function save(form, key) {
-          var _this4 = this;
-
-          form.validateFields(function(error, row) {
-            if (error) {
-              return;
-            }
-
-            var newData = _toConsumableArray(_this4.state.data);
-
-            var index = newData.findIndex(function(item) {
-              return key === item.key;
-            });
-
-            if (index > -1) {
-              var item = newData[index];
-              newData.splice(
-                index,
-                1,
-                _objectSpread2({}, item, {}, row, {
-                  key: item.key
-                })
-              );
-            } else {
-              newData.push(row);
-            }
-
-            _this4.setState(
-              {
-                data: newData,
-                editingKey: ''
-              },
-              function() {
-                _this4.props.onChange(newData);
-              }
-            );
-          });
-        }
-      },
-      {
-        key: 'renderCell',
-        value: function renderCell(text, record, cellConfig) {
-          var dataIndex = cellConfig.dataIndex,
-            editComponent = cellConfig.editComponent,
-            editConfig = cellConfig.editConfig;
-          var instance = this;
-          var mode = this.props.mode;
-          return React__default.createElement(
-            EditableContext.Consumer,
-            null,
-            function(form) {
-              var getFieldDecorator = form.getFieldDecorator;
-              var component = editComponent(text, record, instance, form);
-              return React__default.createElement(
-                FormItem$1,
-                {
-                  style: {
-                    margin: 0
-                  }
-                },
-                getFieldDecorator(
-                  dataIndex,
-                  _objectSpread2({}, editConfig, {
-                    initialValue:
-                      record[dataIndex] === ''
-                        ? editConfig && editConfig.initialValue
-                        : record[dataIndex]
-                  })
-                )(
-                  React__default.createElement(
-                    component.type,
-                    _objectSpread2(
-                      {},
-                      component.props,
-                      {},
-                      mode !== 'row'
-                        ? {
-                            onChange: function onChange(e) {
-                              // e is event
-                              if (e.target) {
-                                form.setFieldsValue(
-                                  _defineProperty({}, dataIndex, e.target.value)
-                                );
-                              } else {
-                                form.setFieldsValue(
-                                  _defineProperty({}, dataIndex, e)
-                                );
-                              }
-
-                              instance.save(form, record.key);
-                            }
-                          }
-                        : {}
-                    )
-                  )
-                )
-              );
-            }
-          );
-        }
-      },
-      {
-        key: 'render',
-        value: function render() {
-          var _this5 = this;
-
-          var components = {
-            body: {
-              row: EditableFormRow // cell: EditableCell
-            }
-          };
-          var mode = this.props.mode;
-          var instance = this;
-          var columns = this.state.columns.map(function(col) {
-            if (!col.editComponent) {
-              return col;
-            }
-            /* istanbul ignore next */
-
-            return _objectSpread2({}, col, {
-              // onCellClick: (record,index)=>{
-              //   console.log(record,index)
-              // },
-              render: function render(text, row) {
-                return mode === 'full' || _this5.isEditing(row)
-                  ? _this5.renderCell(text, row, col)
-                  : col.render
-                  ? col.render(text, row, instance)
-                  : text;
-              }
-            });
-          });
-          return React__default.createElement(_Table, {
-            components: components,
-            bordered: true,
-            dataSource: this.state.data,
-            columns: columns,
-            rowClassName: 'editable-row',
-            footer: function footer() {
-              return React__default.createElement(
-                _Button,
-                {
-                  icon: 'plus',
-                  onClick: _this5.addNew,
-                  style: {
-                    width: '100%'
-                  }
-                },
-                '\u65B0\u589E'
-              );
-            }
-          });
+    };
+    _this.cancel = function(form, key) {
+      var obj = _this.state.data.filter(function(d) {
+        return d.key === key;
+      })[0];
+      var Bdelete = false;
+      for (var b in obj) {
+        if (obj[b] === '') {
+          Bdelete = true;
+          break;
         }
       }
-    ]);
+      if (Bdelete) {
+        _this.delete(key);
+      }
+      _this.setState({editingKey: ''});
+      _this.revertStatus();
+    };
+    _this.addNew = function() {
+      if (_this.state.editingKey !== '') {
+        antd.message.error('请先保存编辑项再进行添加操作！');
+        return false;
+      }
+      var key = new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
+      var obj = {
+        key: key
+      };
+      var keyList = __spreadArrays(_this.state.keyList);
+      /* istanbul ignore else */
+      if (keyList.length > 1) {
+        keyList.length = keyList.length - 1;
+      }
+      keyList.forEach(function(d) {
+        obj[d] = '';
+      });
+      var data = __spreadArrays(_this.state.data);
+      data.push(obj);
+      _this.setState({
+        data: data,
+        editingKey: key
+      });
+      _this.activeStatus();
+    };
+    return _this;
+  }
+  EditTable.prototype.componentDidMount = function() {
+    var _this = this;
+    /* istanbul ignore else */
+    if (this.props.columns && this.props.columns.length > 0) {
+      this.setState(
+        {
+          data: this.props.data === undefined ? [] : this.props.data,
+          columns: __spreadArrays(this.props.columns, this.state.columns)
+        },
+        function() {
+          var keyList = _this.state.columns.map(function(c) {
+            return c.dataIndex;
+          });
+          _this.setState({
+            keyList: keyList
+          });
+        }
+      );
+    }
+  };
+  EditTable.prototype.componentWillReceiveProps = function(nextprops) {
+    /* istanbul ignore else */
+    if (this.props.data != nextprops.data) {
+      this.setState({
+        data: nextprops.data
+      });
+    }
+  };
+  EditTable.prototype.revertStatus = function() {
+    // 恢复每一列的编辑状态，去除所有editingStatus
+    this.state.columns.map(function(item) {
+      return (item.editingStatus = false);
+    });
+  };
+  EditTable.prototype.activeStatus = function() {
+    // 激活每一列的编辑状态，所有列editingStatus设为true
+    this.state.columns.map(function(item) {
+      return (item.editingStatus = true);
+    });
+  };
+  EditTable.prototype.delete = function(key) {
+    var _this = this;
+    var newData = __spreadArrays(this.state.data);
+    this.setState(
+      {
+        data: newData.filter(function(c) {
+          return c.key !== key;
+        }),
+        editingKey: ''
+      },
+      function() {
+        _this.props.onChange(_this.state.data);
+      }
+    );
+  };
+  EditTable.prototype.save = function(form, key) {
+    var _this = this;
+    form.validateFields(function(error, row) {
+      if (error) {
+        return;
+      }
+      var newData = __spreadArrays(_this.state.data);
+      var index = newData.findIndex(function(item) {
+        return key === item.key;
+      });
+      if (index > -1) {
+        var item = newData[index];
+        newData.splice(
+          index,
+          1,
+          __assign(__assign(__assign({}, item), row), {key: item.key})
+        );
+      } else {
+        newData.push(row);
+      }
+      _this.setState({data: newData, editingKey: ''}, function() {
+        _this.props.onChange(newData);
+      });
+    });
+  };
+  EditTable.prototype.renderCell = function(text, record, cellConfig) {
+    var dataIndex = cellConfig.dataIndex,
+      editComponent = cellConfig.editComponent,
+      editConfig = cellConfig.editConfig;
+    var instance = this;
+    var mode = this.props.mode;
+    return React__default.createElement(
+      EditableContext.Consumer,
+      null,
+      function(form) {
+        var getFieldDecorator = form.getFieldDecorator,
+          setFieldsValue = form.setFieldsValue;
+        var component = editComponent(text, record, instance, form);
+        return React__default.createElement(
+          FormItem$1,
+          {style: {margin: 0}},
+          getFieldDecorator(
+            dataIndex,
+            __assign(__assign({}, editConfig), {
+              initialValue:
+                record[dataIndex] === ''
+                  ? editConfig && editConfig.initialValue
+                  : record[dataIndex]
+            })
+          )(
+            React__default.createElement(
+              component.type,
+              __assign(
+                __assign({}, component.props),
+                mode !== 'row'
+                  ? {
+                      onChange: function(e) {
+                        var _a, _b;
+                        // e is event
+                        if (e.target) {
+                          setFieldsValue(
+                            ((_a = {}), (_a[dataIndex] = e.target['value']), _a)
+                          );
+                        } else {
+                          setFieldsValue(((_b = {}), (_b[dataIndex] = e), _b));
+                        }
+                        instance.save(form, record.key);
+                      }
+                    }
+                  : {}
+              )
+            )
+          )
+        );
+      }
+    );
+  };
+  EditTable.prototype.render = function() {
+    var _this = this;
+    var components = {
+      body: {
+        row: EditableFormRow
+        // cell: EditableCell
+      }
+    };
+    var mode = this.props.mode;
+    var instance = this;
+    var columns = this.state.columns.map(function(col) {
+      if (!col.editComponent) {
+        return col;
+      }
+      /* istanbul ignore next */
+      return __assign(__assign({}, col), {
+        // onCellClick: (record,index)=>{
+        //   console.log(record,index)
+        // },
+        render: function(text, row) {
+          return mode === 'full' || _this.isEditing(row)
+            ? _this.renderCell(text, row, col)
+            : col.render
+            ? col.render(text, row, instance)
+            : text;
+        }
+      });
+    });
+    return React__default.createElement(antd.Table, {
+      components: components,
+      bordered: true,
+      dataSource: this.state.data,
+      columns: columns,
+      rowClassName: function(record, index) {
+        return 'editable-row';
+      },
+      footer: function() {
+        return React__default.createElement(
+          antd.Button,
+          {icon: 'plus', onClick: _this.addNew, style: {width: '100%'}},
+          '\u65B0\u589E'
+        );
+      }
+    });
+  };
+  EditTable.defaultProps = {
+    mode: 'row'
+  };
+  return EditTable;
+})(React__default.Component);
 
-    return EditTable;
-  })(React__default.Component);
-
-EditTable.defaultProps = {
-  mode: 'row'
-};
-EditTable.propTypes = {
-  /**
-  表格列配置
-  **/
-  columns: PropTypes.array.isRequired,
-
-  /**
-  数据数组
-  **/
-  data: PropTypes.array,
-  mode: PropTypes.oneOf(['full', 'row'])
-};
-
-var Td = function Td(_ref) {
-  var dataSource = _ref.dataSource,
-    _ref$labelKey = _ref.labelKey,
-    labelKey = _ref$labelKey === void 0 ? dataSource[labelKey] : _ref$labelKey,
-    _ref$valueKey = _ref.valueKey,
-    valueKey = _ref$valueKey === void 0 ? dataSource[valueKey] : _ref$valueKey;
+var Td = function(_a) {
+  var dataSource = _a.dataSource,
+    labelKey = _a.labelKey,
+    valueKey = _a.valueKey;
+  React.useEffect(function() {}, [dataSource, labelKey, labelKey]);
+  labelKey = dataSource[labelKey];
+  valueKey = dataSource[valueKey];
   return [
     React__default.createElement(
       'th',
-      {
-        key: 'td' + dataSource[labelKey]
-      },
+      {key: 'td' + dataSource[labelKey]},
       typeof dataSource[labelKey] === 'function'
         ? dataSource[labelKey]()
         : dataSource[labelKey]
@@ -5647,227 +5553,125 @@ var Td = function Td(_ref) {
     )
   ];
 };
-
-Td.propTypes = {
-  labelKey: PropTypes.string,
-  valueKey: PropTypes.string
+Td.defaultProps = {
+  dataSource: [],
+  labelKey: '',
+  valueKey: ''
 };
 
 var css$5 =
   '.ant-table-detail .ant-table-title {\n  font-size: 14px;\n  padding: 10px 0;\n  background-color: #f8f8f8;\n  color: #000;\n}\n.ant-table-detail .ant-table-title,\n.ant-table-detail .ant-table-content .ant-table-body table th,\n.ant-table-detail .ant-table-content .ant-table-body table td {\n  text-indent: 20px;\n}\n.ant-table-detail .ant-table-content .ant-table-body table {\n  border: 1px solid #f0f0f0;\n  border-collapse: collapse;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr:not(:last-of-type) {\n  border-bottom: 1px solid #f0f0f0;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr:hover td {\n  background-color: #fff;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr td {\n  padding: 9px 16px;\n  border: none;\n  white-space: normal;\n}\n.ant-table-detail .ant-table-content .ant-table-body table tr th {\n  padding: 9px 0;\n  font-weight: normal;\n  border: 1px solid #f0f0f0;\n  width: 18%;\n  color: #000;\n  background: #e8e8e8;\n}\n';
 styleInject(css$5);
 
-var DetailTable =
-  /*#__PURE__*/
-  (function(_React$Component) {
-    _inherits(DetailTable, _React$Component);
-
-    function DetailTable() {
-      var _getPrototypeOf2;
-
-      var _this;
-
-      _classCallCheck(this, DetailTable);
-
-      for (
-        var _len = arguments.length, args = new Array(_len), _key = 0;
-        _key < _len;
-        _key++
-      ) {
-        args[_key] = arguments[_key];
-      }
-
-      _this = _possibleConstructorReturn(
-        this,
-        (_getPrototypeOf2 = _getPrototypeOf(DetailTable)).call.apply(
-          _getPrototypeOf2,
-          [this].concat(args)
-        )
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'showDom', function(
-        dataSource
-      ) {
-        var Data = [];
-
-        if (_this.props.mode === 'object' && Array.isArray(dataSource)) {
-          throw Error('使用对象模式，数据必须为object');
-        }
-
-        if (!Array.isArray(dataSource) && _this.props.mode !== 'object') {
-          throw Error('数据为对象时，mode需要为object');
-        }
-
-        if (_this.props.mode && _this.props.mode === 'object') {
-          for (var a in dataSource) {
-            var _Data$push;
-
-            Data.push(
-              ((_Data$push = {}),
-              _defineProperty(_Data$push, _this.props.labelKey, a),
-              _defineProperty(_Data$push, _this.props.valueKey, dataSource[a]),
-              _Data$push)
-            );
-          }
-        } else {
-          Data = _toConsumableArray(dataSource);
-        }
-
-        var columnNumber =
-          _this.props.columnNumber === undefined ? 1 : _this.props.columnNumber;
-
-        if (columnNumber <= 0) {
-          throw Error('列数必须大于0');
-        }
-
-        var array = [];
-
-        while (Data.length > 0) {
-          var ar = [];
-
-          for (var i = 0; i < columnNumber; i++) {
-            var obj = Data.shift();
-
-            if (obj === undefined) {
-              var _obj;
-
-              obj =
-                ((_obj = {}),
-                _defineProperty(_obj, _this.props.labelKey, ''),
-                _defineProperty(_obj, _this.props.valueKey, ''),
-                _obj);
-            }
-
-            if (obj.colspan && obj.colspan > 0) {
-              ar.push(obj);
-              i = i + obj.colspan - 1;
-            } else {
-              ar.push(obj);
-            }
-          }
-
-          array.push(ar);
-        }
-
-        return array.map(function(d, k) {
-          return React__default.createElement(
-            'tr',
-            {
-              key: k
-            },
-            d.map(function(c, v) {
-              return React__default.createElement(Td, {
-                key: v,
-                dataSource: c,
-                labelKey: _this.props.labelKey,
-                valueKey: _this.props.valueKey
-              });
-            })
-          );
-        });
-      });
-
-      return _this;
+var DetailTable = /** @class */ (function(_super) {
+  __extends(DetailTable, _super);
+  function DetailTable() {
+    return (_super !== null && _super.apply(this, arguments)) || this;
+  }
+  DetailTable.prototype.showDom = function(dataSource) {
+    var _a, _b;
+    var _this = this;
+    var Data = [];
+    if (this.props.mode === 'object' && Array.isArray(dataSource)) {
+      throw Error('使用对象模式，数据必须为object');
     }
-
-    _createClass(DetailTable, [
-      {
-        key: 'render',
-        value: function render() {
-          var _this$props = this.props,
-            dataSource = _this$props.dataSource,
-            title = _this$props.title,
-            tableClass = _this$props.tableClass;
-          return React__default.createElement(
-            'div',
-            {
-              className: tableClass
-            },
-            React__default.createElement(
-              'div',
-              {
-                className: 'ant-table-title'
-              },
-              title
-            ),
-            React__default.createElement(
-              'div',
-              {
-                className: 'ant-table-content'
-              },
-              React__default.createElement(
-                'div',
-                {
-                  className: 'ant-table-body'
-                },
-                React__default.createElement(
-                  'table',
-                  {
-                    style: {
-                      width: '100%'
-                    }
-                  },
-                  React__default.createElement(
-                    'tbody',
-                    {
-                      className: 'ant-table-tbody'
-                    },
-                    this.showDom(dataSource)
-                  )
-                )
-              )
-            )
-          );
+    if (!Array.isArray(dataSource) && this.props.mode !== 'object') {
+      throw Error('数据为对象时，mode需要为object');
+    }
+    if (this.props.mode && this.props.mode === 'object') {
+      for (var a in dataSource) {
+        Data.push(
+          ((_a = {}),
+          (_a[this.props.labelKey] = a),
+          (_a[this.props.valueKey] = dataSource[a]),
+          _a)
+        );
+      }
+    } else {
+      Data = __spreadArrays(dataSource);
+    }
+    var columnNumber =
+      this.props.columnNumber === undefined ? 1 : this.props.columnNumber;
+    if (columnNumber <= 0) {
+      throw Error('列数必须大于0');
+    }
+    var array = [];
+    while (Data.length > 0) {
+      var ar = [];
+      for (var i = 0; i < columnNumber; i++) {
+        var obj = Data.shift();
+        if (obj === undefined) {
+          obj =
+            ((_b = {}),
+            (_b[this.props.labelKey] = ''),
+            (_b[this.props.valueKey] = ''),
+            _b);
+        }
+        if (obj.colspan && obj.colspan > 0) {
+          ar.push(obj);
+          i = i + obj.colspan - 1;
+        } else {
+          ar.push(obj);
         }
       }
-    ]);
-
-    return DetailTable;
-  })(React__default.Component);
-
-DetailTable.propTypes = {
-  /**
-  支持数组模式和对象模式（'array',object）默认数组模式
-  **/
-  mode: PropTypes.oneOf(['object', 'array']),
-
-  /**
-  定义列数，不得小于0
-  **/
-  columnNumber: PropTypes.number,
-
-  /**
-  传递数据，根据类型传递相应的数据
-  **/
-  dataSource: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-
-  /**
-  表格外包div类名
-  **/
-  tableClass: PropTypes.string,
-
-  /**
-  表格title
-  **/
-  title: PropTypes.string,
-
-  /**
-  组模式下配置显示名称key值，默认label
-  **/
-  labelKey: PropTypes.string,
-
-  /**
-  数组模式下配置显示名称value值，默认value
-  **/
-  valueKey: PropTypes.string
-};
-DetailTable.defaultProps = {
-  columnNumber: 2,
-  title: 'datailtable',
-  tableClass: 'ant-table ant-table-bordered ant-table-detail',
-  labelKey: 'name',
-  valueKey: 'value'
-};
+      array.push(ar);
+    }
+    return array.map(function(d, k) {
+      return React__default.createElement(
+        'tr',
+        {key: k},
+        d.map(function(c, v) {
+          return React__default.createElement(Td, {
+            key: v,
+            dataSource: c,
+            labelKey: _this.props.labelKey,
+            valueKey: _this.props.valueKey
+          });
+        })
+      );
+    });
+  };
+  DetailTable.prototype.render = function() {
+    var _a = this.props,
+      dataSource = _a.dataSource,
+      title = _a.title,
+      tableClass = _a.tableClass;
+    return React__default.createElement(
+      'div',
+      {className: tableClass},
+      React__default.createElement(
+        'div',
+        {className: 'ant-table-title'},
+        title
+      ),
+      React__default.createElement(
+        'div',
+        {className: 'ant-table-content'},
+        React__default.createElement(
+          'div',
+          {className: 'ant-table-body'},
+          React__default.createElement(
+            'table',
+            {style: {width: '100%'}},
+            React__default.createElement(
+              'tbody',
+              {className: 'ant-table-tbody'},
+              this.showDom(dataSource)
+            )
+          )
+        )
+      )
+    );
+  };
+  DetailTable.defaultProps = {
+    columnNumber: 2,
+    title: 'datailtable',
+    tableClass: 'ant-table ant-table-bordered ant-table-detail',
+    labelKey: 'name',
+    valueKey: 'value'
+  };
+  return DetailTable;
+})(React__default.Component);
 
 var up = {
   transform: 'rotate(180deg)',
@@ -5880,104 +5684,62 @@ var down = {
   marginLeft: 5,
   verticalAlign: -1
 };
-
-var UpDown = function UpDown(_ref) {
-  var _ref$state = _ref.state,
-    state = _ref$state === void 0 ? 'up' : _ref$state;
-  return React__default.createElement(_Icon, {
+var UpDown = function(_a) {
+  var _b = _a.state,
+    state = _b === void 0 ? 'up' : _b;
+  return React__default.createElement(antd.Icon, {
     type: 'down',
-    className: down,
+    className: down.toString(),
     style: state === 'down' ? down : up
   });
 };
-
-var FieldSet =
-  /*#__PURE__*/
-  (function(_React$Component) {
-    _inherits(FieldSet, _React$Component);
-
-    function FieldSet() {
-      var _getPrototypeOf2;
-
-      var _this;
-
-      _classCallCheck(this, FieldSet);
-
-      for (
-        var _len = arguments.length, args = new Array(_len), _key = 0;
-        _key < _len;
-        _key++
-      ) {
-        args[_key] = arguments[_key];
-      }
-
-      _this = _possibleConstructorReturn(
-        this,
-        (_getPrototypeOf2 = _getPrototypeOf(FieldSet)).call.apply(
-          _getPrototypeOf2,
-          [this].concat(args)
-        )
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'state', {
-        hidden:
-          _this.props.display === undefined
-            ? false
-            : _this.props.display === 'hide'
-      });
-
-      _defineProperty(_assertThisInitialized(_this), 'showHideFun', function() {
-        _this.setState(
-          {
-            hidden: !_this.state.hidden
-          },
-          function() {
-            if (_this.props.onChange) {
-              _this.props.onChange(_this.state.hidden ? 'hide' : 'show');
-            }
-          }
-        );
-      });
-
-      return _this;
-    }
-
-    _createClass(FieldSet, [
-      {
-        key: 'render',
-        value: function render() {
-          return React__default.createElement(
-            'div',
-            null,
-            React__default.createElement(
-              _Divider,
-              {
-                orientation: 'left'
-              },
-              this.props.display === undefined
-                ? this.props.title
-                : React__default.createElement(
-                    'a',
-                    {
-                      onClick: this.showHideFun
-                    },
-                    this.props.title,
-                    React__default.createElement(UpDown, {
-                      state: this.state.hidden ? 'up' : 'down'
-                    })
-                  )
-            ),
-            !this.state.hidden && this.props.children
-          );
+var FieldSet = /** @class */ (function(_super) {
+  __extends(FieldSet, _super);
+  function FieldSet() {
+    var _this = (_super !== null && _super.apply(this, arguments)) || this;
+    _this.state = {
+      hidden:
+        _this.props.display === undefined
+          ? false
+          : _this.props.display === 'hide'
+    };
+    _this.showHideFun = function() {
+      _this.setState({hidden: !_this.state.hidden}, function() {
+        if (_this.props.onChange) {
+          _this.props.onChange(_this.state.hidden ? 'hide' : 'show');
         }
-      }
-    ]);
-
-    return FieldSet;
-  })(React__default.Component);
-FieldSet.defaultProps = {
-  title: '标题'
-};
+      });
+    };
+    return _this;
+  }
+  FieldSet.prototype.render = function() {
+    return React__default.createElement(
+      'div',
+      null,
+      React__default.createElement(
+        antd.Divider,
+        {orientation: 'left'},
+        this.props.display === undefined
+          ? this.props.title
+          : React__default.createElement(
+              'a',
+              {onClick: this.showHideFun},
+              this.props.title,
+              React__default.createElement(UpDown, {
+                state: this.state.hidden ? 'up' : 'down'
+              })
+            )
+      ),
+      !this.state.hidden && this.props.children
+    );
+  };
+  FieldSet.defaultProp = {
+    title: '',
+    display: '',
+    onChange: function() {}
+  };
+  return FieldSet;
+})(React__default.Component);
 
 var downList = [
   {
@@ -6618,113 +6380,48 @@ ConditionForm.defaultProps = {
   callbackParentSql: function callbackParentSql() {}
 };
 
-var ErrorBoundary =
-  /*#__PURE__*/
-  (function(_React$Component) {
-    _inherits(ErrorBoundary, _React$Component);
-
-    function ErrorBoundary(props) {
-      var _this;
-
-      _classCallCheck(this, ErrorBoundary);
-
-      _this = _possibleConstructorReturn(
-        this,
-        _getPrototypeOf(ErrorBoundary).call(this, props)
-      );
-      _this.state = {
-        error: null,
-        errorInfo: null
-      };
-      return _this;
-    }
-
-    _createClass(ErrorBoundary, [
-      {
-        key: 'componentDidCatch',
-        value: function componentDidCatch(error, errorInfo) {
-          // Catch errors in any components below and re-render with error message
-          this.setState({
-            error: error,
-            errorInfo: errorInfo
-          }); // You can also log error messages to an error reporting service here
-        }
-      },
-      {
-        key: 'render',
-        value: function render() {
-          if (this.state.errorInfo) {
-            // Error path
-            return React__default.createElement(
-              'div',
-              null,
-              React__default.createElement('h2', null, '\u51FA\u9519\u4E86.'),
-              React__default.createElement(
-                'details',
-                {
-                  style: {
-                    whiteSpace: 'pre-wrap'
-                  }
-                },
-                this.state.error && this.state.error.toString(),
-                React__default.createElement('br', null),
-                this.state.errorInfo.componentStack
-              )
-            );
-          } // Normally, just render children
-
-          return this.props.children;
-        }
-      }
-    ]);
-
-    return ErrorBoundary;
-  })(React__default.Component);
-
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation. All rights reserved.
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-this file except in compliance with the License. You may obtain a copy of the
-License at http://www.apache.org/licenses/LICENSE-2.0
-
-THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-MERCHANTABLITY OR NON-INFRINGEMENT.
-
-See the Apache Version 2.0 License for specific language governing permissions
-and limitations under the License.
-***************************************************************************** */
-
-var __assign = function() {
-  __assign =
-    Object.assign ||
-    function __assign(t) {
-      for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s)
-          if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-      return t;
+var ErrorBoundary = /** @class */ (function(_super) {
+  __extends(ErrorBoundary, _super);
+  function ErrorBoundary(props) {
+    var _this = _super.call(this, props) || this;
+    _this.state = {
+      error: null,
+      errorInfo: null
     };
-  return __assign.apply(this, arguments);
-};
-
-function __rest(s, e) {
-  var t = {};
-  for (var p in s)
-    if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-      t[p] = s[p];
-  if (s != null && typeof Object.getOwnPropertySymbols === 'function')
-    for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-      if (
-        e.indexOf(p[i]) < 0 &&
-        Object.prototype.propertyIsEnumerable.call(s, p[i])
-      )
-        t[p[i]] = s[p[i]];
+    return _this;
+  }
+  ErrorBoundary.prototype.componentDidCatch = function(error, errorInfo) {
+    // Catch errors in any components below and re-render with error message
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    });
+    // You can also log error messages to an error reporting service here
+  };
+  ErrorBoundary.prototype.render = function() {
+    var _a = this.state,
+      error = _a.error,
+      errorInfo = _a.errorInfo;
+    if (errorInfo) {
+      // Error path
+      return React__default.createElement(
+        'div',
+        null,
+        React__default.createElement('h2', null, '\u51FA\u9519\u4E86.'),
+        React__default.createElement(
+          'details',
+          {style: {whiteSpace: 'pre-wrap'}},
+          error && error.toString(),
+          React__default.createElement('br', null),
+          errorInfo.componentStack
+        )
+      );
     }
-  return t;
-}
+    // Normally, just render children
+    return this.props.children;
+  };
+  return ErrorBoundary;
+})(React__default.Component);
 
 var css$6 =
   '.td-ellipsis {\n  border-collapse: collapse;\n  white-space: nowrap;\n  overflow: hidden;\n  -o-text-overflow: ellipsis;\n  text-overflow: ellipsis;\n  /* max-width: 300px; */\n}\n';
@@ -6946,382 +6643,234 @@ var css$9 =
   '.treeTile .ant-tree-child-tree-open li {\n  float: left !important;\n}\n.treeTile .ant-tree-treenode-switcher-open {\n  display: block !important;\n}\n.treeTile .ant-tree-child-tree-open {\n  display: block !important;\n  position: relative !important;\n  top: -32px !important;\n  left: 200px !important;\n  width: calc(-100%);\n  overflow: hidden;\n}\n.treeTile .ant-tree-child-tree > li:first-child {\n  padding-top: 4px !important;\n}\n.treeTile .ant-tree-switcher {\n  visibility: hidden !important;\n}\n.treeTile .ant-tree-treenode-switcher-open::before {\n  display: block;\n  clear: both;\n  height: 0;\n  content: "";\n  visibility: hidden;\n  overflow: hidden;\n}\n.treeNoData {\n  text-align: center;\n  color: #cccccc;\n  margin-bottom: 0px;\n}\n';
 styleInject(css$9);
 
-var TreeNode$1 = _Tree.TreeNode;
-
-var TreeTile =
-  /*#__PURE__*/
-  (function(_Component) {
-    _inherits(TreeTile, _Component);
-
-    function TreeTile(props) {
-      var _this;
-
-      _classCallCheck(this, TreeTile);
-
-      _this = _possibleConstructorReturn(
-        this,
-        _getPrototypeOf(TreeTile).call(this, props)
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'getKeysFromMap', function(
-        data,
-        dataSourceKeys
-      ) {
-        data.map(function(d) {
-          if (!!d.children) {
-            _this.getKeysFromMap(d.children, dataSourceKeys);
-          }
-
-          dataSourceKeys.push(d.key);
-        });
-        return dataSourceKeys;
-      });
-
-      _defineProperty(
-        _assertThisInitialized(_this),
-        'renderTreeNodes',
-        function(data) {
-          return data.map(function(item) {
-            if (item.children) {
-              return React__default.createElement(
-                TreeNode$1,
-                {
-                  title: item.title,
-                  key: item.key,
-                  dataRef: item
-                },
-                _this.renderTreeNodes(item.children)
-              );
-            }
-
-            return React__default.createElement(TreeNode$1, item);
-          });
+var TreeNode$1 = antd.Tree.TreeNode;
+var TreeTile = /** @class */ (function(_super) {
+  __extends(TreeTile, _super);
+  function TreeTile(props) {
+    var _this = _super.call(this, props) || this;
+    _this.getKeysFromMap = function(data, dataSourceKeys) {
+      data.map(function(d) {
+        if (!!d.children) {
+          _this.getKeysFromMap(d.children, dataSourceKeys);
         }
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'onCheckAll', function(e) {
-        var dataSourceKeys = _this.state.dataSourceKeys;
-        var checkedKeys = e.target.checked ? dataSourceKeys : [];
-
-        _this.setState(
-          {
-            checkedKeys: checkedKeys,
-            indeterminate: false,
-            checkAll: e.target.checked
-          },
-          function() {
-            _this.props.onChange(checkedKeys);
-          }
-        );
+        dataSourceKeys.push(d.key);
       });
-
-      _defineProperty(_assertThisInitialized(_this), 'onCheck', function(
-        checkedKeys
-      ) {
-        var dataSourceKeys = _this.state.dataSourceKeys;
-
-        _this.setState(
-          {
-            checkedKeys: checkedKeys,
-            indeterminate:
-              !!checkedKeys &&
-              checkedKeys.length !== 0 &&
-              checkedKeys.length < dataSourceKeys.length,
-            checkAll:
-              !!checkedKeys && checkedKeys.length === dataSourceKeys.length
-          },
-          function() {
-            _this.props.onChange(checkedKeys);
-          }
-        );
-      });
-
-      _this.state = {
-        indeterminate: false,
-        checkAll: false,
-        dataSourceKeys: [],
-        checkedKeys: []
-      };
-      return _this;
-    }
-
-    _createClass(TreeTile, [
-      {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-          var dataSource = this.props.dataSource;
-          var dataSourceKeys = this.getKeysFromMap(dataSource, []);
-          this.setState({
-            dataSourceKeys: dataSourceKeys
-          });
-          var checkedKeys = this.props.checkedKeys;
-
-          if (checkedKeys instanceof Array) {
-            this.setState({
-              checkedKeys: checkedKeys
-            });
-          } else {
-            this.setState({
-              checkedKeys: []
-            });
-          }
-        }
-      },
-      {
-        key: 'render',
-        value: function render() {
-          var _this$props = this.props,
-            title = _this$props.title,
-            dataSource = _this$props.dataSource;
-          var checkedKeys = this.state.checkedKeys;
+      return dataSourceKeys;
+    };
+    _this.renderTreeNodes = function(data) {
+      return data.map(function(item) {
+        if (item.children) {
           return React__default.createElement(
-            _Card,
-            {
-              size: 'small',
-              title: title,
-              extra: React__default.createElement(
-                _Checkbox,
-                {
-                  onChange: this.onCheckAll,
-                  indeterminate: this.state.indeterminate,
-                  checked: this.state.checkAll
-                },
-                '\u5168\u9009'
-              ),
-              style: {
-                width: '100%'
-              }
-            },
-            !!dataSource && dataSource.length > 0
-              ? React__default.createElement(
-                  _Tree,
-                  {
-                    className: 'treeTile',
-                    name: 'tree',
-                    checkable: true,
-                    blockNode: false,
-                    defaultExpandAll: true,
-                    onCheck: this.onCheck,
-                    checkedKeys: checkedKeys
-                  },
-                  this.renderTreeNodes(dataSource)
-                )
-              : React__default.createElement(
-                  'p',
-                  {
-                    className: 'treeNoData'
-                  },
-                  'no data'
-                )
+            TreeNode$1,
+            {title: item.title, key: item.key, dataRef: item},
+            _this.renderTreeNodes(item.children)
           );
         }
-      }
-    ]);
-
-    return TreeTile;
-  })(React.Component);
-
-TreeTile.propTypes = {
-  title: PropTypes.string,
-  checkedKeys: PropTypes.array,
-  dataSource: PropTypes.array.isRequired
-};
-TreeTile.defaultProps = {
-  title: '请选择',
-  checkedKeys: [],
-  dataSource: []
-};
+        return React__default.createElement(TreeNode$1, __assign({}, item));
+      });
+    };
+    _this.onChange = function(item) {
+      var onChange = _this.props.onChange;
+      if (!onChange) return null;
+      return onChange(item);
+    };
+    _this.onCheckAll = function(e) {
+      var dataSourceKeys = _this.state.dataSourceKeys;
+      var checkedKeys = e.target.checked ? dataSourceKeys : [];
+      _this.setState(
+        {
+          checkedKeys: checkedKeys,
+          indeterminate: false,
+          checkAll: e.target.checked
+        },
+        function() {
+          _this.onChange(checkedKeys);
+        }
+      );
+    };
+    _this.onCheck = function(checkedKeys) {
+      var dataSourceKeys = _this.state.dataSourceKeys;
+      _this.setState(
+        {
+          checkedKeys: checkedKeys,
+          indeterminate:
+            !!checkedKeys &&
+            checkedKeys.length !== 0 &&
+            checkedKeys.length < dataSourceKeys.length,
+          checkAll:
+            !!checkedKeys && checkedKeys.length === dataSourceKeys.length
+        },
+        function() {
+          _this.onChange(checkedKeys);
+        }
+      );
+    };
+    _this.state = {
+      indeterminate: false,
+      checkAll: false,
+      dataSourceKeys: [],
+      checkedKeys: []
+    };
+    return _this;
+  }
+  TreeTile.prototype.componentDidMount = function() {
+    var dataSource = this.props.dataSource;
+    var dataSourceKeys = this.getKeysFromMap(dataSource, []);
+    this.setState({
+      dataSourceKeys: dataSourceKeys
+    });
+    var checkedKeys = this.props.checkedKeys;
+    if (checkedKeys instanceof Array) {
+      this.setState({
+        checkedKeys: checkedKeys
+      });
+    } else {
+      this.setState({
+        checkedKeys: []
+      });
+    }
+  };
+  TreeTile.prototype.render = function() {
+    var _a = this.props,
+      title = _a.title,
+      dataSource = _a.dataSource;
+    var checkedKeys = this.state.checkedKeys;
+    return React__default.createElement(
+      antd.Card,
+      // @ts-ignore: 自定义属性，忽略检查
+      {
+        // @ts-ignore: 自定义属性，忽略检查
+        size: 'small',
+        title: title,
+        extra: React__default.createElement(
+          antd.Checkbox,
+          {
+            onChange: this.onCheckAll,
+            indeterminate: this.state.indeterminate,
+            checked: this.state.checkAll
+          },
+          '\u5168\u9009'
+        ),
+        style: {width: '100%'}
+      },
+      !!dataSource && dataSource.length > 0
+        ? React__default.createElement(
+            antd.Tree,
+            {
+              className: 'treeTile',
+              // @ts-ignore: 自定义属性，忽略检查
+              name: 'tree',
+              checkable: true,
+              blockNode: false,
+              defaultExpandAll: true,
+              onCheck: this.onCheck,
+              checkedKeys: checkedKeys
+            },
+            this.renderTreeNodes(dataSource)
+          )
+        : React__default.createElement(
+            'p',
+            {className: 'treeNoData'},
+            'no data'
+          )
+    );
+  };
+  TreeTile.defaultProps = {
+    dataSource: [],
+    title: '请选择'
+  };
+  return TreeTile;
+})(React__default.Component);
 
 var css$a =
   '.ant-collapse-header {\n  outline: none;\n  box-shadow: none;\n}\n.ant-collapse-header .CollapsePanel-header {\n  line-height: 32px;\n  position: relative;\n  padding: 10px;\n}\n.ant-collapse-header .CollapsePanel-header .CollapsePanel-title {\n  margin-bottom: 0;\n}\n.ant-collapse-header .CollapsePanel-header .CollapsePanel-extra {\n  float: right;\n}\n.ant-collapse-header .CollapsePanel-header .CollapsePanel-extra .ant-form-item {\n  margin-bottom: 0;\n}\n.ant-collapse-header .CollapsePanel-header .CollapsePanel-extra .ant-form-item .ant-form-item-control {\n  line-height: 32px;\n}\n';
 styleInject(css$a);
 
-var Panel$1 = _Collapse.Panel;
-
-var CollapsePanel =
-  /*#__PURE__*/
-  (function(_Component) {
-    _inherits(CollapsePanel, _Component);
-
-    function CollapsePanel() {
-      var _getPrototypeOf2;
-
-      var _this;
-
-      _classCallCheck(this, CollapsePanel);
-
-      for (
-        var _len = arguments.length, args = new Array(_len), _key = 0;
-        _key < _len;
-        _key++
-      ) {
-        args[_key] = arguments[_key];
-      }
-
-      _this = _possibleConstructorReturn(
-        this,
-        (_getPrototypeOf2 = _getPrototypeOf(CollapsePanel)).call.apply(
-          _getPrototypeOf2,
-          [this].concat(args)
+var Panel$1 = antd.Collapse.Panel;
+var CollapsePanel = /** @class */ (function(_super) {
+  __extends(CollapsePanel, _super);
+  function CollapsePanel() {
+    return (_super !== null && _super.apply(this, arguments)) || this;
+  }
+  CollapsePanel.prototype.componentDidMount = function() {
+    this.setActiveStatus();
+  };
+  CollapsePanel.prototype.setActiveStatus = function() {
+    var control = this.props.control;
+    this.setState({
+      active: this.isExtraIsReactDom(control) ? this.fieldValueChange() : true
+    });
+  };
+  CollapsePanel.prototype.fieldValueChange = function() {
+    var formRef = this.context.formRef;
+    var _a = this.props,
+      control = _a.control,
+      closeValues = _a.closeValues;
+    /**
+     * closeValues 关闭值数组【默认为空数组】
+     * 若closeValues 传入则判断值是否在该数组中 存在则返回false
+     * 若未传入则值转boolean
+     */
+    return closeValues.length
+      ? closeValues.filter(function(it) {
+          return it === formRef.getFieldValue(control.props.name);
+        }).length === 0
+      : Boolean(formRef.getFieldValue(control.props.name));
+  };
+  CollapsePanel.prototype.isExtraIsReactDom = function(extra) {
+    return typeof extra === 'object' && typeof extra.$$typeof === 'symbol';
+  };
+  CollapsePanel.prototype.renderHeader = function() {
+    var title = this.props.title;
+    return React__default.createElement(
+      'div',
+      {className: 'CollapsePanel-header'},
+      React__default.createElement(
+        'h5',
+        {className: 'CollapsePanel-title'},
+        title,
+        React__default.createElement(
+          'div',
+          {className: 'CollapsePanel-extra'},
+          this.renderExtra()
         )
-      );
-
-      _defineProperty(_assertThisInitialized(_this), 'state', {
-        active: true
-      });
-
-      return _this;
+      )
+    );
+  };
+  CollapsePanel.prototype.renderExtra = function() {
+    var control = this.props.control;
+    return this.isExtraIsReactDom(control)
+      ? React__default.createElement(FormItem, {}, control)
+      : control;
+  };
+  CollapsePanel.prototype.render = function() {
+    var _a = this.props,
+      children = _a.children,
+      renderable = _a.renderable,
+      otherProps = __rest(_a, ['children', 'renderable']);
+    var formRef = this.context.formRef;
+    var active = this.state.active;
+    var renderProps = true;
+    if (
+      (typeof renderable === 'boolean' && renderable === false) ||
+      (typeof renderable === 'function' &&
+        renderable.apply(this, [formRef]) === false)
+    ) {
+      renderProps = false;
     }
-
-    _createClass(CollapsePanel, [
-      {
-        key: 'componentDidMount',
-        value: function componentDidMount() {
-          this.setActiveStatus();
-        }
-      },
-      {
-        key: 'componentWillReceiveProps',
-        value: function componentWillReceiveProps() {
-          this.setActiveStatus();
-        }
-      },
-      {
-        key: 'setActiveStatus',
-        value: function setActiveStatus() {
-          var control = this.props.control;
-          this.setState({
-            active: this.isExtraIsReactDom(control)
-              ? this.fieldValueChange()
-              : true
-          });
-        }
-      },
-      {
-        key: 'fieldValueChange',
-        value: function fieldValueChange() {
-          var formRef = this.context.formRef;
-          var _this$props = this.props,
-            control = _this$props.control,
-            closeValues = _this$props.closeValues;
-          /**
-           * closeValues 关闭值数组【默认为空数组】
-           * 若closeValues 传入则判断值是否在该数组中 存在则返回false
-           * 若未传入则值转boolean
-           */
-
-          return closeValues.length
-            ? closeValues.filter(function(it) {
-                return it === formRef.getFieldValue(control.props.name);
-              }).length === 0
-            : Boolean(formRef.getFieldValue(control.props.name));
-        }
-      },
-      {
-        key: 'isExtraIsReactDom',
-        value: function isExtraIsReactDom(extra) {
-          return (
-            _typeof(extra) === 'object' && _typeof(extra.$$typeof) === 'symbol'
-          );
-        }
-      },
-      {
-        key: 'renderHeader',
-        value: function renderHeader() {
-          var title = this.props.title;
-          return React__default.createElement(
-            'div',
-            {
-              className: 'CollapsePanel-header'
-            },
-            React__default.createElement(
-              'h5',
-              {
-                className: 'CollapsePanel-title'
-              },
-              title,
-              React__default.createElement(
-                'div',
-                {
-                  className: 'CollapsePanel-extra'
-                },
-                this.renderExtra()
-              )
-            )
-          );
-        }
-      },
-      {
-        key: 'renderExtra',
-        value: function renderExtra() {
-          var control = this.props.control;
-          return this.isExtraIsReactDom(control)
-            ? React__default.createElement(FormItem, {}, control)
-            : control;
-        }
-      },
-      {
-        key: 'render',
-        value: function render() {
-          var _this$props2 = this.props,
-            children = _this$props2.children,
-            title = _this$props2.title,
-            control = _this$props2.control,
-            renderable = _this$props2.renderable,
-            otherProps = _objectWithoutProperties(_this$props2, [
-              'children',
-              'title',
-              'control',
-              'renderable'
-            ]);
-
-          var formRef = this.context.formRef;
-          var active = this.state.active;
-          var renderProps = true;
-
-          if (
-            (typeof renderable === 'boolean' && renderable === false) ||
-            (typeof renderable === 'function' &&
-              renderable.apply(this, [formRef]) === false)
-          ) {
-            renderProps = false;
-          }
-          /**
-           * fixed ：如果children 没传  则不论active为什么  都不显示body
-           */
-
-          return renderProps
-            ? React__default.createElement(
-                Panel$1,
-                _extends(
-                  {
-                    header: this.renderHeader()
-                  },
-                  otherProps,
-                  {
-                    isActive: children ? active : false
-                  }
-                ),
-                children
-              )
-            : null;
-        }
-      }
-    ]);
-
-    return CollapsePanel;
-  })(React.Component);
-
-_defineProperty(CollapsePanel, 'contextTypes', {
-  formRef: PropTypes.object
-});
-CollapsePanel.propTypes = {
-  closeValues: PropTypes.array
-};
-CollapsePanel.defaultProps = {
-  closeValues: [],
-  prefixCls: 'ant-collapse'
-};
+    return renderProps
+      ? React__default.createElement(
+          Panel$1,
+          __assign({header: this.renderHeader()}, otherProps, {
+            // @ts-ignore
+            isActive: children ? active : false
+          }),
+          children
+        )
+      : null;
+  };
+  return CollapsePanel;
+})(React.Component);
 
 var ref = React__default.createRef();
 
