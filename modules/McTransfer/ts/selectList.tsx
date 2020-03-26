@@ -1,9 +1,13 @@
 import React from 'react';
+//@ts-ignore
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
+//@ts-ignore
 import {List} from 'react-virtualized';
 import PropTypes from 'prop-types';
+//@ts-ignore
 import classNames from 'classnames';
 import {Checkbox} from 'antd';
+//@ts-ignore
 import _ from 'lodash';
 
 import Item from './item';
@@ -13,7 +17,7 @@ import {ItemType, ModeType} from './item';
 
 export function noop() {}
 
-export function isRenderResultPlainObject(result) {
+export function isRenderResultPlainObject(result: any) {
   return (
     result &&
     !React.isValidElement(result) &&
@@ -48,7 +52,7 @@ interface SelectListProps {
   render: (item: object) => void;
   searchRender: () => void;
   dataSource: any[];
-  selectedKeys?: any[];
+  selectedKeys: any[];
   handleSelect: (selectedKeys: any[]) => void;
   filterOption: (filter: any, item: object) => void;
   footer: ({}) => React.ReactNode;
@@ -59,8 +63,8 @@ interface SelectListProps {
   titleText: string;
   rowHeight: number;
   style: {
-    height?: number;
-    width?: string | number;
+    height: number;
+    width: string | number;
   };
   notFoundContent?: string;
   searchPlaceholder?: string;
@@ -70,17 +74,16 @@ interface SelectListProps {
   mode: ModeType;
 }
 
-const initialState = {
-  filter: '',
-  dataSource: []
-};
-
-type State = typeof initialState;
+interface State {
+  filter: string;
+  dataSource: any[];
+}
 
 export default class SelectList extends React.Component<
   SelectListProps,
   State
 > {
+  //@ts-ignore
   list = {};
   static defaultProps = {
     filterOption: undefined,
@@ -99,6 +102,10 @@ export default class SelectList extends React.Component<
     rowKey: undefined,
     rowHeight: 32
   };
+  static state = {
+    filter: '',
+    dataSource: []
+  };
   componentWillMount() {
     this.setState({
       dataSource: this.props.dataSource
@@ -107,7 +114,7 @@ export default class SelectList extends React.Component<
       this
     );
   }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: any) {
     /* istanbul ignore else */
     if (nextProps.dataSource !== this.props.dataSource) {
       if (this.state.filter !== '') {
@@ -119,7 +126,7 @@ export default class SelectList extends React.Component<
       }
     }
   }
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps: any, nextState: any) {
     /* istanbul ignore else */
     if (
       this.shouldComponentUpdate(nextProps, nextState)
@@ -135,6 +142,7 @@ export default class SelectList extends React.Component<
      * Sometimes there will be called redundant, but call forceUpdateGrid there every time is
      * the easyest way to ensure right update
      */
+    //@ts-ignore
     this.list['forceUpdateGrid']();
   }
 
@@ -172,7 +180,7 @@ export default class SelectList extends React.Component<
     const hoder = [...selectedKeys];
     let index;
     if (!checkAll) {
-      dataSource.map(item => {
+      dataSource.map((item: {key: string; disabled: boolean}) => {
         /* istanbul ignore else */
         if (!item.disabled && hoder.indexOf(item.key) < 0) {
           hoder.push(item.key);
@@ -180,7 +188,7 @@ export default class SelectList extends React.Component<
         return item;
       });
     } else {
-      dataSource.map(item => {
+      dataSource.map((item: {key: string}) => {
         index = hoder.indexOf(item.key);
         /* istanbul ignore else */
         if (index > -1) {
@@ -192,14 +200,14 @@ export default class SelectList extends React.Component<
     this.props.handleSelect(hoder);
   };
 
-  handleFilterWapper = e => {
+  handleFilterWapper = (e: any) => {
     this.handleFilterWithDebounce(this.props.dataSource, e);
     this.setState({
       filter: e
     });
   };
 
-  matchFilter = (filter: string, item) => {
+  matchFilter = (filter: string, item: any) => {
     /* istanbul ignore else */
     if (this.props.filterOption) {
       return this.props.filterOption(filter, item);
@@ -209,7 +217,7 @@ export default class SelectList extends React.Component<
   };
 
   handleFilter = (dataSource: any[], filter: string) => {
-    const showItems = [];
+    const showItems: any[] = [];
     dataSource.map(item => {
       /* istanbul ignore else */
       if (!this.matchFilter(filter, item)) {
@@ -224,6 +232,7 @@ export default class SelectList extends React.Component<
       },
       () => {
         /* TODO: maybe we can scroll to the position which user is looking at*/
+        //@ts-ignore
         this.list['scrollToRow'](0);
       }
     );
@@ -237,7 +246,7 @@ export default class SelectList extends React.Component<
     });
   };
 
-  rowRenderer(record) {
+  rowRenderer(record: any) {
     const {_key, index, _isScrolling, _isVisible, _parent, style} = record;
     const {selectedKeys, header, type, rowKey, mode} = this.props;
     const item = this.state.dataSource[index];
@@ -268,13 +277,15 @@ export default class SelectList extends React.Component<
     );
   }
 
-  renderItem(item) {
+  renderItem(item: any) {
     /* istanbul ignore next */
     const {render = noop} = this.props;
     const renderResult = render(item);
     const isRenderResultPlain = isRenderResultPlainObject(renderResult);
     return {
+      //@ts-ignore
       renderedText: isRenderResultPlain ? renderResult['value'] : renderResult,
+      //@ts-ignore
       renderedEl: isRenderResultPlain ? renderResult['label'] : renderResult
     };
   }
@@ -332,7 +343,7 @@ export default class SelectList extends React.Component<
 
     var listHeader =
       header &&
-      header.map((value: {text: string; dataIndex: number}, i) => {
+      header.map((value: any, i) => {
         return (
           <div key={`${value.dataIndex}${i}`}>
             {value.text || value.dataIndex}
@@ -380,7 +391,7 @@ export default class SelectList extends React.Component<
         {search}
         {tableHeader}
         <List
-          ref={list => {
+          ref={(list: any) => {
             /* istanbul ignore next */
             this.list = list;
           }}

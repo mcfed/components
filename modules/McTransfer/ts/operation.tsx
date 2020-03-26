@@ -37,7 +37,7 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
     <Button
       type='primary'
       size='small'
-      // 3.16.3以下bug
+      //@ts-ignore
       disabled={!leftActive}
       onClick={moveToLeft}>
       {
@@ -52,7 +52,7 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
     <Button
       type='primary'
       size='small'
-      // 3.16.3以下bug
+      //@ts-ignore
       disabled={!rightActive}
       onClick={moveToRight}>
       {

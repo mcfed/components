@@ -34,7 +34,7 @@ exports[`快照测试 全页快照 1`] = `
       titleText=""
       type="left"
     />
-    <Operation
+    <Component
       className="transfer-operation"
       leftActive={false}
       leftArrowText=""

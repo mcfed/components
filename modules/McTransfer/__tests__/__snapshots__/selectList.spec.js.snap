@@ -36,7 +36,6 @@ exports[`快照测试 全页快照 1`] = `
     onChange={[Function]}
     placeholder="Search here"
     prefixCls="transfer-list-search"
-    value=""
   />
   <List
     autoHeight={false}

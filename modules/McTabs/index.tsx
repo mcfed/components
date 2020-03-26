@@ -21,19 +21,20 @@ interface MyStepsProps {
   handleSubmit: (values: object) => void;
 }
 
-const initialState = {
-  activeTabIndex: ''
-};
-
-type State = typeof initialState;
+interface State {
+  activeTabIndex: string;
+}
 
 export default class MySteps extends React.Component<MyStepsProps, State> {
-  myRef = [];
+  myRef: {ref: any; disabled: boolean}[] = [];
   static defaultProps = {
     steps: []
   };
 
   componentWillMount() {
+    this.state = {
+      activeTabIndex: ''
+    };
     this.setActiveKey();
   }
 
@@ -64,9 +65,9 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
     this.props.onChange && this.props.onChange(key);
   };
   handleSubmit() {
-    let errors = [];
+    let errors: any[] = [];
     let values = {};
-    this.myRef.forEach(obj => {
+    this.myRef.forEach((obj: any) => {
       let item = obj.ref;
       let form = item.current && item.current.form;
       form &&
@@ -75,7 +76,7 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
           {
             force: true
           },
-          (error, value: object) => {
+          (error: any, value: object) => {
             if (error) {
               errors.push({
                 tab: item.current.form.props.name,
@@ -96,7 +97,7 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
     this.props.handleSubmit && this.props.handleSubmit(values);
   }
   getTabPane(
-    item: {text: string; name: string; disabled: boolean; component: string},
+    item: {text: string; name: string; disabled: boolean; component: any},
     others: object
   ) {
     let ref = React.createRef();
@@ -104,7 +105,9 @@ export default class MySteps extends React.Component<MyStepsProps, State> {
     this.myRef.push({ref: ref, disabled: disabled});
     return (
       <TabPane tab={text} key={name} forceRender disabled={disabled}>
-        {!disabled && React.createElement(component, {...others, ref: ref})}
+        {!disabled &&
+          !!component &&
+          React.createElement(component, {...others, ref: ref})}
       </TabPane>
     );
   }

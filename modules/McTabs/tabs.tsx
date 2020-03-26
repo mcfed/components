@@ -8,7 +8,7 @@ interface MyTabProps extends TabsProps {
 }
 
 export default class MyTabs extends React.Component<MyTabProps, any> {
-  static TabPane: React.ClassicComponentClass<TabPaneProps>;
+  static TabPane: any;
   render() {
     return <Tabs {...this.props} />;
   }

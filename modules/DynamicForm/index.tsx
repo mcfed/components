@@ -12,20 +12,27 @@ interface DynamicFormProps {
 }
 
 interface State {}
+
 export default class DynamicForm extends React.Component<
   DynamicFormProps,
   State
 > {
+  form: any;
+  saveFormRef(form: any) {
+    this.form = form;
+  }
   render() {
     const {formData, className, ...otherProp} = this.props;
     return (
-      <BaseForm {...otherProp} className={className}>
-        {formData.map((item: {component: string}) => {
+      <BaseForm
+        {...otherProp}
+        className={className}
+        ref={this.saveFormRef.bind(this)}>
+        {formData.map((item: any) => {
           const {component, ...others} = item;
-          // return <FormItem>{this.renderForm(item)}</FormItem>;
           return React.createElement(
             FormItem,
-            {},
+            {key: others.name},
             React.createElement(component, others)
           );
         })}

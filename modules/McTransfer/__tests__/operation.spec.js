@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import Operation from '../operation';
-import * as Op from '../operation';
+import * as Op from '../ts/operation.tsx';
 
 function setup(props, options) {
   const defaultProps = {

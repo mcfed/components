@@ -1,32 +1,38 @@
-import React from 'react';
-import propTypes from 'prop-types';
-import {Table, Form, Button, message} from 'antd';
-import {WrappedFormUtils} from 'antd/lib/form/Form';
+import * as React from 'react';
+import {Table, Button, message, Form} from 'antd';
 import './index.less';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext({});
 
-/* istanbul ignore next */
-const EditableRow = ({form, index, ...props}) => (
+const EditableRow = ({
+  form,
+  index,
+  ...props
+}: {
+  form: object;
+  index: number;
+}) => (
   <EditableContext.Provider value={form}>
     <tr {...props} />
   </EditableContext.Provider>
 );
 
+//@ts-ignore
 const EditableFormRow = Form.create()(EditableRow);
 
-declare type EditTableMode = 'full' | 'row';
+declare type EditTableMode = 'full' | 'row'; // 全表格编辑 | 单行编辑
 
 /**
  * columns：表格列配置，必须
  * data: 数据数组，必须
+ * mode: 编辑模式，非必须，默认为单行编辑
  */
 interface EditTableProps {
-  columns: object[];
-  data: object[];
+  columns: any[];
+  data: any[];
   mode: EditTableMode;
-  onChange: (data: object) => void;
+  onChange(data: any): void;
 }
 
 interface State {
@@ -36,15 +42,19 @@ interface State {
   columns: any[];
 }
 
-interface ParamsObject {
-  data?: any[];
-  key?: string;
-}
-
 export default class EditTable extends React.Component<EditTableProps, State> {
   static defaultProps = {
     mode: 'row'
   };
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      data: [],
+      editingKey: '',
+      keyList: [],
+      columns: []
+    };
+  }
   componentDidMount() {
     /* istanbul ignore else */
     if (this.props.columns && this.props.columns.length > 0) {
@@ -54,7 +64,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
           columns: [...this.props.columns, ...this.state.columns]
         },
         () => {
-          let keyList = this.state.columns.map(c => c.dataIndex);
+          let keyList = this.state.columns.map((c: any) => c.dataIndex);
           this.setState({
             keyList
           });
@@ -62,19 +72,19 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       );
     }
   }
-  componentWillReceiveProps(nextprops: ParamsObject) {
+  UNSAFE_componentWillReceiveProps(nextprops: any) {
     /* istanbul ignore else */
-    if (this.props.data != nextprops.data) {
+    if (this.props.data !== nextprops.data) {
       this.setState({
         data: nextprops.data
       });
     }
   }
-  isEditing = (record: ParamsObject) => {
+  isEditing = (record: any) => {
     return record.key === this.state.editingKey;
   };
 
-  edit = (key: string) => {
+  edit = (key: any) => {
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他编辑操作！');
       return false;
@@ -84,7 +94,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
   };
 
   // 双击td事件
-  editColumn = (key: string) => {
+  editColumn = (key: any) => {
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他编辑操作！');
       return false;
@@ -92,12 +102,9 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     this.setState({editingKey: key});
   };
 
-  changeColumnEditStatus = (
-    record: {key: string},
-    tdObject: {dataIndex: string}
-  ) => {
+  changeColumnEditStatus = (record: any, tdObject: any) => {
     this.editColumn(record.key);
-    this.state.columns.map(item => {
+    this.state.columns.forEach((item: any) => {
       /* istanbul ignore else */
       if (item.dataIndex === tdObject.dataIndex) {
         item.editingStatus = true;
@@ -107,19 +114,19 @@ export default class EditTable extends React.Component<EditTableProps, State> {
 
   revertStatus() {
     // 恢复每一列的编辑状态，去除所有editingStatus
-    this.state.columns.map(item => (item.editingStatus = false));
+    this.state.columns.map((item: any) => (item.editingStatus = false));
   }
 
   activeStatus() {
     // 激活每一列的编辑状态，所有列editingStatus设为true
-    this.state.columns.map(item => (item.editingStatus = true));
+    this.state.columns.map((item: any) => (item.editingStatus = true));
   }
 
-  delete(key: string) {
+  delete(key: any) {
     let newData = [...this.state.data];
     this.setState(
       {
-        data: newData.filter(c => c.key !== key),
+        data: newData.filter((c: any) => c.key !== key),
         editingKey: ''
       },
       () => {
@@ -127,13 +134,13 @@ export default class EditTable extends React.Component<EditTableProps, State> {
       }
     );
   }
-  save(form: WrappedFormUtils, key: string) {
-    form.validateFields((error, row) => {
+  save(form: any, key: any) {
+    form.validateFields((error: any, row: any) => {
       if (error) {
         return;
       }
       const newData = [...this.state.data];
-      const index = newData.findIndex(item => key === item.key);
+      const index = newData.findIndex((item: any) => key === item.key);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -150,8 +157,8 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     });
   }
 
-  cancel = (form: WrappedFormUtils, key: string) => {
-    let obj = this.state.data.filter(d => d.key === key)[0];
+  cancel = (form: any, key: any) => {
+    let obj = this.state.data.filter((d: any) => d.key === key)[0];
     let Bdelete = false;
     for (let b in obj) {
       if (obj[b] === '') {
@@ -181,7 +188,8 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     if (keyList.length > 1) {
       keyList.length = keyList.length - 1;
     }
-    keyList.forEach(d => {
+    keyList.forEach((d: string) => {
+      //@ts-ignore
       obj[d] = '';
     });
     let data = [...this.state.data];
@@ -194,21 +202,13 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     this.activeStatus();
   };
 
-  renderCell(
-    text,
-    record,
-    cellConfig: {
-      editComponent: Function;
-      dataIndex: string;
-      editConfig;
-    }
-  ) {
+  renderCell(text: any, record: any, cellConfig: any) {
     const {dataIndex, editComponent, editConfig} = cellConfig;
     const instance = this;
     const {mode} = this.props;
     return (
       <EditableContext.Consumer>
-        {(form: WrappedFormUtils) => {
+        {(form: any) => {
           const {getFieldDecorator, setFieldsValue} = form;
           const component = editComponent(text, record, instance, form);
           return (
@@ -224,10 +224,10 @@ export default class EditTable extends React.Component<EditTableProps, State> {
                   ...component.props,
                   ...(mode !== 'row'
                     ? {
-                        onChange: function(e) {
+                        onChange: function(e: any) {
                           // e is event
                           if (e.target) {
-                            setFieldsValue({[dataIndex]: e.target['value']});
+                            setFieldsValue({[dataIndex]: e.target.value});
                           } else {
                             setFieldsValue({[dataIndex]: e});
                           }
@@ -254,7 +254,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
     const {mode} = this.props;
     const instance = this;
 
-    const columns = this.state.columns.map(col => {
+    const columns = this.state.columns.map((col: any) => {
       if (!col.editComponent) {
         return col;
       }
@@ -264,7 +264,7 @@ export default class EditTable extends React.Component<EditTableProps, State> {
         // onCellClick: (record,index)=>{
         //   console.log(record,index)
         // },
-        render: (text: any, row: object) => {
+        render: (text: any, row: any) => {
           return mode === 'full' || this.isEditing(row)
             ? this.renderCell(text, row, col)
             : col.render

@@ -1,9 +1,8 @@
-import {shallow, mount, render} from 'enzyme';
+import {shallow} from 'enzyme';
 import React from 'react';
 import {Button} from 'antd';
 
-import EditTable from '../index';
-import {EditableCell} from '../index';
+import EditTable from '../index.tsx';
 
 const setup = props => {
   const columns = [
@@ -55,21 +54,6 @@ const setup = props => {
     props,
     dataSource,
     columns
-  };
-};
-
-const setupCell = props => {
-  const defaultProps = {
-    onChange: jest.fn()
-  };
-
-  const wrapper = shallow(
-    <EditableCell {...Object.assign({}, defaultProps, props)} />
-  );
-
-  return {
-    wrapper,
-    props
   };
 };
 
@@ -233,7 +217,7 @@ describe('editable method ', () => {
     renderWrapper.props.children.props.children[1].props.onConfirm();
   });
 
-  it('componentWillReceiveProps 生命周期测试', () => {
+  it('UNSAFE_componentWillReceiveProps 生命周期测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const nextprops = {
@@ -246,7 +230,7 @@ describe('editable method ', () => {
         }
       ]
     };
-    instance.componentWillReceiveProps(nextprops);
+    instance.UNSAFE_componentWillReceiveProps(nextprops);
   });
 
   it('edit 方法测试,editingKey已存在branch', () => {
