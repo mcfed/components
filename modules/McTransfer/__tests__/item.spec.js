@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import Item from '../item';
+import Item from '../ts/item.tsx';
 
 function setup(props, options) {
   const defaultProps = {

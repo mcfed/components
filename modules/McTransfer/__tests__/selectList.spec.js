@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import SelectList from '../selectList';
-import * as Sl from '../selectList';
+import SelectList from '../ts/selectList.tsx';
+import * as Sl from '../ts/selectList.tsx';
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
 jest.mock('rc-util/lib/PureRenderMixin');
 
@@ -62,6 +62,8 @@ describe('方法测试全覆盖', () => {
   it('componentWillReceiveProps filter 为空 生命周期测试', () => {
     const {wrapper} = setup(props, {disableLifecycleMethods: true});
     const instance = wrapper.instance();
+    instance.handleFilter = jest.fn();
+    instance.state.filter = '';
     instance.componentWillReceiveProps({dataSource: [{key: 'a'}]});
   });
 

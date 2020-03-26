@@ -1,24 +1,22 @@
 import React from 'react';
 import {Steps} from 'antd';
 import {withRouter, RouteComponentProps} from 'react-router-dom';
+import * as H from 'history';
 const ref = React.createRef();
 
 /**
  * steps：步骤信息数组，必须
  */
 interface MyStepsProps extends RouteComponentProps {
-  steps: object[];
-  location: object;
+  steps: any[];
+  location: H.Location;
   history: any;
 }
 
-const initialState = {
-  currentIndex: 0,
-  step: 1
-};
-
-type State = typeof initialState;
-// type State = Readonly<typeof initialState>;
+interface State {
+  currentIndex: number;
+  step: number;
+}
 
 class MySteps extends React.Component<MyStepsProps, State> {
   static defaultProps = {
@@ -26,10 +24,14 @@ class MySteps extends React.Component<MyStepsProps, State> {
   };
 
   componentWillMount() {
+    this.state = {
+      currentIndex: 0,
+      step: 1
+    };
     const currentStepRoute = this.props.location['pathname'].slice(1);
 
     let currentStepNum = 1;
-    this.props.steps.map((v: {path: string}, index) => {
+    this.props.steps.map((v: any, index) => {
       if (currentStepRoute.indexOf(v.path) > -1) {
         currentStepNum = index + 1;
       }
@@ -73,15 +75,17 @@ class MySteps extends React.Component<MyStepsProps, State> {
             />
           ))}
         </Steps>
-        {React.createElement(renderDom['component'], {
-          ...this.props,
-          ref,
-          goRoutes,
-          getCurrentStep
-        })}
+        {renderDom['component'] &&
+          React.createElement(renderDom['component'], {
+            ...this.props,
+            ref,
+            goRoutes,
+            getCurrentStep
+          })}
       </React.Fragment>
     );
   }
 }
-
-export default withRouter(MySteps);
+const McSteps = withRouter(MySteps);
+export const McTestSteps = MySteps;
+export default McSteps;

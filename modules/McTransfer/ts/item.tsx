@@ -1,6 +1,8 @@
 import React from 'react';
 import {Checkbox} from 'antd';
+//@ts-ignore
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
+//@ts-ignore
 import classNames from 'classnames';
 
 //默认list样式
@@ -27,12 +29,12 @@ export declare type ModeType = 'normal' | 'table';
  */
 
 interface ItemProps {
-  item: object;
-  style?: object;
+  item: any;
+  style?: any;
   renderedText?: string;
   renderedEl: React.ReactNode;
   checked?: boolean;
-  onClick: (item: object) => void;
+  onClick: (item: any) => void;
   prefixCls?: string;
   header?: any[];
   type: ItemType;
@@ -50,7 +52,7 @@ export default class Item extends React.Component<ItemProps, State> {
   }
 
   //阻止select冒泡
-  stopPop = e => {
+  stopPop = (e: any) => {
     if (e && e.stopPropagation) {
       e.stopPropagation();
     } else if (window.event) {

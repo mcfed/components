@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import Search from '../search';
+import Search from '../ts/search.tsx';
 
 function setup(props, options) {
   const defaultProps = {

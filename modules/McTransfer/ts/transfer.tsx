@@ -1,7 +1,8 @@
 import 'react-virtualized/styles.css';
 import React from 'react';
+//@ts-ignore
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
-import PropTypes from 'prop-types';
+//@ts-ignore
 import classNames from 'classnames';
 // import 'core-js/fn/array/includes';
 import SelectList from './selectList';
@@ -43,19 +44,16 @@ export function noop() {}
 interface TransferProps {
   dataSource: any[];
   render: () => void;
-  targetKeys?: any[];
-  selectedKeys?: any[];
+  targetKeys: any[];
+  selectedKeys: any[];
   onChange: (
     newTargetKeys: any[],
     newTargetData: object,
     direction: DirectionType,
     newMoveKeys: any[]
   ) => void;
-  onSelectChange: (leftKeys: any[], rightKeys: any[]) => void;
-  listStyle: {
-    height: number;
-    width: string | number;
-  };
+  onSelectChange: (leftKeys?: any[], rightKeys?: any[]) => void;
+  listStyle: styleStyle;
   className?: string;
   titles: any[];
   operations: any[];
@@ -74,22 +72,25 @@ interface TransferProps {
   };
   searchRender: () => void;
   mode: ModeType;
-  leftStyle?: object;
-  rightStyle?: object;
+  leftStyle?: styleStyle;
+  rightStyle?: styleStyle;
   header: any[];
 }
 
-const initialState = {
-  leftSource: [],
-  rightSrouce: [],
-  sourceSelectedKeys: [],
-  targetSelectedKeys: []
+type styleStyle = {
+  height: number;
+  width: string | number;
 };
 
-type DirectionType = 'left' | 'right';
+interface State {
+  leftSource: any[];
+  rightSrouce: any[];
+  sourceSelectedKeys: any[];
+  targetSelectedKeys: any[];
+  [propName: string]: any;
+}
 
-// Partial类型可以扩展state
-type State = Partial<typeof initialState>;
+type DirectionType = 'left' | 'right';
 
 export default class Item extends React.Component<TransferProps, State> {
   static defaultProps = {
@@ -117,11 +118,18 @@ export default class Item extends React.Component<TransferProps, State> {
     header: undefined,
     mode: 'normal'
   };
+
   componentWillMount() {
+    this.state = {
+      leftSource: [],
+      rightSrouce: [],
+      sourceSelectedKeys: [],
+      targetSelectedKeys: []
+    };
     this.initStateByProps(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: any) {
     /* istanbul ignore else */
     if (
       nextProps.dataSource.toString() !== this.props.dataSource.toString() ||
@@ -132,7 +140,7 @@ export default class Item extends React.Component<TransferProps, State> {
     }
   }
 
-  shouldComponentUpdate(...args) {
+  shouldComponentUpdate(...args: any[]) {
     return PureRenderMixin.shouldComponentUpdate.apply(this, args);
   }
 
@@ -140,15 +148,15 @@ export default class Item extends React.Component<TransferProps, State> {
     return direction === 'left' ? 'sourceSelectedKeys' : 'targetSelectedKeys';
   }
 
-  initStateByProps = (props, update?: boolean) => {
-    const leftSource = [];
+  initStateByProps = (props: any, update?: boolean) => {
+    const leftSource: any[] = [];
     const rightSrouce = new Array(props.targetKeys.length);
-    const sourceSelectedKeys = [];
-    const targetSelectedKeys = [];
-    const oldSourceSelectedKeys = this.state.sourceSelectedKeys;
-    const oldTargetSelectedKeys = this.state.targetSelectedKeys;
+    const sourceSelectedKeys: string[] = [];
+    const targetSelectedKeys: string[] = [];
+    const oldSourceSelectedKeys = this.state.sourceSelectedKeys || [];
+    const oldTargetSelectedKeys = this.state.targetSelectedKeys || [];
 
-    props.dataSource.forEach(item => {
+    props.dataSource.forEach((item: {key: any}) => {
       /* istanbul ignore else */
       if (props.rowKey) {
         item.key = props.rowKey(item); // eslint-disable-line
@@ -227,7 +235,7 @@ export default class Item extends React.Component<TransferProps, State> {
     const moveKeys =
       direction === 'right' ? sourceSelectedKeys : targetSelectedKeys;
 
-    const newMoveKeys = [];
+    const newMoveKeys: any[] = [];
     // disable key can be selected in props, so there should fitler disabled keys
     dataSource.forEach(item => {
       /* istanbul ignore else */

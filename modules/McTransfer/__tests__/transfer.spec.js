@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import Transfer from '../transfer';
-import * as Tr from '../selectList';
+import Transfer from '../ts/transfer.tsx';
+import * as Tr from '../ts/selectList.tsx';
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
 jest.mock('rc-util/lib/PureRenderMixin');
 
