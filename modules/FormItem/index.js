@@ -209,6 +209,7 @@ export default class FormItem extends Component {
         return React.createElement(
           field.type,
           Object.assign(
+            {key: new Date().valueOf()},
             otherProps,
             containerToProp,
             treeDataProp,
