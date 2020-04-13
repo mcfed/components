@@ -261,24 +261,24 @@ describe('editable method ', () => {
     expect(instance.state.editingKey).not.toBe(editingKey);
   });
 
-  it('changeColumnEditStatus 方法测试', () => {
-    const {wrapper} = setup();
-    const instance = wrapper.instance();
-    const record = {
-      key: 1
-    };
-    const tdObject = {
-      dataIndex: 'name'
-    };
-    const editColumnSpy = jest.spyOn(instance, 'editColumn');
-    instance.changeColumnEditStatus(record, tdObject);
-    expect(editColumnSpy).toHaveBeenCalledWith(record.key);
-    expect(
-      instance.state.columns.filter(
-        item => item.dataIndex === tdObject.dataIndex
-      )[0].editingStatus
-    ).toBeTruthy();
-  });
+  // it('changeColumnEditStatus 方法测试', () => {
+  //   const {wrapper} = setup();
+  //   const instance = wrapper.instance();
+  //   const record = {
+  //     key: 1
+  //   };
+  //   const tdObject = {
+  //     dataIndex: 'name'
+  //   };
+  //   const editColumnSpy = jest.spyOn(instance, 'editColumn');
+  //   instance.changeColumnEditStatus(record, tdObject);
+  //   expect(editColumnSpy).toHaveBeenCalledWith(record.key);
+  //   expect(
+  //     instance.state.columns.filter(
+  //       item => item.dataIndex === tdObject.dataIndex
+  //     )[0].editingStatus
+  //   ).toBeTruthy();
+  // });
 
   it('revertStatus 方法测试', () => {
     const {wrapper} = setup();

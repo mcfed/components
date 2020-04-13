@@ -8,7 +8,7 @@ export default class DynamicForm extends React.Component {
     this.form = form;
   }
   render() {
-    const {formData, type, className, ...otherProp} = this.props;
+    const {formData, className, ...otherProp} = this.props;
     return (
       <BaseForm
         {...otherProp}

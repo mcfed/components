@@ -72,15 +72,15 @@ class EditTable extends React.Component {
     this.setState({editingKey: key});
   };
 
-  changeColumnEditStatus = (record, tdObject) => {
-    this.editColumn(record.key);
-    this.state.columns.map(item => {
-      /* istanbul ignore else */
-      if (item.dataIndex === tdObject.dataIndex) {
-        item.editingStatus = true;
-      }
-    });
-  };
+  // changeColumnEditStatus = (record, tdObject) => {
+  //   this.editColumn(record.key);
+  //   this.state.columns.map(item => {
+  //     /* istanbul ignore else */
+  //     if (item.dataIndex === tdObject.dataIndex) {
+  //       item.editingStatus = true;
+  //     }
+  //   });
+  // };
 
   revertStatus() {
     // 恢复每一列的编辑状态，去除所有editingStatus

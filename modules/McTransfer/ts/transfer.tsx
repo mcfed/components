@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import SelectList from './selectList';
 import {Operation} from './operation';
 import {ModeType} from './item';
+import {ItemProps, HeaderProps, StyleProps} from './commonProps';
 
 import prefixCls from './constants';
 import './index.less';
@@ -41,22 +42,22 @@ export function noop() {}
  * header: table模式下的column数据，table模式下必须
  */
 
-interface TransferProps {
-  dataSource: any[];
+interface TransferProps<T> {
+  dataSource: T[];
   render: () => void;
-  targetKeys: any[];
-  selectedKeys: any[];
+  targetKeys: string[];
+  selectedKeys: string[];
   onChange: (
-    newTargetKeys: any[],
+    newTargetKeys: string[],
     newTargetData: object,
     direction: DirectionType,
-    newMoveKeys: any[]
+    newMoveKeys: string[]
   ) => void;
-  onSelectChange: (leftKeys?: any[], rightKeys?: any[]) => void;
-  listStyle: styleStyle;
+  onSelectChange: (leftKeys?: string[], rightKeys?: string[]) => void;
+  listStyle: StyleProps;
   className?: string;
-  titles: any[];
-  operations: any[];
+  titles: string[];
+  operations: string[];
   showSearch?: boolean;
   filterOption: () => void;
   rowHeight?: number;
@@ -72,27 +73,25 @@ interface TransferProps {
   };
   searchRender: () => void;
   mode: ModeType;
-  leftStyle?: styleStyle;
-  rightStyle?: styleStyle;
-  header: any[];
+  leftStyle: StyleProps;
+  rightStyle: StyleProps;
+  header: HeaderProps[];
 }
 
-type styleStyle = {
-  height: number;
-  width: string | number;
-};
-
-interface State {
-  leftSource: any[];
-  rightSrouce: any[];
-  sourceSelectedKeys: any[];
-  targetSelectedKeys: any[];
+interface State<T> {
+  leftSource: T[];
+  rightSrouce: T[];
+  sourceSelectedKeys: string[];
+  targetSelectedKeys: string[];
   [propName: string]: any;
 }
 
 type DirectionType = 'left' | 'right';
 
-export default class Item extends React.Component<TransferProps, State> {
+export default class Item<T extends ItemProps> extends React.Component<
+  TransferProps<T>,
+  State<T>
+> {
   static defaultProps = {
     dataSource: [],
     selectedKeys: undefined,
@@ -140,7 +139,7 @@ export default class Item extends React.Component<TransferProps, State> {
     }
   }
 
-  shouldComponentUpdate(...args: any[]) {
+  shouldComponentUpdate(...args: object[]) {
     return PureRenderMixin.shouldComponentUpdate.apply(this, args);
   }
 
@@ -149,14 +148,14 @@ export default class Item extends React.Component<TransferProps, State> {
   }
 
   initStateByProps = (props: any, update?: boolean) => {
-    const leftSource: any[] = [];
+    const leftSource: T[] = [];
     const rightSrouce = new Array(props.targetKeys.length);
     const sourceSelectedKeys: string[] = [];
     const targetSelectedKeys: string[] = [];
     const oldSourceSelectedKeys = this.state.sourceSelectedKeys || [];
     const oldTargetSelectedKeys = this.state.targetSelectedKeys || [];
 
-    props.dataSource.forEach((item: {key: any}) => {
+    props.dataSource.forEach((item: T) => {
       /* istanbul ignore else */
       if (props.rowKey) {
         item.key = props.rowKey(item); // eslint-disable-line
@@ -209,7 +208,7 @@ export default class Item extends React.Component<TransferProps, State> {
     });
   };
 
-  handleSelect = (direction: DirectionType, selectedKeys: any[]) => {
+  handleSelect = (direction: DirectionType, selectedKeys: string[]) => {
     const leftKeys =
       direction === 'left' ? selectedKeys : this.state.sourceSelectedKeys;
     const rightKeys =
@@ -235,7 +234,7 @@ export default class Item extends React.Component<TransferProps, State> {
     const moveKeys =
       direction === 'right' ? sourceSelectedKeys : targetSelectedKeys;
 
-    const newMoveKeys: any[] = [];
+    const newMoveKeys: string[] = [];
     // disable key can be selected in props, so there should fitler disabled keys
     dataSource.forEach(item => {
       /* istanbul ignore else */

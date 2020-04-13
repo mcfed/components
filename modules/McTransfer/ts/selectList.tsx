@@ -3,7 +3,6 @@ import React from 'react';
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
 //@ts-ignore
 import {List} from 'react-virtualized';
-import PropTypes from 'prop-types';
 //@ts-ignore
 import classNames from 'classnames';
 import {Checkbox} from 'antd';
@@ -14,10 +13,12 @@ import Item from './item';
 import Search from './search';
 import prefixCls from './constants';
 import {ItemType, ModeType} from './item';
+import {ListRowProps} from 'react-virtualized/dist/es/List';
+import {ItemProps, HeaderProps, StyleProps} from './commonProps';
 
 export function noop() {}
 
-export function isRenderResultPlainObject(result: any) {
+export function isRenderResultPlainObject<T>(result: T) {
   return (
     result &&
     !React.isValidElement(result) &&
@@ -48,13 +49,13 @@ export function isRenderResultPlainObject(result: any) {
  * mode: 区分普通transfer和table模式，非必须，默认normal
  */
 
-interface SelectListProps {
+interface SelectListProps<T> {
   render: (item: object) => void;
   searchRender: () => void;
-  dataSource: any[];
-  selectedKeys: any[];
-  handleSelect: (selectedKeys: any[]) => void;
-  filterOption: (filter: any, item: object) => void;
+  dataSource: T[];
+  selectedKeys: string[];
+  handleSelect: (selectedKeys: string[]) => void;
+  filterOption: (filter: string, item: object) => void;
   footer: ({}) => React.ReactNode;
   showSearch: boolean;
   showHeader: boolean;
@@ -62,29 +63,25 @@ interface SelectListProps {
   itemsUnit: string;
   titleText: string;
   rowHeight: number;
-  style: {
-    height: number;
-    width: string | number;
-  };
+  style: StyleProps;
   notFoundContent?: string;
   searchPlaceholder?: string;
-  rowKey: (item: object) => void;
-  header: object[];
+  rowKey: (item: object) => string;
+  header: HeaderProps[];
   type: ItemType;
   mode: ModeType;
 }
 
-interface State {
+interface State<T extends ItemProps> {
   filter: string;
-  dataSource: any[];
+  dataSource: T[];
 }
 
-export default class SelectList extends React.Component<
-  SelectListProps,
-  State
+export default class SelectList<T extends ItemProps> extends React.Component<
+  SelectListProps<T>,
+  State<T>
 > {
-  //@ts-ignore
-  list = {};
+  list: null | {} = {};
   static defaultProps = {
     filterOption: undefined,
     footer: noop,
@@ -114,7 +111,7 @@ export default class SelectList extends React.Component<
       this
     );
   }
-  componentWillReceiveProps(nextProps: any) {
+  componentWillReceiveProps(nextProps: {dataSource: T[]}) {
     /* istanbul ignore else */
     if (nextProps.dataSource !== this.props.dataSource) {
       if (this.state.filter !== '') {
@@ -200,14 +197,14 @@ export default class SelectList extends React.Component<
     this.props.handleSelect(hoder);
   };
 
-  handleFilterWapper = (e: any) => {
+  handleFilterWapper = (e: string) => {
     this.handleFilterWithDebounce(this.props.dataSource, e);
     this.setState({
       filter: e
     });
   };
 
-  matchFilter = (filter: string, item: any) => {
+  matchFilter = (filter: string, item: object) => {
     /* istanbul ignore else */
     if (this.props.filterOption) {
       return this.props.filterOption(filter, item);
@@ -216,8 +213,8 @@ export default class SelectList extends React.Component<
     return renderedText.indexOf(filter) >= 0;
   };
 
-  handleFilter = (dataSource: any[], filter: string) => {
-    const showItems: any[] = [];
+  handleFilter = (dataSource: T[], filter: string) => {
+    const showItems: T[] = [];
     dataSource.map(item => {
       /* istanbul ignore else */
       if (!this.matchFilter(filter, item)) {
@@ -246,8 +243,8 @@ export default class SelectList extends React.Component<
     });
   };
 
-  rowRenderer(record: any) {
-    const {_key, index, _isScrolling, _isVisible, _parent, style} = record;
+  rowRenderer(record: ListRowProps) {
+    const {index, style} = record;
     const {selectedKeys, header, type, rowKey, mode} = this.props;
     const item = this.state.dataSource[index];
     const {renderedText, renderedEl} = this.renderItem(item);
@@ -277,7 +274,7 @@ export default class SelectList extends React.Component<
     );
   }
 
-  renderItem(item: any) {
+  renderItem(item: object) {
     /* istanbul ignore next */
     const {render = noop} = this.props;
     const renderResult = render(item);
@@ -343,7 +340,7 @@ export default class SelectList extends React.Component<
 
     var listHeader =
       header &&
-      header.map((value: any, i) => {
+      header.map((value, i) => {
         return (
           <div key={`${value.dataIndex}${i}`}>
             {value.text || value.dataIndex}
@@ -391,7 +388,7 @@ export default class SelectList extends React.Component<
         {search}
         {tableHeader}
         <List
-          ref={(list: any) => {
+          ref={list => {
             /* istanbul ignore next */
             this.list = list;
           }}

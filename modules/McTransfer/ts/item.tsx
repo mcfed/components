@@ -4,6 +4,11 @@ import {Checkbox} from 'antd';
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
 //@ts-ignore
 import classNames from 'classnames';
+import {
+  HeaderProps,
+  ItemProps as SubItemProps,
+  StyleProps
+} from './commonProps';
 
 //默认list样式
 const defaultListStyle = {
@@ -29,14 +34,14 @@ export declare type ModeType = 'normal' | 'table';
  */
 
 interface ItemProps {
-  item: any;
-  style?: any;
+  item: SubItemProps;
+  style: StyleProps;
   renderedText?: string;
   renderedEl: React.ReactNode;
   checked?: boolean;
-  onClick: (item: any) => void;
+  onClick: (item: SubItemProps) => void;
   prefixCls?: string;
-  header?: any[];
+  header?: HeaderProps[];
   type: ItemType;
   mode: ModeType;
   disabled: boolean;
@@ -52,8 +57,8 @@ export default class Item extends React.Component<ItemProps, State> {
   }
 
   //阻止select冒泡
-  stopPop = (e: any) => {
-    if (e && e.stopPropagation) {
+  stopPop = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (e?.stopPropagation) {
       e.stopPropagation();
     } else if (window.event) {
       window.event.cancelBubble = true;

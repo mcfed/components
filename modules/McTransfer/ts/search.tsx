@@ -10,9 +10,9 @@ import React from 'react';
  */
 interface SearchProps {
   placeholder?: string;
-  value?: any;
+  value?: string;
   prefixCls?: string;
-  onChange(e: any): void;
+  onChange(e: string): void;
   handleClear: () => void;
   searchRender: any;
 }
@@ -25,7 +25,7 @@ export default class Search extends React.Component<SearchProps, State> {
   static defaultprops = {
     placeholder: ''
   };
-  handleChange = (e: any) => {
+  handleChange = (e: string) => {
     const onChange = this.props.onChange;
     /* istanbul ignore else */
     if (onChange) {
