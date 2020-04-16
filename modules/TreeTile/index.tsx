@@ -103,21 +103,24 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     );
   };
 
-  onCheck = () => (checkedKeys: checkedKeysArrayType) => {
-    let {dataSourceKeys} = this.state;
-    this.setState(
-      {
-        checkedKeys: checkedKeys,
-        indeterminate:
-          !!checkedKeys &&
-          checkedKeys.length !== 0 &&
-          checkedKeys.length < dataSourceKeys.length,
-        checkAll: !!checkedKeys && checkedKeys.length === dataSourceKeys.length
-      },
-      () => {
-        this.onChange(checkedKeys);
-      }
-    );
+  onCheck = (checkedKeys: checkedKeysType) => {
+    if (checkedKeys instanceof Array) {
+      let {dataSourceKeys} = this.state;
+      this.setState(
+        {
+          checkedKeys: checkedKeys,
+          indeterminate:
+            !!checkedKeys &&
+            checkedKeys.length !== 0 &&
+            checkedKeys.length < dataSourceKeys.length,
+          checkAll:
+            !!checkedKeys && checkedKeys.length === dataSourceKeys.length
+        },
+        () => {
+          this.onChange(checkedKeys);
+        }
+      );
+    }
   };
 
   render() {
