@@ -87,7 +87,7 @@ export default class EditTable<T extends Item> extends React.Component<
   }
   componentDidMount() {
     /* istanbul ignore else */
-    if (this.props.columns?.length > 0) {
+    if (this.props.columns && this.props.columns.length > 0) {
       this.setState(
         {
           data: this.props.data === undefined ? [] : this.props.data,
@@ -252,7 +252,7 @@ export default class EditTable<T extends Item> extends React.Component<
                 ...editConfig,
                 initialValue:
                   record[dataIndex] === ''
-                    ? editConfig?.initialValue
+                    ? editConfig && editConfig.initialValue
                     : record[dataIndex]
               })(
                 React.createElement(component.type, {

@@ -5,7 +5,7 @@ const TreeNode = Tree.TreeNode;
 
 interface TreeTileProps {
   title?: string;
-  checkedKeys?: any;
+  checkedKeys?: checkedKeysType;
   dataSource: any;
   onChange?: (arg: any) => void;
 }
@@ -14,8 +14,16 @@ interface TreeTileStates {
   indeterminate: boolean;
   checkAll: boolean;
   dataSourceKeys: any;
-  checkedKeys: any;
+  checkedKeys: checkedKeysType;
 }
+
+type checkedKeysType = checkedKeysArrayType | checkedKeysObjectType;
+
+type checkedKeysArrayType = string[];
+type checkedKeysObjectType = {
+  checked: string[];
+  halfChecked: string[];
+};
 
 class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
   static defaultProps = {
@@ -95,7 +103,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     );
   };
 
-  onCheck = (checkedKeys: any) => {
+  onCheck = () => (checkedKeys: checkedKeysArrayType) => {
     let {dataSourceKeys} = this.state;
     this.setState(
       {
@@ -116,6 +124,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     const {title, dataSource} = this.props;
     let {checkedKeys} = this.state;
     return (
+      //@ts-ignore
       <Card
         // @ts-ignore: 自定义属性，忽略检查
         size='small'
@@ -130,6 +139,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
         }
         style={{width: '100%'}}>
         {!!dataSource && dataSource.length > 0 ? (
+          //@ts-ignore
           <Tree
             className='treeTile'
             // @ts-ignore: 自定义属性，忽略检查

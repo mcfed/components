@@ -1,5 +1,6 @@
 import React from 'react';
 import {Button, Icon} from 'antd';
+import {ButtonType, ButtonProps} from 'antd/lib/button';
 
 export function noop() {}
 
@@ -35,7 +36,8 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
   } = props;
   const moveToLeftButton = (
     <Button
-      type='primary'
+      // v3.9 bug,编译报错
+      type={'primary' as any}
       size='small'
       //@ts-ignore
       disabled={!leftActive}
@@ -50,7 +52,8 @@ export const Operation: React.FC<ItemProps> = (props: ItemProps) => {
   );
   const moveToRightButton = (
     <Button
-      type='primary'
+      // v3.9 bug,编译报错
+      type={'primary' as any}
       size='small'
       //@ts-ignore
       disabled={!rightActive}

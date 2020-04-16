@@ -58,7 +58,7 @@ export default class Item extends React.Component<ItemProps, State> {
 
   //阻止select冒泡
   stopPop = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (e?.stopPropagation) {
+    if (e && e.stopPropagation) {
       e.stopPropagation();
     } else if (window.event) {
       window.event.cancelBubble = true;

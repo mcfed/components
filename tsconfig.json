@@ -8,7 +8,7 @@
     "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
-    "noEmit": true,
+    "noEmit": false,
     "jsx": "react"
   },
   "include": ["modules"],

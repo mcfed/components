@@ -42,13 +42,13 @@ export default class CollapsePanel
      * 若closeValues 传入则判断值是否在该数组中 存在则返回false
      * 若未传入则值转boolean
      */
-    return closeValues.length
+    return closeValues && closeValues.length
       ? closeValues.filter(
           it => it === formRef.getFieldValue(control.props.name)
         ).length === 0
       : Boolean(formRef.getFieldValue(control.props.name));
   }
-  isExtraIsReactDom(extra): boolean {
+  isExtraIsReactDom(extra: any): boolean {
     return typeof extra === 'object' && typeof extra.$$typeof === 'symbol';
   }
   renderHeader(): React.ReactElement {
@@ -81,6 +81,7 @@ export default class CollapsePanel
       renderProps = false;
     }
     return renderProps ? (
+      //@ts-ignore
       <Panel
         header={this.renderHeader()}
         {...otherProps}
