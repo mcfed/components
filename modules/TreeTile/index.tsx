@@ -103,8 +103,15 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     );
   };
 
+  isCheckedKeysArrayType = (
+    keys: checkedKeysType
+  ): keys is checkedKeysArrayType => {
+    return keys instanceof Array;
+  };
+
   onCheck = (checkedKeys: checkedKeysType) => {
-    if (checkedKeys instanceof Array) {
+    // istanbul ignore else
+    if (this.isCheckedKeysArrayType(checkedKeys)) {
       let {dataSourceKeys} = this.state;
       this.setState(
         {
