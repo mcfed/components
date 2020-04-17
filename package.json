@@ -37,6 +37,7 @@
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
     "@rollup/plugin-typescript": "2.0.2",
+    "@types/jest": "^24.9.1",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router": "^5.1.4",
@@ -68,10 +69,11 @@
     "rollup-plugin-uglify": "^6.0.2",
     "rollup-plugin-visualizer": "^2.4.4",
     "source-map-explorer": "^2.0.1",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.7.5"
   },
   "optionalDependencies": {
-    "antd": "3.26.11"
+    "antd": "^3.9.4"
   },
   "dependencies": {
     "classnames": "^2.2.6",
@@ -84,7 +86,6 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-virtualized": "^9.21.1",
-    "react-virtualized-transfer": "^1.4.1",
-    "ts-jest": "^24.3.0"
+    "react-virtualized-transfer": "^1.4.1"
   }
 }
