@@ -1,10 +1,11 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const {spawn} = require('child_process');
 
 const configs = {
   sourceFolder: 'modules',
-  targetFolder: 'lib',
+  targetFolders: ['lib', 'es'],
   include: ['css', 'less', 'md']
   //   deep: 3
 };
@@ -100,15 +101,24 @@ const collectFiles = (sourceFolder, targetFilename, files = []) => {
 };
 
 const use = config => {
-  const {sourceFolder, include, targetFolder, deep = 3} = config;
+  const {sourceFolder, include, targetFolders, deep = 3} = config;
   let arr = [];
   include.forEach(item => arr.push(...collectFiles(sourceFolder, item)));
   arr = arr
     .map(path => path.replace(/\\/gi, '/'))
     .filter(path => path.split('/').length <= deep)
-    .forEach(path =>
-      fs.copyFileSync(path, path.replace(sourceFolder, targetFolder))
-    );
+    .forEach(path => {
+      targetFolders.forEach(targetFolder => {
+        if (path.includes('.less')) {
+          const middlePath = path.slice(
+            configs.sourceFolder.length + 1,
+            -'.less'.length
+          );
+          spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
+        }
+        fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
+      });
+    });
 };
 
 use(configs);
