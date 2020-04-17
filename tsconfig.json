@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "outDir": "./lib",
-    "module": "es6",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "target": "es5",
     "lib": ["es5", "dom", "es6", "esnext"],
     "allowJs": true,
     "esModuleInterop": true,
+    "declaration": true,
     "strict": true,
-    "noEmit": false,
+    "noEmit": true,
     "jsx": "react"
   },
   "include": ["modules"],
