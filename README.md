@@ -34,3 +34,7 @@
 - 组件目录下必须具有`index`入口文件，入口文件必须具有`default`导出
 - 当一个组件目录下存在多个待导出组件时，采用`ComponentA.ComponentB`的形式导出非默认组件
 - 先阶段组件样式通过硬编码`import`引入，需要下游项目配置对应的`loader`以加载样式；未来考虑由专门的样式入口文件引入具体样式文件，通过`babel-plugin-import`使样式与组件分离
+
+### 使用说明
+
+请移步至[这里](./docs/usage/basic.md)
