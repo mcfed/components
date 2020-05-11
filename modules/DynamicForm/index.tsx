@@ -26,6 +26,7 @@ export default class DynamicForm extends React.Component<
     return (
       <BaseForm
         {...otherProp}
+        // @ts-ignore
         className={className}
         ref={this.saveFormRef.bind(this)}>
         {formData.map((item: any) => {

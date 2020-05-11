@@ -1,6 +1,6 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import Ellipsis from '../index.tsx';
+import Ellipsis from '../index';
 import Readme from '../README.md';
 import {action} from '@storybook/addon-actions';
 

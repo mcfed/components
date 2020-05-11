@@ -109,14 +109,18 @@ const use = config => {
     .filter(path => path.split('/').length <= deep)
     .forEach(path => {
       targetFolders.forEach(targetFolder => {
-        if (path.includes('.less')) {
-          const middlePath = path.slice(
-            configs.sourceFolder.length + 1,
-            -'.less'.length
-          );
-          spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
+        try {
+          if (path.includes('.less')) {
+            const middlePath = path.slice(
+              configs.sourceFolder.length + 1,
+              -'.less'.length
+            );
+            spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
+          }
+          fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
+        } catch (e) {
+          console.error(e);
         }
-        fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
       });
     });
 };
