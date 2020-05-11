@@ -10,7 +10,15 @@
     "declaration": true,
     "strict": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "plugins": [
+      {
+        "transform": "ts-import-plugin",
+        "type": "config",
+        "libraryName": "antd",
+        "style": true
+      }
+    ]
   },
   "include": ["modules"],
   "exclude": ["node_modules", "**/*.spec.js", "**/*.test.js", "**/*.stories.js"]

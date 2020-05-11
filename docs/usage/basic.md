@@ -20,23 +20,7 @@ yarn add mcf-components
 
 ```javascript
 // config-overrides.js
-const {
-  override,
-  fixBabelImports,
-  addExternalBabelPlugin
-} = require('customize-cra');
-const fixExternalBabelImports = (libraryName, options) =>
-  addExternalBabelPlugin([
-    'import',
-    Object.assign(
-      {},
-      {
-        libraryName
-      },
-      options
-    ),
-    `fix-${libraryName}-imports`
-  ]);
+const {override, fixBabelImports} = require('customize-cra');
 
 module.exports = override(
   // 针对src下引用的antd
@@ -50,12 +34,6 @@ module.exports = override(
     libraryName: 'mcf-components',
     libraryDirectory: 'es', // 对lib下的cjs代码无效
     camel2DashComponentName: false
-  }),
-  // 针对node_modules下mcf-components引用的antd
-  fixExternalBabelImports('import', {
-    libraryName: 'antd',
-    libraryDirectory: 'es',
-    style: 'css'
   })
 );
 ```
@@ -91,27 +69,12 @@ module.exports = {
                 {libraryName: 'antd', libraryDirectory: 'es', style: 'css'}
               ],
               [
-                'mcf-components',
+                'import',
                 {
                   libraryName: 'mcf-components',
                   libraryDirectory: 'es',
                   camel2DashComponentName: false
                 }
-              ]
-            ]
-          }
-        }
-      },
-      {
-        test: /\.js$/,
-        include: /node_modules\/mcf-components/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            plugins: [
-              [
-                'import',
-                {libraryName: 'antd', libraryDirectory: 'es', style: 'css'}
               ]
             ]
           }
