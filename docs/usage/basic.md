@@ -87,6 +87,30 @@ module.exports = {
 };
 ```
 
+or
+
+```json
+// .babelrc
+{
+  "plugins": [
+    // ...
+    [
+      "import",
+      {"libraryName": "antd", "libraryDirectory": "es", "style": "css"}
+    ],
+    [
+      "import",
+      {
+        "libraryName": "mcf-components",
+        "libraryDirectory": "es",
+        "camel2DashComponentName": false
+      }
+    ]
+  ]
+  // ...
+}
+```
+
 ### 基于原始 webpack 配置的 TS 项目
 
 ```sh
