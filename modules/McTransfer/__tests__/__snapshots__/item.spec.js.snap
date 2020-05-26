@@ -11,7 +11,6 @@ exports[`快照测试 全页快照 1`] = `
     checked={true}
     disabled={false}
     indeterminate={false}
-    prefixCls="ant-checkbox"
   />
   <span />
 </li>

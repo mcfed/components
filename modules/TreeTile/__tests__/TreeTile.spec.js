@@ -18,7 +18,7 @@ describe('快照测试', () => {
   });
 });
 
-describe('TreeTile render 是否正确渲染', () => {
+describe.skip('TreeTile render 是否正确渲染', () => {
   const treeData = [
       {
         title: 'Node1',
@@ -97,7 +97,7 @@ describe('TreeTile render 是否正确渲染', () => {
   });
 });
 
-describe('TreeTile 方法测试', () => {
+describe.skip('TreeTile 方法测试', () => {
   const treeData = [
       {
         title: 'Node1',
