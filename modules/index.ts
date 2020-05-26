@@ -1,10 +1,13 @@
 export {default as AdvancedSearch} from './AdvancedSearch';
-export {default as BaseForm} from './BaseForm';
-export {default as FormItem} from './FormItem';
-export {default as ButtonGroups} from './ButtonGroups';
+export {default as BaseForm} from './BaseForm/indexTs';
+// export {default as FormItem} from './FormItem';
+export {default as FormItem} from './FormItem/indexTs';
+export * as ButtonGroups from './ButtonGroups/indexTs';
+// export * as ButtonGroups from './ButtonGroups/indexTs';
+// export {CustomButton} from './ButtonGroups/indexTs';
 // import CustomTable from './CustomTable'
 export {default as WrapperDatePicker} from './WrapperDatePicker';
-export {default as DataTable} from './DataTable';
+export * as DataTable from './DataTable/indexTs';
 export {default as Permission} from './Permission';
 export {default as Panel} from './Panel';
 export {default as ModalAndView} from './ModalAndView';
@@ -15,7 +18,7 @@ export {default as PropertyTable} from './PropertyTable';
 export {default as TransferView} from './TransferView';
 
 export {default as EditTable} from './EditTable';
-export {default as DetailTable} from './DetailTable';
+// export {default as DetailTable} from './DetailTable';
 export {default as FieldSet} from './FieldSet';
 export {default as ConditionForm} from './ConditionForm';
 export {default as ErrorBoundary} from './ErrorBoundary';

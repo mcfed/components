@@ -1,7 +1,7 @@
 'use strict';
 const fs = require('fs');
-const path = require('path');
 const {spawn} = require('child_process');
+const {collectFiles, readCssContent, mergeAndCreateCss} = require('./utils');
 
 const configs = {
   sourceFolder: 'modules',
@@ -88,39 +88,35 @@ const configs = {
 
 // config('modules')
 
-const collectFiles = (sourceFolder, targetFilename, files = []) => {
-  const folders = [];
-  fs.readdirSync(sourceFolder)
-    .map(name => path.join(sourceFolder, name))
-    .forEach(source => {
-      if (fs.lstatSync(source).isDirectory()) folders.push(source);
-      else if (source.includes(targetFilename)) files.push(source);
-    });
-  folders.forEach(f => collectFiles(f, targetFilename, files));
-  return files;
-};
-
 const use = config => {
   const {sourceFolder, include, targetFolders, deep = 3} = config;
   let arr = [];
-  include.forEach(item => arr.push(...collectFiles(sourceFolder, item)));
+  let cssContentArray = [];
+  include.map(item => {
+    const fileArray = collectFiles(sourceFolder, item);
+    arr.push(...fileArray);
+    switch (item) {
+      case 'less':
+      case 'css':
+        cssContentArray.push(...fileArray.map(readCssContent));
+      default:
+        break;
+    }
+  });
+  mergeAndCreateCss(cssContentArray, 'dist/style.less');
   arr = arr
     .map(path => path.replace(/\\/gi, '/'))
     .filter(path => path.split('/').length <= deep)
     .forEach(path => {
       targetFolders.forEach(targetFolder => {
-        try {
-          if (path.includes('.less')) {
-            const middlePath = path.slice(
-              configs.sourceFolder.length + 1,
-              -'.less'.length
-            );
-            spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
-          }
-          fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
-        } catch (e) {
-          console.error(e);
+        if (path.includes('.less')) {
+          const middlePath = path.slice(
+            configs.sourceFolder.length + 1,
+            -'.less'.length
+          );
+          spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
         }
+        fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
       });
     });
 };

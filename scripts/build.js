@@ -3,5 +3,5 @@ const fs = require('fs-extra');
 
 fs.removeSync('./lib');
 fs.removeSync('./es');
-spawnSync('ttsc', ['--noEmit', 'false']);
-spawnSync('ttsc', ['--build', 'tsconfig.es.json']);
+spawnSync('tsc', ['--noEmit', 'false']);
+spawnSync('tsc', ['--noEmit', 'false', '--outDir', './es', '-m', 'ES6']);

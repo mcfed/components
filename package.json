@@ -1,5 +1,5 @@
 {
-  "name": "mcf-components",
+  "name": "@mcf/components",
   "version": "1.4.0-rc1",
   "description": "@mcf for components",
   "main": "lib/index.js",
