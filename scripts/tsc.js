@@ -4,7 +4,7 @@ const {spawn} = require('child_process');
 const {collectFiles, readCssContent, mergeAndCreateCss} = require('./utils');
 
 const configs = {
-  sourceFolder: 'modules',
+  sourceFolder: 'src',
   targetFolders: ['lib', 'es'],
   include: ['css', 'less', 'md']
   //   deep: 3

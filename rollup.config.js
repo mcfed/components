@@ -11,7 +11,7 @@ import typescript from '@rollup/plugin-typescript';
 
 import pkg from './package.json';
 const name = 'components';
-const input = './modules/index.ts';
+const input = './src/index.ts';
 
 const globals = {
   react: 'React',

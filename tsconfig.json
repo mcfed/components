@@ -20,6 +20,6 @@
       }
     ]
   },
-  "include": ["modules"],
+  "include": ["src"],
   "exclude": ["node_modules", "**/*.spec.js", "**/*.test.js", "**/*.stories.js"]
 }

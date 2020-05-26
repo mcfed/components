@@ -15,7 +15,7 @@
     "@mcf",
     "components",
     "CRUD",
-    "modules",
+    "src",
     "developer"
   ],
   "repository": {
