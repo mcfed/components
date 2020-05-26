@@ -24,4 +24,5 @@ yarn-error.log*
 /umd/*
 .size-snapshot.json
 /lib
+/cjs
 /es
