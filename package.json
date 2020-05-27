@@ -1,6 +1,6 @@
 {
   "name": "@mcf/components",
-  "version": "1.4.0-rc1",
+  "version": "0.1.1",
   "description": "@mcf for components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "npm test -- --watch",
-    "build": "rollup -c",
+    "build": "npm run tsc",
     "tsc": "node scripts/build.js && node scripts/tsc.js"
   },
   "keywords": [
@@ -22,6 +22,12 @@
     "type": "git",
     "url": "http://git.mchz.com.cn/mcf/components.git"
   },
+  "files": [
+    "dist/",
+    "es/",
+    "lib/",
+    "package.json"
+  ],
   "author": "jaxchow",
   "license": "ISC",
   "devDependencies": {
@@ -77,7 +83,7 @@
     "typescript": "^3.7.5"
   },
   "optionalDependencies": {
-    "antd": "^3.9.4"
+    "antd": "3.9.3"
   },
   "dependencies": {
     "classnames": "^2.2.6",
