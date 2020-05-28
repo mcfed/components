@@ -2,8 +2,8 @@ export {default as AdvancedSearch} from './AdvancedSearch';
 export {default as BaseForm} from './BaseForm/indexTs';
 // export {default as FormItem} from './FormItem';
 export {default as FormItem} from './FormItem/indexTs';
-import * as ButtonGroups from './ButtonGroups/indexTs';
-export {ButtonGroups};
+import {default as ButtonGroups} from './ButtonGroups/indexTs';
+// export {ButtonGroups};
 // export * as ButtonGroups from './ButtonGroups/indexTs';
 // export {CustomButton} from './ButtonGroups/indexTs';
 // import CustomTable from './CustomTable'
@@ -19,7 +19,7 @@ export {default as PropertyTable} from './PropertyTable';
 export {default as TransferView} from './TransferView';
 
 export {default as EditTable} from './EditTable';
-// export {default as DetailTable} from './DetailTable';
+export {default as DetailTable} from './DetailTable';
 export {default as FieldSet} from './FieldSet';
 export {default as ConditionForm} from './ConditionForm';
 export {default as ErrorBoundary} from './ErrorBoundary';

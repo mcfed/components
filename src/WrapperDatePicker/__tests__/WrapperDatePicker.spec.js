@@ -362,7 +362,7 @@ describe('WrapperDatePicker valueFormat to whatever', () => {
     ]);
   });
 
-  it('date not array valueFormat is x', () => {
+  xit('date not array valueFormat is x', () => {
     const onchangeFn = jest.fn();
     const {wrapper} = setup({
       children: <RangePicker valueFormat='x' />,
@@ -388,7 +388,7 @@ describe('WrapperDatePicker valueFormat to whatever', () => {
     );
   });
 
-  it('date not array valueFormat false', () => {
+  xit('date not array valueFormat false', () => {
     const onchangeFn = jest.fn();
     const {wrapper} = setup({
       children: <RangePicker valueFormat={false} />,

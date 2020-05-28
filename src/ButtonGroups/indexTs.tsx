@@ -44,13 +44,14 @@ class Confirm extends React.Component<ConfirmType> {
   }
 }
 
-export default class ButtonGroups extends React.Component<ButtonGroupsType> {
+export class ButtonGroups extends React.Component<ButtonGroupsType> {
   static defaultProps = {
     showSize: 5,
     handleClick: function(actionkey: string) {},
     viewMode: 'text',
     mode: 'ButtonGroup'
   };
+  // static CustomButton: typeof CustomButton;
   filterChildren(childrenArray: any) {
     return childrenArray.filter((it: React.ReactElement) => {
       if (it.props.permission === undefined) {
@@ -215,3 +216,8 @@ export class CustomButton extends React.Component<CustomButtonProps> {
     return <Button {...otherProps} />;
   }
 }
+
+//@ts-ignore
+ButtonGroups.CustomButton = CustomButton;
+
+export default ButtonGroups;

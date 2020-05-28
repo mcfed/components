@@ -1500,10 +1500,10 @@ ant-design-palettes@^1.1.3:
   dependencies:
     tinycolor2 "^1.4.1"
 
-antd@^3.9.4:
-  version "3.9.4"
-  resolved "https://registry.npm.taobao.org/antd/download/antd-3.9.4.tgz#dd0d8b0781a76f7e788f68af34e77fb761333850"
-  integrity sha1-3Q2LB4Gnb354j2ivNOd/t2EzOFA=
+antd@3.9.3:
+  version "3.9.3"
+  resolved "http://nexus.mchz.com.cn:4873/antd/-/antd-3.9.3.tgz#bc3e6a93478f4fcfb57f9e7f683c3ce590069ddb"
+  integrity sha512-YeDW/WubTP8IgAwIkBJYPZ1kzzC8Qt9upRiy+bvKWLKP8lB2VHISOyPAiQ+5jPqIJqE7vT0DguMYv6U2XIpHRg==
   dependencies:
     "@ant-design/icons" "~1.1.5"
     "@ant-design/icons-react" "~1.1.1"

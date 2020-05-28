@@ -17,6 +17,7 @@ exports[`快照测试 全页快照 1`] = `
       checked={true}
       indeterminate={false}
       onChange={[Function]}
+      prefixCls="ant-checkbox"
     />
     <span
       className="transfer-list-header-selected"

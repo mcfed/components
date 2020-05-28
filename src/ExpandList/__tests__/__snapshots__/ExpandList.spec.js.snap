@@ -10,6 +10,7 @@ exports[`快照测试 ExpandList 快照测试 1`] = `
   loadMore={null}
   loading={false}
   pagination={false}
+  prefixCls="ant-list"
   renderItem={[Function]}
   size="large"
   split={true}
