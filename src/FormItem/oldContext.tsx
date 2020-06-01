@@ -54,9 +54,10 @@ export default class FormItem extends React.Component<CustFormItemProps, any> {
   renderFields(element: React.ReactElement) {
     const _this = this;
     const {disabled} = this.props;
+    const {defaultValue, ...otherProps} = element.props;
     return React.createElement(
       element.type,
-      Object.assign({}, element.props, _this.fieldDisabledProp(disabled)),
+      Object.assign({}, otherProps, _this.fieldDisabledProp(disabled)),
       element.props.children
     );
   }
