@@ -2,7 +2,7 @@ export {default as AdvancedSearch} from './AdvancedSearch';
 export {default as BaseForm} from './BaseForm/indexTs';
 // export {default as FormItem} from './FormItem';
 export {default as FormItem} from './FormItem/indexTs';
-import {default as ButtonGroups} from './ButtonGroups/indexTs';
+export {default as ButtonGroups} from './ButtonGroups/indexTs';
 // export {ButtonGroups};
 // export * as ButtonGroups from './ButtonGroups/indexTs';
 // export {CustomButton} from './ButtonGroups/indexTs';
