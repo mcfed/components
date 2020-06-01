@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ButtonProps} from 'antd/es/button';
+import {BaseButtonProps} from 'antd/es/button';
 // import Tooltip from 'antd/es/tooltip';
 // import Menu from 'antd/es/menu';
 // import Icon from 'antd/es/icon';
@@ -45,6 +45,7 @@ class Confirm extends React.Component<ConfirmType> {
 }
 
 export class ButtonGroups extends React.Component<ButtonGroupsType> {
+  static CustomButton: typeof CustomButton;
   static defaultProps = {
     showSize: 5,
     handleClick: function(actionkey: string) {},
@@ -196,7 +197,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
 }
 
-type CustomButtonProps = ButtonProps & {
+type CustomButtonProps = BaseButtonProps & {
   actionkey: string;
   tip?: string;
   confirm?: string;
@@ -205,19 +206,11 @@ type CustomButtonProps = ButtonProps & {
 
 export class CustomButton extends React.Component<CustomButtonProps> {
   render() {
-    const {
-      children,
-      actionkey,
-      tip,
-      confirm,
-      confirmTitle,
-      ...otherProps
-    } = this.props;
-    return <Button {...otherProps} />;
+    const {actionkey, tip, confirm, confirmTitle, ...otherProps} = this.props;
+    return <Button {...otherProps} href='undefined' />;
   }
 }
 
-//@ts-ignore
 ButtonGroups.CustomButton = CustomButton;
 
 export default ButtonGroups;
