@@ -13,6 +13,7 @@ interface CustFormItemProps extends FormItemProps {
   renderable?: fnOrBoolType;
   formLayout?: object;
   formRef?: any;
+  rules?: object[];
 }
 
 //feature todo
@@ -50,9 +51,10 @@ class FormItem extends React.Component<CustFormItemProps, any> {
   renderFields(element: React.ReactElement) {
     const _this = this;
     const {disabled} = this.props;
+    const {defaultValue, ...otherProps} = element.props;
     return React.createElement(
       element.type,
-      Object.assign({}, element.props, _this.fieldDisabledProp(disabled)),
+      Object.assign({}, otherProps, _this.fieldDisabledProp(disabled)),
       element.props.children
     );
   }
@@ -70,8 +72,8 @@ class FormItem extends React.Component<CustFormItemProps, any> {
     const {getFieldDecorator} = formRef;
     const element = this.props.children;
     const {defaultValue} = element.props;
-    console.log(formRef);
-    return this.fieldRenderableProp(renderable) ? (
+    const isFormContextComing = getFieldDecorator !== undefined;
+    return this.fieldRenderableProp(renderable) && isFormContextComing ? (
       <Form.Item label={label} {...formLayout}>
         {getFieldDecorator(name, {
           ...otherProps,
