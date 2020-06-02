@@ -32,3 +32,4 @@ export {default as CollapsePanel} from './CollapsePanel';
 
 export {default as Step} from './Step';
 export {default as ExtraColumn} from './ExtraColumn';
+export {default as SwitchConfirm} from './SwitchConfirm';
