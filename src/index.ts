@@ -1,4 +1,5 @@
-export {default as AdvancedSearch} from './AdvancedSearch/indexTs';
+export {default as AdvancedSearch} from './AdvancedSearch';
+export {default as HeadSearchBar} from './HeadSearchBar/indexTs';
 export {default as BaseForm} from './BaseForm/indexTs';
 // export {default as FormItem} from './FormItem';
 export {default as FormItem} from './FormItem/indexTs';
@@ -31,3 +32,4 @@ export {default as CollapsePanel} from './CollapsePanel';
 
 export {default as Step} from './Step';
 export {default as ExtraColumn} from './ExtraColumn';
+export {default as SwitchConfirm} from './SwitchConfirm';
