@@ -72,11 +72,21 @@ export default class AdvancedSearchForm extends React.Component<
       cols = 24 / columns;
     }
     return React.Children.toArray(children).map((it: any, idx: number) => {
-      const hasLabelClass =
-        it.props.label !== undefined ? '' : 'head-searchbar-col-nolabel';
+      const hasLabelWrapper =
+        it.props.label !== undefined
+          ? {}
+          : {
+              wrapperCol: {
+                span: 24
+              }
+            };
       return (
-        <Col span={cols} key={idx} className={hasLabelClass}>
-          {it}
+        <Col span={cols} key={idx}>
+          {React.createElement(
+            it.type,
+            Object.assign({}, it.props, hasLabelWrapper),
+            it.props.children
+          )}
         </Col>
       );
     });
