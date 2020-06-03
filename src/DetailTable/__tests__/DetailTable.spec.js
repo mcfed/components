@@ -1,8 +1,8 @@
 import {shallow, mount, render} from 'enzyme';
 import React from 'react';
 
-import DetailTable from '../index.tsx';
-import Td from '../td.tsx';
+import DetailTable from '../index';
+import Td from '../td';
 
 const setup = props => {
   const wrapper = shallow(<DetailTable {...props} />);
@@ -28,13 +28,25 @@ describe('DetailTable  render', () => {
 });
 
 describe('DetailTable method test', () => {
-  it.skip('showDom props mode和datasource不匹配时', () => {
-    const {wrapper, props} = setup({
-      dataSource: [],
-      mode: 'object'
-    });
-
-    // console.log(wrapper.instance().showDom(props.dataSource))
+  it('showDom props mode和datasource不匹配时', () => {
+    function render1() {
+      setup({
+        dataSource: [],
+        mode: 'object'
+      });
+    }
+    function render2() {
+      setup({
+        dataSource: {},
+        mode: 'array'
+      });
+    }
+    expect(() => {
+      render1();
+    }).toThrowError(new Error('使用对象模式，数据必须为object'));
+    expect(() => {
+      render2();
+    }).toThrowError(new Error('数据为对象时，mode需要为object'));
   });
 
   it('mode为object时，能正确渲染', () => {
@@ -149,11 +161,20 @@ describe('DetailTable method test', () => {
   });
 });
 
-describe.skip('td test', () => {
+describe('td test', () => {
   it('td dataSource labelkey 都是基本类型  ', () => {
     const dataSource = {label: 'a', value: 1};
-    console.log(Td(dataSource, 'label', 'value'));
-    // expect(Td(dataSource)).toEqual([
+    const wrapper = shallow(
+      <Td dataSource={dataSource} labelKey='label' valueKey='value' />
+    );
+    const children = wrapper.props().children;
+    expect(children.length).toBe(2);
+    expect(children[0].type).toBe('th');
+    expect(children[0].props.children).toEqual('a');
+    expect(children[0].key).toEqual('tda');
+    expect(children[1].type).toBe('td');
+    expect(children[1].props.children).toEqual(1);
+    // expect(wrapper).toEqual([
     //   <th key={'td' + dataSource.label}>{dataSource.label}</th>,
     //   <td colSpan={null} key={'td1' + dataSource.value}>{dataSource.value}</td>
     // ])

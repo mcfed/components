@@ -42,7 +42,14 @@ class BaseForm extends React.Component<CustomFormComponentProps> {
 const SubmitForm = FormCreate()(BaseForm);
 
 class AdvancedFormClass extends BaseForm {}
-//@ts-ignore
-export const AdvancedForm = FormCreate()(AdvancedFormClass);
+
+export const AdvancedForm = FormCreate({
+  onValuesChange(props: any, values, allValues) {
+    if (props.autoSubmitForm) {
+      props.onSearch(allValues);
+    }
+  }
+  //@ts-ignore
+})(AdvancedFormClass);
 
 export default SubmitForm;
