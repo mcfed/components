@@ -5,6 +5,7 @@ import Button from 'antd/es/button';
 import Form from 'antd/es/form';
 import {FormProps} from 'antd/lib/form';
 import {AdvancedForm} from '../BaseForm/indexTs';
+import './index.less';
 
 interface AdvancedFormProps extends FormProps {
   gutter?: number;
@@ -24,9 +25,9 @@ export default class AdvancedSearchForm extends React.Component<
     columns: 4,
     layout: 'horizontal',
     defaultParams: {},
-    autoSubmitForm: false,
+    autoSubmitForm: true,
     filterSubmitHandler: (value: any) => {},
-    showSearchButton: true
+    showSearchButton: false
   };
   handleSearch(e: any, values?: any) {
     e.preventDefault();
@@ -52,7 +53,7 @@ export default class AdvancedSearchForm extends React.Component<
 
     return (
       <div
-        className='advanced-search-toolbar'
+        className='head-searchbar-toolbar'
         style={showSearchButton ? {} : {display: 'none'}}>
         //@ts-ignore
         <Button
@@ -71,8 +72,10 @@ export default class AdvancedSearchForm extends React.Component<
       cols = 24 / columns;
     }
     return React.Children.toArray(children).map((it: any, idx: number) => {
+      const hasLabelClass =
+        it.props.label !== undefined ? '' : 'head-searchbar-col-nolabel';
       return (
-        <Col span={cols} key={idx}>
+        <Col span={cols} key={idx} className={hasLabelClass}>
           {it}
         </Col>
       );
@@ -80,14 +83,17 @@ export default class AdvancedSearchForm extends React.Component<
   }
 
   render() {
-    const {gutter, layout, autoSubmitForm} = this.props;
+    const {gutter, layout, autoSubmitForm, filterSubmitHandler} = this.props;
     return (
-      <div className='advanced-search-panel'>
+      <div className='head-searchbar-panel'>
         <AdvancedForm
           layout={layout}
           autoSubmitForm={autoSubmitForm}
+          onSearch={filterSubmitHandler}
           wrappedComponentRef={this.saveFormRef.bind(this)}>
-          <Row gutter={gutter}>{this.renderFields()}</Row>
+          <Row className='head-searchbar-fieldsbox' gutter={gutter}>
+            {this.renderFields()}
+          </Row>
           {this.renderSearchBar()}
         </AdvancedForm>
       </div>
