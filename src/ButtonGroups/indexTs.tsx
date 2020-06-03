@@ -1,14 +1,15 @@
 import * as React from 'react';
-import {BaseButtonProps} from 'antd/es/button';
-// import Tooltip from 'antd/es/tooltip';
-// import Menu from 'antd/es/menu';
-// import Icon from 'antd/es/icon';
-// import Dropdown from 'antd/es/dropdown';
-// import Modal, {ModalFuncProps} from 'antd/es/modal';
-import {ModalFuncProps} from 'antd/es/modal';
-import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
+import Button, {ButtonGroupProps} from 'antd/es/button';
+import Tooltip from 'antd/es/tooltip';
+import Menu from 'antd/es/menu';
+import Icon from 'antd/es/icon';
+import Dropdown from 'antd/es/dropdown';
+import Modal, {ModalFuncProps} from 'antd/es/modal';
+// import {ModalFuncProps} from 'antd/es/modal';
+// import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
+import CustomButton from './Button';
 
-interface ButtonGroupsType {
+interface ButtonGroupsType extends ButtonGroupProps {
   handleClick: (actionkey: string) => void;
   children: React.ReactElement<CustomButton>[];
   mode: 'ButtonGroup' | 'ButtonMenu';
@@ -183,9 +184,16 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderChildren() {
-    const {mode} = this.props;
+    const {
+      mode,
+      handleClick,
+      children,
+      showSize,
+      viewMode,
+      ...otherProps
+    } = this.props;
     return (
-      <Button.Group>
+      <Button.Group {...otherProps}>
         {mode === 'ButtonGroup'
           ? this.renderButtonOnly()
           : this.renderMixButtonMenu()}
@@ -194,20 +202,6 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
   render() {
     return <div className='button-groups'>{this.renderChildren()}</div>;
-  }
-}
-
-type CustomButtonProps = BaseButtonProps & {
-  actionkey: string;
-  tip?: string;
-  confirm?: string;
-  confirmTitle?: string;
-};
-
-export class CustomButton extends React.Component<CustomButtonProps> {
-  render() {
-    const {actionkey, tip, confirm, confirmTitle, ...otherProps} = this.props;
-    return <Button {...otherProps} href='undefined' />;
   }
 }
 
