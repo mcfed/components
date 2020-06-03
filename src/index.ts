@@ -1,9 +1,8 @@
 export {default as AdvancedSearch} from './AdvancedSearch';
-export {default as HeadSearchBar} from './HeadSearchBar/indexTs';
-export {default as BaseForm} from './BaseForm/indexTs';
-// export {default as FormItem} from './FormItem';
-export {default as FormItem} from './FormItem/indexTs';
-export {default as ButtonGroups} from './ButtonGroups/indexTs';
+export {default as HeadSearchBar} from './HeadSearchBar';
+export {default as BaseForm} from './TsBaseForm';
+export {default as FormItem} from './TsFormItem';
+export {default as ButtonGroups} from './TsButtonGroups';
 // export {ButtonGroups};
 // export * as ButtonGroups from './ButtonGroups/indexTs';
 // export {CustomButton} from './ButtonGroups/indexTs';
