@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Form, {FormItemProps} from 'antd/es/form';
 import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
 
-import {FormRefContext, LayoutRefContext} from '../BaseForm/indexTs';
+import {FormRefContext, LayoutRefContext} from '../TsBaseForm';
 
 type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 type fetchParamsType = object | ((form: any) => object);

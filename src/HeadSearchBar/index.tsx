@@ -4,7 +4,7 @@ import Col from 'antd/es/col';
 import Button from 'antd/es/button';
 import Form from 'antd/es/form';
 import {FormProps} from 'antd/lib/form';
-import {AdvancedForm} from '../BaseForm/indexTs';
+import {AdvancedForm} from '../TsBaseForm';
 import './index.less';
 
 interface AdvancedFormProps extends FormProps {
