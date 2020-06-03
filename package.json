@@ -1,6 +1,6 @@
 {
   "name": "@mcf/components",
-  "version": "0.1.5-rc3",
+  "version": "0.1.5-rc4",
   "description": "@mcf for components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -87,6 +87,7 @@
   },
   "dependencies": {
     "@ant-design/css-animation": "^1.7.2",
+    "@types/qs": "^6.9.3",
     "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
     "indexof": "^0.0.1",
