@@ -5,7 +5,6 @@ import Modal, {ModalFuncProps} from 'antd/es/modal';
 interface SwitchConfirmProps extends SwitchProps {
   confirm?: boolean;
   modalConfirmProps?: ModalFuncProps;
-  onSwitchChange: (checked: boolean, fn: () => void) => void;
 }
 interface SwitchConfirmState {
   checked: boolean;
@@ -40,22 +39,20 @@ export default class SwitchConfirm extends React.Component<
     return checkedProp !== undefined ? checkedProp : false;
   }
   handleChange(checked: boolean) {
-    const {onSwitchChange} = this.props;
-    onSwitchChange(checked, () => {
-      this.setState({
-        checked: checked
-      });
+    const _this = this;
+    const {modalConfirmProps} = this.props;
+    Modal.confirm({
+      ...modalConfirmProps,
+      onOk: () => {
+        _this.setState({
+          checked: checked
+        });
+      }
     });
   }
 
   render() {
-    const {
-      confirm,
-      modalConfirmProps,
-      onSwitchChange,
-      onChange,
-      ...otherProps
-    } = this.props;
+    const {confirm, modalConfirmProps, onChange, ...otherProps} = this.props;
     const {checked} = this.state;
     return (
       <Switch
