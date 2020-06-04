@@ -11,7 +11,9 @@ import CustomButton from './Button';
 
 interface ButtonGroupsType extends ButtonGroupProps {
   handleClick: (actionkey: string) => void;
-  children: React.ReactElement<CustomButton>[];
+  children:
+    | React.ReactElement<CustomButton>
+    | React.ReactElement<CustomButton>[];
   mode: 'ButtonGroup' | 'ButtonMenu';
   showSize: number;
   viewMode: 'text' | 'icon' | 'both'; //todo

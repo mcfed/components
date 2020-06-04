@@ -3,6 +3,9 @@ import Switch, {SwitchProps} from 'antd/es/switch';
 import Modal, {ModalFuncProps} from 'antd/es/modal';
 
 interface SwitchConfirmProps extends SwitchProps {
+  checkedOption?: any;
+  currentOption?: any;
+  onConfirm: (checked: boolean, action?: () => void) => void;
   confirm?: boolean;
   modalConfirmProps?: ModalFuncProps;
 }
@@ -25,34 +28,46 @@ export default class SwitchConfirm extends React.Component<
   }
   componentDidMount() {
     this.setState({
-      checked: this.translateChecked(this.props.checked)
+      checked: this.translateChecked(this.props, this.props.checked)
     });
   }
   componentWillReceiveProps(nextProps: SwitchConfirmProps) {
     if (this.props.checked !== nextProps.checked) {
       this.setState({
-        checked: this.translateChecked(nextProps.checked)
+        checked: this.translateChecked(nextProps, nextProps.checked)
       });
     }
   }
-  translateChecked(checkedProp: boolean | undefined) {
+  translateChecked(currentProps: SwitchConfirmProps, checkedProp?: boolean) {
+    const {currentOption, checkedOption} = currentProps;
+    if (currentOption !== undefined && checkedOption !== undefined) {
+      return currentOption == checkedOption;
+    }
     return checkedProp !== undefined ? checkedProp : false;
   }
   handleChange(checked: boolean) {
     const _this = this;
-    const {modalConfirmProps} = this.props;
+    const {modalConfirmProps, onConfirm} = this.props;
     Modal.confirm({
       ...modalConfirmProps,
       onOk: () => {
-        _this.setState({
-          checked: checked
-        });
+        onConfirm(checked, () =>
+          _this.setState({
+            checked: checked
+          })
+        );
       }
     });
   }
 
   render() {
-    const {confirm, modalConfirmProps, onChange, ...otherProps} = this.props;
+    const {
+      confirm,
+      modalConfirmProps,
+      onChange,
+      onConfirm,
+      ...otherProps
+    } = this.props;
     const {checked} = this.state;
     return (
       <Switch
