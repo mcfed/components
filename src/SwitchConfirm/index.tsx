@@ -66,6 +66,8 @@ export default class SwitchConfirm extends React.Component<
       modalConfirmProps,
       onChange,
       onConfirm,
+      currentOption,
+      checkedOption,
       ...otherProps
     } = this.props;
     const {checked} = this.state;
