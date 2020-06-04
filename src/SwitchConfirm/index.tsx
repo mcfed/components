@@ -33,7 +33,10 @@ export default class SwitchConfirm extends React.Component<
     });
   }
   componentWillReceiveProps(nextProps: SwitchConfirmProps) {
-    if (this.props.checked !== nextProps.checked) {
+    if (
+      this.props.checked !== nextProps.checked ||
+      this.props.currentOption !== nextProps.currentOption
+    ) {
       this.setState({
         checked: this.translateChecked(nextProps, nextProps.checked)
       });
@@ -77,6 +80,7 @@ export default class SwitchConfirm extends React.Component<
       onConfirm,
       currentOption,
       checkedOption,
+      uncheckedOption,
       ...otherProps
     } = this.props;
     const {checked} = this.state;
