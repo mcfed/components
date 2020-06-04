@@ -7,6 +7,8 @@ type CustomButtonProps = BaseButtonProps & {
   tip?: string;
   confirm?: string;
   confirmTitle?: string;
+  permission?: boolean;
+  disabled?: any;
 };
 
 export default class CustomButton extends React.Component<CustomButtonProps> {

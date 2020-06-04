@@ -5,6 +5,8 @@ import {FormProps} from 'antd/lib/form';
 export interface CustomFormComponentProps extends FormProps {
   itemLayout?: object;
   prefixCls?: string;
+  autoSubmitForm?: boolean;
+  onSearch?: any;
 }
 
 export const FormRefContext = React.createContext({});
@@ -27,7 +29,14 @@ class BaseForm extends React.Component<CustomFormComponentProps> {
   };
 
   render() {
-    const {form, itemLayout = {}, children, ...otherProps} = this.props;
+    const {
+      form,
+      itemLayout = {},
+      children,
+      autoSubmitForm,
+      onSearch,
+      ...otherProps
+    } = this.props;
     return (
       //@ts-ignore
       <FormRefContext.Provider value={form}>
@@ -46,7 +55,7 @@ class AdvancedFormClass extends BaseForm {}
 export const AdvancedForm = FormCreate({
   onValuesChange(props: any, values, allValues) {
     if (props.autoSubmitForm) {
-      props.onSearch(allValues);
+      props.onSearch && props.onSearch(allValues);
     }
   }
   //@ts-ignore
