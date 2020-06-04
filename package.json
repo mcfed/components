@@ -1,6 +1,6 @@
 {
   "name": "@mcf/components",
-  "version": "0.1.5",
+  "version": "0.1.6-beta",
   "description": "@mcf for components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -9,8 +9,7 @@
     "test": "jest",
     "test:watch": "npm test -- --watch",
     "build": "npm run tsc",
-    "tsc": "node scripts/build.js && node scripts/tsc.js",
-    "version":"npm run build && npm publish "
+    "tsc": "node scripts/build.js && node scripts/tsc.js"
   },
   "keywords": [
     "@mcf",
