@@ -1,8 +1,8 @@
 import * as React from 'react';
 import fetch from 'cross-fetch';
 import {stringify} from 'qs';
-import PropTypes from 'prop-types';
 import Form, {FormItemProps} from 'antd/es/form';
+import Select from 'antd/es/select';
 import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
 
 import {FormRefContext, LayoutRefContext} from '../TsBaseForm';
@@ -157,10 +157,18 @@ class FormItem extends React.Component<CustFormItemType, any> {
     }
     return this.isPropsTrue(renderable);
   }
+  renderItem(it: any, idx: number) {
+    return (
+      <Select.Option key={idx} value={it.value}>
+        {it.label}
+      </Select.Option>
+    );
+  }
 
   renderFields(element: React.ReactElement) {
+    const _this = this;
     const {childData} = this.state;
-    const {disabled, renderItem, containerTo} = this.props;
+    const {disabled, renderItem, containerTo, label} = this.props;
     const {defaultValue, children, ...otherProps} = element.props;
     let containerToProps = {};
     if (
@@ -177,16 +185,34 @@ class FormItem extends React.Component<CustFormItemType, any> {
     const elementProps = Object.assign(
       {},
       otherProps,
+      containerToProps,
       this.fieldDisabledProp(disabled)
     );
-    if (renderItem !== undefined && childData.length > 0) {
+    if (childData.length > 0) {
       return React.createElement(
         element.type,
         elementProps,
-        childData.map((it: any, idx: number) => renderItem(it, idx))
+        childData.map((it: any, idx: number) => {
+          return renderItem !== undefined
+            ? renderItem(it, idx)
+            : _this.renderItem(it, idx);
+        })
       );
     }
     return React.createElement(element.type, elementProps, children);
+  }
+
+  compileWrapperCols() {
+    let wrapperColsProps = {};
+    const {label} = this.props;
+    if (label === undefined) {
+      wrapperColsProps = {
+        wrapperCol: {
+          span: 24
+        }
+      };
+    }
+    return wrapperColsProps;
   }
 
   render() {
@@ -203,8 +229,11 @@ class FormItem extends React.Component<CustFormItemType, any> {
     const element = this.props.children;
     const {defaultValue} = element.props;
     const isFormContextComing = getFieldDecorator !== undefined;
+    const wrapperColsProps = this.compileWrapperCols();
     return this.fieldRenderableProp(renderable) && isFormContextComing ? (
-      <Form.Item label={label} {...Object.assign({}, formLayout, otherProps)}>
+      <Form.Item
+        label={label}
+        {...Object.assign({}, formLayout, wrapperColsProps, otherProps)}>
         {getFieldDecorator(name, {
           ...otherProps,
           initialValue: defaultValue
