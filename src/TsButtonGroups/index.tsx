@@ -1,12 +1,13 @@
 import * as React from 'react';
-import Button, {ButtonGroupProps} from 'antd/es/button';
-import Tooltip from 'antd/es/tooltip';
-import Menu from 'antd/es/menu';
-import Icon from 'antd/es/icon';
-import Dropdown from 'antd/es/dropdown';
-import Modal, {ModalFuncProps} from 'antd/es/modal';
-// import {ModalFuncProps} from 'antd/es/modal';
-// import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
+// import Button, {ButtonGroupProps} from 'antd/es/button';
+// import Tooltip from 'antd/es/tooltip';
+// import Menu from 'antd/es/menu';
+// import Icon from 'antd/es/icon';
+// import Dropdown from 'antd/es/dropdown';
+// import Modal, {ModalFuncProps} from 'antd/es/modal';
+import {ButtonGroupProps} from 'antd/es/button';
+import {ModalFuncProps} from 'antd/es/modal';
+import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
 import CustomButton from './Button';
 
 interface ButtonGroupsType extends ButtonGroupProps {
