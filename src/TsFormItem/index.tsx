@@ -1,9 +1,11 @@
 import * as React from 'react';
 import fetch from 'cross-fetch';
 import {stringify} from 'qs';
-import Form, {FormItemProps} from 'antd/es/form';
-import Select from 'antd/es/select';
+// import Form, {FormItemProps} from 'antd/es/form';
+// import Select from 'antd/es/select';
+import {FormItemProps} from 'antd/es/form';
 import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
+import {Form, Select} from 'antd';
 
 import {FormRefContext, LayoutRefContext} from '../TsBaseForm';
 
@@ -28,7 +30,7 @@ interface CustFormItemProps extends FormItemProps {
 
 type CustFormItemType = CustFormItemProps & GetFieldDecoratorOptions;
 
-class FormItem extends React.Component<CustFormItemType, any> {
+export class FormItem extends React.Component<CustFormItemType, any> {
   static defaultProps = {
     containerTo: true
   };
