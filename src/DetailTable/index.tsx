@@ -1,6 +1,6 @@
 import React from 'react';
-// @ts-ignore
-import Td from './td.tsx';
+
+import Td from './td';
 import './index.less';
 
 interface DetailProps<T = any> {

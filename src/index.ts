@@ -1,8 +1,8 @@
 export {default as AdvancedSearch} from './AdvancedSearch';
-export {default as BaseForm} from './BaseForm/indexTs';
-// export {default as FormItem} from './FormItem';
-export {default as FormItem} from './FormItem/indexTs';
-import {default as ButtonGroups} from './ButtonGroups/indexTs';
+export {default as HeadSearchBar} from './HeadSearchBar';
+export {default as BaseForm} from './TsBaseForm';
+export {default as FormItem} from './TsFormItem';
+export {default as ButtonGroups} from './TsButtonGroups';
 // export {ButtonGroups};
 // export * as ButtonGroups from './ButtonGroups/indexTs';
 // export {CustomButton} from './ButtonGroups/indexTs';
@@ -31,3 +31,6 @@ export {default as CollapsePanel} from './CollapsePanel';
 
 export {default as Step} from './Step';
 export {default as ExtraColumn} from './ExtraColumn';
+export {default as SwitchConfirm} from './SwitchConfirm';
+
+export {default as InputSearch} from './InputSearch';

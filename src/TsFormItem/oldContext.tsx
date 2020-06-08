@@ -2,9 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Form, {FormItemProps} from 'antd/es/form';
 
-import {FormRefContext, LayoutRefContext} from '../BaseForm/indexTs';
-
-type fnOrBoolType = ((form: any) => boolean) | boolean;
+type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 
 interface CustFormItemProps extends FormItemProps {
   name: string;
@@ -13,6 +11,7 @@ interface CustFormItemProps extends FormItemProps {
   renderable?: fnOrBoolType;
   formLayout?: object;
   formRef?: any;
+  rules?: object[];
 }
 
 //feature todo
@@ -21,7 +20,12 @@ interface CustFormItemProps extends FormItemProps {
 //3  renderable  finish
 //hidden  style
 
-class FormItem extends React.Component<CustFormItemProps, any> {
+export default class FormItem extends React.Component<CustFormItemProps, any> {
+  static contextTypes = {
+    formRef: PropTypes.object,
+    formLayout: PropTypes.object
+  };
+
   isPropsTrue(prop: fnOrBoolType) {
     const {formRef} = this.context;
     if (typeof prop === 'function') {
@@ -50,7 +54,7 @@ class FormItem extends React.Component<CustFormItemProps, any> {
   renderFields(element: React.ReactElement) {
     const _this = this;
     const {disabled} = this.props;
-    const {otherProps} = element.props;
+    const {defaultValue, ...otherProps} = element.props;
     return React.createElement(
       element.type,
       Object.assign({}, otherProps, _this.fieldDisabledProp(disabled)),
@@ -59,32 +63,18 @@ class FormItem extends React.Component<CustFormItemProps, any> {
   }
 
   render() {
-    const {name, label, renderable, formRef, formLayout} = this.props;
+    const {name, label, renderable, children, ...otherProps} = this.props;
+    const {formRef, formLayout} = this.context;
     const {getFieldDecorator} = formRef;
     const element = this.props.children;
     const {defaultValue} = element.props;
     return this.fieldRenderableProp(renderable) ? (
       <Form.Item label={label} {...formLayout}>
         {getFieldDecorator(name, {
+          ...otherProps,
           initialValue: defaultValue
         })(this.renderFields(element))}
       </Form.Item>
     ) : null;
   }
-}
-
-export default function FormItemRender(props: CustFormItemProps) {
-  return (
-    <FormRefContext.Consumer>
-      {formRef => (
-        <LayoutRefContext.Consumer>
-          {formLayout => (
-            <FormItem {...props} formLayout={formLayout} formRef={formRef}>
-              {props.children}
-            </FormItem>
-          )}
-        </LayoutRefContext.Consumer>
-      )}
-    </FormRefContext.Consumer>
-  );
 }
