@@ -77,6 +77,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       tip,
       confirm,
       confirmTitle,
+      permission,
       children,
       ...btnProps
     } = it.props;
@@ -105,6 +106,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       confirmTitle,
       actionkey,
       children,
+      permission,
       ...otherProps
     } = it.props;
     const title = this.formatTooltipTitle(it.props);

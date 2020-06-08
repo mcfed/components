@@ -6,7 +6,7 @@ const Button = ButtonGroups.CustomButton;
 
 const setup = props => {
   const wrapper = shallow(
-    <ButtonGroups {...props}>
+    <ButtonGroups {...props} handleClick={jest.fn()}>
       <Button actionkey='aaa'>aaa</Button>
       <Button actionkey='bbb'>bbb</Button>
     </ButtonGroups>
@@ -109,5 +109,35 @@ describe('ts-button-group test ', () => {
     instance.renderNormalChild = jest.fn();
     instance.renderReactElement({props: {disabled: false, confirm: false}});
     expect(instance.renderNormalChild).toHaveBeenCalled();
+  });
+
+  it('method test renderConfirmChild ', () => {
+    const {wrapper} = setup();
+    const instance = wrapper.instance();
+    const renderProps = {
+      props: {
+        tip: 'aaa',
+        confirm: 'bbb',
+        actionkey: 'ccc',
+        confirmTitle: 'ddd'
+      }
+    };
+
+    const confirmChild = instance.renderConfirmChild(renderProps, 1);
+    expect(confirmChild.props.content).toBe(renderProps.props.confirm);
+    expect(confirmChild.props.title).toBe(renderProps.props.confirmTitle);
+  });
+
+  it('method test renderMenuChild', () => {
+    const {wrapper} = setup();
+    const instance = wrapper.instance();
+    const renderProps = {
+      props: {
+        tip: 'aaa'
+      }
+    };
+    const menuChild = instance.renderMenuChild(renderProps, 1);
+    expect(menuChild.props.title).toEqual(renderProps.props.tip);
+    expect(menuChild.key).toEqual('1');
   });
 });
