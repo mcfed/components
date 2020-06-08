@@ -36,6 +36,12 @@ export default class InputSearch extends React.Component<
       value: e.target.value
     });
   };
+  onBlur = () => {
+    const {onChange} = this.props;
+    const {value} = this.state;
+    /* istanbul ignore else */
+    if (onChange) onChange(value);
+  };
   render() {
     const {value} = this.state;
     return (
@@ -44,6 +50,7 @@ export default class InputSearch extends React.Component<
         onChange={this.onChange}
         value={value}
         onSearch={this.onSearchHandler}
+        onBlur={this.onBlur}
       />
     );
   }
