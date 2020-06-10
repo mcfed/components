@@ -1,9 +1,11 @@
 import * as React from 'react';
 import fetch from 'cross-fetch';
 import {stringify} from 'qs';
-import Form, {FormItemProps} from 'antd/es/form';
-import Select from 'antd/es/select';
+// import Form, {FormItemProps} from 'antd/es/form';
+// import Select from 'antd/es/select';
+import {FormItemProps} from 'antd/es/form';
 import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
+import {Form, Select} from 'antd';
 
 import {FormRefContext, LayoutRefContext} from '../TsBaseForm';
 
@@ -24,11 +26,12 @@ interface CustFormItemProps extends FormItemProps {
   fetchParams?: fetchParamsType;
   fetchCallback?: fetchCallbackType;
   containerTo?: boolean;
+  loopProp?: string;
 }
 
 type CustFormItemType = CustFormItemProps & GetFieldDecoratorOptions;
 
-class FormItem extends React.Component<CustFormItemType, any> {
+export class FormItem extends React.Component<CustFormItemType, any> {
   static defaultProps = {
     containerTo: true
   };
@@ -164,11 +167,44 @@ class FormItem extends React.Component<CustFormItemType, any> {
       </Select.Option>
     );
   }
+  renderTreeItem(it: any) {
+    return '';
+  }
+  loopRenderTreeNode(
+    data: any[],
+    loopProp: string,
+    renderItem: any
+  ): React.ReactNode {
+    const renderItemFinal =
+      renderItem !== undefined ? renderItem : this.renderTreeItem;
+    return data.map((item: any) => {
+      if (item[loopProp] && item[loopProp].length > 0) {
+        return React.cloneElement(
+          renderItemFinal(item),
+          {},
+          this.loopRenderTreeNode(item[loopProp], loopProp, renderItem)
+        );
+      }
+      return React.cloneElement(renderItemFinal(item));
+    });
+  }
+  renderChildNode(childData: any[]) {
+    const {renderItem, loopProp} = this.props;
+    const _this = this;
+    if (loopProp !== undefined) {
+      return this.loopRenderTreeNode(childData, loopProp, renderItem);
+    }
+    return childData.map((it: any, idx: number) => {
+      return renderItem !== undefined
+        ? renderItem(it, idx)
+        : _this.renderItem(it, idx);
+    });
+  }
 
   renderFields(element: React.ReactElement) {
     const _this = this;
     const {childData} = this.state;
-    const {disabled, renderItem, containerTo, label} = this.props;
+    const {disabled, containerTo, label} = this.props;
     const {defaultValue, children, ...otherProps} = element.props;
     let containerToProps = {};
     if (
@@ -188,15 +224,12 @@ class FormItem extends React.Component<CustFormItemType, any> {
       containerToProps,
       this.fieldDisabledProp(disabled)
     );
+    console.log(childData);
     if (childData.length > 0) {
       return React.createElement(
         element.type,
         elementProps,
-        childData.map((it: any, idx: number) => {
-          return renderItem !== undefined
-            ? renderItem(it, idx)
-            : _this.renderItem(it, idx);
-        })
+        _this.renderChildNode(childData)
       );
     }
     return React.createElement(element.type, elementProps, children);

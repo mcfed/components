@@ -1,6 +1,9 @@
 import * as React from 'react';
-import Switch, {SwitchProps} from 'antd/es/switch';
-import Modal, {ModalFuncProps} from 'antd/es/modal';
+// import Switch, {SwitchProps} from 'antd/es/switch';
+// import Modal, {ModalFuncProps} from 'antd/es/modal';
+import {SwitchProps} from 'antd/es/switch';
+import {ModalFuncProps} from 'antd/es/modal';
+import {Switch, Modal} from 'antd';
 
 interface SwitchConfirmProps extends SwitchProps {
   uncheckedOption?: any;

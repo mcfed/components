@@ -1,11 +1,10 @@
 import * as React from 'react';
-import Row from 'antd/es/row';
-import Col from 'antd/es/col';
-import Button from 'antd/es/button';
-import Form from 'antd/es/form';
+// import Row from 'antd/es/row';
+// import Col from 'antd/es/col';
+// import Button from 'antd/es/button';
 import {FormProps} from 'antd/lib/form';
 import {AdvancedForm} from '../TsBaseForm';
-import './index.less';
+import {Row, Col, Button} from 'antd';
 
 interface AdvancedFormProps extends FormProps {
   gutter?: number;
