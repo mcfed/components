@@ -28,6 +28,7 @@ interface CustFormItemProps extends FormItemProps {
   fetchCallback?: fetchCallbackType;
   containerTo?: boolean;
   loopProp?: string;
+  defaultValue?: any;
 }
 
 type CustFormItemType = CustFormItemProps & GetFieldDecoratorOptions;
@@ -267,6 +268,17 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     return wrapperColsProps;
   }
 
+  compileValue(element: any) {
+    const {defaultValue} = element.props;
+    if (defaultValue === null) {
+      return undefined;
+    }
+    if (this.props.defaultValue !== undefined) {
+      return this.props.defaultValue;
+    }
+    return defaultValue;
+  }
+
   render() {
     const {
       name,
@@ -279,7 +291,8 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     } = this.props;
     const {getFieldDecorator} = formRef;
     const element = this.props.children;
-    const {defaultValue} = element.props;
+    // const {defaultValue} = element.props;
+    const transferValue = this.compileValue(element);
     const isFormContextComing = getFieldDecorator !== undefined;
     const wrapperColsProps = this.compileWrapperCols();
     return this.fieldRenderableProp(renderable) && isFormContextComing ? (
@@ -288,7 +301,7 @@ export class FormItem extends React.Component<CustFormItemType, any> {
         {...Object.assign({}, formLayout, wrapperColsProps, otherProps)}>
         {getFieldDecorator(name, {
           ...otherProps,
-          initialValue: defaultValue
+          initialValue: transferValue
         })(this.renderFields(element))}
       </Form.Item>
     ) : null;
