@@ -16,7 +16,7 @@ export {default as ModalAndView} from './ModalAndView';
 export {default as TreeView} from './TreeView';
 export {default as TabsPanel} from './TabsPanel';
 export {default as PropertyTable} from './PropertyTable';
-export {default as TransferView} from './TransferView';
+// export {default as TransferView} from './TransferView';
 
 export {default as EditTable} from './EditTable';
 export {default as DetailTable} from './DetailTable';
