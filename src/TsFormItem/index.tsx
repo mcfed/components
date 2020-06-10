@@ -224,7 +224,6 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       containerToProps,
       this.fieldDisabledProp(disabled)
     );
-    console.log(childData);
     if (childData.length > 0) {
       return React.createElement(
         element.type,
