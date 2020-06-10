@@ -8,6 +8,7 @@ import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
 import {Form, Select} from 'antd';
 
 import {FormRefContext, LayoutRefContext} from '../TsBaseForm';
+import {FetchUtils} from '@mcf/utils';
 
 type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 type fetchParamsType = object | ((form: any) => object);
@@ -90,19 +91,38 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     fetchParams?: fetchParamsType,
     fetchCallback?: fetchCallbackType
   ) {
-    const defaultOptions = {
-      method: 'GET'
-    };
-    let url = this.compileFetchUrl(fetchUrl, fetchParams);
-    fetch(url, defaultOptions)
-      .then(data => data.json())
-      .then(result => {
-        if (fetchCallback !== undefined) {
-          this.setChildData(fetchCallback(result));
-        } else {
-          this.defaultSetChildData(result);
-        }
-      });
+    const params = this.compileFetchParams(fetchParams);
+    FetchUtils.fetchGet(fetchUrl, {body: params}).then((result: any) => {
+      if (fetchCallback !== undefined) {
+        this.setChildData(fetchCallback(result));
+      } else {
+        this.defaultSetChildData(result);
+      }
+    });
+    // const defaultOptions = {
+    //   method: 'GET'
+    // };
+    // let url = this.compileFetchUrl(fetchUrl, fetchParams);
+    // fetch(url, defaultOptions)
+    //   .then(data => data.json())
+    //   .then(result => {
+    //     if (fetchCallback !== undefined) {
+    //       this.setChildData(fetchCallback(result));
+    //     } else {
+    //       this.defaultSetChildData(result);
+    //     }
+    //   });
+  }
+  compileFetchParams(fetchParams?: fetchParamsType) {
+    const {formRef} = this.props;
+    if (fetchParams === undefined) {
+      return undefined;
+    }
+    if (typeof fetchParams === 'function') {
+      return fetchParams(formRef);
+    } else {
+      return fetchParams;
+    }
   }
 
   compileFetchUrl(fetchUrl: string, fetchParams?: fetchParamsType) {
