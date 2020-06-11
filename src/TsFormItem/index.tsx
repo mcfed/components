@@ -252,6 +252,14 @@ export class FormItem extends React.Component<CustFormItemType, any> {
         _this.renderChildNode(childData)
       );
     }
+    //@ts-ignore
+    if (element.type.name === 'TreeSelect' && childData.length === 0) {
+      return React.createElement(
+        element.type,
+        {...elementProps, treeData: []},
+        children
+      );
+    }
     return React.createElement(element.type, elementProps, children);
   }
 
