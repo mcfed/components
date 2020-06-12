@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow, mount, render} from 'enzyme';
-import {Input, Select} from 'antd';
+import {Input, Select, TreeSelect} from 'antd';
 
 import FormItemRender, {FormItem} from '../index';
 
@@ -192,5 +192,52 @@ describe('formitem base test', () => {
     const instance = wrapper.instance();
 
     expect(instance.compileWrapperCols()).toEqual({});
+  });
+
+  it('method test compileValue', () => {
+    const {wrapper} = setup(<Input defaultValue='aaa' />, {label: 'aaa'});
+    const instance = wrapper.instance();
+
+    expect(instance.compileValue({props: {defaultValue: null}})).toEqual(
+      undefined
+    );
+    expect(instance.compileValue({props: {defaultValue: undefined}})).toEqual(
+      undefined
+    );
+    expect(instance.compileValue({props: {defaultValue: 123}})).toEqual(123);
+    expect(instance.compileValue({props: {defaultValue: 'str'}})).toEqual(
+      'str'
+    );
+  });
+
+  it('method test renderChildNode', () => {
+    const {wrapper} = setup(<Input defaultValue='aaa' />, {
+      label: 'aaa',
+      loopProp: 'child'
+    });
+    const instance = wrapper.instance();
+    instance.loopRenderTreeNode = jest.fn();
+    instance.renderChildNode([]);
+    expect(instance.loopRenderTreeNode).toHaveBeenCalled();
+  });
+
+  it('method test renderChildNode no looprop & renderitem', () => {
+    const {wrapper} = setup(<Input defaultValue='aaa' />, {
+      label: 'aaa'
+    });
+    const instance = wrapper.instance();
+    instance.renderItem = jest.fn();
+    instance.renderChildNode([{}]);
+    expect(instance.renderItem).toHaveBeenCalled();
+  });
+
+  it('method test renderChildNode no looprop  has renderitem', () => {
+    const {wrapper} = setup(<Input defaultValue='aaa' />, {
+      label: 'aaa',
+      renderItem: jest.fn()
+    });
+    const instance = wrapper.instance();
+    instance.renderChildNode([{}]);
+    expect(wrapper.prop('renderItem')).toHaveBeenCalled();
   });
 });
