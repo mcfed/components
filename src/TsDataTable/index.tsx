@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {TableProps, ColumnProps} from 'antd/es/table/interface';
-import Table from 'antd/es/table';
+import {Table} from 'antd';
 
 interface defaultSortType {
   columnKey: string;
@@ -52,8 +52,11 @@ export default class DataTable<T> extends React.Component<
     });
   }
   render() {
-    const {defaultSort, page, pagination, ...otherProps} = this.props;
+    const {defaultSort, page, pagination, columns, ...otherProps} = this.props;
     let newColumns = this.state.columns;
+    newColumns = newColumns.filter((it: DataTableColumnProps<T>) => {
+      return it.visible === undefined || it.visible;
+    });
     if (defaultSort !== undefined) {
       newColumns = newColumns.map((it: DataTableColumnProps<T>) => {
         defaultSort.columnKey === it.dataIndex
@@ -61,6 +64,7 @@ export default class DataTable<T> extends React.Component<
           : null;
         return it;
       });
+      console.log(newColumns);
     }
 
     return (
