@@ -26,6 +26,7 @@ interface CustFormItemProps extends FormItemProps {
   fetch?: string;
   fetchParams?: fetchParamsType;
   fetchCallback?: fetchCallbackType;
+  dataSourceProp?: string;
   containerTo?: boolean;
   loopProp?: string;
   defaultValue?: any;
@@ -225,7 +226,7 @@ export class FormItem extends React.Component<CustFormItemType, any> {
   renderFields(element: React.ReactElement) {
     const _this = this;
     const {childData} = this.state;
-    const {disabled, containerTo, label} = this.props;
+    const {disabled, containerTo, dataSourceProp} = this.props;
     const {defaultValue, children, ...otherProps} = element.props;
     let containerToProps = {};
     if (
@@ -245,6 +246,13 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       containerToProps,
       this.fieldDisabledProp(disabled)
     );
+    if (dataSourceProp !== undefined) {
+      return React.createElement(
+        element.type,
+        {...elementProps, [dataSourceProp]: childData},
+        children
+      );
+    }
     if (childData.length > 0) {
       return React.createElement(
         element.type,
@@ -293,6 +301,8 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       label,
       renderable,
       formRef,
+      options,
+      dataSourceProp,
       formLayout,
       children,
       ...otherProps
