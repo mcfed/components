@@ -4,7 +4,10 @@ import * as React from 'react';
 // import Button from 'antd/es/button';
 import {FormProps} from 'antd/lib/form';
 import {AdvancedForm} from '../TsBaseForm';
-import {Row, Col, Button} from 'antd';
+import ButtonGroups from '../TsButtonGroups';
+import {Row, Col} from 'antd';
+
+const Button = ButtonGroups.CustomButton;
 
 interface AdvancedFormProps extends FormProps {
   gutter?: number;
@@ -54,10 +57,11 @@ export default class AdvancedSearchForm extends React.Component<
       <div
         className='head-searchbar-toolbar'
         style={showSearchButton ? {} : {display: 'none'}}>
-        //@ts-ignore
         <Button
           htmlType='submit'
+          actionkey='aaa'
           onClick={this.handleSearch.bind(this)}
+          //@ts-ignore
           type='primary'>
           搜索
         </Button>

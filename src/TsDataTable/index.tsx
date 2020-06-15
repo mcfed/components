@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {TableProps, ColumnProps} from 'antd/es/table/interface';
-import Table from 'antd/es/table';
+import {Table} from 'antd';
 
 interface defaultSortType {
   columnKey: string;
