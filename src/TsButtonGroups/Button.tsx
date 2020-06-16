@@ -1,16 +1,24 @@
 import * as React from 'react';
 // import Button from 'antd/es/button';
-import {NativeButtonProps, ButtonType} from 'antd/es/button/button';
+import {
+  NativeButtonProps,
+  ButtonType,
+  BaseButtonProps
+} from 'antd/es/button/button';
 import {Button} from 'antd';
 
-type CustomButtonProps = NativeButtonProps & {
-  actionkey: string;
-  tip?: string;
-  confirm?: string;
-  confirmTitle?: string;
-  permission?: boolean;
-  disabled?: any;
-};
+type CustomButtonProps = BaseButtonProps &
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    htmlType?: 'submit' | 'reset' | 'button' | undefined;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement>;
+    actionkey: string;
+    tip?: string;
+    confirm?: string;
+    confirmTitle?: string;
+    permission?: boolean;
+    disabled?: any;
+    href?: undefined;
+  };
 
 export default class CustomButton extends React.Component<CustomButtonProps> {
   render() {
@@ -22,6 +30,7 @@ export default class CustomButton extends React.Component<CustomButtonProps> {
       permission,
       ...otherProps
     } = this.props;
-    return <Button {...otherProps} />;
+    //@ts-ignore
+    return <Button {...otherProps} href={undefined} />;
   }
 }

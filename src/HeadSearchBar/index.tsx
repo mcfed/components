@@ -61,7 +61,6 @@ export default class AdvancedSearchForm extends React.Component<
           htmlType='submit'
           actionkey='aaa'
           onClick={this.handleSearch.bind(this)}
-          //@ts-ignore
           type='primary'>
           搜索
         </Button>

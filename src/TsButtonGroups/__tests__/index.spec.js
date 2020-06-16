@@ -30,7 +30,7 @@ describe('ts-button-group test ', () => {
     );
 
     expect(wrapper.find('.ant-btn').prop('disabled')).toEqual(undefined);
-    expect(wrapper.find('.ant-btn').prop('type')).toEqual('button');
+    expect(wrapper.find('.ant-btn').prop('type')).toEqual(undefined);
   });
 
   it('button groups base test mode buttngroups', () => {
