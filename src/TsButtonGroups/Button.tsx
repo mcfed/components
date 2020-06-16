@@ -1,9 +1,9 @@
 import * as React from 'react';
 // import Button from 'antd/es/button';
-import {BaseButtonProps} from 'antd/es/button/button';
+import {NativeButtonProps, ButtonType} from 'antd/es/button/button';
 import {Button} from 'antd';
 
-type CustomButtonProps = BaseButtonProps & {
+type CustomButtonProps = NativeButtonProps & {
   actionkey: string;
   tip?: string;
   confirm?: string;
@@ -22,7 +22,6 @@ export default class CustomButton extends React.Component<CustomButtonProps> {
       permission,
       ...otherProps
     } = this.props;
-    //@ts-ignore
     return <Button {...otherProps} />;
   }
 }
