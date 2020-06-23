@@ -8,7 +8,7 @@ import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
 import {Form, Select} from 'antd';
 
 import {FormRefContext, LayoutRefContext} from '../TsBaseForm';
-import {FetchUtils} from '@mcf/utils';
+import {FetchUtils} from '@mcfed/utils';
 
 type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 type fetchParamsType = object | ((form: any) => object);
