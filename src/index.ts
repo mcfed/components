@@ -34,3 +34,5 @@ export {default as ExtraColumn} from './ExtraColumn';
 export {default as SwitchConfirm} from './SwitchConfirm';
 
 export {default as InputSearch} from './InputSearch';
+
+export {default as TsWrapperDatePicker} from './TsWrapperDatePicker';

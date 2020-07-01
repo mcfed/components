@@ -232,12 +232,13 @@ describe('formitem base test', () => {
   });
 
   it('method test renderChildNode no looprop  has renderitem', () => {
+    const jestfn = jest.fn();
     const {wrapper} = setup(<Input defaultValue='aaa' />, {
       label: 'aaa',
-      renderItem: jest.fn()
+      renderItem: jestfn
     });
     const instance = wrapper.instance();
     instance.renderChildNode([{}]);
-    expect(wrapper.prop('renderItem')).toHaveBeenCalled();
+    expect(jestfn).toHaveBeenCalled();
   });
 });

@@ -64,7 +64,6 @@ export default class DataTable<T> extends React.Component<
           : null;
         return it;
       });
-      console.log(newColumns);
     }
 
     return (

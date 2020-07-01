@@ -1,9 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`快照测试 Editable全页快照 1`] = `
-<Table
+<withStore(Table)
   bordered={true}
-  className=""
   columns={
     Array [
       Object {
@@ -47,14 +46,6 @@ exports[`快照测试 Editable全页快照 1`] = `
     ]
   }
   footer={[Function]}
-  indentSize={20}
-  loading={false}
-  locale={Object {}}
-  prefixCls="ant-table"
   rowClassName={[Function]}
-  rowKey="key"
-  showHeader={true}
-  size="default"
-  useFixedHeader={false}
 />
 `;

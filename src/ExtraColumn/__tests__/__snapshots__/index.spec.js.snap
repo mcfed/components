@@ -11,9 +11,7 @@ exports[`快照测试 全页快照 1`] = `
       span={10}
     >
       <FormItem
-        colon={true}
         hasFeedback={false}
-        prefixCls="ant-form"
       />
     </Col>
     <Col
@@ -23,9 +21,7 @@ exports[`快照测试 全页快照 1`] = `
       span={10}
     >
       <FormItem
-        colon={true}
         hasFeedback={false}
-        prefixCls="ant-form"
       />
     </Col>
   </Row>
