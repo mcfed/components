@@ -1,6 +1,6 @@
 {
   "name": "@mcfed/components",
-  "version": "0.1.6-rc",
+  "version": "0.1.6-rc1",
   "description": "@mcf for components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -85,8 +85,8 @@
     "typescript": "^3.7.5"
   },
   "optionalDependencies": {
-    "antd": "3.9.3"
-  },
+    "antd": "^3.9.3"
+  }, 
   "dependencies": {
     "@ant-design/css-animation": "^1.7.2",
     "@mcfed/utils": "^0.2.0-rc8",
