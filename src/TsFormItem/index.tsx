@@ -304,6 +304,11 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       options,
       dataSourceProp,
       formLayout,
+      containerTo,
+      fetch,
+      fetchCallback,
+      loopProp,
+      renderItem,
       children,
       ...otherProps
     } = this.props;

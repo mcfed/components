@@ -5,6 +5,8 @@ import * as React from 'react';
 import {FormProps} from 'antd/lib/form';
 import {AdvancedForm} from '../TsBaseForm';
 import ButtonGroups from '../TsButtonGroups';
+import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import Locale from './locale';
 import {Row, Col} from 'antd';
 
 const Button = ButtonGroups.CustomButton;
@@ -16,6 +18,7 @@ interface AdvancedFormProps extends FormProps {
   showSearchButton?: boolean;
   columns?: number;
   autoSubmitForm?: boolean;
+  locale?: object;
 }
 
 export default class AdvancedSearchForm extends React.Component<
@@ -50,6 +53,19 @@ export default class AdvancedSearchForm extends React.Component<
       this.form = instance.props.form;
     }
   }
+  renderButton(locale: any) {
+    const contextLocale = Object.assign({}, locale, this.props.locale);
+
+    return (
+      <Button
+        htmlType='submit'
+        actionkey='aaa'
+        onClick={this.handleSearch.bind(this)}
+        type='primary'>
+        {contextLocale.searchText}
+      </Button>
+    );
+  }
   renderSearchBar() {
     const {showSearchButton} = this.props;
 
@@ -57,13 +73,15 @@ export default class AdvancedSearchForm extends React.Component<
       <div
         className='head-searchbar-toolbar'
         style={showSearchButton ? {} : {display: 'none'}}>
-        <Button
-          htmlType='submit'
-          actionkey='aaa'
-          onClick={this.handleSearch.bind(this)}
-          type='primary'>
-          搜索
-        </Button>
+        {React.createElement(
+          LocaleReceiver,
+          {
+            componentName: 'HeadSearchBar',
+            defaultLocale: Locale,
+            children: () => undefined //为通过类型检查
+          },
+          this.renderButton.bind(this)
+        )}
       </div>
     );
   }
