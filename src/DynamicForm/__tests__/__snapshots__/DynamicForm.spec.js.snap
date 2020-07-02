@@ -2,8 +2,7 @@
 
 exports[`快照测试 全页快照 1`] = `
 <Form(BaseForm)>
-  <FormItem
-    containerTo={true}
+  <FormItemRender
     key="input1"
   >
     <Input
@@ -30,6 +29,6 @@ exports[`快照测试 全页快照 1`] = `
       }
       type="text"
     />
-  </FormItem>
+  </FormItemRender>
 </Form(BaseForm)>
 `;

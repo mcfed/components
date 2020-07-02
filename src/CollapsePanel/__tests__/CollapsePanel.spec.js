@@ -55,7 +55,7 @@ describe('CollapsePanel 组件方法测试', () => {
   it('renderExtra 测试 control为dom时', () => {
     const {wrapper} = setup();
     expect(wrapper.instance().renderExtra()).toEqual(
-      <FormItem containerTo={true}>
+      <FormItem>
         <Switch name='test' />
       </FormItem>
     );

@@ -1,6 +1,5 @@
 import React from 'react';
 import {Tooltip} from 'antd';
-import './index.less';
 /**
  * text：文本,必须
  * tooltiptext：与text文本不同时需要传入，否则可以不传

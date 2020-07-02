@@ -1,17 +1,20 @@
 import * as React from 'react';
-import Button, {ButtonGroupProps} from 'antd/es/button';
-import Tooltip from 'antd/es/tooltip';
-import Menu from 'antd/es/menu';
-import Icon from 'antd/es/icon';
-import Dropdown from 'antd/es/dropdown';
-import Modal, {ModalFuncProps} from 'antd/es/modal';
-// import {ModalFuncProps} from 'antd/es/modal';
-// import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
-import CustomButton from '../TsButtonGroups/Button';
+// import Button, {ButtonGroupProps} from 'antd/es/button';
+// import Tooltip from 'antd/es/tooltip';
+// import Menu from 'antd/es/menu';
+// import Icon from 'antd/es/icon';
+// import Dropdown from 'antd/es/dropdown';
+// import Modal, {ModalFuncProps} from 'antd/es/modal';
+import {ButtonGroupProps} from 'antd/es/button';
+import {ModalFuncProps} from 'antd/es/modal';
+import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
+import CustomButton from './Button';
 
 interface ButtonGroupsType extends ButtonGroupProps {
   handleClick: (actionkey: string) => void;
-  children: React.ReactElement<CustomButton>[];
+  children:
+    | React.ReactElement<CustomButton>
+    | React.ReactElement<CustomButton>[];
   mode: 'ButtonGroup' | 'ButtonMenu';
   showSize: number;
   viewMode: 'text' | 'icon' | 'both'; //todo
@@ -74,6 +77,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       tip,
       confirm,
       confirmTitle,
+      permission,
       children,
       ...btnProps
     } = it.props;
@@ -102,6 +106,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       confirmTitle,
       actionkey,
       children,
+      permission,
       ...otherProps
     } = it.props;
     const title = this.formatTooltipTitle(it.props);

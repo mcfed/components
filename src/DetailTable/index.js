@@ -2,8 +2,6 @@ import React from 'react';
 import Td from './td';
 import propTypes from 'prop-types';
 
-import './index.less';
-
 class DetailTable extends React.Component {
   showDom = dataSource => {
     let Data = [];

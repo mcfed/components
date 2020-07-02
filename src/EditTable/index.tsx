@@ -3,7 +3,6 @@ import {Table, Button, message, Form} from 'antd';
 import {FormComponentProps} from 'antd/lib/form';
 import {ColumnProps} from 'antd/lib/table/interface';
 import {WrappedFormUtils} from 'antd/lib/form/Form';
-import './index.less';
 import {HTMLAttributes} from 'react';
 
 const FormItem = Form.Item;

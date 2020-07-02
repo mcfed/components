@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {Button, Spin} from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import Locale from './locale.js';
-import './index.less';
 
 export default class Panel extends Component {
   renderHeader() {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {Transfer, Checkbox, Icon, Input, Select} from 'antd';
-import './style.css';
 
 //重写方法所需依赖
 import _defineProperty from 'babel-runtime/helpers/defineProperty';
