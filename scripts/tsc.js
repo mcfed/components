@@ -6,6 +6,7 @@ const {collectFiles, readCssContent, mergeAndCreateCss} = require('./utils');
 const configs = {
   sourceFolder: 'src',
   targetFolders: ['lib', 'es'],
+  excludeFolder: '__stories__',
   include: ['css', 'less', 'md']
   //   deep: 3
 };
@@ -89,7 +90,13 @@ const configs = {
 // config('modules')
 
 const use = config => {
-  const {sourceFolder, include, targetFolders, deep = 3} = config;
+  const {
+    sourceFolder,
+    include,
+    targetFolders,
+    deep = 4,
+    excludeFolder
+  } = config;
   let arr = [];
   let cssContentArray = [];
   include.map(item => {
@@ -104,19 +111,23 @@ const use = config => {
     }
   });
   mergeAndCreateCss(cssContentArray, 'dist/style.less');
+
   arr = arr
     .map(path => path.replace(/\\/gi, '/'))
     .filter(path => path.split('/').length <= deep)
+    .filter(path => !path.includes(excludeFolder))
     .forEach(path => {
       targetFolders.forEach(targetFolder => {
-        if (path.includes('.less')) {
-          const middlePath = path.slice(
-            configs.sourceFolder.length + 1,
-            -'.less'.length
-          );
-          spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
+        // if (path.includes('.less')) {
+        //   const middlePath = path.slice(
+        //     configs.sourceFolder.length + 1,
+        //     -'.less'.length
+        //   );
+        //   spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
+        // }
+        if (path.includes('.css') || path.includes('.less')) {
+          fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
         }
-        fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
       });
     });
 };
