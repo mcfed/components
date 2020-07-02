@@ -92,6 +92,9 @@ export default class WrapperDatePicker extends React.Component<
   private formatOnchangeVal(date: any[]) {
     const {onChange, timeRange, timeRangeType} = this.props;
     const {valueFormatFinal} = this.state;
+    if (date.length === 0) {
+      return date;
+    }
     let onChangeVal = timeRange
       ? [
           date[0].startOf(timeRangeType).format(valueFormatFinal),
