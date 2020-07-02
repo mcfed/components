@@ -38,3 +38,24 @@
 ### 使用说明
 
 请移步至[这里](./docs/usage/basic.md)
+
+### 样式分包使用
+
+- 使用 babel-plugin-import
+- 配置
+  >
+
+```javascript
+ loader:'babel-loader',
+ options:{
+   plugins:[
+          "import",{
+            libraryName:'@mcf/components',
+            libraryDirectory:"lib",
+            camel2DashComponentName:false,
+            style:true
+          },"@mcf/components"
+        ]
+ }
+
+```
