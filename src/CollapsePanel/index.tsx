@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Collapse} from 'antd';
 import FormItem from '../FormItem/index';
 
-import './index.less';
 const Panel = Collapse.Panel;
 
 interface CollapsePanelState {
