@@ -39,9 +39,23 @@ export default class TreeView extends Component {
     });
   }
   onCheck = (checkedKeys, e) => {
+    const {isRemoveParentNode} = this.props;
+    let filterKeys = [];
+    if (isRemoveParentNode) {
+      //是否需要移除父节点传值
+      filterKeys = e.checkedNodes
+        .filter(it => {
+          return it.props.children === undefined;
+        })
+        .map(it => it.key);
+      this.setState;
+    } else {
+      //常规分支
+      filterKeys = checkedKeys;
+    }
     this.setState(
       {
-        checkedKeys: checkedKeys
+        checkedKeys: filterKeys
       },
       () => {
         this.props.onChange(this.state.checkedKeys);
@@ -72,7 +86,8 @@ export default class TreeView extends Component {
       value,
       onSelect,
       defaultKey,
-      scrollHeight
+      scrollHeight,
+      isRemoveParentNode
     } = this.props;
     const {checkedKeys, expandedKeys} = this.state;
     // console.log(treeData)

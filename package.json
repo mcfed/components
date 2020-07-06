@@ -1,6 +1,6 @@
 {
   "name": "@mcfed/components",
-  "version": "0.1.6-rc1",
+  "version": "0.2.1",
   "description": "@mcf for components",
   "main": "lib/index.js",
   "module": "es/index.js",

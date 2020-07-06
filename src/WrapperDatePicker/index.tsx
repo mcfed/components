@@ -89,11 +89,14 @@ export default class WrapperDatePicker extends React.Component<
   private isValueArray(value: any) {
     return value instanceof Array;
   }
-  private formatOnchangeVal(date: any[]) {
+
+  private formatOnchangeArrayVal(date: any[]) {
     const {onChange, timeRange, timeRangeType} = this.props;
     const {valueFormatFinal} = this.state;
     if (date.length === 0) {
-      return date;
+      //清空时
+      onChange(date);
+      return false;
     }
     let onChangeVal = timeRange
       ? [
@@ -106,21 +109,30 @@ export default class WrapperDatePicker extends React.Component<
     }
     onChange(onChangeVal);
   }
-  onChange(date: any, dateString: string) {
+  formatOnchangeSingleVal(date: any) {
     const {onChange} = this.props;
     const {valueFormatFinal} = this.state;
+    if (date === null) {
+      //清空时
+      onChange(undefined);
+      return false;
+    }
+    let onChangeVal = moment(date).format(valueFormatFinal);
+    this.isValueTimestamp(valueFormatFinal)
+      ? onChange(Number(onChangeVal))
+      : onChange(onChangeVal);
+  }
+  onChange(date: any, dateString: string) {
+    //返回的date有可能是null  moment(null) 为Invalid date
     this.setState(
       {
         value: date
       },
       () => {
         if (this.isValueArray(date)) {
-          this.formatOnchangeVal(date);
+          this.formatOnchangeArrayVal(date);
         } else {
-          let onChangeVal = moment(date).format(valueFormatFinal);
-          this.isValueTimestamp(valueFormatFinal)
-            ? onChange(Number(onChangeVal))
-            : onChange(onChangeVal);
+          this.formatOnchangeSingleVal(date);
         }
       }
     );
