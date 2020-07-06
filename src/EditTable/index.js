@@ -1,7 +1,6 @@
 import React from 'react';
 import propTypes from 'prop-types';
 import {Table, Form, Button, message} from 'antd';
-import './index.less';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext();

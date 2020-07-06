@@ -1,6 +1,5 @@
 import React from 'react';
 import {Tree, Card, Checkbox} from 'antd';
-import './style.less';
 const TreeNode = Tree.TreeNode;
 
 interface TreeTileProps {

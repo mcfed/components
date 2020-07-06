@@ -1,6 +1,5 @@
 import React, {useEffect, FunctionComponent} from 'react';
 import {Tooltip} from 'antd';
-import './index.less';
 
 interface EllipsisProps {
   text: string;

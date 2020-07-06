@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Td from './td';
-import './index.less';
 
 interface DetailProps<T = any> {
   mode: 'array' | 'object';

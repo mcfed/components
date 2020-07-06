@@ -3,7 +3,6 @@ import {Collapse} from 'antd';
 import PropTypes from 'prop-types';
 import FormItem from '../FormItem/index';
 
-import './index.less';
 const Panel = Collapse.Panel;
 
 export default class CollapsePanel extends Component {

@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Tree, Card, Checkbox} from 'antd';
-import './style.less';
 
 const TreeNode = Tree.TreeNode;
 

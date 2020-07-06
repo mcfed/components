@@ -44,7 +44,7 @@ export default class WrapperDatePicker extends React.Component<
     nextprops: WrapperDatePickerProps,
     prevstate: wrapperDatePickerState
   ) {
-    console.log(nextprops, prevstate);
+    // console.log(nextprops, prevstate);
   }
   // componentDidUpdate(prevProps:WrapperDatePickerProps) {
   //   if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
@@ -89,6 +89,7 @@ export default class WrapperDatePicker extends React.Component<
   private isValueArray(value: any) {
     return value instanceof Array;
   }
+
   private formatOnchangeArrayVal(date: any[]) {
     const {onChange, timeRange, timeRangeType} = this.props;
     const {valueFormatFinal} = this.state;
@@ -97,7 +98,6 @@ export default class WrapperDatePicker extends React.Component<
       onChange(date);
       return false;
     }
-
     let onChangeVal = timeRange
       ? [
           date[0].startOf(timeRangeType).format(valueFormatFinal),
