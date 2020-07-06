@@ -44,7 +44,7 @@ export default class WrapperDatePicker extends React.Component<
     nextprops: WrapperDatePickerProps,
     prevstate: wrapperDatePickerState
   ) {
-    console.log(nextprops, prevstate);
+    // console.log(nextprops, prevstate);
   }
   // componentDidUpdate(prevProps:WrapperDatePickerProps) {
   //   if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
