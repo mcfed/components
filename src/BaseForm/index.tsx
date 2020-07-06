@@ -16,7 +16,7 @@ export const LayoutRefContext = React.createContext({});
 const FormCreate = Form.create;
 
 class BaseForm extends React.Component<CustomFormComponentProps> {
-  static defaultProps = {
+  static defaultProps: CustomFormComponentProps = {
     prefixCls: 'ant-form',
     layout: 'horizontal',
     itemLayout: {
