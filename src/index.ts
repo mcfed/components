@@ -11,7 +11,7 @@ export {default as WrapperDatePicker} from './WrapperDatePicker';
 export {default as DataTable} from './DataTable';
 export {default as Permission} from './Permission';
 export {default as Panel} from './Panel';
-export {default as ModalAndView} from './ModalAndView';
+export {default as ModalOrView} from './ModalOrView';
 //import SmartLink from './SmartLink'
 export {default as TreeView} from './TreeView';
 export {default as TabsPanel} from './TabsPanel';
