@@ -8,6 +8,9 @@ import Locale from './locale';
 
 const FormItem = Form.Item;
 
+//在可编辑表格内唯一的区分表格行的key
+const edit_table_key = 'edit_table_key';
+
 type editConfigFnType<T> = (
   text: any,
   record: T,
@@ -24,10 +27,13 @@ interface EditTableColProps<T> extends ColumnProps<T> {
   ) => React.ReactElement;
   editConfig?: GetFieldDecoratorOptions | editConfigFnType<T>;
   dataIndex: string;
+  addInitValue?: any;
 }
 
+type wrapData<T> = (T & {edit_table_key: string})[];
+
 interface EditTableState<T> {
-  data: T[];
+  data: wrapData<T>[];
   editingKey: string;
   rowKey: string;
   keyList: string[];
@@ -70,7 +76,7 @@ export default class EditTable<A = {}> extends React.Component<
     if (columns !== undefined && columns.length > 0) {
       const keyList = columns.map((it: EditTableColProps<A>) => it.dataIndex);
       this.setState({
-        data: data,
+        data: this.compileDataSource(data),
         columns: [...columns, this.state.columns],
         rowKey: rowKey,
         keyList: keyList
@@ -83,10 +89,15 @@ export default class EditTable<A = {}> extends React.Component<
   ) {
     if (JSON.stringify(prevState.data) !== JSON.stringify(nextProps.data)) {
       return {
-        data: nextProps.data
+        data: this.compileDataSource(nextProps.data)
       };
     }
     return null;
+  }
+  private compileDataSource(data: any): wrapData<A>[] {
+    return data.map((it: A, index: number) => {
+      return Object.assign({}, it, {[edit_table_key]: String(index)});
+    });
   }
   optionColumns() {
     const {rowKey} = this.props;
@@ -113,14 +124,13 @@ export default class EditTable<A = {}> extends React.Component<
   }
   renderEditOption(record: any, locale: any) {
     const contextLocale = Object.assign({}, locale, this.props.locale);
-    const {rowKey, hideCancelConfirm} = this.props;
-    const optionKey = record[rowKey];
+    const {hideCancelConfirm} = this.props;
     return (
       <span>
         <EditTableContext.Consumer>
           {(form: any) => (
             <a
-              onClick={() => this.save(form, optionKey)}
+              onClick={() => this.save(form, record, contextLocale)}
               style={{marginRight: 8}}>
               {contextLocale.saveText}
             </a>
@@ -131,11 +141,11 @@ export default class EditTable<A = {}> extends React.Component<
             hideCancelConfirm ? (
               <Popconfirm
                 title={contextLocale.confirmCancelText}
-                onConfirm={() => this.cancel(form, optionKey)}>
+                onConfirm={() => this.cancel(record, contextLocale)}>
                 <a>{contextLocale.cancelText}</a>
               </Popconfirm>
             ) : (
-              <a onClick={() => this.cancel(form, optionKey)}>
+              <a onClick={() => this.cancel(record, contextLocale)}>
                 {contextLocale.cancelText}
               </a>
             )
@@ -146,29 +156,113 @@ export default class EditTable<A = {}> extends React.Component<
   }
   renderShowOption(record: any, locale: any) {
     const contextLocale = Object.assign({}, locale, this.props.locale);
-    const optionKey = record[this.props.rowKey];
     return (
       <span>
-        <a style={{marginRight: 8}} onClick={() => this.edit(optionKey)}>
+        <a
+          style={{marginRight: 8}}
+          onClick={() => this.edit(record, contextLocale)}>
           {contextLocale.editText}
         </a>
         <Popconfirm
           title={contextLocale.confirmDeleteText}
-          onConfirm={() => this.delete(optionKey)}>
+          onConfirm={() => this.delete(record)}>
           <a> {contextLocale.deleteText}</a>
         </Popconfirm>
       </span>
     );
   }
   isEditing(record: any) {
-    const {rowKey, editingKey} = this.state;
-    return record[rowKey] === editingKey;
+    //用editable 内部自定义key 作为唯一值
+    return record[edit_table_key] === this.state.editingKey;
   }
-  save(form: WrappedFormUtils, optionKey: string) {}
-  cancel(form: WrappedFormUtils, optionKey: string) {}
-  edit(optionKey: string) {}
-  delete(optionKey: string) {}
-  renderAddButton(locale: any) {
+  private save(form: WrappedFormUtils, record: A, locale: any) {
+    const _this = this;
+    const {data} = this.state;
+    const {onOption} = this.props;
+    const isCurrentAdd = this.isRecordAdd(record);
+    const isHasOptionFn = this.isOptionFnExist();
+    form.validateFieldsAndScroll((error: any, row: any) => {
+      if (error) {
+        return;
+      }
+      const concatData = Object.assign(record, row);
+      const addCallBack = () => {
+        _this.setState({
+          data: [...data, concatData],
+          editingKey: ''
+        });
+      };
+      const editCallBack = () => {
+        _this.setState({
+          data: data.map((it: any) => {
+            if (it[edit_table_key] === concatData[edit_table_key]) {
+              return concatData;
+            }
+            return it;
+          }),
+          editingKey: ''
+        });
+      };
+
+      if (isCurrentAdd) {
+        isHasOptionFn
+          ? onOption?.call(this, concatData, 'add', addCallBack)
+          : addCallBack();
+      } else {
+        isHasOptionFn
+          ? onOption?.call(this, concatData, 'edit', editCallBack)
+          : editCallBack();
+      }
+    });
+  }
+  private cancel(record: any, locale: any): void {
+    const {data, rowKey} = this.state;
+    if (this.isRecordAdd(record)) {
+      //add
+      this.setState({
+        data: data.filter(
+          (it: any) => it[edit_table_key] !== record[edit_table_key]
+        )
+      });
+    }
+    this.setState({
+      editingKey: ''
+    });
+  }
+  private edit(record: any, locale: any) {
+    if (this.state.editingKey !== '') {
+      message.error(locale.endEditBeforeEditText);
+      return false;
+    }
+    this.setState({
+      editingKey: record[edit_table_key]
+    });
+  }
+  private delete(record: any): void {
+    const {onOption} = this.props;
+    const {data} = this.state;
+
+    const delCallBack = () => {
+      this.setState({
+        data: data.filter((it: any) => {
+          return it[edit_table_key] !== record[edit_table_key];
+        })
+      });
+    };
+
+    if (this.isOptionFnExist()) {
+      onOption?.call(this, record, 'del', delCallBack);
+    } else {
+      delCallBack();
+    }
+  }
+  private isOptionFnExist(): boolean {
+    return this.props.onOption !== undefined;
+  }
+  private isRecordAdd(record: any): boolean {
+    return record[this.state.rowKey] === '';
+  }
+  private renderAddButton(locale: any) {
     const contextLocale = Object.assign({}, locale, this.props.locale);
     return (
       <Button
@@ -179,10 +273,30 @@ export default class EditTable<A = {}> extends React.Component<
       </Button>
     );
   }
-  addNew(locale: any) {
+  private addNew(locale: any) {
     if (this.state.editingKey !== '') {
       message.error(locale.endEditBeforeAddText);
     }
+    const newRow = this.newRowInit();
+    this.setState({
+      data: [...this.state.data, newRow],
+      editingKey: newRow[edit_table_key]
+    });
+  }
+  private newRowInit(): any {
+    let row = {
+      [edit_table_key]:
+        new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1)
+    };
+    this.props.columns.map((it: EditTableColProps<A>) => {
+      const {dataIndex, addInitValue} = it;
+      if (addInitValue !== undefined) {
+        row = {...row, [dataIndex]: addInitValue};
+      } else {
+        row = {...row, [dataIndex]: ''};
+      }
+    });
+    return row;
   }
   renderFooter() {
     const {footer, hideOperation} = this.props;

@@ -6,5 +6,6 @@ export default {
   cancelText: '取消',
   confirmDeleteText: '确认删除？',
   confirmCancelText: '确认取消？',
-  endEditBeforeAddText: '请先保存编辑项在进行添加操作！'
+  endEditBeforeAddText: '请先保存编辑项在进行添加操作！',
+  endEditBeforeEditText: '请先保存编辑项在进行编辑操作！'
 };

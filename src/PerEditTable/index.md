@@ -23,6 +23,7 @@
 | ------------: | ---------------------- | ---------------- | --------- |
 | editComponent | 编辑模式 render 方法   | function         | undefined |
 |    editConfig | 编辑模式自定义属性传入 | json or function | undefined |
+|  addInitValue | 新增时是否有初始化值   | any              | undefined |
 
 ## demo
 
