@@ -4,6 +4,7 @@ exports[`快照测试 全页快照 1`] = `
 <Form(BaseForm)>
   <FormItemRender
     key="input1"
+    name="input1"
   >
     <Input
       defaultValue="input1"
