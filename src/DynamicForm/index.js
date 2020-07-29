@@ -18,7 +18,7 @@ export default class DynamicForm extends React.Component {
           const {component, ...others} = item;
           return React.createElement(
             FormItem,
-            {key: others.name},
+            {key: others.name, name: others.name, children: others.children},
             React.createElement(component, others)
           );
         })}
