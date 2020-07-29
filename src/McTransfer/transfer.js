@@ -1,4 +1,3 @@
-import 'react-virtualized/styles.css';
 import React from 'react';
 import PureRenderMixin from 'rc-util/lib/PureRenderMixin';
 import PropTypes from 'prop-types';
@@ -8,7 +7,6 @@ import SelectList from './selectList';
 import Operation from './operation';
 
 import prefixCls from './constants';
-import './index.less';
 export function noop() {}
 
 export default class Transfer extends React.Component {
