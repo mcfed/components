@@ -112,6 +112,8 @@ const use = config => {
   });
   mergeAndCreateCss(cssContentArray, 'dist/style.less');
 
+  spawn('lessc', ['dist/style.less', 'dist/style.css']);
+
   arr = arr
     .map(path => path.replace(/\\/gi, '/'))
     .filter(path => path.split('/').length <= deep)
@@ -123,7 +125,8 @@ const use = config => {
         //     configs.sourceFolder.length + 1,
         //     -'.less'.length
         //   );
-        //   spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
+        //   console.log(middlePath)
+        //   // spawn('lessc', [path, `${targetFolder}/${middlePath}.css`]);
         // }
         if (path.includes('.css') || path.includes('.less')) {
           fs.copyFileSync(path, path.replace(sourceFolder, targetFolder));
