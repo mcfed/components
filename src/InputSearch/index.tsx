@@ -26,6 +26,9 @@ export default class InputSearch extends React.Component<
   }
   onSearchHandler = (value: string) => {
     const {onSearch, onChange} = this.props;
+    this.setState({
+      value: value
+    });
     /* istanbul ignore else */
     if (onSearch) onSearch(value);
     /* istanbul ignore else */
@@ -39,6 +42,7 @@ export default class InputSearch extends React.Component<
   onBlur = () => {
     const {onChange} = this.props;
     const {value} = this.state;
+    console.log(value);
     /* istanbul ignore else */
     if (onChange) onChange(value);
   };
