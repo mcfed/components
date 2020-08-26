@@ -16,6 +16,38 @@ stroies.add('基础用法', () => {
       <FormItem label='input headsearch a' name='aaaa'>
         <Input defaultValue='aaaa' />
       </FormItem>
+      <FormItem
+        label='select headsearch b'
+        name='bbbb'
+        options={[
+          {label: 'aaaa', value: 'aaaa'},
+          {label: 'bbbb', value: 'bbbb'},
+          {label: 'cccc', value: 'cccc'}
+        ]}>
+        <Select defaultValue='aaaa' />
+      </FormItem>
+      <FormItem label='input headsearch c' name='cccc'>
+        <Input defaultValue='ccccc' />
+      </FormItem>
+      <FormItem label='input headsearch d' name='dddd'>
+        <Input defaultValue='dddd' />
+      </FormItem>
+    </HeadSearchBar>
+  );
+});
+
+stroies.add('columns', () => {
+  const searchFn = value => {
+    console.log(value);
+  };
+  return (
+    <HeadSearchBar
+      filterSubmitHandler={searchFn}
+      columns={3}
+      showSearchButton={true}>
+      <FormItem label='input headsearch a' name='aaaa'>
+        <Input defaultValue='aaaa' />
+      </FormItem>
       <FormItem label='select headsearch b' name='bbbb'>
         <Select
           defaultValue='aaaa'
@@ -28,9 +60,6 @@ stroies.add('基础用法', () => {
       </FormItem>
       <FormItem label='input headsearch c' name='cccc'>
         <Input defaultValue='ccccc' />
-      </FormItem>
-      <FormItem label='input headsearch d' name='dddd'>
-        <Input defaultValue='dddd' />
       </FormItem>
     </HeadSearchBar>
   );
