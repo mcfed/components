@@ -6,7 +6,7 @@
 // antd4
 import React from 'react';
 import {Form} from 'antd';
-import TextMask from '@mcf/components';
+import {TextMaskInput} from '@mcf/components';
 
 const FormItem = Form.Item;
 
@@ -15,7 +15,7 @@ const Demo = () => {
   return (
     <Form form={form} {...layout}>
       <FormItem name='phone' label='phone'>
-        <TextMask
+        <TextMaskInput
           maskType='phone'
           // defaultValue={18868832053}
           onChange={e => console.log(e.target.value)}
@@ -23,10 +23,10 @@ const Demo = () => {
         />
       </FormItem>
       <FormItem name='email' label='email'>
-        <TextMask maskType='email' />
+        <TextMaskInput maskType='email' />
       </FormItem>
       <FormItem name='date' label='date'>
-        <TextMask maskType='date' />
+        <TextMaskInput maskType='date' />
       </FormItem>
     </Form>
   );
@@ -40,7 +40,7 @@ class Demo extends React.Component {
       <Form {...layout}>
         <FormItem label='phone'>
           {getFieldDecorator('phone')(
-            <TextMask
+            <TextMaskInput
               maskType='phone'
               // defaultValue={18868832053}
               onChange={e => console.log(e.target.value)}
@@ -49,10 +49,10 @@ class Demo extends React.Component {
           )}
         </FormItem>
         <FormItem label='email'>
-          {getFieldDecorator('email')(<TextMask maskType='email' />)}
+          {getFieldDecorator('email')(<TextMaskInput maskType='email' />)}
         </FormItem>
         <FormItem label='date'>
-          {getFieldDecorator('date')(<TextMask maskType='date' />)}
+          {getFieldDecorator('date')(<TextMaskInput maskType='date' />)}
         </FormItem>
       </Form>
     );
