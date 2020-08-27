@@ -6,7 +6,7 @@
 // antd4
 import React from 'react';
 import {Form} from 'antd';
-import {TextMaskInput} from '@mcf/components';
+import {TextMaskInput} from '@mcfed/components';
 
 const FormItem = Form.Item;
 
