@@ -1,10 +1,9 @@
 import React from 'react';
 import MaskedInput from 'react-text-mask';
-import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 import {Input} from 'antd';
 import masks from './mask';
 
-type MaskTypes = 'phone' | 'email' | 'date';
+type MaskTypes = 'phone' | 'email' | 'date' | 'ip';
 
 interface IMaskedInput {
   props: any;
@@ -12,8 +11,6 @@ interface IMaskedInput {
   onBlur: Function;
   onChange: Function;
 }
-
-const autoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy HH:MM');
 
 const maskRender = (ref: Function, props: any) => {
   const {
@@ -50,15 +47,8 @@ class NewMaskedInput extends MaskedInput {
 }
 
 const MaskInput = ({maskType, ...others}: {maskType: MaskTypes}) => {
-  return (
-    <NewMaskedInput
-      mask={masks[maskType || 'phone']}
-      {...Object.assign(
-        others,
-        maskType === 'date' ? {pipe: autoCorrectedDatePipe} : {}
-      )}
-    />
-  );
+  //@ts-ignore
+  return <NewMaskedInput {...masks[maskType || 'phone']} {...others} />;
 };
 
 export default MaskInput;
