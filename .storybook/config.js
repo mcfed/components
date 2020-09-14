@@ -34,7 +34,7 @@ const newViewports = {
 //   // You can require as many stories as you need.
 // }
 
-const req = require.context("../packages/components/src", true, /.stories.js$/);
+const req = require.context("../packages/components/src", true, /\.stories\.(js|tsx)$/);
 function loadStories() {
   req.keys().forEach((fileName) => req(fileName));
 }
