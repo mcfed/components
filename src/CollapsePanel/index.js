@@ -6,7 +6,7 @@ import FormItem from '../FormItem/index';
 import {FormRefContext} from '../BaseForm';
 const Panel = Collapse.Panel;
 
-class CollapsePanelClass extends Component {
+export class CollapsePanelClass extends Component {
   state = {
     active: true
   };
@@ -72,7 +72,6 @@ class CollapsePanelClass extends Component {
     /**
      * fixed ：如果children 没传  则不论active为什么  都不显示body
      */
-    console.log(222);
     return renderProps ? (
       <Panel
         header={this.renderHeader()}
