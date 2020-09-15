@@ -298,7 +298,8 @@ export class FormItem extends React.Component<CustFormItemType, any> {
   fixedPropFieldFrom(propName: string) {
     //@ts-ignore
     return this.props[propName] !== undefined
-      ? this.props[propName]
+      ? //@ts-ignore
+        this.props[propName]
       : this.props.children.props[propName];
   }
 
