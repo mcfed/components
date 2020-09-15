@@ -3,14 +3,12 @@ import {Collapse} from 'antd';
 import PropTypes from 'prop-types';
 import FormItem from '../FormItem/index';
 
+import {FormRefContext} from '../BaseForm';
 const Panel = Collapse.Panel;
 
-export default class CollapsePanel extends Component {
+class CollapsePanelClass extends Component {
   state = {
     active: true
-  };
-  static contextTypes = {
-    formRef: PropTypes.object
   };
   componentDidMount() {
     this.setActiveStatus();
@@ -25,7 +23,7 @@ export default class CollapsePanel extends Component {
     });
   }
   fieldValueChange() {
-    const {formRef} = this.context;
+    const {formRef} = this.props;
     const {control, closeValues} = this.props;
     /**
      * closeValues 关闭值数组【默认为空数组】
@@ -61,7 +59,7 @@ export default class CollapsePanel extends Component {
   }
   render() {
     const {children, title, control, renderable, ...otherProps} = this.props;
-    const {formRef} = this.context;
+    const {formRef} = this.props;
     let {active} = this.state;
     let renderProps = true;
     if (
@@ -74,6 +72,7 @@ export default class CollapsePanel extends Component {
     /**
      * fixed ：如果children 没传  则不论active为什么  都不显示body
      */
+    console.log(222);
     return renderProps ? (
       <Panel
         header={this.renderHeader()}
@@ -82,6 +81,20 @@ export default class CollapsePanel extends Component {
         {children}
       </Panel>
     ) : null;
+  }
+}
+
+export default class CollapsePanel extends Component {
+  render() {
+    return (
+      <FormRefContext.Consumer>
+        {formRef => (
+          <CollapsePanelClass {...this.props} formRef={formRef}>
+            {this.props.children}
+          </CollapsePanelClass>
+        )}
+      </FormRefContext.Consumer>
+    );
   }
 }
 

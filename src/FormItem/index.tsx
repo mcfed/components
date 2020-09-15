@@ -295,6 +295,13 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     return defaultValue;
   }
 
+  fixedPropFieldFrom(propName: string) {
+    //@ts-ignore
+    return this.props[propName] !== undefined
+      ? this.props[propName]
+      : this.props.children.props[propName];
+  }
+
   render() {
     const {
       name,
@@ -318,11 +325,12 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     const transferValue = this.compileValue(element);
     const isFormContextComing = getFieldDecorator !== undefined;
     const wrapperColsProps = this.compileWrapperCols();
+    const fixedFieldName = this.fixedPropFieldFrom('name');
     return this.fieldRenderableProp(renderable) && isFormContextComing ? (
       <Form.Item
-        label={label}
+        label={this.fixedPropFieldFrom('label')}
         {...Object.assign({}, formLayout, wrapperColsProps, otherProps)}>
-        {getFieldDecorator(name, {
+        {getFieldDecorator(fixedFieldName, {
           ...otherProps,
           initialValue: transferValue
         })(this.renderFields(element))}
