@@ -2,7 +2,7 @@
 
 exports[`toolbar base test test render 1`] = `
 <div
-  class="tool-bar undefined"
+  class="tool-bar "
 >
   <button
     class="ant-btn"
