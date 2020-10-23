@@ -27,14 +27,14 @@ export default class SwitchConfirm extends React.Component<
   constructor(props: SwitchConfirmProps) {
     super(props);
     this.state = {
-      checked: false
+      checked: this.translateChecked(props, props.checked)
     };
   }
-  componentDidMount() {
-    this.setState({
-      checked: this.translateChecked(this.props, this.props.checked)
-    });
-  }
+  // componentDidMount() {
+  //   this.setState({
+  //     checked: this.translateChecked(this.props, this.props.checked)
+  //   });
+  // }
   componentWillReceiveProps(nextProps: SwitchConfirmProps) {
     if (
       this.props.checked !== nextProps.checked ||
