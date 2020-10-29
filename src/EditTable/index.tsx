@@ -281,16 +281,16 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   render() {
+    const {data, columns, mode, onChange, ...otherProps} = this.props;
     const components = {
       body: {
         row: EditableFormRow
         // cell: EditableCell
       }
     };
-    const {mode} = this.props;
     const instance = this;
 
-    const columns = this.state.columns.map((col: ColumnsItem<T>) => {
+    const columnsFinal = this.state.columns.map((col: ColumnsItem<T>) => {
       if (!col.editComponent) {
         return col;
       }
@@ -320,6 +320,7 @@ export default class EditTable<T extends Item> extends React.Component<
         dataSource={this.state.data}
         columns={columns}
         rowClassName={(record: object, index: number) => 'editable-row'}
+        {...otherProps}
         footer={() => (
           <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
             新增
