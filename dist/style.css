@@ -232,6 +232,28 @@
 .isBeteen > .ant-row {
   margin: 0 10px;
 }
+.form-set .ant-card-head {
+  background-color: #f7f8fb;
+  color: #8c8c95;
+  padding: 0 0 0 20px;
+  line-height: 32px;
+  min-height: 32px;
+  height: 32px;
+  font-size: 12px;
+  border: 0;
+}
+.form-set .ant-card-head .ant-card-head-title {
+  padding: 0;
+}
+.form-set .ant-card-body {
+  padding: 0 20px;
+}
+.form-set .ant-form-item-label {
+  text-align: left;
+}
+.form-set p {
+  margin: 0;
+}
 .head-searchbar-panel {
   padding-left: 10px;
   padding-right: 10px;
