@@ -51,7 +51,10 @@ stories.add('按钮组超出折叠', () => {
   };
   return (
     <ButtonGroups handleClick={handlerMenu} showSize={3} mode='ButtonMenu'>
-      <CustomButton actionkey='click1' confirm='这是一个无理取闹的确认框'>
+      <CustomButton
+        actionkey='click1'
+        confirm={<CustomButton>测试</CustomButton>}
+        confirmTitle='标题'>
         点击
       </CustomButton>
       <CustomButton actionkey='click2'>不要点我</CustomButton>

@@ -166,7 +166,6 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderMenuItem(itemList: any) {
-    const {handleClick} = this.props;
     return (
       <Menu onClick={this.handleMenuClick.bind(this)}>
         {itemList.map((it: any, idx: number) => {
