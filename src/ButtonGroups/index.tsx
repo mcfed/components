@@ -70,6 +70,12 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     return item.tip || item.children;
   }
   completeIconProp() {}
+
+  handleMenuClick(item: any) {
+    const {handleClick} = this.props;
+    handleClick(item.key);
+  }
+
   renderNormalChild(it: any, idx: number): React.ReactNode {
     const {handleClick} = this.props;
     const {
@@ -160,12 +166,13 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderMenuItem(itemList: any) {
-    const {handleClick} = this.props;
     return (
-      <Menu onClick={handleClick.bind(this, 'menu')}>
+      <Menu onClick={this.handleMenuClick.bind(this)}>
         {itemList.map((it: any, idx: number) => {
           return (
-            <Menu.Item key={idx}>{this.renderMenuChild(it, idx)}</Menu.Item>
+            <Menu.Item key={it.props.actionkey || idx}>
+              {this.renderMenuChild(it, idx)}
+            </Menu.Item>
           );
         })}
       </Menu>
