@@ -291,10 +291,9 @@ export default class EditTable<T extends Item> extends React.Component<
     const instance = this;
 
     const columnsFinal = this.state.columns.map((col: ColumnsItem<T>) => {
-      if (!col.editComponent) {
+      if (col.editComponent === undefined) {
         return col;
       }
-      /* istanbul ignore next */
       return {
         ...col,
         // onCellClick: (record,index)=>{
@@ -318,7 +317,7 @@ export default class EditTable<T extends Item> extends React.Component<
         components={components}
         bordered
         dataSource={this.state.data}
-        columns={columns}
+        columns={columnsFinal}
         rowClassName={(record: object, index: number) => 'editable-row'}
         {...otherProps}
         footer={() => (
