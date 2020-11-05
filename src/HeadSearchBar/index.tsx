@@ -78,6 +78,7 @@ export default class AdvancedSearchForm extends React.Component<
           {
             componentName: 'HeadSearchBar',
             defaultLocale: Locale,
+            //@ts-ignore
             children: () => undefined //为通过类型检查
           },
           this.renderButton.bind(this)
