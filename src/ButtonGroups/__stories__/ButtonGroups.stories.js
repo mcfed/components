@@ -46,7 +46,7 @@ stories.add('按钮组超出折叠', () => {
       message.info('这是第三个按钮');
     }
     if (actionkey === 'click4') {
-      // message.info('没有更多了');
+      message.info('没有更多了');
     }
   };
   return (

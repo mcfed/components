@@ -71,11 +71,6 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
   completeIconProp() {}
 
-  handleMenuClick(item: any) {
-    const {handleClick} = this.props;
-    handleClick(item.key);
-  }
-
   renderNormalChild(it: any, idx: number): React.ReactNode {
     const {handleClick} = this.props;
     const {
@@ -167,7 +162,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
   renderMenuItem(itemList: any) {
     return (
-      <Menu onClick={this.handleMenuClick.bind(this)}>
+      <Menu>
         {itemList.map((it: any, idx: number) => {
           return (
             <Menu.Item key={it.props.actionkey || idx}>
