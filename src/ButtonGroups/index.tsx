@@ -121,7 +121,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       //@ts-ignore
       {
         key: idx,
-        title: confirmTitle,
+        title: !!confirmTitle ? confirmTitle : undefined,
         content: confirm,
         onConfirm: () => {
           handleClick(actionkey);
@@ -143,8 +143,8 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderReactElement(it: any, idx: number) {
-    const {disabled, confirm} = it.props;
-    if (confirm && !disabled) {
+    const {disabled, confirmTitle, confirm} = it.props;
+    if ((confirmTitle || confirm) && !disabled) {
       return this.renderConfirmChild(it, idx);
     } else {
       return this.renderNormalChild(it, idx);
@@ -171,7 +171,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
         {itemList.map((it: any, idx: number) => {
           return (
             <Menu.Item key={it.props.actionkey || idx}>
-              {this.renderMenuChild(it, idx)}
+              {this.renderReactElement(it, idx)}
             </Menu.Item>
           );
         })}
