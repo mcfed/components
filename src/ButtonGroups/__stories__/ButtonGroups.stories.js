@@ -59,7 +59,9 @@ stories.add('按钮组超出折叠', () => {
       </CustomButton>
       <CustomButton actionkey='click2'>不要点我</CustomButton>
       <CustomButton actionkey='click3'>第三个按钮</CustomButton>
-      <CustomButton actionkey='click4'>444</CustomButton>
+      <CustomButton actionkey='click4' confirm='aaa' confirmTitle={'null'}>
+        444
+      </CustomButton>
     </ButtonGroups>
   );
 });

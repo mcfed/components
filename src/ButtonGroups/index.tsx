@@ -71,11 +71,6 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
   completeIconProp() {}
 
-  handleMenuClick(item: any) {
-    const {handleClick} = this.props;
-    handleClick(item.key);
-  }
-
   renderNormalChild(it: any, idx: number): React.ReactNode {
     const {handleClick} = this.props;
     const {
@@ -121,7 +116,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       //@ts-ignore
       {
         key: idx,
-        title: confirmTitle,
+        title: !!confirmTitle ? confirmTitle : undefined,
         content: confirm,
         onConfirm: () => {
           handleClick(actionkey);
@@ -143,8 +138,8 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderReactElement(it: any, idx: number) {
-    const {disabled, confirm} = it.props;
-    if (confirm && !disabled) {
+    const {disabled, confirmTitle, confirm} = it.props;
+    if ((confirmTitle || confirm) && !disabled) {
       return this.renderConfirmChild(it, idx);
     } else {
       return this.renderNormalChild(it, idx);
@@ -167,11 +162,11 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
   renderMenuItem(itemList: any) {
     return (
-      <Menu onClick={this.handleMenuClick.bind(this)}>
+      <Menu>
         {itemList.map((it: any, idx: number) => {
           return (
             <Menu.Item key={it.props.actionkey || idx}>
-              {this.renderMenuChild(it, idx)}
+              {this.renderReactElement(it, idx)}
             </Menu.Item>
           );
         })}

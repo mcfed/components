@@ -18,3 +18,5 @@
 # 0.3.1
 
 fix: ButtonGroups ButtonMenu 模式下 menu action 捕获失败
+fix: ButtonGroups ButtonMenu 模式下 menu item 按照节点完整渲染
+fix: ButtonGroups ButtonMenu 模式下 menu item 多次触发
