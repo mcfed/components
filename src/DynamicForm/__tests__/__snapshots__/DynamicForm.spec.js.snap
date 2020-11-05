@@ -8,7 +8,6 @@ exports[`快照测试 全页快照 1`] = `
   >
     <Input
       defaultValue="input1"
-      disabled={false}
       formItemLayout={
         Object {
           "labelCol": Object {
@@ -21,7 +20,6 @@ exports[`快照测试 全页快照 1`] = `
       }
       label="input1"
       name="input1"
-      prefixCls="ant-input"
       rules={
         Array [
           Object {

@@ -11,7 +11,7 @@ exports[`formset base test test render 1`] = `
       class="ant-row ant-form-item"
     >
       <div
-        class="ant-col-3 ant-form-item-label"
+        class="ant-col ant-col-3 ant-form-item-label"
       >
         <label
           class=""
@@ -21,7 +21,7 @@ exports[`formset base test test render 1`] = `
         </label>
       </div>
       <div
-        class="ant-col-18 ant-form-item-control-wrapper"
+        class="ant-col ant-col-18 ant-form-item-control-wrapper"
       >
         <div
           class="ant-form-item-control"
@@ -32,6 +32,7 @@ exports[`formset base test test render 1`] = `
             <input
               class="ant-input"
               type="text"
+              value=""
             />
           </span>
         </div>

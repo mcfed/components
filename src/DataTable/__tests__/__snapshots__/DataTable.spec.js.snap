@@ -1,14 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`快照测试 DataTable 快照测试 1`] = `
-<Table
-  bordered={false}
-  className=""
+<withStore(Table)
   columns={Array []}
-  dataSource={Array []}
-  indentSize={20}
-  loading={false}
-  locale={Object {}}
   pagination={
     Object {
       "pageSizeOptions": Array [
@@ -23,14 +17,10 @@ exports[`快照测试 DataTable 快照测试 1`] = `
     }
   }
   prefixCls="ant-table"
-  rowKey="key"
-  showHeader={true}
-  size="default"
   style={
     Object {
       "width": "100%",
     }
   }
-  useFixedHeader={false}
 />
 `;
