@@ -12,12 +12,33 @@ import {Row, Col} from 'antd';
 const Button = ButtonGroups.CustomButton;
 
 interface AdvancedFormProps extends FormProps {
+  /**
+   * 组件之前的间隔
+   */
   gutter?: number;
+  /**
+   * 搜索按钮事件监听方法
+   */
   filterSubmitHandler: (values: any) => void;
+  /**
+   * 设置发送请求时带的默认参数
+   */
   defaultParams?: object;
+  /**
+   * 是否显示搜索按钮
+   */
   showSearchButton?: boolean;
+  /**
+   * 设置一列中排列的组件个数
+   */
   columns?: number;
+  /**
+   * 表单自动提交
+   */
   autoSubmitForm?: boolean;
+  /**
+   * 传入国际化字段文案
+   */
   locale?: object;
 }
 
