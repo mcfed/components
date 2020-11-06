@@ -98,6 +98,9 @@ export default class CollapsePanel extends Component {
 }
 
 CollapsePanel.propTypes = {
+  /**
+   * 关闭值数组
+   */
   closeValues: PropTypes.array
 };
 CollapsePanel.defaultProps = {
