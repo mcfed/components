@@ -18,7 +18,7 @@ interface ButtonGroupsType extends ButtonGroupProps {
   mode: 'ButtonGroup' | 'ButtonMenu';
   showSize: number;
   viewMode: 'text' | 'icon' | 'both'; //todo
-  overlayClassName: string;
+  overlayClassName?: string;
 }
 
 interface ConfirmType extends ModalFuncProps {
