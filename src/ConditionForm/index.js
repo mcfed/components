@@ -396,8 +396,14 @@ class ConditionForm extends PureComponent {
 }
 
 ConditionForm.propTypes = {
-  conditionSelect: PropTypes.array.isRequired, //传入的下拉列表框数组值
-  callbackParentSql: PropTypes.func.isRequired //把textarea输入框的值回传出去的回调方法
+  /**
+   * 传入的下拉列表框数组值
+   */
+  conditionSelect: PropTypes.array.isRequired,
+  /**
+   * 把textarea输入框的值回传出去的回调方法
+   */
+  callbackParentSql: PropTypes.func.isRequired
 };
 
 ConditionForm.defaultProps = {
