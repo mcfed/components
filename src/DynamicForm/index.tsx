@@ -7,7 +7,13 @@ import BaseForm from '../BaseForm';
  * className: 样式类名，非必须
  */
 interface DynamicFormProps {
+  /**
+   * 步骤信息数组，必须
+   */
   formData: object[];
+  /**
+   * 样式类名，非必须
+   */
   className?: string;
 }
 
