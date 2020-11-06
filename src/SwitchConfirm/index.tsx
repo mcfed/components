@@ -6,11 +6,29 @@ import {ModalFuncProps} from 'antd/es/modal';
 import {Switch, Modal} from 'antd';
 
 interface SwitchConfirmProps extends SwitchProps {
+  /**
+   * 非选中时的内容
+   */
   uncheckedOption?: any;
+  /**
+   * 选中时的内容
+   */
   checkedOption?: any;
+  /**
+   * 当前显示内容
+   */
   currentOption?: any;
+  /**
+   * 二次确认弹出弹出框确认按钮的回调
+   */
   onConfirm: (currentOption: any, action?: () => void) => void;
+  /**
+   * 暂无用意
+   */
   confirm?: boolean;
+  /**
+   * 二次确认弹出框的props属性
+   */
   modalConfirmProps?: ModalFuncProps;
 }
 interface SwitchConfirmState {
