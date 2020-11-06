@@ -248,9 +248,18 @@ AdvancedSearchForm.propTypes = {
   是否显示配置项,配置搜索条件显示
   **/
   showConfig: PropTypes.bool,
+  /**
+   * 设置搜索按钮载入状态
+   */
   loading: PropTypes.bool,
   footer: PropTypes.element,
+  /**
+   * 设置国际化字段
+   */
   locale: PropTypes.object,
+  /**
+   * 设置发送请求时带的默认参数
+   */
   defaultParams: PropTypes.object,
   /**
   是否收展，超过指定个数后隐藏
