@@ -21,8 +21,17 @@ const UpDown = ({state = 'up'}) => (
 );
 
 interface FieldSetProps {
+  /**
+   * 分组标题
+   */
   title: string;
+  /**
+   * 默认展开合并，如果不配置，默认显示表单，不能展开隐藏，配置后，展开隐藏可使用
+   */
   display: string;
+  /**
+   * 展开合并回调方法
+   */
   onChange: any;
 }
 
