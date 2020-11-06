@@ -176,20 +176,22 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   }
   renderMixButtonMenu(): React.ReactNode {
     let {children, showSize, overlayClassName} = this.props;
-    let childrenArray = React.Children.toArray(children);
+    let childrenArray = this.filterChildren(React.Children.toArray(children));
     let endArray = childrenArray.splice(showSize);
     return (
       <React.Fragment>
-        {childrenArray.map((it, idx) => {
+        {childrenArray.map((it: any, idx: number) => {
           return this.renderReactElement(it, idx);
         })}
-        <Dropdown
-          overlayClassName={overlayClassName}
-          overlay={this.renderMenuItem(endArray)}>
-          <Button>
-            <Icon type='ellipsis' />
-          </Button>
-        </Dropdown>
+        {endArray.length ? (
+          <Dropdown
+            overlayClassName={overlayClassName}
+            overlay={this.renderMenuItem(endArray)}>
+            <Button>
+              <Icon type='ellipsis' />
+            </Button>
+          </Dropdown>
+        ) : null}
       </React.Fragment>
     );
   }
