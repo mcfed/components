@@ -16,4 +16,5 @@
 fix: ButtonGroups ButtonMenu 模式下 menu action 捕获失败
 fix: ButtonGroups ButtonMenu 模式下 menu item 按照节点完整渲染
 fix: ButtonGroups ButtonMenu 模式下 menu item 多次触发
+fix: buttonGroup menu 模式 权限控制
 feat: 增加指定 OverLay，类名字段
