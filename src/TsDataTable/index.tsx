@@ -12,8 +12,18 @@ interface DataTableColumnProps<T> extends ColumnProps<T> {
 }
 
 interface DataTableProps<T> extends TableProps<T> {
+  /**
+    表格列的配置描述 同antd table columns
+  **/
   columns: DataTableColumnProps<T>[];
+  /**
+  默认排序参数  {columnKey,order} columnkey代表需要排序的columns的dataIndex order 选项为‘descend ascend’之一
+  e.g. {columnKey:'name',order:'descend'}
+  **/
   defaultSort?: defaultSortType;
+  /**
+  分页器 
+  **/
   page?: object;
 }
 

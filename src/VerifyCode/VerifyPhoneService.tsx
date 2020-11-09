@@ -3,9 +3,21 @@ import {Button} from 'antd';
 import VerifyCode, {VerifyCodeProps} from './VerifyCode';
 
 export interface PhoneServiceVerifyProps extends VerifyCodeProps {
+  /**
+   * 设置按钮名字
+   */
   title?: string;
+  /**
+   * 设置多久间隔才可以再次点击
+   */
   interval?: number;
+  /**
+   * 点击按钮之后调用的回调函数
+   */
   retry?: Function;
+  /**
+   * 是否可点击按钮
+   */
   disabled?: boolean;
 }
 
