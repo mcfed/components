@@ -15,20 +15,65 @@ type fetchParamsType = object | ((form: any) => object);
 type fetchCallbackType = (result: any) => any[];
 
 interface CustFormItemProps extends FormItemProps {
+  /**
+   * 设置表单域内字段 id 的前缀
+   */
   name: string;
+  /**
+   * FormItem 包裹的子组件
+   */
   children: React.ReactElement;
+  /**
+   * 禁用表单项，也不做 redux store 传参值
+   */
   disabled?: fnOrBoolType;
+  /**
+   * 不渲染表单项，也不做 redux store 传参值
+   */
   renderable?: fnOrBoolType;
+  /**
+   * 设置表单布局样式
+   */
   formLayout?: object;
+  /**
+   * 给DOM元素或子组件注册引用信息
+   */
   formRef?: any;
+  /**
+   * 下拉框下拉菜单内容
+   */
   options?: any[];
+  /**
+   * 自定义下拉框下拉菜单的渲染方式
+   */
   renderItem?: (it: any, idx: number) => React.ReactElement;
+  /**
+   * URL 发起 xhr 请求获取 options 数据，提供 renderItem 渲染节点
+   */
   fetch?: string;
+  /**
+   * URL 发起 xhr 请求时带的参数
+   */
   fetchParams?: fetchParamsType;
+  /**
+   * URL 发起 xhr 请求后的回调函数
+   */
   fetchCallback?: fetchCallbackType;
+  /**
+   * 对fetchCallBack返回的数据，根据包裹的子组件，设置数据源名称
+   */
   dataSourceProp?: string;
+  /**
+   * 是否基于 parentNode 渲染 getPopupContainer:triggerNode => triggerNode.parentNode
+   */
   containerTo?: boolean;
+  /**
+   * 自定义用来循环渲染树节点的数据属性名称
+   */
   loopProp?: string;
+  /**
+   * 给 FormItem 包裹的子组件设置默认值
+   */
   defaultValue?: any;
 }
 

@@ -112,7 +112,7 @@ const use = config => {
   });
   mergeAndCreateCss(cssContentArray, 'dist/style.less');
 
-  spawn('lessc', ['dist/style.less', 'dist/style.css']);
+  spawn('lessc', ['dist/style.less', 'dist/style.css'], { shell: true });
 
   arr = arr
     .map(path => path.replace(/\\/gi, '/'))

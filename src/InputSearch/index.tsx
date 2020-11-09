@@ -5,8 +5,17 @@ import {SearchProps} from 'antd/lib/input/Search';
 const {Search} = Input;
 
 interface InputSearchProps extends InputProps, SearchProps {
+  /**
+   * 点击搜索或按下回车键时的回调
+   */
   onSearch?: (arg: any) => void;
+  /**
+   * 输入框内容变化时的回调
+   */
   onChange?: (arg: any) => void;
+  /**
+   * 输入框默认内容
+   */
   defaultValue?: any;
 }
 

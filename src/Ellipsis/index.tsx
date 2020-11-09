@@ -5,7 +5,13 @@ import {Tooltip} from 'antd';
  * tooltiptext：与text文本不同时需要传入，否则可以不传
  */
 interface EllipsisProps {
+  /**
+   * 文本,必须
+   */
   text: string;
+  /**
+   * 与text文本不同时需要传入，否则可以不传
+   */
   tooltiptext?: string;
 }
 

@@ -33,25 +33,13 @@
   vertical-align: bottom;
 }
 /* 穿梭框左侧 */
-.mc-transfer
-  .ant-transfer-list:first-child
-  .ant-transfer-list-header
-  .header-item
-  div:not(:first-child) {
+.mc-transfer .ant-transfer-list:first-child .ant-transfer-list-header .header-item div:not(:first-child) {
   display: none;
 }
-.mc-transfer
-  .ant-transfer-list:first-child
-  .ant-transfer-list-content
-  .custom-item
-  div:not(:first-child) {
+.mc-transfer .ant-transfer-list:first-child .ant-transfer-list-content .custom-item div:not(:first-child) {
   display: none;
 }
-.mc-transfer
-  .ant-transfer-list:first-child
-  .ant-transfer-list-content
-  .custom-item
-  div:first-child {
+.mc-transfer .ant-transfer-list:first-child .ant-transfer-list-content .custom-item div:first-child {
   max-width: 100% !important;
 }
 /* 穿梭框头部样式 */
@@ -79,12 +67,7 @@
 .advanced-search-panel .ant-form-item-label {
   line-height: 32px;
 }
-.advanced-search-panel
-  .ant-input-group
-  .ant-form-item
-  .ant-form-item-control-wrapper
-  .ant-select
-  .ant-select-selection {
+.advanced-search-panel .ant-input-group .ant-form-item .ant-form-item-control-wrapper .ant-select .ant-select-selection {
   margin-right: -1px;
   height: 32px;
   border-radius: 4px 0 0 4px;
@@ -108,26 +91,17 @@
 .advanced-search-panel .ant-btn-circle {
   border-width: 0;
 }
-.advanced-search-panel
-  .ant-select-selection--multiple
-  .ant-select-selection__rendered {
+.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered {
   overflow: hidden;
   height: 30px;
 }
-.advanced-search-panel
-  .ant-select-selection--multiple
-  .ant-select-selection__rendered
-  ul {
+.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul {
   position: absolute;
   left: 0;
   right: 0;
   white-space: nowrap;
 }
-.advanced-search-panel
-  .ant-select-selection--multiple
-  .ant-select-selection__rendered
-  ul
-  li {
+.advanced-search-panel .ant-select-selection--multiple .ant-select-selection__rendered ul li {
   float: none;
   margin-top: 8px;
   display: inline-block;
@@ -150,11 +124,7 @@
 .ant-collapse-header .CollapsePanel-header .CollapsePanel-extra .ant-form-item {
   margin-bottom: 0;
 }
-.ant-collapse-header
-  .CollapsePanel-header
-  .CollapsePanel-extra
-  .ant-form-item
-  .ant-form-item-control {
+.ant-collapse-header .CollapsePanel-header .CollapsePanel-extra .ant-form-item .ant-form-item-control {
   line-height: 32px;
 }
 .ant-table-detail .ant-table-title {
@@ -172,11 +142,7 @@
   border: 1px solid #f0f0f0;
   border-collapse: collapse;
 }
-.ant-table-detail
-  .ant-table-content
-  .ant-table-body
-  table
-  tr:not(:last-of-type) {
+.ant-table-detail .ant-table-content .ant-table-body table tr:not(:last-of-type) {
   border-bottom: 1px solid #f0f0f0;
 }
 .ant-table-detail .ant-table-content .ant-table-body table tr:hover td {
@@ -261,11 +227,7 @@
 .head-searchbar-panel .ant-form-item {
   margin-bottom: 16px;
 }
-.head-searchbar-panel
-  .head-searchbar-fieldsbox
-  > .head-searchbar-col-nolabel
-  .ant-form-item
-  .ant-form-item-control-wrapper {
+.head-searchbar-panel .head-searchbar-fieldsbox > .head-searchbar-col-nolabel .ant-form-item .ant-form-item-control-wrapper {
   width: 100%;
 }
 .mc-transfer {

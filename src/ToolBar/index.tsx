@@ -1,6 +1,9 @@
 import React, {FunctionComponent} from 'react';
 
 interface IToolBarProps {
+  /**
+   * 样式名称
+   */
   className?: string;
 }
 

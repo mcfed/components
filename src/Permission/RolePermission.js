@@ -11,6 +11,9 @@ export default class RolePermission extends React.Component {
     appConfig: PropTypes.object
   };
   static propTypes = {
+    /**
+     * 角色名称
+     */
     roleName: PropTypes.string
   };
   static defaultProps = {

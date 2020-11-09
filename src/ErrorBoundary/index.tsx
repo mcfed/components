@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
 interface ErrorBoundaryProps {
+  /**
+   * 子组件
+   */
   children: any;
 }
 

@@ -8,14 +8,41 @@ import moment, {Moment} from 'moment';
 //timeRangeType?:'day'
 
 interface WrapperDatePickerProps {
+  /**
+   * 包裹的子组件
+   */
   children: React.ReactElement;
+  /**
+   * 日期内容变化时的回调
+   */
   onChange?: any;
+  /**
+   * 当前时间
+   */
   value?: any;
+  /**
+   * 组件传出的时间格式
+   */
   valueFormat?: string;
+  /**
+   * 是否使用 moment 初始化时间
+   */
   isInitMoment?: boolean;
+  /**
+   * 展示的时间格式
+   */
   format: string;
+  /**
+   * 设置默认回调方法
+   */
   defaultTrggier?: string;
+  /**
+   * 以什么时间单位作为开始和结束类型（默认为天）  -day -month -year
+   */
   timeRange?: boolean;
+  /**
+   * 设置时间范围单位
+   */
   timeRangeType?: string;
 }
 interface wrapperDatePickerState {
