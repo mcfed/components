@@ -49,15 +49,15 @@ interface ColumnsItem<T> extends ColumnProps<T> {
  */
 interface EditTableProps<T> {
   /**
-   * columns：表格列配置，必须
+   * columns：表格列配置
    */
   columns: ColumnsItem<T>[];
   /**
-   * 数据数组，必须
+   * 数据数组
    */
   data: T[];
   /**
-   * 编辑模式，非必须，默认为单行编辑
+   * 编辑模式
    */
   mode: EditTableMode;
   onChange(data: T[]): void;
