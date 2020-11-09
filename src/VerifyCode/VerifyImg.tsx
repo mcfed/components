@@ -2,7 +2,13 @@ import React, {ReactNode} from 'react';
 import VerifyCode, {VerifyCodeProps} from './VerifyCode';
 
 export interface IMGVerifyCodeProps extends VerifyCodeProps {
+  /**
+   * 点击按钮之后调用的回调函数
+   */
   retry: any;
+  /**
+   * 图片的url地址
+   */
   url: string;
 }
 
