@@ -15,11 +15,11 @@ interface SwitchConfirmProps extends SwitchProps {
    */
   checkedOption?: any;
   /**
-   * 当前显示内容
+   * 当前状态
    */
   currentOption?: any;
   /**
-   * 二次确认弹出弹出框确认按钮的回调
+   * 弹出框确认按钮的回调
    */
   onConfirm: (currentOption: any, action?: () => void) => void;
   /**
@@ -27,7 +27,7 @@ interface SwitchConfirmProps extends SwitchProps {
    */
   confirm?: boolean;
   /**
-   * 二次确认弹出框的props属性
+   * 弹出框的props属性
    */
   modalConfirmProps?: ModalFuncProps;
 }
