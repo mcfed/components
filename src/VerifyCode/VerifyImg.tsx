@@ -10,7 +10,7 @@ export interface IMGVerifyCodeState {
   random: number;
 }
 
-export default class VerifyImg extends VerifyCode<
+export default class ImgVerifyCode extends VerifyCode<
   IMGVerifyCodeProps,
   IMGVerifyCodeState
 > {

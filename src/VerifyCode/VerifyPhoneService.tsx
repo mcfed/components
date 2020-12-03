@@ -14,7 +14,7 @@ export interface PhoneServiceVerifyState {
   countdown?: number;
 }
 
-export default class VerifyPhoneService extends VerifyCode<
+export default class PhoneServiceVerifyCode extends VerifyCode<
   PhoneServiceVerifyProps,
   PhoneServiceVerifyState
 > {

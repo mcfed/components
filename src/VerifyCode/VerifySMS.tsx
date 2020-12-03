@@ -14,7 +14,7 @@ export interface SMSVerifyState {
   countdown?: number;
 }
 
-export default class VerifySMS extends VerifyCode<
+export default class SMSVerifyCode extends VerifyCode<
   SMSVerifyProps,
   SMSVerifyState
 > {
