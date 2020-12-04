@@ -7,11 +7,11 @@ import {Switch, Modal} from 'antd';
 
 interface SwitchConfirmProps extends SwitchProps {
   /**
-   * 非选中时的内容
+   * 自定义非选中时的值，默认为false
    */
   uncheckedOption?: any;
   /**
-   * 选中时的内容
+   * 自定义选中时的值，默认为true
    */
   checkedOption?: any;
   /**
