@@ -26,10 +26,7 @@ export interface SMSVerifyState {
   countdown?: number;
 }
 
-export default class SMSVerifyCode extends VerifyCode<
-  SMSVerifyProps,
-  SMSVerifyState
-> {
+export class SMSVerifyCode extends VerifyCode<SMSVerifyProps, SMSVerifyState> {
   static defaultProps = {
     interval: 60
   };

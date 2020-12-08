@@ -9,17 +9,20 @@ export interface IMGVerifyCodeProps extends VerifyCodeProps {
   /**
    * 图片的url地址
    */
-  url: string;
+  url: string | undefined;
 }
 
 export interface IMGVerifyCodeState {
   random: number;
 }
 
-export default class ImgVerifyCode extends VerifyCode<
+export class ImgVerifyCode extends VerifyCode<
   IMGVerifyCodeProps,
   IMGVerifyCodeState
 > {
+  state = {
+    random: new Date().valueOf()
+  };
   handlerClick() {
     const {retry} = this.props;
     retry && retry();
@@ -29,11 +32,10 @@ export default class ImgVerifyCode extends VerifyCode<
   }
   renderAddon(): ReactNode {
     const {url} = this.props;
-    const {random} = this.state;
     return (
       <img
         className='addon-content'
-        src={`${url}?d=${random}`}
+        src={`${url}`}
         alt='看不清，换一张'
         onClick={this.handlerClick.bind(this)}
       />
