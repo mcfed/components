@@ -1,6 +1,6 @@
 {
   "name": "@mcfed/components",
-  "version": "0.3.3-beta1",
+  "version": "0.3.4",
   "description": "@mcfed for components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -94,6 +94,7 @@
     "@types/qs": "^6.9.3",
     "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
+    "git": "^0.1.5",
     "indexof": "^0.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",

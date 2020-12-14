@@ -11,6 +11,11 @@
 
 -->
 
+# 0.3.4
+
+feat: Step 组件 goToNext 方法，跳转下一个流程
+docs: 新增部分组件 storybook 示例
+
 # 0.3.1
 
 fix: ButtonGroups ButtonMenu 模式下 menu action 捕获失败
