@@ -26,10 +26,7 @@ export interface SMSVerifyState {
   countdown?: number;
 }
 
-export default class VerifySMS extends VerifyCode<
-  SMSVerifyProps,
-  SMSVerifyState
-> {
+export class SMSVerifyCode extends VerifyCode<SMSVerifyProps, SMSVerifyState> {
   static defaultProps = {
     interval: 60
   };
@@ -66,7 +63,7 @@ export default class VerifySMS extends VerifyCode<
     }
     return (
       <Button
-        type='primary'
+        type='default'
         className='sms-btn'
         disabled={disabled}
         onClick={this.handleClick.bind(this)}>

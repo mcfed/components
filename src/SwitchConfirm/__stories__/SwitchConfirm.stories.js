@@ -1,6 +1,7 @@
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import SwitchConfirm from '../index';
+
 import md from '../README.md';
 
 const stories = storiesOf('SwitchConfirm', module);
@@ -32,3 +33,4 @@ stories.add(
   },
   {notes: {markdown: md}}
 );
+
