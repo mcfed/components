@@ -2,48 +2,35 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import SwitchConfirm from '../index';
 
-const stories = storiesOf('SwitchConfirm', module);
+import md from '../README.md';
 
+const stories = storiesOf('SwitchConfirm', module);
 stories.addParameters({jest: ['SwitchConfirm.spec.js']});
 
-class Show extends React.Component {
-  constructor(props) {
-    super(props);
-    console.log(props);
-    this.state = {
-      currentText: props.currentOption || props.checked || false
+stories.add(
+  '基础使用',
+  () => {
+    let onConfirm = function(status, callback) {
+      console.log(status);
+      callback();
     };
-  }
-  handleSet(current) {
-    this.setState({
-      currentText: current
-    });
-  }
-  render() {
-    const {...SwitchProps} = this.props;
     return (
-      <div>
-        <SwitchConfirm
-          {...SwitchProps}
-          onConfirm={(current, option) => {
-            console.log(current, this);
-            this.handleSet.call(this, current);
-            option();
-          }}
-        />
-        current:
-        <span>{String(this.state.currentText)}</span>
-      </div>
+      <SwitchConfirm
+        uncheckedOption='OFF'
+        checkedOption='ON'
+        checkedChildren='ON'
+        unCheckedChildren='OFF'
+        currentOption={status}
+        modalConfirmProps={{
+          title: '这是一个简单的开关确认弹窗',
+          content: '点击确认，改变窗口状态；点击取消，那就取消了',
+          okText: '确认',
+          cancelText: '取消'
+        }}
+        onConfirm={onConfirm}
+      />
     );
-  }
-}
+  },
+  {notes: {markdown: md}}
+);
 
-stories.add('基础用法', () => <Show modalConfirmProps={{title: 'title'}} />);
-stories.add('自定义ON|OFF用法', () => (
-  <Show
-    uncheckedOption='OFF'
-    checkedOption='ON'
-    currentOption='OFF'
-    modalConfirmProps={{title: 'title'}}
-  />
-));
