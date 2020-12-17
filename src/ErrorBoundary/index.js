@@ -19,7 +19,7 @@ export default class ErrorBoundary extends React.Component {
     if (this.state.errorInfo) {
       // Error path
       return (
-        <div>
+        <div className='error-boundary-container'>
           <h2>出错了.</h2>
           <details style={{whiteSpace: 'pre-wrap'}}>
             {this.state.error && this.state.error.toString()}
