@@ -18,3 +18,12 @@ stories.add('不抛错', () => (
     <Input placeholder='这是一个输入框' />
   </ErrorBoundary>
 ));
+
+stories.add('出错捉捕', () => {
+  <ErrorBoundary>
+    <div className='sdfsf'>
+      hello world
+      {new Error('出错了')}
+    </div>
+  </ErrorBoundary>;
+});
