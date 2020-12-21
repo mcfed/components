@@ -12,7 +12,6 @@ export {default as DataTable} from './DataTable';
 export {default as Permission} from './Permission';
 export {default as Panel} from './Panel';
 export {default as ModalAndView} from './ModalAndView';
-//import SmartLink from './SmartLink'
 export {default as TreeView} from './TreeView';
 export {default as TabsPanel} from './TabsPanel';
 export {default as PropertyTable} from './PropertyTable';
@@ -35,6 +34,4 @@ export {default as SwitchConfirm} from './SwitchConfirm';
 
 export {default as InputSearch} from './InputSearch';
 export {default as ToolBar} from './ToolBar';
-export {default as FormSet} from './FormSet';
-
 export {default as VerifyCode} from './VerifyCode';
