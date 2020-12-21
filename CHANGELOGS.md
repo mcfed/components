@@ -10,6 +10,10 @@
 //       see the bottom of this file. The list there is sorted, try to follow that.
 
 -->
+# 0.5.0
+
+feat: FormItem 加入columns 属性 支持多列布局
+feat: HeadSearchBar 支持传入className 自定义类名
 
 # 0.4.1
 
