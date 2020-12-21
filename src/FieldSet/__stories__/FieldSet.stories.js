@@ -9,15 +9,12 @@ stories.addParameters({jest: ['index.spec.js']});
 stories.add(
   '基础用法',
   () => {
-    const onChange = () => {
-      console.log('是否显示');
-    };
     return (
       <div>
-        <FieldSet title='分组标题1' display='hide' onChange={onChange}>
+        <FieldSet title='分组标题1'>
           <Input placeholder='Username' />
         </FieldSet>
-        <FieldSet title='分组标题2' display='hide' onChange={onChange}>
+        <FieldSet title='分组标题2'>
           <Input placeholder='value' />
         </FieldSet>
       </div>
