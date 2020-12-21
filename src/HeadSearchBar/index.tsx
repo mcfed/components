@@ -114,8 +114,10 @@ export default class AdvancedSearchForm extends React.Component<
       cols = 24 / columns;
     }
     return React.Children.toArray(children).map((it: any, idx: number) => {
+      const {columns} = it.props;
+      const spanCol = Number(columns) ? cols * Number(columns) : cols;
       return (
-        <Col span={cols} key={idx}>
+        <Col span={spanCol} key={idx}>
           {React.createElement(it.type, it.props, it.props.children)}
         </Col>
       );
@@ -123,9 +125,15 @@ export default class AdvancedSearchForm extends React.Component<
   }
 
   render() {
-    const {gutter, layout, autoSubmitForm, filterSubmitHandler} = this.props;
+    const {
+      gutter,
+      layout,
+      autoSubmitForm,
+      filterSubmitHandler,
+      className
+    } = this.props;
     return (
-      <div className='head-searchbar-panel'>
+      <div className={`${className} head-searchbar-panel`}>
         <AdvancedForm
           layout={layout}
           autoSubmitForm={autoSubmitForm}
