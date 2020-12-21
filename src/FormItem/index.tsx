@@ -61,6 +61,7 @@ interface CustFormItemProps extends FormItemProps {
   fetchParams?: fetchParamsType;
   /**
    * URL 发起 xhr 请求后的回调函数
+   * @example fetchCallback(res){ return res.json()}
    */
   fetchCallback?: fetchCallbackType;
   /**

@@ -11,6 +11,20 @@
 
 -->
 
+# 0.4.1
+
+fix: ErrorBoundary 修正样式引入相对路径
+
+# 0.4.0
+
+chore: 移除过时 SmartLInk、FormSet 组件不再使用
+feat: 简化 FieldSet 重新实现
+
+# 0.3.4
+
+feat: Step 组件 goToNext 方法，跳转下一个流程
+docs: 新增部分组件 storybook 示例
+
 # 0.3.1
 
 fix: ButtonGroups ButtonMenu 模式下 menu action 捕获失败
