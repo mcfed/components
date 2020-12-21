@@ -11,6 +11,10 @@
 
 -->
 
+# 0.4.1
+
+fix: ErrorBoundary 修正样式引入相对路径
+
 # 0.4.0
 
 chore: 移除过时 SmartLInk、FormSet 组件不再使用
