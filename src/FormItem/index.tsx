@@ -331,8 +331,6 @@ export class FormItem extends React.Component<CustFormItemType, any> {
         }
       };
     } else if (columns !== 1 && Number(columns)) {
-      //@ts-ignore
-      console.log(formLayout.labelCol.span);
       const labelColSpan = Math.round(
         //@ts-ignore
         formLayout.labelCol.span / Number(columns)
