@@ -36,6 +36,10 @@ interface CustFormItemProps extends FormItemProps {
    */
   formLayout?: object;
   /**
+   * 设置表单布局样式
+   */
+  columns?: number;
+  /**
    * 给DOM元素或子组件注册引用信息
    */
   formRef?: any;
@@ -318,14 +322,30 @@ export class FormItem extends React.Component<CustFormItemType, any> {
 
   compileWrapperCols() {
     let wrapperColsProps = {};
-    const {label} = this.props;
+    const {label, formLayout, columns} = this.props;
     if (label === undefined) {
       wrapperColsProps = {
         wrapperCol: {
           span: 24
         }
       };
+    } else if (columns !== 1 && Number(columns)) {
+      //@ts-ignore
+      console.log(formLayout.labelCol.span);
+      const labelColSpan = Math.round(
+        //@ts-ignore
+        formLayout.labelCol.span / Number(columns)
+      );
+      wrapperColsProps = {
+        labelCol: {
+          span: labelColSpan
+        },
+        wrapperCol: {
+          span: 24 - labelColSpan
+        }
+      };
     }
+
     return wrapperColsProps;
   }
 
@@ -347,6 +367,18 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       fixedFieldLabel: label !== undefined ? label : children.props.label,
       fixedFieldRules: rules !== undefined ? rules : children.props.rules
     };
+  }
+
+  compileStyleProps() {
+    //针对hidden input antd 有margin 空开 处理
+    const element = this.props.children;
+    let styles = {};
+    if (element.props.type === 'hidden') {
+      styles = {
+        style: {marginBottom: 0}
+      };
+    }
+    return styles;
   }
 
   render() {
@@ -377,12 +409,21 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       fixedFieldLabel,
       fixedFieldRules
     } = this.fixedPropFieldFrom();
+    const styleProps = this.compileStyleProps();
+
     return this.fieldRenderableProp(renderable) && isFormContextComing ? (
       <Form.Item
         label={fixedFieldLabel}
-        {...Object.assign({}, formLayout, wrapperColsProps, otherProps, {
-          rules: fixedFieldRules
-        })}>
+        {...Object.assign(
+          {},
+          formLayout,
+          styleProps,
+          wrapperColsProps,
+          otherProps,
+          {
+            rules: fixedFieldRules
+          }
+        )}>
         {getFieldDecorator(fixedFieldName, {
           ...otherProps,
           initialValue: transferValue
