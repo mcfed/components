@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {FieldSet} from '../index.tsx';
+import FieldSet from '../index.tsx';
 
 const setup = props => {
   // 通过 enzyme 提供的 shallow(浅渲染) 创建组件

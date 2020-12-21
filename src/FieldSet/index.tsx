@@ -6,7 +6,7 @@ export interface FieldsetProps {
   children: ReactNode;
 }
 
-export function FieldSet(props: FieldsetProps) {
+export default function FieldSet(props: FieldsetProps) {
   return (
     <fieldset>
       <legend>{props.title}</legend>
