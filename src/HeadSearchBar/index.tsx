@@ -40,6 +40,10 @@ interface AdvancedFormProps extends FormProps {
    * 传入国际化字段文案
    */
   locale?: object;
+  /**
+   * 传入自定义搜索按钮文本
+   */
+  searchBtnText?: string;
 }
 
 export default class AdvancedSearchForm extends React.Component<
@@ -75,6 +79,7 @@ export default class AdvancedSearchForm extends React.Component<
     }
   }
   renderButton(locale: any) {
+    const {searchBtnText} = this.props;
     const contextLocale = Object.assign({}, locale, this.props.locale);
 
     return (
@@ -83,7 +88,7 @@ export default class AdvancedSearchForm extends React.Component<
         actionkey='aaa'
         onClick={this.handleSearch.bind(this)}
         type='primary'>
-        {contextLocale.searchText}
+        {searchBtnText == undefined ? contextLocale.searchText : searchBtnText}
       </Button>
     );
   }
@@ -130,7 +135,7 @@ export default class AdvancedSearchForm extends React.Component<
       layout,
       autoSubmitForm,
       filterSubmitHandler,
-      className
+      className = ''
     } = this.props;
     return (
       <div className={`${className} head-searchbar-panel`}>
