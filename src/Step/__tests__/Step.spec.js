@@ -106,6 +106,18 @@ describe('Step 点击事件', () => {
       .onClick();
     expect(wrapper.instance().props.history.push).toHaveBeenCalled();
     expect(window.location.href.indexOf('second') > -1).toBe(true);
+    expect(wrapper.find('Button').length).toBe(3);
+  });
+
+  it('没有上一步按钮', () => {
+    const {wrapper} = setup(Object.assign({}, {showPrev: false}, {...props}));
+    expect(window.location.href.indexOf('second') > -1).toBe(true);
+    ref.current = {
+      onSubmit: () => {
+        wrapper.instance().goToStep(2);
+      }
+    };
+    expect(wrapper.find('Button').length).toBe(2);
   });
 
   it('点击上一步，能正确跳转，路由是否正确', () => {

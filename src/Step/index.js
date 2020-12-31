@@ -38,7 +38,7 @@ export default class Step extends Component {
   };
 
   render() {
-    const {steps} = this.props;
+    const {steps, showPrev} = this.props;
     const {step, currentIndex} = this.state;
     /* istanbul ignore next */
     const renderDom = steps[currentIndex] || steps[0];
@@ -58,7 +58,7 @@ export default class Step extends Component {
           ref={ref}
           {...this.props}
           goToStep={this.goToStep}
-          goToNext={()=>this.goToStep(step+1)}
+          goToNext={() => this.goToStep(step + 1)}
         />
 
         <Button.Group>
@@ -68,7 +68,7 @@ export default class Step extends Component {
                 return '';
               case steps.length:
                 /* istanbul ignore next */
-                return this.props.showFinalLastStep ? (
+                return showPrev && this.props.showFinalLastStep ? (
                   <Button onClick={() => this.goToStep(step - 1)}>
                     {'上一步'}
                   </Button>
@@ -76,10 +76,12 @@ export default class Step extends Component {
                   ''
                 );
               default:
-                return (
+                return showPrev ? (
                   <Button onClick={() => this.goToStep(step - 1)}>
                     {'上一步'}
                   </Button>
+                ) : (
+                  ''
                 );
             }
           })()}
@@ -122,6 +124,7 @@ Step.defaultProps = {
   steps: [],
   cancelText: '取消',
   finishText: '完成',
+  showPrev: true,
   showFinalLastStep: true,
   showCancel: true,
   backPath: '/',

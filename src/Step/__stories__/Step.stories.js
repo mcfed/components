@@ -69,6 +69,19 @@ stories.add(
 );
 
 stories.add(
+  '不展示上一步操作',
+  () => {
+    return (
+      <React.Fragment>
+        这是一个不展示上一步按钮step用法示例
+        <Step steps={Steps} showPrev={false} />
+      </React.Fragment>
+    );
+  },
+  {notes: {markdown: Readme}}
+);
+
+stories.add(
   '隐藏取消按钮用法',
   () => {
     return (

@@ -39,6 +39,7 @@ exports[`快照测试 全页快照 1`] = `
     }
     showCancel={true}
     showFinalLastStep={true}
+    showPrev={true}
     steps={
       Array [
         Object {

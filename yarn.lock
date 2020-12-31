@@ -4309,6 +4309,13 @@ git-raw-commits@^2.0.0:
     split2 "^2.0.0"
     through2 "^4.0.0"
 
+git@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.npm.taobao.org/git/download/git-0.1.5.tgz#9ef62df93f851c27542143bf52d1c68b1017ca15"
+  integrity sha1-nvYt+T+FHCdUIUO/UtHGixAXyhU=
+  dependencies:
+    mime "1.2.9"
+
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"
@@ -6487,6 +6494,11 @@ mime-types@^2.1.12, mime-types@~2.1.19, mime-types@~2.1.7:
   integrity sha512-JIhqnCasI9yD+SsmkquHBxTSEuZdQX5BuQnS2Vc7puQQQ+8yiP5AY5uWhpdv4YL4VM5c6iliiYWPgJ/nJQLp7w==
   dependencies:
     mime-db "1.44.0"
+
+mime@1.2.9:
+  version "1.2.9"
+  resolved "https://registry.npm.taobao.org/mime/download/mime-1.2.9.tgz?cache=0&sync_timestamp=1608083970482&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmime%2Fdownload%2Fmime-1.2.9.tgz#009cd40867bd35de521b3b966f04e2f8d4d13d09"
+  integrity sha1-AJzUCGe9Nd5SGzuWbwTi+NTRPQk=
 
 mime@^1.2.11, mime@^1.4.1:
   version "1.6.0"
