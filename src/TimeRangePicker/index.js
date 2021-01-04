@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {TimePicker, Input} from 'antd';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 const InputGroup = Input.Group;
 
