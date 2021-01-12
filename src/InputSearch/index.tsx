@@ -16,7 +16,7 @@ interface InputSearchProps extends InputProps, SearchProps {
   /**
    * 输入框默认内容
    */
-  defaultValue?: any;
+  value?: any;
 }
 
 interface InputSearchState {
@@ -30,7 +30,7 @@ export default class InputSearch extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
-      value: props.defaultValue
+      value: props.value
     };
   }
   onSearchHandler = (value: string) => {
