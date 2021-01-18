@@ -1,7 +1,7 @@
-import React, {Component, PureComponent, ReactElement, ReactNode} from 'react';
-import {Icon, Menu, Select} from 'antd';
+import React, {Component, PureComponent, ReactNode} from 'react';
+import {Select} from 'antd';
+import {SelectProps} from 'antd/lib/select';
 import './index.css';
-import {LabeledValue, SelectProps} from 'antd/lib/select';
 
 interface SearchInputProps extends SelectProps {
   afterAddon?: ReactNode;
