@@ -1,27 +1,25 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import CollapsePanel from '../index';
+import {CollapsePanelClass as CollapsePanel} from '../index';
 import {Switch, Select} from 'antd';
 import FormItem from '../../FormItem/index';
 
 const setup = (props, control) => {
-  const context = {
-    formRef: {
-      getFieldValue(name, item) {
-        return function(component) {
-          return component;
-        };
-      }
-    }
-  };
   const wrapper = shallow(
     <CollapsePanel
       title='测试一发'
+      formRef={{
+        getFieldValue(name, item) {
+          return function(component) {
+            return component;
+          };
+        }
+      }}
       control={control || <Switch name='test' />}
+      closeValues={[]}
       {...props}>
       <div>123123</div>
-    </CollapsePanel>,
-    {context}
+    </CollapsePanel>
   );
 
   return {
@@ -32,6 +30,7 @@ const setup = (props, control) => {
 describe('CollapsePanel 组件方法测试', () => {
   it('componentDidMount 测试', () => {
     const {wrapper} = setup();
+    console.log(wrapper.children());
     wrapper.instance().setActiveStatus = jest.fn();
     wrapper.instance().componentDidMount();
 

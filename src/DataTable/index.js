@@ -247,6 +247,9 @@ DataTable.propTypes = {
   e.g. {columnKey:'name',order:'descend'}
   **/
   defaultSort: PropTypes.object,
+  /**
+  分页器  同antd table pagination
+  **/
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
 };
 export default DataTable;

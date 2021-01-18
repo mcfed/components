@@ -25,6 +25,7 @@ exports[`快照测试 全页快照 1`] = `
     backPath="/"
     cancelText="取消"
     finishText="完成"
+    goToNext={[Function]}
     goToStep={[Function]}
     history={
       Object {

@@ -58,6 +58,7 @@ export default class Step extends Component {
           ref={ref}
           {...this.props}
           goToStep={this.goToStep}
+          goToNext={()=>this.goToStep(step+1)}
         />
 
         <Button.Group>

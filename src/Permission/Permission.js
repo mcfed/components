@@ -17,6 +17,9 @@ Permission.propTypes = {
   expression: PropTypes.any
 };
 Permission.defaultProps = {
+  /**
+   * 表达式结果为真渲染子组件可见，否则，不可见
+   */
   expression: true
 };
 

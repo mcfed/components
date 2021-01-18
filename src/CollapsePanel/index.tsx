@@ -9,10 +9,25 @@ interface CollapsePanelState {
 }
 
 interface CollapsePanelProps {
+  /**
+   * 标题文字 Panel titile
+   */
   title: string;
+  /**
+   * 是否渲染面板
+   */
   renderable: boolean | Function;
+  /**
+   * 自定义渲染每个面板右上角的内容
+   */
   control: React.ReactElement;
+  /**
+   * 子组件
+   */
   children: React.ReactNode;
+  /**
+   * 关闭值数组
+   */
   closeValues?: any[];
 }
 

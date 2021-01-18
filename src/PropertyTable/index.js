@@ -25,6 +25,12 @@ export default class PropertyTable extends Component {
 }
 
 PropertyTable.propsType = {
+  /**
+   * 表格数据源
+   */
   dataSource: PropsType.array.isRequired,
+  /**
+   * 自定义表格数据渲染方式，目前暂未开放该接口
+   */
   renderItem: PropsType.func
 };

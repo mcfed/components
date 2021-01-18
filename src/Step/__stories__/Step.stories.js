@@ -61,7 +61,7 @@ stories.add(
     return (
       <React.Fragment>
         这是一个基础的step用法示例
-        <Step Steps={Steps} />
+        <Step steps={Steps} />
       </React.Fragment>
     );
   },
@@ -74,7 +74,7 @@ stories.add(
     return (
       <React.Fragment>
         隐藏取消按钮用法
-        <Step showCancel={false} Steps={Steps} />
+        <Step showCancel={false} steps={Steps} />
       </React.Fragment>
     );
   },
@@ -87,7 +87,7 @@ stories.add(
     return (
       <React.Fragment>
         取消按钮文字自定义
-        <Step cancelText={'点击取消'} Steps={Steps} />
+        <Step cancelText={'点击取消'} steps={Steps} />
       </React.Fragment>
     );
   },
@@ -100,7 +100,7 @@ stories.add(
     return (
       <React.Fragment>
         最后一步完成按钮文字自定义
-        <Step finishText={'点击完成'} Steps={Steps} />
+        <Step finishText={'点击完成'} steps={Steps} />
       </React.Fragment>
     );
   },
@@ -113,7 +113,7 @@ stories.add(
     return (
       <React.Fragment>
         隐藏最后一步的上一步按钮
-        <Step showFinalLastStep={false} Steps={Steps} />
+        <Step showFinalLastStep={false} steps={Steps} />
       </React.Fragment>
     );
   },
@@ -126,7 +126,7 @@ stories.add(
     return (
       <React.Fragment>
         最后一步完成的响应方法名自定义
-        <Step finalSubmitFunctionName={'mysubmit'} Steps={Steps} />
+        <Step finalSubmitFunctionName={'mysubmit'} steps={Steps} />
       </React.Fragment>
     );
   },
@@ -139,7 +139,7 @@ stories.add(
     return (
       <React.Fragment>
         取消按钮跳转的路由自定义
-        <Step backPath={'/index'} Steps={Steps} />
+        <Step backPath={'/index'} steps={Steps} />
       </React.Fragment>
     );
   },
