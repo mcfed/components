@@ -10,10 +10,20 @@
 //       see the bottom of this file. The list there is sorted, try to follow that.
 
 -->
+
+# 0.6.0
+
+feat: 增加 UploadFile 组件
+feat: 增加 SelectInput 组
+feat: 增加 ModalOrView 组件
+feat: 增加 TextMaskInput 组件
+chore: 移除过时的 ModalAndView 组件
+fix: McSteps 组件 重写部分逻辑[lujianan]
+
 # 0.5.0
 
-feat: FormItem 加入columns 属性 支持多列布局
-feat: HeadSearchBar 支持传入className 自定义类名
+feat: FormItem 加入 columns 属性 支持多列布局
+feat: HeadSearchBar 支持传入 className 自定义类名
 
 # 0.4.1
 
