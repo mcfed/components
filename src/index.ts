@@ -33,5 +33,7 @@ export {default as ExtraColumn} from './ExtraColumn';
 export {default as SwitchConfirm} from './SwitchConfirm';
 
 export {default as InputSearch} from './InputSearch';
+export {default as TextMaskInput} from './TextMaskInput';
 export {default as ToolBar} from './ToolBar';
 export {default as VerifyCode} from './VerifyCode';
+

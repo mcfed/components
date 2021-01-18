@@ -92,6 +92,7 @@
     "@ant-design/css-animation": "^1.7.2",
     "@mcfed/utils": "^0.2.0-rc8",
     "@types/qs": "^6.9.3",
+    "@types/react-text-mask": "^5.4.6",
     "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
     "git": "^0.1.5",
@@ -102,7 +103,9 @@
     "react-dom": "^16.9.0",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
+    "react-text-mask": "^5.4.3",
     "react-virtualized": "^9.21.1",
-    "react-virtualized-transfer": "^1.4.1"
+    "react-virtualized-transfer": "^1.4.1",
+    "text-mask-addons": "^3.8.0"
   }
 }
