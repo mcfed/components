@@ -39,6 +39,7 @@ exports[`快照测试 全页快照 1`] = `
     }
     showCancel={true}
     showFinalLastStep={true}
+    showPrev={true}
     steps={
       Array [
         Object {
@@ -70,7 +71,7 @@ exports[`快照测试 全页快照 1`] = `
       loading={false}
       onClick={[Function]}
     >
-      下一步
+      取消
     </Button>
     <Button
       block={false}
@@ -79,7 +80,7 @@ exports[`快照测试 全页快照 1`] = `
       loading={false}
       onClick={[Function]}
     >
-      取消
+      下一步
     </Button>
   </ButtonGroup>
 </Fragment>
