@@ -1,7 +1,7 @@
 import {shallow} from 'enzyme';
 import React from 'react';
 
-import {McTestSteps} from '../index.tsx';
+import McTestSteps from '../index.tsx';
 
 const setup = props => {
   const wrapper = shallow(<McTestSteps {...props} />);
