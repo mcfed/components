@@ -35,3 +35,5 @@ export {default as SwitchConfirm} from './SwitchConfirm';
 export {default as InputSearch} from './InputSearch';
 export {default as ToolBar} from './ToolBar';
 export {default as VerifyCode} from './VerifyCode';
+export {default as UploadFile} from './UploadFile';
+export {default as SelectInput} from './SelectInput';
