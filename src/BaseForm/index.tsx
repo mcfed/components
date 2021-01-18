@@ -4,9 +4,21 @@ import {FormProps} from 'antd/lib/form';
 import {Form} from 'antd';
 
 export interface CustomFormComponentProps extends FormProps {
+  /**
+   * 统一设定子组件 FromItem 的布局
+   */
   itemLayout?: object;
+  /**
+   * 统一设置样式前缀
+   */
   prefixCls?: string;
+  /**
+   * 表单自动提交
+   */
   autoSubmitForm?: boolean;
+  /**
+   * 任一表单域的值发生改变时调用的方法
+   */
   onSearch?: any;
 }
 

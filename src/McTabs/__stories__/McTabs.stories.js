@@ -18,31 +18,29 @@ class Form1 extends React.Component {
   render() {
     return (
       <BaseForm ref={this.saveFormRef.bind(this)} name='tab1'>
-        <FormItem>
-          <Input
-            label='form1'
-            name='form1'
-            defaultValue=''
-            rules={[
-              {
-                required: true,
-                message: '必填1'
-              }
-            ]}
-          />
+        <FormItem
+          label='form1'
+          name='form1'
+          defaultValue=''
+          rules={[
+            {
+              required: true,
+              message: '必填1'
+            }
+          ]}>
+          <Input />
         </FormItem>
-        <FormItem>
-          <Input
-            label='form2'
-            name='form2'
-            defaultValue=''
-            rules={[
-              {
-                required: true,
-                message: '必填2'
-              }
-            ]}
-          />
+        <FormItem
+          label='form2'
+          name='form2'
+          defaultValue=''
+          rules={[
+            {
+              required: true,
+              message: '必填2'
+            }
+          ]}>
+          <Input />
         </FormItem>
       </BaseForm>
     );
@@ -55,18 +53,17 @@ class Form2 extends React.Component {
   render() {
     return (
       <BaseForm ref={this.saveFormRef.bind(this)} name='tab2'>
-        <FormItem>
-          <Input
-            label='form2'
-            name='form2'
-            defaultValue=''
-            rules={[
-              {
-                required: true,
-                message: '必填2'
-              }
-            ]}
-          />
+        <FormItem
+          label='form2'
+          name='form2'
+          defaultValue=''
+          rules={[
+            {
+              required: true,
+              message: '必填2'
+            }
+          ]}>
+          <Input />
         </FormItem>
       </BaseForm>
     );
@@ -79,18 +76,17 @@ class Form3 extends React.Component {
   render() {
     return (
       <BaseForm ref={this.saveFormRef.bind(this)} name='tab3'>
-        <FormItem>
-          <Input
-            label='form3'
-            name='form3'
-            defaultValue=''
-            rules={[
-              {
-                required: true,
-                message: '必填3'
-              }
-            ]}
-          />
+        <FormItem
+          label='form3'
+          name='form3'
+          defaultValue=''
+          rules={[
+            {
+              required: true,
+              message: '必填3'
+            }
+          ]}>
+          <Input />
         </FormItem>
       </BaseForm>
     );

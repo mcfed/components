@@ -11,13 +11,29 @@ import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
 import CustomButton from './Button';
 
 interface ButtonGroupsType extends ButtonGroupProps {
+  /**
+   * 点击事件监听
+   */
   handleClick: (actionkey: string) => void;
+  /**
+   * 子组件
+   */
   children:
     | React.ReactElement<CustomButton>
     | React.ReactElement<CustomButton>[];
+  /**
+   * 显示模式 ButtonGroup 和 ButtonMenu
+   */
   mode: 'ButtonGroup' | 'ButtonMenu';
+  /**
+   * 最多显示个数
+   */
   showSize: number;
+  /**
+   * Button 显示模式 text、icon、both
+   */
   viewMode: 'text' | 'icon' | 'both'; //todo
+  overlayClassName?: string;
 }
 
 interface ConfirmType extends ModalFuncProps {
@@ -70,6 +86,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     return item.tip || item.children;
   }
   completeIconProp() {}
+
   renderNormalChild(it: any, idx: number): React.ReactNode {
     const {handleClick} = this.props;
     const {
@@ -115,7 +132,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       //@ts-ignore
       {
         key: idx,
-        title: confirmTitle,
+        title: !!confirmTitle ? confirmTitle : undefined,
         content: confirm,
         onConfirm: () => {
           handleClick(actionkey);
@@ -137,8 +154,8 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderReactElement(it: any, idx: number) {
-    const {disabled, confirm} = it.props;
-    if (confirm && !disabled) {
+    const {disabled, confirmTitle, confirm} = it.props;
+    if ((confirmTitle || confirm) && !disabled) {
       return this.renderConfirmChild(it, idx);
     } else {
       return this.renderNormalChild(it, idx);
@@ -160,31 +177,36 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderMenuItem(itemList: any) {
-    const {handleClick} = this.props;
     return (
-      <Menu onClick={handleClick.bind(this, 'menu')}>
+      <Menu>
         {itemList.map((it: any, idx: number) => {
           return (
-            <Menu.Item key={idx}>{this.renderMenuChild(it, idx)}</Menu.Item>
+            <Menu.Item key={it.props.actionkey || idx}>
+              {this.renderReactElement(it, idx)}
+            </Menu.Item>
           );
         })}
       </Menu>
     );
   }
   renderMixButtonMenu(): React.ReactNode {
-    let {children, showSize} = this.props;
-    let childrenArray = React.Children.toArray(children);
+    let {children, showSize, overlayClassName} = this.props;
+    let childrenArray = this.filterChildren(React.Children.toArray(children));
     let endArray = childrenArray.splice(showSize);
     return (
       <React.Fragment>
-        {childrenArray.map((it, idx) => {
+        {childrenArray.map((it: any, idx: number) => {
           return this.renderReactElement(it, idx);
         })}
-        <Dropdown overlay={this.renderMenuItem(endArray)}>
-          <Button>
-            <Icon type='ellipsis' />
-          </Button>
-        </Dropdown>
+        {endArray.length ? (
+          <Dropdown
+            overlayClassName={overlayClassName}
+            overlay={this.renderMenuItem(endArray)}>
+            <Button>
+              <Icon type='ellipsis' />
+            </Button>
+          </Dropdown>
+        ) : null}
       </React.Fragment>
     );
   }

@@ -7,7 +7,13 @@ import BaseForm from '../BaseForm';
  * className: 样式类名，非必须
  */
 interface DynamicFormProps {
+  /**
+   * 步骤信息数组，必须
+   */
   formData: object[];
+  /**
+   * 样式类名，非必须
+   */
   className?: string;
 }
 
@@ -33,7 +39,7 @@ export default class DynamicForm extends React.Component<
           const {component, ...others} = item;
           return React.createElement(
             FormItem,
-            {key: others.name},
+            {key: others.name, name: others.name, children: others.children},
             React.createElement(component, others)
           );
         })}

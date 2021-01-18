@@ -124,8 +124,17 @@ class TreeTile extends Component {
 }
 
 TreeTile.propTypes = {
+  /**
+   * 标题
+   */
   title: PropTypes.string,
+  /**
+   * （受控）选中复选框的树节点（注意：父子节点有关联，如果传入父节点 key，则子节点自动选中；相应当子节点 key 都传入，父节点也自动选中。当设置 checkable 和 checkStrictly，它是*一个有checked和halfChecked属性的对象，并且父子节点的选中与否不再关联
+   */
   checkedKeys: PropTypes.array,
+  /**
+   * 数据源
+   */
   dataSource: PropTypes.array.isRequired
 };
 

@@ -6,11 +6,29 @@ import {ModalFuncProps} from 'antd/es/modal';
 import {Switch, Modal} from 'antd';
 
 interface SwitchConfirmProps extends SwitchProps {
+  /**
+   * 自定义非选中时的值，默认为false
+   */
   uncheckedOption?: any;
+  /**
+   * 自定义选中时的值，默认为true
+   */
   checkedOption?: any;
+  /**
+   * 当前状态
+   */
   currentOption?: any;
+  /**
+   * 弹出框确认按钮的回调
+   */
   onConfirm: (currentOption: any, action?: () => void) => void;
+  /**
+   * 暂无用意
+   */
   confirm?: boolean;
+  /**
+   * 弹出框的props属性
+   */
   modalConfirmProps?: ModalFuncProps;
 }
 interface SwitchConfirmState {
@@ -27,14 +45,14 @@ export default class SwitchConfirm extends React.Component<
   constructor(props: SwitchConfirmProps) {
     super(props);
     this.state = {
-      checked: false
+      checked: this.translateChecked(props, props.checked)
     };
   }
-  componentDidMount() {
-    this.setState({
-      checked: this.translateChecked(this.props, this.props.checked)
-    });
-  }
+  // componentDidMount() {
+  //   this.setState({
+  //     checked: this.translateChecked(this.props, this.props.checked)
+  //   });
+  // }
   componentWillReceiveProps(nextProps: SwitchConfirmProps) {
     if (
       this.props.checked !== nextProps.checked ||

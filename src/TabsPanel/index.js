@@ -69,8 +69,17 @@ export default class TabsPanel extends PureComponent {
 }
 
 TabsPanel.propTypes = {
+  /**
+   * 自定义url路径参数
+   */
   paramName: PropTypes.string,
+  /**
+   * 默认url路径参数
+   */
   defaultPath: PropTypes.string,
+  /**
+   * 当前窗口的浏览历史
+   */
   history: PropTypes.object
 };
 

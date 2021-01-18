@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 
 interface ErrorBoundaryProps {
+  /**
+   * 子组件
+   */
   children: any;
 }
 
@@ -13,6 +16,7 @@ export default class ErrorBoundary extends React.Component<
   ErrorBoundaryProps,
   ErrorBoundaryStates
 > {
+  state: {error: null; errorInfo: null};
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -21,7 +25,7 @@ export default class ErrorBoundary extends React.Component<
     };
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: any) {
     // Catch errors in any components below and re-render with error message
     this.setState({
       error: error,
@@ -35,12 +39,17 @@ export default class ErrorBoundary extends React.Component<
     if (errorInfo) {
       // Error path
       return (
-        <div>
+        <div className='error-boundary-container'>
           <h2>出错了.</h2>
           <details style={{whiteSpace: 'pre-wrap'}}>
-            {error && error.toString()}
+            {error &&
+              //@ts-ignore
+              error.toString()}
             <br />
-            {errorInfo.componentStack}
+            {
+              //@ts-ignore
+              errorInfo.componentStack
+            }
           </details>
         </div>
       );

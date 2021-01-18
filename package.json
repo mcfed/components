@@ -1,7 +1,7 @@
 {
   "name": "@mcfed/components",
-  "version": "0.2.1",
-  "description": "@mcf for components",
+  "version": "0.5.4",
+  "description": "@mcfed for components",
   "main": "lib/index.js",
   "module": "es/index.js",
   "types": "lib/index.d.ts",
@@ -10,7 +10,8 @@
     "test": "jest",
     "test:watch": "npm test -- --watch",
     "build": "npm run tsc",
-    "tsc": "node scripts/build.js && node scripts/tsc.js"
+    "tsc": "node scripts/build.js && node scripts/tsc.js",
+    "prepublish": "npm run build"
   },
   "keywords": [
     "@mcf",
@@ -93,8 +94,10 @@
     "@ant-design/css-animation": "^1.7.2",
     "@mcfed/utils": "^0.2.0-rc8",
     "@types/qs": "^6.9.3",
+    "@types/react-text-mask": "^5.4.6",
     "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
+    "git": "^0.1.5",
     "indexof": "^0.0.1",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
@@ -102,7 +105,9 @@
     "react-dom": "^16.9.0",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
+    "react-text-mask": "^5.4.3",
     "react-virtualized": "^9.21.1",
-    "react-virtualized-transfer": "^1.4.1"
+    "react-virtualized-transfer": "^1.4.1",
+    "text-mask-addons": "^3.8.0"
   }
 }

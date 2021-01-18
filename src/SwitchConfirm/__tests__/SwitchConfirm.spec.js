@@ -76,22 +76,22 @@ describe('switchconfirm method test', () => {
     expect(instance.translateCustomChecked(false)).toEqual(false);
   });
 
-  it('componentDidMount test 1', () => {
-    const {wrapper, props} = setup();
-    const instance = wrapper.instance();
+  // it('componentDidMount test 1', () => {
+  //   const {wrapper, props} = setup();
+  //   const instance = wrapper.instance();
 
-    instance.componentDidMount();
-    expect(wrapper.state('checked')).toEqual(false);
-  });
-  it('componentDidMount test 2', () => {
-    const {wrapper, props} = setup({
-      checked: true
-    });
-    const instance = wrapper.instance();
+  //   instance.componentDidMount();
+  //   expect(wrapper.state('checked')).toEqual(false);
+  // });
+  // it('componentDidMount test 2', () => {
+  //   const {wrapper, props} = setup({
+  //     checked: true
+  //   });
+  //   const instance = wrapper.instance();
 
-    instance.componentDidMount();
-    expect(wrapper.state('checked')).toEqual(true);
-  });
+  //   instance.componentDidMount();
+  //   expect(wrapper.state('checked')).toEqual(true);
+  // });
 
   it('componentWillReceiveProps test 1', () => {
     const {wrapper, props} = setup();

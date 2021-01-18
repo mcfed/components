@@ -10,33 +10,29 @@
 //       see the bottom of this file. The list there is sorted, try to follow that.
 
 -->
+# 0.5.0
 
-## Master
+feat: FormItem 加入columns 属性 支持多列布局
+feat: HeadSearchBar 支持传入className 自定义类名
 
-<!-- Your comment below this -->
+# 0.4.1
 
-# 1.3.5
+fix: ErrorBoundary 修正样式引入相对路径
 
-- feat: expand list [@guorong]
-- feat: Layout 布局组件 [@shibo]
+# 0.4.0
 
-# 1.3.4
+chore: 移除过时 SmartLInk、FormSet 组件不再使用
+feat: 简化 FieldSet 重新实现
 
-- 修正 DetailTable 原 datasource.name 不显示 bug [@lujianan]
+# 0.3.4
 
-# 1.3.3
+feat: Step 组件 goToNext 方法，跳转下一个流程
+docs: 新增部分组件 storybook 示例
 
-- select 的 fetch 加 params 参数不起作用 [@zhouhuan]
+# 0.3.1
 
-# 1.3.2
-
-- collapse panel 新增 renderable 属性 接受布尔值和函数 [@shibo]
-
-# 1.3.1
-
-- 新增 CollapsePanel 组件 [@shibo]
-- 新增 baseform 和 fromItem 协同工作属性 colNumber offsetNumber[@shibo]
-
-# 1.3.0
-
-- 重新修改打包机制，master 上使用自动化发布 [@zhouhuan]
+fix: ButtonGroups ButtonMenu 模式下 menu action 捕获失败
+fix: ButtonGroups ButtonMenu 模式下 menu item 按照节点完整渲染
+fix: ButtonGroups ButtonMenu 模式下 menu item 多次触发
+fix: buttonGroup menu 模式 权限控制
+feat: 增加指定 OverLay，类名字段

@@ -23,6 +23,9 @@ export default class FormItemFixed extends Component {
 }
 
 FormItemFixed.propsTypes = {
+  /**
+   * 是否应用className为element-text-box的样式
+   */
   isResetCss: PropTypes.bool
 };
 FormItemFixed.defaultProps = {

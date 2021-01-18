@@ -48,8 +48,17 @@ interface ColumnsItem<T> extends ColumnProps<T> {
  * mode: 编辑模式，非必须，默认为单行编辑
  */
 interface EditTableProps<T> {
+  /**
+   * columns：表格列配置
+   */
   columns: ColumnsItem<T>[];
+  /**
+   * 数据数组
+   */
   data: T[];
+  /**
+   * 编辑模式
+   */
   mode: EditTableMode;
   onChange(data: T[]): void;
 }
@@ -281,20 +290,19 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   render() {
+    const {data, columns, mode, onChange, ...otherProps} = this.props;
     const components = {
       body: {
         row: EditableFormRow
         // cell: EditableCell
       }
     };
-    const {mode} = this.props;
     const instance = this;
 
-    const columns = this.state.columns.map((col: ColumnsItem<T>) => {
-      if (!col.editComponent) {
+    const columnsFinal = this.state.columns.map((col: ColumnsItem<T>) => {
+      if (col.editComponent === undefined) {
         return col;
       }
-      /* istanbul ignore next */
       return {
         ...col,
         // onCellClick: (record,index)=>{
@@ -318,8 +326,9 @@ export default class EditTable<T extends Item> extends React.Component<
         components={components}
         bordered
         dataSource={this.state.data}
-        columns={columns}
+        columns={columnsFinal}
         rowClassName={(record: object, index: number) => 'editable-row'}
+        {...otherProps}
         footer={() => (
           <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
             新增

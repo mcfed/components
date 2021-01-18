@@ -10,11 +10,29 @@ interface ExpandListProps {
 }
 
 interface initializeState {
+  /**
+   * 用来判断是否要显示加载更多按钮
+   */
   initLoading: boolean;
+  /**
+   * 当卡片内容还在加载中时，可以用 loading 展示一个占位
+   */
   loading: boolean;
+  /**
+   * 列表当前所在页数
+   */
   current: number;
+  /**
+   * 列表数据源
+   */
   data: any;
+  /**
+   * 获取初始化时列表的全部数据
+   */
   list: any;
+  /**
+   * pageSize 分页条数，默认为10
+   */
   pageSize: number;
 }
 
