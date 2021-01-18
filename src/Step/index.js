@@ -62,6 +62,14 @@ export default class Step extends Component {
         />
 
         <Button.Group>
+          {step !== steps.length && this.props.showCancel ? (
+            <Button
+              onClick={() => this.props.history.push(this.props.backPath)}>
+              {this.props.cancelText}
+            </Button>
+          ) : (
+            ''
+          )}
           {(() => {
             switch (step) {
               case 1:
@@ -88,14 +96,6 @@ export default class Step extends Component {
           {step !== steps.length ? (
             <Button onClick={() => ref.current.onSubmit('handleSubmit')}>
               {'下一步'}
-            </Button>
-          ) : (
-            ''
-          )}
-          {step !== steps.length && this.props.showCancel ? (
-            <Button
-              onClick={() => this.props.history.push(this.props.backPath)}>
-              {this.props.cancelText}
             </Button>
           ) : (
             ''
