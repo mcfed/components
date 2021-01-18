@@ -61,7 +61,7 @@ stories.add(
     return (
       <React.Fragment>
         这是一个基础的step用法示例
-        <Step steps={Steps} />
+        <Step steps={Steps} showCancel={currentIndex => currentIndex === 0} />
       </React.Fragment>
     );
   },

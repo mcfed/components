@@ -101,7 +101,7 @@ describe('Step 点击事件', () => {
     };
     wrapper
       .find('Button')
-      .first()
+      .last()
       .props()
       .onClick();
     expect(wrapper.instance().props.history.push).toHaveBeenCalled();
@@ -130,7 +130,7 @@ describe('Step 点击事件', () => {
     };
     wrapper
       .find('Button')
-      .first()
+      .at(1)
       .props()
       .onClick();
     expect(wrapper.instance().props.history.push).toHaveBeenCalled();

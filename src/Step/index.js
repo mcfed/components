@@ -37,8 +37,71 @@ export default class Step extends Component {
     });
   };
 
+  renderStepButtonGroups() {
+    const {steps, showPrev, showCancel} = this.props;
+    const {step, currentIndex} = this.state;
+    return (
+      <Button.Group>
+        {step !== steps.length &&
+        (typeof showCancel === 'boolean'
+          ? showCancel
+          : showCancel(currentIndex)) ? (
+          <Button onClick={() => this.props.history.push(this.props.backPath)}>
+            {this.props.cancelText}
+          </Button>
+        ) : (
+          ''
+        )}
+        {(() => {
+          switch (step) {
+            case 1:
+              return '';
+            case steps.length:
+              /* istanbul ignore next */
+              return showPrev && this.props.showFinalLastStep ? (
+                <Button onClick={() => this.goToStep(step - 1)}>
+                  {'上一步'}
+                </Button>
+              ) : (
+                ''
+              );
+            default:
+              return showPrev ? (
+                <Button onClick={() => this.goToStep(step - 1)}>
+                  {'上一步'}
+                </Button>
+              ) : (
+                ''
+              );
+          }
+        })()}
+        {step !== steps.length ? (
+          <Button onClick={() => ref.current.onSubmit('handleSubmit')}>
+            {'下一步'}
+          </Button>
+        ) : (
+          ''
+        )}
+        {step === steps.length ? (
+          <Button
+            onClick={() =>
+              /* istanbul ignore next */
+              this.props.finalSubmitFunctionName
+                ? ref.current &&
+                  ref.current[this.props.finalSubmitFunctionName]()
+                : ref.current.onSubmit('handleSubmit')
+            }>
+            {this.props.finishText}
+          </Button>
+        ) : (
+          ''
+        )}
+      </Button.Group>
+    );
+  }
+
   render() {
-    const {steps, showPrev} = this.props;
+    const {steps} = this.props;
     const {step, currentIndex} = this.state;
     /* istanbul ignore next */
     const renderDom = steps[currentIndex] || steps[0];
@@ -61,60 +124,7 @@ export default class Step extends Component {
           goToNext={() => this.goToStep(step + 1)}
         />
 
-        <Button.Group>
-          {step !== steps.length && this.props.showCancel ? (
-            <Button
-              onClick={() => this.props.history.push(this.props.backPath)}>
-              {this.props.cancelText}
-            </Button>
-          ) : (
-            ''
-          )}
-          {(() => {
-            switch (step) {
-              case 1:
-                return '';
-              case steps.length:
-                /* istanbul ignore next */
-                return showPrev && this.props.showFinalLastStep ? (
-                  <Button onClick={() => this.goToStep(step - 1)}>
-                    {'上一步'}
-                  </Button>
-                ) : (
-                  ''
-                );
-              default:
-                return showPrev ? (
-                  <Button onClick={() => this.goToStep(step - 1)}>
-                    {'上一步'}
-                  </Button>
-                ) : (
-                  ''
-                );
-            }
-          })()}
-          {step !== steps.length ? (
-            <Button onClick={() => ref.current.onSubmit('handleSubmit')}>
-              {'下一步'}
-            </Button>
-          ) : (
-            ''
-          )}
-          {step === steps.length ? (
-            <Button
-              onClick={() =>
-                /* istanbul ignore next */
-                this.props.finalSubmitFunctionName
-                  ? ref.current &&
-                    ref.current[this.props.finalSubmitFunctionName]()
-                  : ref.current.onSubmit('handleSubmit')
-              }>
-              {this.props.finishText}
-            </Button>
-          ) : (
-            ''
-          )}
-        </Button.Group>
+        {this.renderStepButtonGroups()}
       </React.Fragment>
     );
   }

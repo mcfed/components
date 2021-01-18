@@ -71,7 +71,7 @@ exports[`快照测试 全页快照 1`] = `
       loading={false}
       onClick={[Function]}
     >
-      下一步
+      取消
     </Button>
     <Button
       block={false}
@@ -80,7 +80,7 @@ exports[`快照测试 全页快照 1`] = `
       loading={false}
       onClick={[Function]}
     >
-      取消
+      下一步
     </Button>
   </ButtonGroup>
 </Fragment>
