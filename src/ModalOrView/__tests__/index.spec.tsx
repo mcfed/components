@@ -49,13 +49,13 @@ describe('ModalOrView', () => {
     };
   }
 
-  it('modal模式快照', () => {
+  it.skip('modal模式快照', () => {
     const {wrapper} = setup({mode: 'modal'});
 
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('view模式快照', () => {
+  it.skip('view模式快照', () => {
     const {wrapper} = setup({mode: 'view'});
 
     expect(wrapper).toMatchSnapshot();
