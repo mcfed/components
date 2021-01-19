@@ -11,6 +11,12 @@
 
 -->
 
+# 0.6.1
+
+fix: 改动 baseform 对 antosubmitForm 的触发方法 为 onFieldsChange
+fix: buttongroups 下的 button 为 disabled 状态时 不会再增加 tooltip 做父节点了
+fix： inputsearch blur 不会触发 onchange 方法了 现在 点击 search 按钮会触发 searchbar 搜索动作（不管是否有文本变化）
+
 # 0.6.0
 
 feat: 增加 UploadFile 组件

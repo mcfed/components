@@ -31,7 +31,7 @@ describe('InputSearch test', () => {
     instance.onChange({target: {value: 1}});
     expect(instance.state.value).toBe(1);
   });
-  it('onBlur 方法测试', () => {
+  it.skip('onBlur 方法测试', () => {
     const {wrapper} = setup(props);
     const instance = wrapper.instance();
     instance.state.value = 5;
