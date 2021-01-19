@@ -42,6 +42,10 @@ type CustomButtonProps = BaseButtonProps &
      */
     disabled?: any;
     /**
+     * 按钮禁用状态
+     */
+    needTooltip?: boolean;
+    /**
      * 点击跳转的地址，指定此属性 button 的行为和 a 链接一致
      */
     href?: undefined;
@@ -55,6 +59,7 @@ export default class CustomButton extends React.Component<CustomButtonProps> {
       confirm,
       confirmTitle,
       permission,
+      needTooltip,
       ...otherProps
     } = this.props;
     //@ts-ignore
