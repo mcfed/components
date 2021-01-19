@@ -49,10 +49,10 @@ export default class InputSearch extends React.Component<
     });
   };
   onBlur = () => {
-    const {onChange} = this.props;
-    const {value} = this.state;
-    /* istanbul ignore else */
-    if (onChange) onChange(value);
+    // const {onChange} = this.props;
+    // const {value} = this.state;
+    // /* istanbul ignore else */
+    // if (onChange) onChange(value);
   };
   render() {
     const {value} = this.state;

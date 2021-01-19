@@ -65,10 +65,20 @@ const SubmitForm = FormCreate()(BaseForm);
 
 class AdvancedFormClass extends BaseForm {}
 
+function compileValue(Fields: any) {
+  let json = {};
+  for (const it in Fields) {
+    //@ts-ignore
+    json[it] = Fields[it]['value'];
+  }
+  return json;
+}
+
 export const AdvancedForm = FormCreate({
-  onValuesChange(props: any, values, allValues) {
+  onFieldsChange(props: any, changedFields, allFields) {
+    console.log(11111, compileValue(allFields));
     if (props.autoSubmitForm) {
-      props.onSearch && props.onSearch(allValues);
+      props.onSearch && props.onSearch(compileValue(allFields));
     }
   }
   //@ts-ignore
