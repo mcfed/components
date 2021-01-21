@@ -1,7 +1,6 @@
 import React, {Component, PureComponent, ReactNode} from 'react';
 import {Select} from 'antd';
 import {SelectProps} from 'antd/lib/select';
-import './index.css';
 
 interface SearchInputProps extends SelectProps {
   afterAddon?: ReactNode;

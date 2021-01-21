@@ -11,6 +11,10 @@
 
 -->
 
+# 0.6.2
+
+- fix: version 0.6.1 版本不可用 【样式引用未清除 导致代码报错】 0.6.2 修复此问题
+
 # 0.6.1
 
 fix: 改动 baseform 对 antosubmitForm 的触发方法 为 onFieldsChange
