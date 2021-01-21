@@ -61,7 +61,7 @@ stories.add(
     return (
       <React.Fragment>
         这是一个基础的step用法示例
-        <Step steps={Steps} showCancel={currentIndex => currentIndex === 0} />
+        <Step steps={Steps} />
       </React.Fragment>
     );
   },
@@ -88,6 +88,19 @@ stories.add(
       <React.Fragment>
         隐藏取消按钮用法
         <Step showCancel={false} steps={Steps} />
+      </React.Fragment>
+    );
+  },
+  {notes: {markdown: Readme}}
+);
+
+stories.add(
+  '取消按钮隐藏显示表达式',
+  () => {
+    return (
+      <React.Fragment>
+        取消按钮隐藏显示表达式
+        <Step showCancel={currentIndex => currentIndex === 0} steps={Steps} />
       </React.Fragment>
     );
   },

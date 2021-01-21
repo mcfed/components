@@ -24,11 +24,14 @@ class MySteps extends React.Component<MyStepsProps, State> {
   };
 
   componentWillMount() {
+    const {location} = this.props;
     this.state = {
       currentIndex: 0,
       step: 1
     };
-    const currentStepRoute = this.props.location['pathname'].slice(1);
+    const currentStepRoute = `${location['pathname'].slice(1)}${
+      location['search']
+    }`;
 
     let currentStepNum = 1;
     this.props.steps.map((v: any, index) => {
