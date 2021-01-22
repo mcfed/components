@@ -10,7 +10,9 @@ export default class Step extends Component {
   };
 
   componentWillMount() {
-    const currentStepRoute = this.props.location.pathname.slice(1);
+    const currentStepRoute = `${this.props.location.pathname.slice(1)}${
+      this.props.location.search
+    }`;
 
     let currentStepNum = 1;
     this.props.steps.map((v, index) => {
