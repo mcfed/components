@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {TimePicker, Input} from 'antd';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 const InputGroup = Input.Group;
 
@@ -16,9 +17,10 @@ export default class TimeRangePicker extends Component {
     }
   }
   translateTime(val) {
+    const {format} = this.props;
     return {
-      startTime: val && val[0] ? moment(val[0], ['hh:mm']) : '',
-      endTime: val && val[1] ? moment(val[1], ['hh:mm']) : ''
+      startTime: val && val[0] ? moment(val[0], [format]) : '',
+      endTime: val && val[1] ? moment(val[1], [format]) : ''
     };
   }
   hanldeChange(type, val) {
@@ -55,11 +57,11 @@ export default class TimeRangePicker extends Component {
 
   formatTime(momentTime) {
     let {format} = this.props;
-    return momentTime ? moment(momentTime, ['hh:mm']).format(format) : '';
+    return momentTime ? moment(momentTime, [format]).format(format) : '';
   }
 
   render() {
-    let {value, onChange, id, label, ...otherProps} = this.props;
+    let {value, onChange, id, label, format, ...otherProps} = this.props;
     let {startTime, endTime} = this.state;
     return (
       <InputGroup compact className='TimeRangePicker-compact'>
@@ -77,3 +79,14 @@ export default class TimeRangePicker extends Component {
     );
   }
 }
+
+TimeRangePicker.propTypes = {
+  /**
+   * format 时间格式
+   */
+  paramName: PropTypes.string
+};
+
+TimeRangePicker.defaultProps = {
+  format: 'HH:mm:ss'
+};

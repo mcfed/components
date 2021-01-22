@@ -10,10 +10,30 @@
 //       see the bottom of this file. The list there is sorted, try to follow that.
 
 -->
+
+# 0.6.2
+
+- fix: version 0.6.1 版本不可用 【样式引用未清除 导致代码报错】 0.6.2 修复此问题
+
+# 0.6.1
+
+fix: 改动 baseform 对 antosubmitForm 的触发方法 为 onFieldsChange
+fix: buttongroups 下的 button 为 disabled 状态时 不会再增加 tooltip 做父节点了
+fix： inputsearch blur 不会触发 onchange 方法了 现在 点击 search 按钮会触发 searchbar 搜索动作（不管是否有文本变化）
+
+# 0.6.0
+
+feat: 增加 UploadFile 组件
+feat: 增加 SelectInput 组
+feat: 增加 ModalOrView 组件
+feat: 增加 TextMaskInput 组件
+chore: 移除过时的 ModalAndView 组件
+fix: McSteps 组件 重写部分逻辑[lujianan]
+
 # 0.5.0
 
-feat: FormItem 加入columns 属性 支持多列布局
-feat: HeadSearchBar 支持传入className 自定义类名
+feat: FormItem 加入 columns 属性 支持多列布局
+feat: HeadSearchBar 支持传入 className 自定义类名
 
 # 0.4.1
 

@@ -22,8 +22,18 @@ exports[`快照测试 全页快照 1`] = `
     />
   </Steps>
   <1
+    forwardRef={
+      Object {
+        "current": null,
+      }
+    }
     getCurrentStep={[Function]}
     goRoutes={[Function]}
+    history={
+      Object {
+        "push": [Function],
+      }
+    }
     location={
       Object {
         "pathname": "",

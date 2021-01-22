@@ -92,6 +92,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     const {
       actionkey,
       tip,
+      needTooltip,
       confirm,
       confirmTitle,
       permission,
@@ -99,26 +100,40 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       ...btnProps
     } = it.props;
     const title = this.formatTooltipTitle(it.props);
-    return React.createElement(
-      Tooltip,
-      {key: idx, title: title},
-      React.createElement(
-        //@ts-ignore
-        Button,
-        {
-          ...btnProps,
-          onClick: () => {
-            handleClick(actionkey);
-          }
-        },
-        children
-      )
-    );
+    return btnProps.disabled === true
+      ? React.createElement(
+          //@ts-ignore
+          Button,
+          {
+            ...btnProps,
+            onClick: () => {
+              handleClick(actionkey);
+            }
+          },
+          children
+        )
+      : React.createElement(
+          Tooltip,
+          {key: idx, title: title},
+          React.createElement(
+            //@ts-ignore
+            Button,
+            {
+              ...btnProps,
+              onClick: () => {
+                handleClick(actionkey);
+              }
+            },
+            children
+          )
+        );
   }
+
   renderConfirmChild(it: any, idx: number): React.ReactNode {
     const {handleClick} = this.props;
     const {
       tip,
+      needTooltip,
       confirm,
       confirmTitle,
       actionkey,
@@ -138,19 +153,26 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
           handleClick(actionkey);
         }
       },
-      React.createElement(
-        Tooltip,
-        {
-          key: idx,
-          title: title
-        },
-        React.createElement(
-          //@ts-ignore
-          Button,
-          {...otherProps},
-          children
-        )
-      )
+      otherProps.disabled === true
+        ? React.createElement(
+            //@ts-ignore
+            Button,
+            {...otherProps},
+            children
+          )
+        : React.createElement(
+            Tooltip,
+            {
+              key: idx,
+              title: title
+            },
+            React.createElement(
+              //@ts-ignore
+              Button,
+              {...otherProps},
+              children
+            )
+          )
     );
   }
   renderReactElement(it: any, idx: number) {
