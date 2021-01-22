@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Steps } from "antd";
+import * as React from 'react';
+import {Steps} from 'antd';
 export default interface StepProps {
   steps: any[];
   history?: any;
@@ -9,12 +9,12 @@ export default interface StepProps {
 export const defaultStepProps = {
   steps: [],
   location: {
-    pathname: ""
+    pathname: ''
   },
   history: {
     push() {}
-  },
-}
+  }
+};
 
 const initialState = {
   currentIndex: 0,
@@ -31,7 +31,9 @@ export default class Step extends React.Component<StepProps, State> {
   state: State = initialState;
 
   UNSAFE_componentWillMount() {
-    const currentStepRoute = this.props.location.pathname.slice(1);
+    const currentStepRoute = `${this.props.location.pathname.slice(1)}${
+      this.props.location.search
+    }`;
 
     let currentStepNum = 1;
     this.props.steps.forEach((v, index) => {
@@ -48,12 +50,12 @@ export default class Step extends React.Component<StepProps, State> {
 
   goRoutes = (route: number | string) => {
     const {
-      props: { steps }
+      props: {steps}
     } = this;
     let currentPath: string;
     let currentStep = 1;
     let currentIndex = 0;
-    if (typeof route === "number") {
+    if (typeof route === 'number') {
       currentPath = steps[route - 1].path;
       currentStep = route;
       currentIndex = currentStep - 1;
@@ -67,7 +69,7 @@ export default class Step extends React.Component<StepProps, State> {
       });
     }
     const ifNeedJump =
-      steps.filter((item) => item.path === currentPath).length > 0;
+      steps.filter(item => item.path === currentPath).length > 0;
     if (ifNeedJump) {
       this.props.history.push(currentPath);
       this.setState({
@@ -75,7 +77,7 @@ export default class Step extends React.Component<StepProps, State> {
         step: currentStep
       });
     } else {
-      console.log("请输入正确的地址！");
+      console.log('请输入正确的地址！');
     }
   };
 
@@ -100,13 +102,13 @@ export default class Step extends React.Component<StepProps, State> {
   }
 
   render() {
-    const { steps } = this.props;
-    const { currentIndex } = this.state;
+    const {steps} = this.props;
+    const {currentIndex} = this.state;
     const renderDom = steps[currentIndex];
     return (
       <React.Fragment>
         <Steps current={currentIndex}>
-          {steps.map((item: { text: string; description: string }) => (
+          {steps.map((item: {text: string; description: string}) => (
             <Steps.Step
               key={item.text}
               title={item.text}
