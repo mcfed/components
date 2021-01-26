@@ -76,7 +76,6 @@ function compileValue(Fields: any) {
 
 export const AdvancedForm = FormCreate({
   onFieldsChange(props: any, changedFields, allFields) {
-    console.log(11111, compileValue(allFields));
     if (props.autoSubmitForm) {
       props.onSearch && props.onSearch(compileValue(allFields));
     }
