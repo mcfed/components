@@ -43,13 +43,30 @@ interface AdvancedFormProps extends FormProps {
   /**
    * 传入自定义搜索按钮文本
    */
-  searchBtnText?: string;
+  customBtnText?: {
+    searchBtnText?: string;
+    collapseText?: string;
+    openCollapseText?: string;
+    resetBtnText?: string;
+  };
+  /**
+   * 搜索项过多是否需要收起展开功能
+   */
+  needCollapse?: boolean;
+}
+
+interface AdvancedFormState {
+  isCollapse: boolean;
 }
 
 export default class AdvancedSearchForm extends React.Component<
-  AdvancedFormProps
+  AdvancedFormProps,
+  AdvancedFormState
 > {
   form: any;
+  state = {
+    isCollapse: true
+  };
   static defaultProps = {
     gutter: 20,
     columns: 4,
@@ -57,7 +74,8 @@ export default class AdvancedSearchForm extends React.Component<
     defaultParams: {},
     autoSubmitForm: true,
     filterSubmitHandler: (value: any) => {},
-    showSearchButton: false
+    showSearchButton: false,
+    needCollapse: false
   };
   handleSearch(e: any, values?: any) {
     e.preventDefault();
@@ -78,19 +96,54 @@ export default class AdvancedSearchForm extends React.Component<
       this.form = instance.props.form;
     }
   }
+  handleResetForm() {
+    this.form.resetFields();
+  }
+  handleCollapse() {
+    this.setState({
+      isCollapse: !this.state.isCollapse
+    });
+  }
   renderButton(locale: any) {
-    const {searchBtnText} = this.props;
+    const {customBtnText, needCollapse} = this.props;
     const contextLocale = Object.assign({}, locale, this.props.locale);
+    const collapseText =
+      customBtnText?.collapseText == undefined
+        ? contextLocale.collapseText
+        : customBtnText?.collapseText;
+    const openCollapseText =
+      customBtnText?.openCollapseText == undefined
+        ? contextLocale.openCollapseText
+        : customBtnText?.openCollapseText;
 
-    return (
+    return [
+      <Button
+        htmlType='reset'
+        actionkey='aaa'
+        onClick={this.handleResetForm.bind(this)}
+        type='default'>
+        {customBtnText?.resetBtnText == undefined
+          ? contextLocale.resetBtnText
+          : customBtnText?.resetBtnText}
+      </Button>,
       <Button
         htmlType='submit'
-        actionkey='aaa'
+        actionkey='bbb'
         onClick={this.handleSearch.bind(this)}
         type='primary'>
-        {searchBtnText == undefined ? contextLocale.searchText : searchBtnText}
-      </Button>
-    );
+        {customBtnText?.searchBtnText == undefined
+          ? contextLocale.searchText
+          : customBtnText?.searchBtnText}
+      </Button>,
+      needCollapse ? (
+        <Button
+          actionkey='ccc'
+          onClick={this.handleCollapse.bind(this)}
+          type='link'>
+          {this.state.isCollapse ? collapseText : openCollapseText}
+        </Button>
+      ) : null
+    ];
   }
   renderSearchBar() {
     const {showSearchButton} = this.props;
@@ -119,6 +172,7 @@ export default class AdvancedSearchForm extends React.Component<
       cols = 24 / columns;
     }
     return React.Children.toArray(children).map((it: any, idx: number) => {
+      //搜索项若需要设置多倍宽度 columns 为设置倍数
       const {columns} = it.props;
       const spanCol = Number(columns) ? cols * Number(columns) : cols;
       return (
@@ -134,11 +188,17 @@ export default class AdvancedSearchForm extends React.Component<
       gutter,
       layout,
       autoSubmitForm,
+      needCollapse,
       filterSubmitHandler,
       className = ''
     } = this.props;
     return (
-      <div className={`${className} head-searchbar-panel`}>
+      <div
+        className={`${className} head-searchbar-panel ${
+          needCollapse && this.state.isCollapse
+            ? 'head-searchbar-collapsed'
+            : 'head-searchbar-not-collapse'
+        }`}>
         <AdvancedForm
           layout={layout}
           autoSubmitForm={autoSubmitForm}
