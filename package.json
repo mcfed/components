@@ -3,7 +3,7 @@
   "version": "0.6.3",
   "description": "@mcfed for components",
   "main": "lib/index.js",
-  "module": "es/index.js",
+  "module": "src/index.js",
   "types": "lib/index.d.ts",
   "private": false,
   "scripts": {
