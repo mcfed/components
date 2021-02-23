@@ -40,3 +40,4 @@ export {default as VerifyCode} from './VerifyCode';
 
 export {default as UploadFile} from './UploadFile';
 export {default as SelectInput} from './SelectInput';
+export {default as FullScreen} from './FullScreen';
