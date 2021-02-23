@@ -95,6 +95,8 @@
     "@mcfed/utils": "^0.2.0-rc8",
     "@types/qs": "^6.9.3",
     "@types/react-text-mask": "^5.4.6",
+    "@types/fscreen": "1.0.0",
+    "fscreen": "1.2.0",
     "classnames": "^2.2.6",
     "cross-fetch": "^2.2.3",
     "git": "^0.1.5",
