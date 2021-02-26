@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {Table, Button, message, Form} from 'antd';
+import {Table, Button, message, Form, Popconfirm} from 'antd';
 import {FormComponentProps} from 'antd/lib/form';
 import {ColumnProps} from 'antd/lib/table/interface';
 import {WrappedFormUtils} from 'antd/lib/form/Form';
 import {HTMLAttributes} from 'react';
+import {rowKey} from '../../es/McTransfer/selectList';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext({} as WrappedFormUtils);
@@ -35,8 +36,8 @@ interface Item {
 
 interface ColumnsItem<T> extends ColumnProps<T> {
   dataIndex: string;
-  editingStatus: boolean;
-  renderCol: (text: string, row: T, instance: Object) => React.ReactNode;
+  editingStatus?: boolean;
+  renderCol?: (text: string, row: T, instance: Object) => React.ReactNode;
   [propName: string]: any;
 }
 
@@ -60,6 +61,9 @@ interface EditTableProps<T> {
    * 编辑模式
    */
   mode: EditTableMode;
+  rowKey: string;
+  hideOperation?: boolean;
+  hideCancelConfirm?: boolean;
   onChange(data: T[]): void;
 }
 
@@ -90,7 +94,62 @@ export default class EditTable<T extends Item> extends React.Component<
       data: [],
       editingKey: '',
       keyList: [],
-      columns: []
+      columns: props.hideOperation
+        ? []
+        : [
+            {
+              title: '操作',
+              dataIndex: '操作',
+              render: (text: any, record: any) => {
+                const editable = this.isEditing(record);
+                return (
+                  <div>
+                    {editable ? (
+                      <span>
+                        <EditableContext.Consumer>
+                          {form => (
+                            <a
+                              onClick={() => this.save(form, record.key)}
+                              style={{marginRight: 8}}>
+                              保存
+                            </a>
+                          )}
+                        </EditableContext.Consumer>
+                        <EditableContext.Consumer>
+                          {form =>
+                            !props.hideCancelConfirm ? (
+                              <Popconfirm
+                                title='确认取消?'
+                                onConfirm={() => this.cancel(form, record.key)}>
+                                <a>取消</a>
+                              </Popconfirm>
+                            ) : (
+                              <a onClick={() => this.cancel(form, record.key)}>
+                                取消
+                              </a>
+                            )
+                          }
+                        </EditableContext.Consumer>
+                      </span>
+                    ) : (
+                      <span>
+                        <a
+                          style={{marginRight: 8}}
+                          onClick={() => this.edit(record.key)}>
+                          编辑
+                        </a>
+                        <Popconfirm
+                          title='确认删除?'
+                          onConfirm={() => this.delete(record.key)}>
+                          <a>删除</a>
+                        </Popconfirm>
+                      </span>
+                    )}
+                  </div>
+                );
+              }
+            }
+          ]
     };
   }
   componentDidMount() {
@@ -98,7 +157,7 @@ export default class EditTable<T extends Item> extends React.Component<
     if (this.props.columns && this.props.columns.length > 0) {
       this.setState(
         {
-          data: this.props.data === undefined ? [] : this.props.data,
+          data: this.compileData(this.props.data),
           columns: [...this.props.columns, ...this.state.columns]
         },
         () => {
@@ -110,11 +169,21 @@ export default class EditTable<T extends Item> extends React.Component<
       );
     }
   }
+
+  compileData(data: any[]) {
+    const {rowKey} = this.props;
+    return data.map
+      ? data.map((it: any, idex: number) => ({
+          ...it,
+          key: it[rowKey]
+        }))
+      : [];
+  }
   UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
     /* istanbul ignore else */
     if (this.props.data !== nextprops.data) {
       this.setState({
-        data: nextprops.data
+        data: this.compileData(nextprops.data)
       });
     }
   }
