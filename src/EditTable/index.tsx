@@ -4,7 +4,6 @@ import {FormComponentProps} from 'antd/lib/form';
 import {ColumnProps} from 'antd/lib/table/interface';
 import {WrappedFormUtils} from 'antd/lib/form/Form';
 import {HTMLAttributes} from 'react';
-import {rowKey} from '../../es/McTransfer/selectList';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext({} as WrappedFormUtils);
