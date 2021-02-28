@@ -63,7 +63,9 @@ interface EditTableProps<T> {
   rowKey: string;
   hideOperation?: boolean;
   hideCancelConfirm?: boolean;
-  onChange(data: T[]): void;
+  onChangeWithOutForm?: (data: T[]) => void;
+  onChange?: (data: T[]) => void;
+  formatData4Form?: (data: T[]) => any;
 }
 
 interface State<T> {
@@ -242,7 +244,7 @@ export default class EditTable<T extends Item> extends React.Component<
         editingKey: ''
       },
       () => {
-        this.props.onChange(this.state.data);
+        this.handleChangeData(this.state.data);
       }
     );
   }
@@ -264,9 +266,25 @@ export default class EditTable<T extends Item> extends React.Component<
         newData.push(row);
       }
       this.setState({data: newData, editingKey: ''}, () => {
-        this.props.onChange(newData);
+        this.handleChangeData(newData);
       });
     });
+  }
+
+  handleChangeData(data: any) {
+    const {onChange, formatData4Form, onChangeWithOutForm} = this.props;
+    if (onChangeWithOutForm !== undefined) {
+      onChangeWithOutForm(data);
+      return false;
+    }
+    if (onChange === undefined) {
+      return false;
+    }
+    if (formatData4Form !== undefined) {
+      onChange(formatData4Form(data));
+      return false;
+    }
+    onChange(data);
   }
 
   cancel = (form: WrappedFormUtils, key: string) => {
