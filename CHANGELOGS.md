@@ -11,6 +11,14 @@
 
 -->
 
+# 0.6.8
+
+- feat: headsearchbar 增加收起展开功能 & 重置功能
+
+# 0.6.7
+
+- fix: 修复 edittable bug 扩展使用 props
+
 # 0.6.2
 
 - fix: version 0.6.1 版本不可用 【样式引用未清除 导致代码报错】 0.6.2 修复此问题
