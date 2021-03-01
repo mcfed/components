@@ -242,6 +242,11 @@
 .head-searchbar-panel {
   padding-left: 10px;
   padding-right: 10px;
+  position: relative;
+  padding-right: 170px;
+}
+.head-searchbar-panel .head-searchbar-toolbar > button:first-child {
+  margin-right: 10px;
 }
 .head-searchbar-panel .ant-form-item {
   margin-bottom: 16px;
@@ -252,6 +257,18 @@
   .ant-form-item
   .ant-form-item-control-wrapper {
   width: 100%;
+}
+.head-searchbar-panel.head-searchbar-collapsed .head-searchbar-fieldsbox {
+  height: 56px;
+  overflow-y: hidden;
+}
+.head-searchbar-panel.head-searchbar-not-collapse .head-searchbar-fieldsbox {
+  height: auto;
+}
+.head-searchbar-panel .head-searchbar-toolbar {
+  position: absolute;
+  right: 0px;
+  top: 4px;
 }
 .mc-transfer {
   /* 穿梭框头部样式 */
