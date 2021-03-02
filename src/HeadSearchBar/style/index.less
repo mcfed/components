@@ -1,8 +1,13 @@
 .head-searchbar-panel {
   padding-left: 10px;
   padding-right: 10px;
-  position: relative;
-  padding-right: 220px;
+
+  &.head-searchbar-not-collapse,
+  &.head-searchbar-collapsed {
+    position: relative;
+    padding-right: 220px;
+  }
+
   .head-searchbar-toolbar > button:first-child {
     margin-right: 10px;
   }

@@ -13,6 +13,10 @@
 
 # 0.6.8
 
+- fix: headsearchbar 收起展开的样式问题修复
+
+# 0.6.8
+
 - feat: headsearchbar 增加收起展开功能 & 重置功能
 
 # 0.6.7
