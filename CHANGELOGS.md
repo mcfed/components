@@ -11,7 +11,12 @@
 
 -->
 
-# 0.6.8
+# 0.6.10
+
+- fix: headsearchbar 对收起展开逻辑和展示搜索按钮逻辑整合
+- fix: headsearchbar 样式问题 补充修复
+
+# 0.6.9
 
 - fix: headsearchbar 收起展开的样式问题修复
 
