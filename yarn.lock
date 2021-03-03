@@ -1138,6 +1138,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/classnames@^2.2.11":
+  version "2.2.11"
+  resolved "https://registry.npmjs.org/@types/classnames/-/classnames-2.2.11.tgz#2521cc86f69d15c5b90664e4829d84566052c1cf"
+  integrity sha512-2koNhpWm3DgWRp5tpkiJ8JGc1xTn2q0l+jUNUE7oMKXUf5NpI9AIdC4kbjGNFBdHtcxBD18LAksoudAVhFKCjw==
+
 "@types/enzyme@^3.10.5":
   version "3.10.8"
   resolved "https://registry.npmjs.org/@types/enzyme/-/enzyme-3.10.8.tgz#ad7ac9d3af3de6fd0673773123fafbc63db50d42"
@@ -1151,10 +1156,10 @@
   resolved "https://registry.npmjs.org/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
 
-"@types/fscreen@^1.0.1":
-  version "1.0.1"
-  resolved "http://nexus.mchz.com.cn:4873/@types%2ffscreen/-/fscreen-1.0.1.tgz#d924e07d0468eb056abeca41bd54e742ddce2b6d"
-  integrity sha512-hV2d0BreihMGtrg+EdAFOIl/O2EL5vhAheHJUztGE/lPFZIN8ZCpGFL8hCbtyi1CfhKjDRCf47sHjP+FwJ4q0Q==
+"@types/fscreen@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/@types/fscreen/-/fscreen-1.0.0.tgz#1ce5f85d7d0faea3ce434554f0c6ab3137c8be3c"
+  integrity sha512-uPHCyams1wWzSTPpFqnTTqBj8CL/+avaxepUbwWRDsTJ6GhZ3je1sZcMIkGKZCHTVHcvaKN1dxOIbHWogJDDeA==
 
 "@types/history@*":
   version "4.7.8"
@@ -4241,9 +4246,9 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
-fscreen@^1.2.0:
+fscreen@1.2.0:
   version "1.2.0"
-  resolved "http://nexus.mchz.com.cn:4873/fscreen/-/fscreen-1.2.0.tgz#1a8c88e06bc16a07b473ad96196fb06d6657f59e"
+  resolved "https://registry.npmjs.org/fscreen/-/fscreen-1.2.0.tgz#1a8c88e06bc16a07b473ad96196fb06d6657f59e"
   integrity sha512-hlq4+BU0hlPmwsFjwGGzZ+OZ9N/wq9Ljg/sq3pX+2CD7hrJsX9tJgWWK/wiNTFM212CLHWhicOoqwXyZGGetJg==
 
 fsevents@^1.2.3, fsevents@^1.2.7:

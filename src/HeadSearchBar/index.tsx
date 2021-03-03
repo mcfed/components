@@ -6,6 +6,7 @@ import {FormProps} from 'antd/lib/form';
 import {AdvancedForm} from '../BaseForm';
 import ButtonGroups from '../ButtonGroups';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import classNames from 'classnames';
 import Locale from './locale';
 import {Row, Col} from 'antd';
 
@@ -53,6 +54,10 @@ interface AdvancedFormProps extends FormProps {
    * 搜索项过多是否需要收起展开功能
    */
   needCollapse?: boolean;
+  /**
+   * 默认是否展开 如果不传  默认为true
+   */
+  defaultCollapse?: boolean;
 }
 
 interface AdvancedFormState {
@@ -64,9 +69,6 @@ export default class AdvancedSearchForm extends React.Component<
   AdvancedFormState
 > {
   form: any;
-  state = {
-    isCollapse: true
-  };
   static defaultProps = {
     gutter: 20,
     columns: 4,
@@ -75,8 +77,17 @@ export default class AdvancedSearchForm extends React.Component<
     autoSubmitForm: true,
     filterSubmitHandler: (value: any) => {},
     showSearchButton: false,
-    needCollapse: false
+    needCollapse: false,
+    defaultCollapse: false
   };
+  constructor(props: AdvancedFormProps) {
+    super(props);
+    if (props.defaultCollapse !== undefined) {
+      this.state = {
+        isCollapse: props.defaultCollapse
+      };
+    }
+  }
   handleSearch(e: any, values?: any) {
     e.preventDefault();
     const {filterSubmitHandler, defaultParams} = this.props;
@@ -146,12 +157,13 @@ export default class AdvancedSearchForm extends React.Component<
     ];
   }
   renderSearchBar() {
-    const {showSearchButton} = this.props;
-
+    const {showSearchButton, needCollapse} = this.props;
+    //如果需要收起展开 那么必然要显示按钮
+    const isShowSearchButton = needCollapse ? true : showSearchButton;
     return (
       <div
         className='head-searchbar-toolbar'
-        style={showSearchButton ? {} : {display: 'none'}}>
+        style={isShowSearchButton ? {} : {display: 'none'}}>
         {React.createElement(
           LocaleReceiver,
           {
@@ -183,22 +195,22 @@ export default class AdvancedSearchForm extends React.Component<
     });
   }
 
+  formatClassName() {
+    const {className, needCollapse, showSearchButton} = this.props;
+
+    return classNames(
+      className,
+      'head-searchbar-panel',
+      {'head-searchbar-show-button': showSearchButton},
+      {'head-searchbar-collapsed': needCollapse && this.state.isCollapse},
+      {'head-searchbar-not-collapse': needCollapse && !this.state.isCollapse}
+    );
+  }
+
   render() {
-    const {
-      gutter,
-      layout,
-      autoSubmitForm,
-      needCollapse,
-      filterSubmitHandler,
-      className = ''
-    } = this.props;
+    const {gutter, layout, autoSubmitForm, filterSubmitHandler} = this.props;
     return (
-      <div
-        className={`${className} head-searchbar-panel ${
-          needCollapse && this.state.isCollapse
-            ? 'head-searchbar-collapsed'
-            : 'head-searchbar-not-collapse'
-        }`}>
+      <div className={this.formatClassName()}>
         <AdvancedForm
           layout={layout}
           autoSubmitForm={autoSubmitForm}
