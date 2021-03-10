@@ -33,6 +33,13 @@ export default class InputSearch extends React.Component<
       value: props.value
     };
   }
+  componentWillReceiveProps(nextProps: any) {
+    if (this.props.value !== nextProps.value) {
+      this.setState({
+        value: nextProps.value
+      });
+    }
+  }
   onSearchHandler = (value: string) => {
     const {onSearch, onChange} = this.props;
     this.setState({

@@ -129,7 +129,6 @@ export default class AdvancedSearchForm extends React.Component<
 
     return [
       <Button
-        htmlType='reset'
         actionkey='aaa'
         onClick={this.handleResetForm.bind(this)}
         type='default'>

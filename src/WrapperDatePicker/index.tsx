@@ -67,11 +67,18 @@ export default class WrapperDatePicker extends React.Component<
       valueFormatFinal: this.translateValueFormat(props)
     };
   }
-  static getDerivedStateFromProps(
-    nextprops: WrapperDatePickerProps,
-    prevstate: wrapperDatePickerState
-  ) {
-    // console.log(nextprops, prevstate);
+  // static getDerivedStateFromProps(
+  //   nextprops: WrapperDatePickerProps,
+  //   prevstate: wrapperDatePickerState
+  // ) {
+  //   // console.log(nextprops, prevstate);
+  // }
+  componentWillReceiveProps(nextProps: WrapperDatePickerProps) {
+    if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
+      this.setState({
+        value: this.valueInit(nextProps)
+      });
+    }
   }
   // componentDidUpdate(prevProps:WrapperDatePickerProps) {
   //   if(JSON.stringify(prevProps) !== JSON.stringify(this.props)){
@@ -120,7 +127,7 @@ export default class WrapperDatePicker extends React.Component<
   private formatOnchangeArrayVal(date: any[]) {
     const {onChange, timeRange, timeRangeType} = this.props;
     const {valueFormatFinal} = this.state;
-    if (date.length === 0) {
+    if (date.filter(it => it).length !== 2) {
       //清空时
       onChange(date);
       return false;
