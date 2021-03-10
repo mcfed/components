@@ -11,6 +11,12 @@
 
 -->
 
+# 0.6.11
+
+- fix: headsearchbar 重置按钮逻辑使用 antd resetFields
+- fix: inputSearch 新的 value 传入不更新的问题修复
+- fix： wrapperDatePicker 新值传入不更新问题修复
+
 # 0.6.10
 
 - fix: headsearchbar 对收起展开逻辑和展示搜索按钮逻辑整合
