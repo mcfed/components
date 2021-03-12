@@ -321,8 +321,8 @@ export default class EditTable<T extends Item> extends React.Component<
     keyList.forEach(d => {
       obj[d] = '';
     });
-    let data = [...this.state.data];
-    data.push(obj);
+    let data = [obj, ...this.state.data];
+    // data.push(obj);
     this.setState({
       data,
       editingKey: key
