@@ -11,6 +11,10 @@
 
 -->
 
+# 0.6.12
+
+- fix: edittable 修改新增行至第一行
+
 # 0.6.11
 
 - fix: headsearchbar 重置按钮逻辑使用 antd resetFields
