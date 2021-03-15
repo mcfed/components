@@ -173,6 +173,9 @@ export default class EditTable<T extends Item> extends React.Component<
 
   compileData(data: any[]) {
     const {rowKey} = this.props;
+    if (!data) {
+      return [];
+    }
     return data.map
       ? data.map((it: any, idex: number) => ({
           ...it,
