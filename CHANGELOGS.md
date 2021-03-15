@@ -11,6 +11,10 @@
 
 -->
 
+# 0.6.13
+
+- fix: edittable 数据编译 undefined 报错问题
+
 # 0.6.12
 
 - fix: edittable 修改新增行至第一行
