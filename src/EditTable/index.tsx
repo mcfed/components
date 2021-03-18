@@ -185,9 +185,10 @@ export default class EditTable<T extends Item> extends React.Component<
   }
   UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
     /* istanbul ignore else */
-    if (this.props.data !== nextprops.data) {
+    if (JSON.stringify(this.props.data) !== JSON.stringify(nextprops.data)) {
       this.setState({
-        data: this.compileData(nextprops.data)
+        data: this.compileData(nextprops.data),
+        editingKey: ''
       });
     }
   }

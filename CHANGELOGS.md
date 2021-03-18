@@ -11,6 +11,10 @@
 
 -->
 
+# 0.6.14
+
+- fix: edittable 修复新数据传入 editstatus 不重置的问题
+
 # 0.6.13
 
 - fix: edittable 数据编译 undefined 报错问题
