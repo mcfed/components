@@ -13,6 +13,10 @@
 
 # 0.6.14
 
+- fix: edittable 扩展 按钮 btnText 可自定义传入按钮 text
+
+# 0.6.14
+
 - fix: edittable 修复新数据传入 editstatus 不重置的问题
 
 # 0.6.13
