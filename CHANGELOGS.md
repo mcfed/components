@@ -11,7 +11,7 @@
 
 -->
 
-# 0.6.14
+# 0.6.15
 
 - fix: edittable 扩展 按钮 btnText 可自定义传入按钮 text
 
