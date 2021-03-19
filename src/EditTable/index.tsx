@@ -66,6 +66,13 @@ interface EditTableProps<T> {
   onChangeWithOutForm?: (data: T[]) => void;
   onChange?: (data: T[]) => void;
   formatData4Form?: (data: T[]) => any;
+  btnText?: {
+    save?: string;
+    add?: string;
+    delete?: string;
+    cancel?: string;
+    edit?: string;
+  };
 }
 
 interface State<T> {
@@ -112,7 +119,9 @@ export default class EditTable<T extends Item> extends React.Component<
                             <a
                               onClick={() => this.save(form, record.key)}
                               style={{marginRight: 8}}>
-                              保存
+                              {props.btnText?.save
+                                ? props.btnText?.save
+                                : '保存'}
                             </a>
                           )}
                         </EditableContext.Consumer>
@@ -122,11 +131,17 @@ export default class EditTable<T extends Item> extends React.Component<
                               <Popconfirm
                                 title='确认取消?'
                                 onConfirm={() => this.cancel(form, record.key)}>
-                                <a>取消</a>
+                                <a>
+                                  {props.btnText?.cancel
+                                    ? props.btnText?.cancel
+                                    : '取消'}
+                                </a>
                               </Popconfirm>
                             ) : (
                               <a onClick={() => this.cancel(form, record.key)}>
-                                取消
+                                {props.btnText?.cancel
+                                  ? props.btnText?.cancel
+                                  : '取消'}
                               </a>
                             )
                           }
@@ -137,12 +152,16 @@ export default class EditTable<T extends Item> extends React.Component<
                         <a
                           style={{marginRight: 8}}
                           onClick={() => this.edit(record.key)}>
-                          编辑
+                          {props.btnText?.edit ? props.btnText?.edit : '编辑'}
                         </a>
                         <Popconfirm
                           title='确认删除?'
                           onConfirm={() => this.delete(record.key)}>
-                          <a>删除</a>
+                          <a>
+                            {props.btnText?.delete
+                              ? props.btnText?.delete
+                              : '删除'}
+                          </a>
                         </Popconfirm>
                       </span>
                     )}
@@ -380,7 +399,7 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   render() {
-    const {data, columns, mode, onChange, ...otherProps} = this.props;
+    const {data, columns, mode, onChange, btnText, ...otherProps} = this.props;
     const components = {
       body: {
         row: EditableFormRow
@@ -421,7 +440,7 @@ export default class EditTable<T extends Item> extends React.Component<
         {...otherProps}
         footer={() => (
           <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
-            新增
+            {btnText?.add ? btnText?.add : '新增'}
           </Button>
         )}
       />
