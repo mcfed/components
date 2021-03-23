@@ -156,7 +156,7 @@ export default class EditTable<T extends Item> extends React.Component<
                         </a>
                         <Popconfirm
                           title='确认删除?'
-                          onConfirm={() => this.delete(record.key)}>
+                          onConfirm={() => this.delete(record.key, 'delete')}>
                           <a>
                             {props.btnText?.delete
                               ? props.btnText?.delete
@@ -259,7 +259,11 @@ export default class EditTable<T extends Item> extends React.Component<
     );
   }
 
-  delete(key: string) {
+  delete(key: string, type: string) {
+    if (type === 'delete' && this.state.editingKey !== '') {
+      message.error('请先保存编辑项再进行其他删除操作！');
+      return false;
+    }
     let newData = [...this.state.data];
     this.setState(
       {
@@ -320,7 +324,7 @@ export default class EditTable<T extends Item> extends React.Component<
       }
     }
     if (Bdelete) {
-      this.delete(key);
+      this.delete(key, 'cancel');
     }
     this.setState({editingKey: ''});
 
