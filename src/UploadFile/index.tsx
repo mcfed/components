@@ -38,10 +38,25 @@ export default class UploadFile extends React.Component<
   }
 
   componentWillReceiveProps(next: UploadFileProps) {
+    let _this = this;
+    const {listType = ''} = this.props;
     if (JSON.stringify(this.props.value) !== JSON.stringify(next.value)) {
-      this.setState({
-        fileList: next.value ? [next.value] : []
-      });
+      let file = next.value;
+      if (file && listType?.indexOf('picture') > -1) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function() {
+          file.thumbUrl = reader.result;
+
+          _this.setState({
+            fileList: file ? [file] : []
+          });
+        };
+      } else {
+        this.setState({
+          fileList: file ? [file] : []
+        });
+      }
     }
   }
   beforeUpload(file: any, fileList: any[]) {
