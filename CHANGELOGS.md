@@ -11,6 +11,10 @@
 
 -->
 
+# 0.6.19
+
+- feat: 增加对 uploadFile 的预览图展示 thumurl
+
 # 0.6.15
 
 - fix: edittable 扩展 按钮 btnText 可自定义传入按钮 text
