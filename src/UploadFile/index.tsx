@@ -42,7 +42,7 @@ export default class UploadFile extends React.Component<
     const {listType = ''} = this.props;
     if (JSON.stringify(this.props.value) !== JSON.stringify(next.value)) {
       let file = next.value;
-      if (file && listType?.indexOf('picture') > -1) {
+      if (file && file instanceof File && listType?.indexOf('picture') > -1) {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function() {
