@@ -51,7 +51,6 @@ export default class ModalSelect extends React.Component<CProps, any> {
     }
     return <DataTable {...formatTableProps} />;
   }
-  handleOk(e: any, formatModalProps: ModalProps) {}
 
   render() {
     const {modalProps, value, onChange} = this.props;
