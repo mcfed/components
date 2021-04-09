@@ -7,6 +7,8 @@ export {default as ButtonGroups} from './ButtonGroups';
 // export * as ButtonGroups from './ButtonGroups/indexTs';
 // export {CustomButton} from './ButtonGroups/indexTs';
 // import CustomTable from './CustomTable'
+export {default as EditRow} from './EditRow';
+export {default as ModalSelect} from './ModalSelect';
 export {default as WrapperDatePicker} from './WrapperDatePicker';
 export {default as DataTable} from './DataTable';
 export {default as Permission} from './Permission';
