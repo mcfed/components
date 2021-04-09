@@ -11,6 +11,12 @@
 
 -->
 
+# 0.7.0
+
+- feat: 增加 EditRow 组件
+- feat: 增加 ModalSelect 组件
+- feat: 增加 RFLayout 组件
+
 # 0.6.19
 
 - feat: 增加对 uploadFile 的预览图展示 thumurl
