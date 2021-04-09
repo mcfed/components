@@ -37,3 +37,8 @@ export function RFPane(props: PPane) {
     </div>
   );
 }
+
+export default {
+  RFLayout,
+  RFPane
+};
