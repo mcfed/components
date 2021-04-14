@@ -11,6 +11,11 @@
 
 -->
 
+# 0.7.2
+
+- fix: 扩展 treeviewpanel 组件搜索逻辑支持服务端搜索
+- fix: fixed collapsePanel types
+
 # 0.7.1
 
 - fix: fixed treeviewpanel bug
