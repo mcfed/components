@@ -8,8 +8,8 @@ interface Cprops {
     callback: (data: any, json: any) => void
   ) => React.ReactNode;
   btnText?: {
-    delete?: string;
-    add?: string;
+    delete?: React.ReactNode;
+    add?: React.ReactNode;
   };
   value?: any[];
   onChange?: any;
