@@ -179,12 +179,17 @@ export class TreeViewPanel extends Component {
     value: ''
   };
   onSearch(value, event) {
-    this.setState({
-      key: value
-    });
+    const {searchCallback} = this.props;
+    // console.log(node.props.title)
+    if (searchCallback) {
+      searchCallback(value);
+    } else {
+      this.setState({
+        key: value
+      });
+    }
   }
   onSelect(node, value) {
-    // console.log(node.props.title)
     this.setState({
       label: node.props.title,
       value: node.props.value
@@ -213,7 +218,7 @@ export class TreeViewPanel extends Component {
     }
   }
   renderPanel() {
-    const {treeData, isShowExpend, ...others} = this.props;
+    const {treeData, isShowExpend, searchCallback, ...others} = this.props;
     const {key, inside, label, value} = this.state;
     if (inside && isShowExpend) {
       return <div className='tree-view-panel-box'>{label}</div>;
