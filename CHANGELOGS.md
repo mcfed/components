@@ -11,6 +11,11 @@
 
 -->
 
+# 0.7.1
+
+- fix: fixed treeviewpanel bug
+- fix: fixed collapsePanel bug
+
 # 0.7.0
 
 - feat: 增加 EditRow 组件
