@@ -29,6 +29,10 @@ interface CollapsePanelProps {
    * 关闭值数组
    */
   closeValues?: any[];
+  /**
+   * 表单实例
+   */
+  formRef: any;
 }
 
 interface ICollapsePanel {
@@ -39,14 +43,26 @@ interface ICollapsePanel {
 export default class CollapsePanel
   extends Component<CollapsePanelProps, CollapsePanelState>
   implements ICollapsePanel {
-  componentDidMount() {
+  constructor(props: CollapsePanelProps) {
+    super(props);
+    this.state = {
+      active: this.compileActive()
+    };
+  }
+  componentWillReceiveProps() {
     this.setActiveStatus();
   }
   setActiveStatus(): void {
     const {control} = this.props;
     this.setState({
-      active: this.isExtraIsReactDom(control) ? this.fieldValueChange() : true
+      active: this.compileActive()
     });
+  }
+  compileActive() {
+    const {control, formRef} = this.props;
+    return this.isExtraIsReactDom(control) && formRef
+      ? this.fieldValueChange()
+      : true;
   }
   fieldValueChange(): boolean {
     const {formRef} = this.context;
