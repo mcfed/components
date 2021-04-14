@@ -5,6 +5,8 @@ const Search = Input.Search;
 const TreeNode = Tree.TreeNode;
 const DirectoryTree = Tree.DirectoryTree;
 
+export {TreeNode};
+
 export default class TreeView extends Component {
   // state = {
   // 	checkedKeys: [],
@@ -169,7 +171,7 @@ export class TreeSelectPicker extends Component {
   }
 }
 
-export class TrewViewPanel extends Component {
+export class TreeViewPanel extends Component {
   state = {
     key: '',
     inside: false,
@@ -211,39 +213,40 @@ export class TrewViewPanel extends Component {
     }
   }
   renderPanel() {
-    const {treeDataSource, renderNode} = this.props;
-    // console.log(treeDataSource)
+    const {treeData, isShowExpend, ...others} = this.props;
     const {key, inside, label, value} = this.state;
-    if (inside) {
-      return <div className=''>{label}</div>;
+    if (inside && isShowExpend) {
+      return <div className='tree-view-panel-box'>{label}</div>;
     } else {
       return (
-        <div className=''>
+        <div className='tree-view-panel-box'>
           <Search
             style={{marginBottom: 8}}
             placeholder='Search'
             onSearch={this.onSearch.bind(this)}
           />
           <TreeView
-            treeDataSource={this.filterTree(treeDataSource, new RegExp(key))}
-            value={value}
-            renderNode={renderNode}
+            treeData={this.filterTree(treeData, new RegExp(key))}
+            {...others}
             onSelect={this.onSelect.bind(this)}
           />
         </div>
       );
     }
   }
-  render() {
-    // console.log(renderNode)
-    const {treeDataSource, renderNode} = this.props;
+  renderExpendButton() {
+    const {isShowExpend} = this.props;
     const {key, inside, label} = this.state;
-
+    return isShowExpend ? (
+      <Button onClick={this.onMouseHandler.bind(this, inside)}>
+        {!inside ? '收起' : '展开'}
+      </Button>
+    ) : null;
+  }
+  render() {
     return (
-      <div className=''>
-        <Button onClick={this.onMouseHandler.bind(this, inside)}>
-          {!inside ? '收起' : '展开'}
-        </Button>
+      <div className='tree-view-panel'>
+        {this.renderExpendButton()}
         {this.renderPanel()}
       </div>
     );
