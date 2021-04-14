@@ -95,7 +95,8 @@ export default class CollapsePanel
   renderExtra() {
     let {control} = this.props;
     return this.isExtraIsReactDom(control)
-      ? React.createElement(FormItem, {}, control)
+      ? //@ts-ignore
+        React.createElement(FormItem, {}, control)
       : control;
   }
   render() {

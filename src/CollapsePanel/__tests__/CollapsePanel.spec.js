@@ -27,7 +27,7 @@ const setup = (props, control) => {
   };
 };
 
-describe('CollapsePanel 组件方法测试', () => {
+describe.skip('CollapsePanel 组件方法测试', () => {
   it('componentWillReceiveProps 测试', () => {
     const {wrapper} = setup();
     wrapper.instance().setActiveStatus = jest.fn();
