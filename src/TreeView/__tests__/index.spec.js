@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow, mount, render} from 'enzyme';
 
 import {Input, Select, Tree} from 'antd';
-import TreeView, {TreeSelectPicker, TrewViewPanel} from '../index';
+import TreeView, {TreeSelectPicker, TreeViewPanel} from '../index';
 
 const TreeNode = Tree.TreeNode;
 
@@ -25,7 +25,7 @@ const tPickerSetup = (props = {}) => {
 };
 
 const tViewPanelSetup = (props = {}) => {
-  const wrapper = shallow(<TrewViewPanel {...props} />);
+  const wrapper = shallow(<TreeViewPanel {...props} />);
   return {
     props,
     wrapper
@@ -213,20 +213,20 @@ describe('TreeSelectPicker event handle', () => {
 describe('TrewViewPanel render', () => {
   it('TrewViewPanel rendered inside is true', () => {
     const {wrapper, props} = tViewPanelSetup({
-      treeDataSource: treeData,
+      treeData: treeData,
       inside: true
     });
     wrapper.setState({inside: true});
     expect(wrapper.state().inside).toBe(true);
   });
   it('TrewViewPanel rendered inside is false', () => {
-    const {wrapper, props} = tViewPanelSetup({treeDataSource: treeData});
+    const {wrapper, props} = tViewPanelSetup({treeData: treeData});
     expect(wrapper.state().inside).toBe(false);
   });
 });
 
 describe('TrevViewPanel event handle', () => {
-  const {wrapper, props} = tViewPanelSetup({treeDataSource: treeData});
+  const {wrapper, props} = tViewPanelSetup({treeData: treeData});
   it('Button click event 触发 onMouseHandler without label', () => {
     wrapper.instance().onMouseHandler(false);
     expect(wrapper.state().inside).toBe(false);

@@ -7,20 +7,25 @@ import {FormRefContext} from '../BaseForm';
 const Panel = Collapse.Panel;
 
 export class CollapsePanelClass extends Component {
-  state = {
-    active: true
-  };
-  componentDidMount() {
-    this.setActiveStatus();
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: this.compileActive()
+    };
   }
   componentWillReceiveProps() {
     this.setActiveStatus();
   }
   setActiveStatus() {
-    const {control} = this.props;
     this.setState({
-      active: this.isExtraIsReactDom(control) ? this.fieldValueChange() : true
+      active: this.compileActive()
     });
+  }
+  compileActive() {
+    const {control, formRef} = this.props;
+    return this.isExtraIsReactDom(control) && formRef
+      ? this.fieldValueChange()
+      : true;
   }
   fieldValueChange() {
     const {formRef} = this.props;
@@ -39,7 +44,6 @@ export class CollapsePanelClass extends Component {
   isExtraIsReactDom(extra) {
     return typeof extra === 'object' && typeof extra.$$typeof === 'symbol';
   }
-
   renderHeader() {
     let {title} = this.props;
     return (
