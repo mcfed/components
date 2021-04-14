@@ -28,14 +28,6 @@ const setup = (props, control) => {
 };
 
 describe('CollapsePanel 组件方法测试', () => {
-  it('componentDidMount 测试', () => {
-    const {wrapper} = setup();
-    console.log(wrapper.children());
-    wrapper.instance().setActiveStatus = jest.fn();
-    wrapper.instance().componentDidMount();
-
-    expect(wrapper.instance().setActiveStatus).toHaveBeenCalled();
-  });
   it('componentWillReceiveProps 测试', () => {
     const {wrapper} = setup();
     wrapper.instance().setActiveStatus = jest.fn();
