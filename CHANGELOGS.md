@@ -11,6 +11,10 @@
 
 -->
 
+# 0.7.3
+
+- fix: 修复 collapsepanel ts 版本 context 缺失
+
 # 0.7.2
 
 - fix: 扩展 treeviewpanel 组件搜索逻辑支持服务端搜索
