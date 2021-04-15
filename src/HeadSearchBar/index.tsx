@@ -116,7 +116,7 @@ export default class AdvancedSearchForm extends React.Component<
     });
   }
   renderButton(locale: any) {
-    const {customBtnText, needCollapse} = this.props;
+    const {showSearchButton, customBtnText, needCollapse} = this.props;
     const contextLocale = Object.assign({}, locale, this.props.locale);
     const collapseText =
       customBtnText?.collapseText == undefined
@@ -128,23 +128,27 @@ export default class AdvancedSearchForm extends React.Component<
         : customBtnText?.openCollapseText;
 
     return [
-      <Button
-        actionkey='aaa'
-        onClick={this.handleResetForm.bind(this)}
-        type='default'>
-        {customBtnText?.resetBtnText == undefined
-          ? contextLocale.resetBtnText
-          : customBtnText?.resetBtnText}
-      </Button>,
-      <Button
-        htmlType='submit'
-        actionkey='bbb'
-        onClick={this.handleSearch.bind(this)}
-        type='primary'>
-        {customBtnText?.searchBtnText == undefined
-          ? contextLocale.searchText
-          : customBtnText?.searchBtnText}
-      </Button>,
+      showSearchButton ? (
+        <React.Fragment>
+          <Button
+            actionkey='aaa'
+            onClick={this.handleResetForm.bind(this)}
+            type='default'>
+            {customBtnText?.resetBtnText == undefined
+              ? contextLocale.resetBtnText
+              : customBtnText?.resetBtnText}
+          </Button>
+          <Button
+            htmlType='submit'
+            actionkey='bbb'
+            onClick={this.handleSearch.bind(this)}
+            type='primary'>
+            {customBtnText?.searchBtnText == undefined
+              ? contextLocale.searchText
+              : customBtnText?.searchBtnText}
+          </Button>
+        </React.Fragment>
+      ) : null,
       needCollapse ? (
         <Button
           actionkey='ccc'
@@ -156,13 +160,8 @@ export default class AdvancedSearchForm extends React.Component<
     ];
   }
   renderSearchBar() {
-    const {showSearchButton, needCollapse} = this.props;
-    //如果需要收起展开 那么必然要显示按钮
-    const isShowSearchButton = needCollapse ? true : showSearchButton;
     return (
-      <div
-        className='head-searchbar-toolbar'
-        style={isShowSearchButton ? {} : {display: 'none'}}>
+      <div className='head-searchbar-toolbar'>
         {React.createElement(
           LocaleReceiver,
           {
