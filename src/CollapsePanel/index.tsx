@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Collapse} from 'antd';
 import FormItem from '../FormItem/index';
 
+import {FormRefContext} from '../BaseForm';
 const Panel = Collapse.Panel;
 
 interface CollapsePanelState {
@@ -32,7 +33,7 @@ interface CollapsePanelProps {
   /**
    * 表单实例
    */
-  formRef: any;
+  formRef?: any;
 }
 
 interface ICollapsePanel {
@@ -40,7 +41,7 @@ interface ICollapsePanel {
   render(): React.ReactNode;
 }
 
-export default class CollapsePanel
+class CollapsePanelClass
   extends Component<CollapsePanelProps, CollapsePanelState>
   implements ICollapsePanel {
   constructor(props: CollapsePanelProps) {
@@ -121,5 +122,19 @@ export default class CollapsePanel
         {children}
       </Panel>
     ) : null;
+  }
+}
+
+export default class CollapsePanel extends Component<CollapsePanelProps> {
+  render() {
+    return (
+      <FormRefContext.Consumer>
+        {formRef => (
+          <CollapsePanelClass {...this.props} formRef={formRef}>
+            {this.props.children}
+          </CollapsePanelClass>
+        )}
+      </FormRefContext.Consumer>
+    );
   }
 }
