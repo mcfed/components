@@ -11,6 +11,15 @@
 
 -->
 
+# 0.7.5
+
+- fix: 对 headsearchbar 按钮展开逻辑和 style 调整
+- fix: timeRangePicker 增加 props 接受对 timePicker 的 format
+
+# 0.7.4
+
+- fix: 修复 collapsepanel ts 版本 formRef 读取 context bug js 遗留问题
+
 # 0.7.3
 
 - fix: 修复 collapsepanel ts 版本 context 缺失
