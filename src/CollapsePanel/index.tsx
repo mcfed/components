@@ -66,8 +66,7 @@ class CollapsePanelClass
       : true;
   }
   fieldValueChange(): boolean {
-    const {formRef} = this.context;
-    const {control, closeValues} = this.props;
+    const {control, closeValues, formRef} = this.props;
     /**
      * closeValues 关闭值数组【默认为空数组】
      * 若closeValues 传入则判断值是否在该数组中 存在则返回false
@@ -101,8 +100,7 @@ class CollapsePanelClass
       : control;
   }
   render() {
-    const {children, renderable, ...otherProps} = this.props;
-    const {formRef} = this.context;
+    const {children, renderable, formRef, ...otherProps} = this.props;
     let {active} = this.state;
     let renderProps = true;
     if (
