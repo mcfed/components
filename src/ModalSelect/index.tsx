@@ -10,7 +10,7 @@ interface CProps {
     onChange: any,
     changeModalShow: any
   ) => ModalProps | ModalProps;
-  customRenderContent?: () => React.ReactNode;
+  customRenderContent?: (value: any, changeModalShow: any) => React.ReactNode;
   trggierELement: (value: any, changeModalShow: any) => any;
   value?: any;
   onChange?: any;
@@ -33,9 +33,9 @@ export default class ModalSelect extends React.Component<CProps, any> {
   }
 
   renderContent() {
-    const {customRenderContent} = this.props;
+    const {customRenderContent, value, onChange} = this.props;
     if (customRenderContent !== undefined) {
-      return customRenderContent();
+      return customRenderContent(value, onChange);
     }
     return this.renderDataTable();
   }
