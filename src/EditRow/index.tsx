@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react';
 import {Button} from 'antd';
+import {ButtonProps} from 'antd/es/button/button';
 
 interface Cprops {
   renderItem: (
@@ -11,6 +12,8 @@ interface Cprops {
     delete?: React.ReactNode;
     add?: React.ReactNode;
   };
+  deleteButtonProps?: ButtonProps;
+  addButtonProps?: ButtonProps;
   value?: any[];
   onChange?: any;
 }
@@ -65,7 +68,7 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
     );
   }
   render() {
-    const {btnText} = this.props;
+    const {btnText, addButtonProps, deleteButtonProps} = this.props;
     return (
       <div className='editrow-box'>
         {this.state.ranges.map((it: any, idx: number) => (
@@ -76,6 +79,7 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
               this.handleChangeItem.bind(this, idx)
             )}
             <Button
+              {...deleteButtonProps}
               onClick={this.handleDelItem.bind(this, idx)}
               className='editrow-item-del'>
               {btnText?.delete || '删除'}
@@ -83,6 +87,7 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
           </div>
         ))}
         <Button
+          {...addButtonProps}
           onClick={this.handleAddRange.bind(this)}
           className='editrow-item-add'>
           {btnText?.add || '添加'}
