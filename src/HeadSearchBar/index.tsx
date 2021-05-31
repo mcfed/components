@@ -58,6 +58,10 @@ interface AdvancedFormProps extends FormProps {
    * 默认是否展开 如果不传  默认为true
    */
   defaultCollapse?: boolean;
+  /**
+   * 重置按钮事件监听方法
+   */
+  filterResetHandler: () => void;
 }
 
 interface AdvancedFormState {
@@ -76,6 +80,7 @@ export default class AdvancedSearchForm extends React.Component<
     defaultParams: {},
     autoSubmitForm: true,
     filterSubmitHandler: (value: any) => {},
+    filterResetHandler: () => {},
     showSearchButton: false,
     needCollapse: false,
     defaultCollapse: false
@@ -107,8 +112,15 @@ export default class AdvancedSearchForm extends React.Component<
       this.form = instance.props.form;
     }
   }
-  handleResetForm() {
-    this.form.resetFields();
+  handleResetForm(e: any) {
+    e.preventDefault();
+    const {filterResetHandler} = this.props;
+    if (filterResetHandler) {
+      filterResetHandler.call(this);
+      this.form.resetFields();
+    } else {
+      this.form.resetFields();
+    }
   }
   handleCollapse() {
     this.setState({
