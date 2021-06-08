@@ -56,6 +56,10 @@ interface CustFormItemProps extends FormItemProps {
    */
   fetch?: string;
   /**
+   * fetch 请求的 method ，默认 get ，向前兼容 get，只有指定 post 时才使用 post
+   */
+  fetchMethod?: string;
+  /**
    * URL 发起 xhr 请求时带的参数
    */
   fetchParams?: fetchParamsType;
@@ -105,9 +109,12 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     }
   }
   componentDidMount() {
+    let {fetchMethod} = this.props;
+    fetchMethod = fetchMethod ? fetchMethod : 'get';
     if (this.props.fetch !== undefined) {
       this.fetchData(
         this.props.fetch,
+        fetchMethod,
         this.props.fetchParams,
         this.props.fetchCallback
       );
@@ -118,10 +125,17 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     if (!this.isObjectJSONSame(options, this.props.options)) {
       this.setChildData(options);
     }
+    let {fetchMethod} = nextProps;
+    fetchMethod = fetchMethod ? fetchMethod : 'get';
 
     if (fetch !== undefined) {
       if (fetch !== this.props.fetch) {
-        this.fetchData(fetch, nextProps.fetchParams, nextProps.fetchCallback);
+        this.fetchData(
+          fetch,
+          fetchMethod,
+          nextProps.fetchParams,
+          nextProps.fetchCallback
+        );
       }
 
       if (fetchParams !== undefined) {
@@ -130,7 +144,12 @@ export class FormItem extends React.Component<CustFormItemType, any> {
           (typeof fetchParams === 'object' &&
             !this.isObjectJSONSame(fetchParams, this.props.fetchParams))
         ) {
-          this.fetchData(fetch, fetchParams, nextProps.fetchCallback);
+          this.fetchData(
+            fetch,
+            fetchMethod,
+            fetchParams,
+            nextProps.fetchCallback
+          );
         }
       }
     }
@@ -140,30 +159,28 @@ export class FormItem extends React.Component<CustFormItemType, any> {
   }
   fetchData(
     fetchUrl: string,
+    fetchMethod: string,
     fetchParams?: fetchParamsType,
     fetchCallback?: fetchCallbackType
   ) {
     const params = this.compileFetchParams(fetchParams);
-    FetchUtils.fetchGet(fetchUrl, {body: params}).then((result: any) => {
-      if (fetchCallback !== undefined) {
-        this.setChildData(fetchCallback(result));
-      } else {
-        this.defaultSetChildData(result);
-      }
-    });
-    // const defaultOptions = {
-    //   method: 'GET'
-    // };
-    // let url = this.compileFetchUrl(fetchUrl, fetchParams);
-    // fetch(url, defaultOptions)
-    //   .then(data => data.json())
-    //   .then(result => {
-    //     if (fetchCallback !== undefined) {
-    //       this.setChildData(fetchCallback(result));
-    //     } else {
-    //       this.defaultSetChildData(result);
-    //     }
-    //   });
+    if (fetchMethod === 'post' || fetchMethod === 'POST') {
+      FetchUtils.fetchPost(fetchUrl, {body: params}).then((result: any) => {
+        if (fetchCallback !== undefined) {
+          this.setChildData(fetchCallback(result));
+        } else {
+          this.defaultSetChildData(result);
+        }
+      });
+    } else {
+      FetchUtils.fetchGet(fetchUrl, {body: params}).then((result: any) => {
+        if (fetchCallback !== undefined) {
+          this.setChildData(fetchCallback(result));
+        } else {
+          this.defaultSetChildData(result);
+        }
+      });
+    }
   }
   compileFetchParams(fetchParams?: fetchParamsType) {
     const {formRef} = this.props;
@@ -391,6 +408,7 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       formLayout,
       containerTo,
       fetch,
+      fetchMethod,
       fetchCallback,
       loopProp,
       renderItem,
