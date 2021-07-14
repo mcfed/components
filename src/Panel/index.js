@@ -45,7 +45,7 @@ export default class Panel extends Component {
 
   renderFooterButton(locale) {
     const {onOk, onCancel, confirmLoading} = this.props;
-    const {getFieldsError} = this.props.form
+    const getFieldsError = this.props.form
       ? this.props.form.getFieldsError
       : function() {};
     return [

@@ -64,6 +64,7 @@ class BaseForm extends React.Component<CustomFormComponentProps> {
 const SubmitForm = FormCreate({
   onFieldsChange: function(props, changedFields, allFields) {
     if (changedFields && 'onSearch' in props) {
+      //@ts-ignore
       props.onSearch(allFields);
     }
   }
