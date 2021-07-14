@@ -61,7 +61,14 @@ class BaseForm extends React.Component<CustomFormComponentProps> {
   }
 }
 //@ts-ignore
-const SubmitForm = FormCreate()(BaseForm);
+const SubmitForm = FormCreate({
+  onFieldsChange: function(props, changedFields, allFields) {
+    if (changedFields && 'onSearch' in props) {
+      props.onSearch(allFields);
+    }
+  }
+  //@ts-ignore
+})(BaseForm);
 
 class AdvancedFormClass extends BaseForm {}
 
