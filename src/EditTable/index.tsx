@@ -73,6 +73,14 @@ interface EditTableProps<T> {
     cancel?: string;
     edit?: string;
   };
+  /**
+   * 删除单条数据时触发的自定义方法
+   */
+  onDelete?: (data: T, callback: Function) => void;
+  /**
+   * 保存单条数据时触发的自定义方法
+   */
+  onSave?: (data: T, status: 'edit' | 'add', callback: Function) => void;
 }
 
 interface State<T> {
@@ -260,11 +268,30 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   delete(key: string, type: string) {
+    const {onDelete} = this.props;
     if (type === 'delete' && this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他删除操作！');
       return false;
     }
     let newData = [...this.state.data];
+    if (onDelete) {
+      const deleteData = this.state.data?.filter(c => c.key === key)[0];
+      onDelete(deleteData, (status: boolean) => {
+        // 如果返回为false，则不继续执行前端数据删除操作
+        if (status === true) {
+          this.setState(
+            {
+              data: newData.filter(c => c.key !== key),
+              editingKey: ''
+            },
+            () => {
+              this.handleChangeData(this.state.data);
+            }
+          );
+        }
+      });
+      return;
+    }
     this.setState(
       {
         data: newData.filter(c => c.key !== key),
@@ -276,6 +303,7 @@ export default class EditTable<T extends Item> extends React.Component<
     );
   }
   save(form: WrappedFormUtils, key: string) {
+    const {onSave} = this.props;
     form.validateFields((error: any, row: T) => {
       if (error) {
         return;
@@ -291,6 +319,17 @@ export default class EditTable<T extends Item> extends React.Component<
         });
       } else {
         newData.push(row);
+      }
+      if (onSave) {
+        onSave(row, index > -1 ? 'edit' : 'add', (status: boolean) => {
+          // 如果返回为false，则不继续执行前端数据保存操作
+          if (status === true) {
+            this.setState({data: newData, editingKey: ''}, () => {
+              this.handleChangeData(newData);
+            });
+          }
+        });
+        return;
       }
       this.setState({data: newData, editingKey: ''}, () => {
         this.handleChangeData(newData);
