@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`快照测试 Step 1`] = `
+<Fragment>
+  <Steps
+    current={0}
+  >
+    <Step
+      description="firstStep"
+      key="firstStep"
+      title="firstStep"
+    />
+  </Steps>
+  <[object Object]
+    goToNext={[Function]}
+    goToStep={[Function]}
+    steps={
+      Array [
+        Object {
+          "component": <div>
+            Test
+          </div>,
+          "description": "firstStep",
+          "path": "first",
+          "text": "firstStep",
+        },
+      ]
+    }
+  />
+  <ButtonGroup
+    className=""
+    style={
+      Object {
+        "textAlign": "left",
+      }
+    }
+  >
+    <Button
+      block={false}
+      ghost={false}
+      htmlType="button"
+      loading={false}
+      onClick={[Function]}
+      type="default"
+    >
+      完成
+    </Button>
+  </ButtonGroup>
+</Fragment>
+`;
