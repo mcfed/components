@@ -1,6 +1,6 @@
 import React, {Component, ReactNode} from 'react';
 import {Button, Steps, Modal} from 'antd';
-import StepsProps from 'antd/lib/steps/index';
+import {StepsProps} from 'antd/lib/steps/index';
 
 export const ref: any = React.createRef();
 
@@ -74,6 +74,10 @@ export interface McStepProps extends StepsProps {
    */
   btnAlign?: 'left' | 'center' | 'right';
   /**
+   * 按钮type和间隔是否调整
+   */
+  isBtnAdjust?: boolean;
+  /**
    * 父组件props属性
    */
   location: any;
@@ -81,10 +85,6 @@ export interface McStepProps extends StepsProps {
    * 父组件props属性
    */
   history: any;
-  /**
-   *  样式类
-   */
-  // className?: string;
 }
 
 interface StepState {
@@ -229,11 +229,12 @@ export default class TsStep extends Component<McStepProps, StepState> {
   }
 
   renderNextAndFinisah(): ReactNode {
-    const {steps, finishText} = this.props;
+    const {steps, finishText, isBtnAdjust} = this.props;
     const {step} = this.state;
     if (step === steps?.length) {
       return (
         <Button
+          type={isBtnAdjust ? 'primary' : 'default'}
           onClick={this.handleFinish.bind(this)}
           loading={this.getLoading('finish')}>
           {finishText || '完成'}
@@ -242,6 +243,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
     } else {
       return (
         <Button
+          type={isBtnAdjust ? 'primary' : 'default'}
           onClick={() => ref?.current?.onSubmit('handleSubmit')}
           loading={this.getLoading('next')}>
           {'下一步'}
@@ -251,9 +253,11 @@ export default class TsStep extends Component<McStepProps, StepState> {
   }
 
   renderStepButtonGroups() {
-    const {btnAlign = 'left'} = this.props;
+    const {btnAlign = 'left', isBtnAdjust = false} = this.props;
     return (
-      <Button.Group style={{textAlign: btnAlign}}>
+      <Button.Group
+        style={{textAlign: btnAlign}}
+        className={isBtnAdjust ? 'Step-buttonGroup' : ''}>
         {this.renderCancelBtn()}
         {this.renderCustomBtn()}
         {this.renderPrev()}

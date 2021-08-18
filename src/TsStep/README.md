@@ -74,6 +74,7 @@ return (
 | btnLoading              | 按钮状态控制                     | BtnLoadingProps         | {}         |
 | customBtn               | 自定义按钮设置                   | ReactNode \| Function   | null       |
 | btnAlign                | 按钮布局                         | left \| center \| right | left       |
+| isBtnAdjust             | 按钮 type 和间隔是否调整         | boolean                 | false      |
 
 ## BtnLoadingProps
 
