@@ -5,10 +5,10 @@ import {StepsProps} from 'antd/lib/steps/index';
 export const ref: any = React.createRef();
 
 type BtnLoadingProps = {
-  cancel: boolean;
-  prev: boolean;
-  next: boolean;
-  finish: boolean;
+  cancel?: boolean;
+  prev?: boolean;
+  next?: boolean;
+  finish?: boolean;
 };
 
 type BtnLoadingStatus = 'cancel' | 'prev' | 'next' | 'finish';
@@ -131,8 +131,8 @@ export default class TsStep extends Component<McStepProps, StepState> {
     const {cancelConfirm, cancelConfirmTitle, backPath, history} = this.props;
     if (cancelConfirm || cancelConfirmTitle) {
       Modal.confirm({
-        title: cancelConfirmTitle || '系统提示？',
-        content: cancelConfirm || '确认执行？',
+        title: !!cancelConfirmTitle ? cancelConfirmTitle : undefined,
+        content: cancelConfirm,
         onOk: () => history.push(backPath)
       });
     } else {
@@ -151,8 +151,8 @@ export default class TsStep extends Component<McStepProps, StepState> {
 
   getLoading(status: BtnLoadingStatus): boolean {
     const {btnLoading} = this.props;
-    if (btnLoading && typeof btnLoading[status] === 'boolean') {
-      return btnLoading[status];
+    if (btnLoading) {
+      return btnLoading[status] || false;
     } else {
       return false;
     }
