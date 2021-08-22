@@ -80,7 +80,7 @@ interface EditTableProps<T> {
   /**
    * 保存单条数据时触发的自定义方法
    */
-  onSave?: (data: T, status: 'edit' | 'add', callback: Function) => void;
+  onSave?: (data: T, callback: Function) => void;
 }
 
 interface State<T> {
@@ -321,7 +321,7 @@ export default class EditTable<T extends Item> extends React.Component<
         newData.push(row);
       }
       if (onSave) {
-        onSave(row, index > -1 ? 'edit' : 'add', (status: boolean) => {
+        onSave(newData[index], (status: boolean) => {
           // 如果返回为false，则不继续执行前端数据保存操作
           if (status === true) {
             this.setState({data: newData, editingKey: ''}, () => {
