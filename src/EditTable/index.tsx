@@ -274,7 +274,7 @@ export default class EditTable<T extends Item> extends React.Component<
       return false;
     }
     let newData = [...this.state.data];
-    if (onDelete) {
+    if (onDelete && type === 'delete') {
       const deleteData = this.state.data?.filter(c => c.key === key)[0];
       onDelete(deleteData, (status: boolean) => {
         // 如果返回为false，则不继续执行前端数据删除操作
