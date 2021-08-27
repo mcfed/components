@@ -51,6 +51,13 @@ exports[`快照测试 Editable全页快照 1`] = `
     ]
   }
   footer={[Function]}
+  pagination={
+    Object {
+      "current": 1,
+      "onChange": [Function],
+      "pageSize": 10,
+    }
+  }
   rowClassName={[Function]}
 />
 `;

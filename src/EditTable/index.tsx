@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Table, Button, message, Form, Popconfirm} from 'antd';
 import {FormComponentProps} from 'antd/lib/form';
 import {ColumnProps} from 'antd/lib/table/interface';
+import {GetFieldDecoratorOptions} from 'antd/lib/form/Form';
 import {WrappedFormUtils} from 'antd/lib/form/Form';
 import {HTMLAttributes} from 'react';
 
@@ -81,6 +82,14 @@ interface EditTableProps<T> {
    * 保存单条数据时触发的自定义方法
    */
   onSave?: (data: T, callback: Function) => void;
+  /**
+   * 可添加的数据条数最大值
+   */
+  maxNum?: number;
+  /**
+   * 设定数据新增在第一行或最后一行
+   */
+  direction?: 'top' | 'bottom';
 }
 
 interface State<T> {
@@ -88,6 +97,7 @@ interface State<T> {
   editingKey: string;
   keyList: string[];
   columns: ColumnsItem<T>[];
+  currentPage?: number;
 }
 
 type HTMLElementEvent<T extends HTMLElement> = Event & {
@@ -97,6 +107,11 @@ type HTMLElementEvent<T extends HTMLElement> = Event & {
   // currentTarget: T;
 };
 
+type EditConfigFunctionType = (
+  data: any,
+  editingKey: any
+) => GetFieldDecoratorOptions;
+
 export default class EditTable<T extends Item> extends React.Component<
   EditTableProps<T>,
   State<T>
@@ -104,6 +119,7 @@ export default class EditTable<T extends Item> extends React.Component<
   static defaultProps = {
     mode: 'row'
   };
+  pageSize = 10; // 设定table的每页条数
   constructor(props: Readonly<EditTableProps<T>>) {
     super(props);
     this.state = {
@@ -177,7 +193,8 @@ export default class EditTable<T extends Item> extends React.Component<
                 );
               }
             }
-          ]
+          ],
+      currentPage: 1
     };
   }
   componentDidMount() {
@@ -387,7 +404,20 @@ export default class EditTable<T extends Item> extends React.Component<
     keyList.forEach(d => {
       obj[d] = '';
     });
-    let data = [obj, ...this.state.data];
+    let data = [];
+    if (this.props.direction === 'bottom') {
+      data = [...this.state.data, obj];
+      // 默认页数为10条，该属性为默认配置不暴露，故此处直接设为10来处理
+      const page = Math.ceil(data?.length / this.pageSize);
+      this.setState({
+        currentPage: page
+      });
+    } else {
+      data = [obj, ...this.state.data];
+      this.setState({
+        currentPage: 1
+      });
+    }
     // data.push(obj);
     this.setState({
       data,
@@ -396,6 +426,27 @@ export default class EditTable<T extends Item> extends React.Component<
 
     this.activeStatus();
   };
+
+  // 根据外界传入的editConfig来处理，当前仅接受对象和方法
+  renderEditConfig(
+    config: GetFieldDecoratorOptions | EditConfigFunctionType
+  ): GetFieldDecoratorOptions | null {
+    if (Object.prototype.toString.call(config) === '[object Object]') {
+      // @ts-ignore
+      return config;
+    } else if (Object.prototype.toString.call(config) === '[object Function]') {
+      // @ts-ignore
+      return config(this.state.data, this.state.editingKey);
+    } else {
+      return {};
+    }
+  }
+
+  pageOnChange(page: number, pageSize?: number) {
+    this.setState({
+      currentPage: page
+    });
+  }
 
   renderCell(text: string, record: Item, cellConfig: ColumnsItem<T>) {
     const {dataIndex, editComponent, editConfig} = cellConfig;
@@ -409,10 +460,11 @@ export default class EditTable<T extends Item> extends React.Component<
           return (
             <FormItem style={{margin: 0}}>
               {getFieldDecorator(dataIndex, {
-                ...editConfig,
+                ...this.renderEditConfig(editConfig),
                 initialValue:
                   record[dataIndex] === ''
-                    ? editConfig && editConfig.initialValue
+                    ? editConfig &&
+                      this.renderEditConfig(editConfig)?.initialValue
                     : record[dataIndex]
               })(
                 React.createElement(component.type, {
@@ -442,7 +494,15 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   render() {
-    const {data, columns, mode, onChange, btnText, ...otherProps} = this.props;
+    const {
+      data,
+      columns,
+      mode,
+      onChange,
+      btnText,
+      maxNum,
+      ...otherProps
+    } = this.props;
     const components = {
       body: {
         row: EditableFormRow
@@ -479,10 +539,19 @@ export default class EditTable<T extends Item> extends React.Component<
         bordered
         dataSource={this.state.data}
         columns={columnsFinal}
+        pagination={{
+          pageSize: this.pageSize,
+          current: this.state.currentPage,
+          onChange: this.pageOnChange.bind(this)
+        }}
         rowClassName={(record: object, index: number) => 'editable-row'}
         {...otherProps}
         footer={() => (
-          <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
+          <Button
+            icon='plus'
+            onClick={this.addNew}
+            style={{width: '100%'}}
+            disabled={!!maxNum && this.state.data?.length >= maxNum}>
             {btnText?.add ? btnText?.add : '新增'}
           </Button>
         )}
