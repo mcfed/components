@@ -429,14 +429,15 @@ export default class EditTable<T extends Item> extends React.Component<
 
   // 根据外界传入的editConfig来处理，当前仅接受对象和方法
   renderEditConfig(
-    config: GetFieldDecoratorOptions | EditConfigFunctionType
+    config: GetFieldDecoratorOptions | EditConfigFunctionType,
+    form: WrappedFormUtils
   ): GetFieldDecoratorOptions | null {
     if (Object.prototype.toString.call(config) === '[object Object]') {
       // @ts-ignore
       return config;
     } else if (Object.prototype.toString.call(config) === '[object Function]') {
       // @ts-ignore
-      return config(this.state.data, this.state.editingKey);
+      return config(this.state.data, this.state.editingKey, form);
     } else {
       return {};
     }
@@ -460,11 +461,11 @@ export default class EditTable<T extends Item> extends React.Component<
           return (
             <FormItem style={{margin: 0}}>
               {getFieldDecorator(dataIndex, {
-                ...this.renderEditConfig(editConfig),
+                ...this.renderEditConfig(editConfig, form),
                 initialValue:
                   record[dataIndex] === ''
                     ? editConfig &&
-                      this.renderEditConfig(editConfig)?.initialValue
+                      this.renderEditConfig(editConfig, form)?.initialValue
                     : record[dataIndex]
               })(
                 React.createElement(component.type, {
