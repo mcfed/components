@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`editable method renderCell 方法测试 1`] = `
+<UNDEFINED>
+  [Function]
+</UNDEFINED>
+`;
+
 exports[`快照测试 Editable全页快照 1`] = `
 <withStore(Table)
   bordered={true}

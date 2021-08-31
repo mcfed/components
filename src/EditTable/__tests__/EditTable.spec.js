@@ -3,6 +3,7 @@ import React from 'react';
 import {Button} from 'antd';
 
 import EditTable from '../index.tsx';
+import {any} from 'prop-types';
 
 const setup = props => {
   const columns = [
@@ -115,7 +116,25 @@ describe.skip('edittable base test', () => {
   });
 });
 
-describe.skip('editable method ', () => {
+describe('editable method', () => {
+  it('compileData 方法测试 data=undefined', () => {
+    const {wrapper, props} = setup();
+    const instance = wrapper.instance();
+    expect(instance.compileData(undefined)).toEqual([]);
+  });
+
+  it('compileData 方法测试 data非数组', () => {
+    const {wrapper, props} = setup();
+    const instance = wrapper.instance();
+    expect(instance.compileData({})).toEqual([]);
+  });
+
+  it('compileData 方法测试 data数组', () => {
+    const {wrapper, props} = setup();
+    const instance = wrapper.instance();
+    expect(instance.compileData([{id: 1}])).toEqual([{id: 1, key: undefined}]);
+  });
+
   it('isEditing 默认为空，传入key为123 返回false', () => {
     const {wrapper, props} = setup();
     const record = {
@@ -159,6 +178,39 @@ describe.skip('editable method ', () => {
     expect(onchangeFn.mock.calls.length).toBe(1);
   });
 
+  it('delete 方法调用 type=delete', () => {
+    const onchangeFn = jest.fn();
+    const {wrapper, props, dataSource} = setup({
+      onChange: onchangeFn
+    });
+    const instance = wrapper.instance();
+
+    const key = '1';
+    let oldData = wrapper.state('data');
+    wrapper.setState({
+      editingKey: '1'
+    });
+    expect(instance.delete(key, 'delete')).toEqual(false);
+
+    wrapper.setState({
+      editingKey: ''
+    });
+  });
+
+  it('delete 方法调用 onDelete type=delete', () => {
+    const onDeleteFn = jest.fn().mockImplementation((data, callback) => {
+      callback(true);
+    });
+    const {wrapper, props, dataSource} = setup({
+      onDelete: onDeleteFn
+    });
+    const key = '1';
+    let oldData = wrapper.state('data');
+    wrapper.instance().delete(key, 'delete');
+    expect(wrapper.state('data')).toEqual(oldData.filter(c => c.key !== key));
+    expect(onDeleteFn.mock.calls.length).toBe(1);
+  });
+
   it('addNew 方法调用,若当前editingkey不为空则返回false', () => {
     const {wrapper, props} = setup();
     wrapper.instance().edit('1');
@@ -169,6 +221,64 @@ describe.skip('editable method ', () => {
     const {wrapper, props, dataSource} = setup();
     wrapper.instance().addNew();
     expect(wrapper.state('data').length).toBe(dataSource.length + 1);
+  });
+
+  it('addNew 方法调用 direction=bottom', () => {
+    const {wrapper, props, dataSource} = setup({
+      direction: 'bottom'
+    });
+    wrapper.instance().addNew();
+    expect(wrapper.state('currentPage')).toBe(1);
+  });
+
+  it('renderEditConfig 方法测试 config为对象', () => {
+    const {wrapper, props, dataSource} = setup();
+    const instance = wrapper.instance();
+    const config = {};
+    const form = {};
+    expect(instance.renderEditConfig(config, form)).toEqual({});
+  });
+
+  it('renderEditConfig 方法测试 config为方法', () => {
+    const {wrapper, props, dataSource} = setup();
+    const instance = wrapper.instance();
+    const config = jest.fn().mockImplementation((data, key, form) => ({}));
+    const form = {};
+    expect(instance.renderEditConfig(config, form)).toEqual({});
+  });
+
+  it('renderEditConfig 方法测试 config为其他类型', () => {
+    const {wrapper, props, dataSource} = setup();
+    const instance = wrapper.instance();
+    const config = undefined;
+    const form = {};
+    expect(instance.renderEditConfig(config, form)).toEqual({});
+  });
+
+  it('pageOnChange 方法测试', () => {
+    const {wrapper, props, dataSource} = setup();
+    const instance = wrapper.instance();
+    const page = 2;
+    const pageSize = 10;
+    instance.pageOnChange(page, pageSize);
+    expect(wrapper.state('currentPage')).toBe(2);
+  });
+
+  it('renderCell 方法测试', () => {
+    const {wrapper, props, dataSource} = setup();
+    const instance = wrapper.instance();
+    const text = '';
+    const record = {key: 1, id: 1};
+    const cellConfig = {
+      dataIndex: 'id',
+      editComponent: jest
+        .fn()
+        .mockImplementation((text, record, instance, form) => (
+          <div>{text}</div>
+        )),
+      editConfig: {}
+    };
+    expect(instance.renderCell(text, record, cellConfig)).toMatchSnapshot();
   });
 
   it.skip('cancel 方法调用', () => {
@@ -301,6 +411,9 @@ describe.skip('editable method ', () => {
   it('save 方法测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
+    wrapper.setState({
+      data: [{key: '110'}]
+    });
     const form = {
       validateFields: jest.fn(cb => {
         cb(false, null);
@@ -317,6 +430,38 @@ describe.skip('editable method ', () => {
     instance.save(form, key1);
     // 保存新增项branch
     instance.save(form, key2);
+  });
+
+  it('save 方法测试 onSave', () => {
+    const onSaveFn = jest.fn().mockImplementation((data, callback) => {
+      callback(true);
+    });
+    const {wrapper} = setup({
+      onSave: onSaveFn
+    });
+    const instance = wrapper.instance();
+    wrapper.setState({
+      data: [{key: '1'}]
+    });
+    const form = {
+      validateFields: jest.fn(cb => {
+        cb(false, null);
+      }),
+      getFieldInstance: jest.fn().mockReturnValue({
+        validateFields: jest.fn(cb => {
+          cb(false, null);
+        })
+      })
+    };
+    const key1 = '1';
+    const key2 = '110';
+    // 编辑保存
+    instance.save(form, key1);
+    // 保存新增项branch
+    instance.save(form, key2);
+
+    // expect(wrapper.state('data')).toEqual(oldData.filter(c => c.key !== key));
+    expect(onSaveFn.mock.calls.length).toBe(2);
   });
 
   it('save 方法测试,第一个验证方法未通过branch', () => {
@@ -348,6 +493,57 @@ describe.skip('editable method ', () => {
     instance.save(form, key);
   });
 
+  it('handleChangeData 方法测试', () => {
+    const onChangeFn = jest.fn();
+    const {wrapper} = setup({
+      onChange: onChangeFn
+    });
+    const instance = wrapper.instance();
+    const data = [];
+    instance.handleChangeData(data);
+    expect(onChangeFn).toHaveBeenCalledWith([]);
+  });
+
+  it('handleChangeData 方法测试 onChangeWithOutForm!==undefined', () => {
+    const onChangeFn = jest.fn();
+    const formatData4FormFn = jest.fn();
+    const onChangeWithOutFormFn = jest.fn();
+    const {wrapper} = setup({
+      onChange: onChangeFn,
+      formatData4Form: formatData4FormFn,
+      onChangeWithOutForm: onChangeWithOutFormFn
+    });
+    const instance = wrapper.instance();
+    const data = [];
+    instance.handleChangeData(data);
+    expect(onChangeWithOutFormFn).toHaveBeenCalledWith([]);
+    expect(instance.handleChangeData(data)).toEqual(false);
+  });
+
+  it('handleChangeData 方法测试 onChange===undefined', () => {
+    const {wrapper} = setup({
+      onChange: undefined
+    });
+    const instance = wrapper.instance();
+    const data = [];
+    expect(instance.handleChangeData(data)).toEqual(false);
+  });
+
+  it('handleChangeData 方法测试 formatData4Form !==undefined', () => {
+    const onChangeFn = jest.fn();
+    const formatData4FormFn = jest.fn();
+    const {wrapper} = setup({
+      onChange: onChangeFn,
+      formatData4Form: formatData4FormFn
+    });
+    const instance = wrapper.instance();
+    const data = [];
+    instance.handleChangeData(data);
+    expect(onChangeFn).toHaveBeenCalled();
+    expect(formatData4FormFn).toHaveBeenCalledWith([]);
+    expect(instance.handleChangeData(data)).toEqual(false);
+  });
+
   it('cancel 方法测试, 取消table的数据行branch', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
@@ -371,7 +567,7 @@ describe.skip('editable method ', () => {
       address: ''
     });
     instance.cancel({}, '3');
-    expect(deleteSpy).toBeCalledWith('3');
+    expect(deleteSpy).toBeCalledWith('3', 'cancel');
     expect(instance.state.editingKey).toBe('');
     expect(revertStatusSpy).toBeCalled();
   });
