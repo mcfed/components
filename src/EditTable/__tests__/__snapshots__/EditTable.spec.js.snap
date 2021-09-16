@@ -27,6 +27,7 @@ exports[`快照测试 Editable全页快照 1`] = `
         "title": "住址",
       },
       Object {
+        "className": "operation",
         "dataIndex": "操作",
         "render": [Function],
         "title": "操作",
@@ -45,13 +46,13 @@ exports[`快照测试 Editable全页快照 1`] = `
       Object {
         "address": "西湖区湖底公园1号",
         "age": 32,
-        "key": undefined,
+        "key": "1",
         "name": "胡彦斌",
       },
       Object {
         "address": "西湖区湖底公园1号",
         "age": 42,
-        "key": undefined,
+        "key": "2",
         "name": "胡彦祖",
       },
     ]

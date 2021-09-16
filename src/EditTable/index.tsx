@@ -87,9 +87,17 @@ interface EditTableProps<T> {
    */
   maxNum?: number;
   /**
+   * 表格数据达到最大值时的错误信息提示
+   */
+  maxErrorMsg?: string;
+  /**
    * 设定数据新增在第一行或最后一行
    */
   direction?: 'top' | 'bottom';
+  /**
+   * 是否隐藏删除按钮的二次确认
+   */
+  hideDeleteConfirm?: boolean;
 }
 
 interface State<T> {
@@ -132,71 +140,121 @@ export default class EditTable<T extends Item> extends React.Component<
             {
               title: '操作',
               dataIndex: '操作',
-              render: (text: any, record: any) => {
+              className: 'operation',
+              render: (text: any, record: any, index: number) => {
                 const editable = this.isEditing(record);
-                return (
-                  <div>
-                    {editable ? (
-                      <span>
+                if (this.props.mode === 'full') {
+                  return (
+                    <div className='operation-button-full'>
+                      {this.renderAddAndDeleteButton('delete', index) &&
+                        this.renderDeleteConfirmButton(props, record)}
+                      {this.renderAddAndDeleteButton('add', index) && (
                         <EditableContext.Consumer>
                           {form => (
-                            <a
-                              onClick={() => this.save(form, record.key)}
-                              style={{marginRight: 8}}>
-                              {props.btnText?.save
-                                ? props.btnText?.save
-                                : '保存'}
+                            <a onClick={(e: any) => this.addNew(e, form)}>
+                              {props.btnText?.add ? props.btnText?.add : '添加'}
                             </a>
                           )}
                         </EditableContext.Consumer>
-                        <EditableContext.Consumer>
-                          {form =>
-                            !props.hideCancelConfirm ? (
-                              <Popconfirm
-                                title='确认取消?'
-                                onConfirm={() => this.cancel(form, record.key)}>
-                                <a>
+                      )}
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div>
+                      {editable ? (
+                        <span>
+                          <EditableContext.Consumer>
+                            {form => (
+                              <a
+                                onClick={() => this.save(form, record.key)}
+                                style={{marginRight: 8}}>
+                                {props.btnText?.save
+                                  ? props.btnText?.save
+                                  : '保存'}
+                              </a>
+                            )}
+                          </EditableContext.Consumer>
+                          <EditableContext.Consumer>
+                            {form =>
+                              !props.hideCancelConfirm ? (
+                                <Popconfirm
+                                  title='确认取消?'
+                                  onConfirm={() =>
+                                    this.cancel(form, record.key)
+                                  }>
+                                  <a>
+                                    {props.btnText?.cancel
+                                      ? props.btnText?.cancel
+                                      : '取消'}
+                                  </a>
+                                </Popconfirm>
+                              ) : (
+                                <a
+                                  onClick={() => this.cancel(form, record.key)}>
                                   {props.btnText?.cancel
                                     ? props.btnText?.cancel
                                     : '取消'}
                                 </a>
-                              </Popconfirm>
-                            ) : (
-                              <a onClick={() => this.cancel(form, record.key)}>
-                                {props.btnText?.cancel
-                                  ? props.btnText?.cancel
-                                  : '取消'}
-                              </a>
-                            )
-                          }
-                        </EditableContext.Consumer>
-                      </span>
-                    ) : (
-                      <span>
-                        <a
-                          style={{marginRight: 8}}
-                          onClick={() => this.edit(record.key)}>
-                          {props.btnText?.edit ? props.btnText?.edit : '编辑'}
-                        </a>
-                        <Popconfirm
-                          title='确认删除?'
-                          onConfirm={() => this.delete(record.key, 'delete')}>
-                          <a>
-                            {props.btnText?.delete
-                              ? props.btnText?.delete
-                              : '删除'}
+                              )
+                            }
+                          </EditableContext.Consumer>
+                        </span>
+                      ) : (
+                        <span>
+                          <a
+                            style={{marginRight: 8}}
+                            onClick={() => this.edit(record.key)}>
+                            {props.btnText?.edit ? props.btnText?.edit : '编辑'}
                           </a>
-                        </Popconfirm>
-                      </span>
-                    )}
-                  </div>
-                );
+                          {this.renderDeleteConfirmButton(props, record)}
+                        </span>
+                      )}
+                    </div>
+                  );
+                }
               }
             }
           ],
       currentPage: 1
     };
   }
+
+  renderDeleteConfirmButton(props: Readonly<EditTableProps<T>>, record: any) {
+    if (props.hideDeleteConfirm) {
+      return (
+        <a
+          style={{marginRight: 8}}
+          onClick={() => this.delete(record.key, 'delete')}>
+          {props.btnText?.delete ? props.btnText?.delete : '删除'}
+        </a>
+      );
+    } else {
+      return (
+        <Popconfirm
+          title='确认删除?'
+          onConfirm={() => this.delete(record.key, 'delete')}>
+          <a style={{marginRight: 8}}>
+            {props.btnText?.delete ? props.btnText?.delete : '删除'}
+          </a>
+        </Popconfirm>
+      );
+    }
+  }
+
+  renderAddAndDeleteButton(type: 'add' | 'delete', index: number) {
+    const {direction} = this.props;
+    if (type === 'add') {
+      if (direction === 'bottom') {
+        return this.state.data?.length - 1 === index;
+      } else {
+        return index === 0;
+      }
+    } else {
+      return this.state.data?.length - 1 > 0;
+    }
+  }
+
   componentDidMount() {
     /* istanbul ignore else */
     if (this.props.columns && this.props.columns.length > 0) {
@@ -216,9 +274,16 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   compileData(data: any[]) {
-    const {rowKey} = this.props;
+    const rowKey = this.props.rowKey || 'key';
     if (!data) {
       return [];
+    }
+    if (this.props.mode === 'full') {
+      if (data?.length === 0) {
+        let key =
+          new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
+        return [{key}];
+      }
     }
     return data.map
       ? data.map((it: any, idex: number) => ({
@@ -285,8 +350,8 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   delete(key: string, type: string) {
-    const {onDelete} = this.props;
-    if (type === 'delete' && this.state.editingKey !== '') {
+    const {onDelete, mode} = this.props;
+    if (type === 'delete' && this.state.editingKey !== '' && mode === 'row') {
       message.error('请先保存编辑项再进行其他删除操作！');
       return false;
     }
@@ -387,10 +452,28 @@ export default class EditTable<T extends Item> extends React.Component<
     this.revertStatus();
   };
 
-  addNew = () => {
-    if (this.state.editingKey !== '') {
+  addNew = (e: any, form?: WrappedFormUtils) => {
+    const {mode, maxNum, maxErrorMsg} = this.props;
+    if (this.state.editingKey !== '' && mode === 'row') {
       message.error('请先保存编辑项再进行添加操作！');
       return false;
+    }
+    // 如果是全表单编辑模式下
+    if (mode === 'full') {
+      let fullFlag = false;
+      form?.validateFields((error: any, row: T) => {
+        if (error) {
+          return;
+        }
+        fullFlag = true;
+      });
+      if (!fullFlag) {
+        return;
+      }
+    }
+    if (maxNum && this.state.data?.length >= maxNum) {
+      message.error(maxErrorMsg || `最多可添加${maxNum}条数据`);
+      return;
     }
     let key = new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
     let obj: any = {
@@ -430,6 +513,7 @@ export default class EditTable<T extends Item> extends React.Component<
   // 根据外界传入的editConfig来处理，当前仅接受对象和方法
   renderEditConfig(
     config: GetFieldDecoratorOptions | EditConfigFunctionType,
+    instance: any,
     form: WrappedFormUtils
   ): GetFieldDecoratorOptions | null {
     if (Object.prototype.toString.call(config) === '[object Object]') {
@@ -437,7 +521,7 @@ export default class EditTable<T extends Item> extends React.Component<
       return config;
     } else if (Object.prototype.toString.call(config) === '[object Function]') {
       // @ts-ignore
-      return config(this.state.data, this.state.editingKey, form);
+      return config(instance, form);
     } else {
       return {};
     }
@@ -452,6 +536,7 @@ export default class EditTable<T extends Item> extends React.Component<
   renderCell(text: string, record: Item, cellConfig: ColumnsItem<T>) {
     const {dataIndex, editComponent, editConfig} = cellConfig;
     const instance = this;
+    const {data} = this.state;
     const {mode} = this.props;
     return (
       <EditableContext.Consumer>
@@ -461,11 +546,12 @@ export default class EditTable<T extends Item> extends React.Component<
           return (
             <FormItem style={{margin: 0}}>
               {getFieldDecorator(dataIndex, {
-                ...this.renderEditConfig(editConfig, form),
+                ...this.renderEditConfig(editConfig, instance, form),
                 initialValue:
                   record[dataIndex] === ''
                     ? editConfig &&
-                      this.renderEditConfig(editConfig, form)?.initialValue
+                      this.renderEditConfig(editConfig, instance, form)
+                        ?.initialValue
                     : record[dataIndex]
               })(
                 React.createElement(component.type, {
@@ -494,6 +580,24 @@ export default class EditTable<T extends Item> extends React.Component<
     );
   }
 
+  renderDefaultConfig() {
+    const {mode, btnText} = this.props;
+    if (mode === 'row') {
+      return {
+        footer: () => (
+          <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
+            {btnText?.add ? btnText?.add : '新增'}
+          </Button>
+        )
+      };
+    } else {
+      // 当前全表格编辑默认不需要分页
+      return {
+        pagination: false
+      };
+    }
+  }
+
   render() {
     const {
       data,
@@ -502,6 +606,7 @@ export default class EditTable<T extends Item> extends React.Component<
       onChange,
       btnText,
       maxNum,
+      rowKey,
       ...otherProps
     } = this.props;
     const components = {
@@ -540,22 +645,17 @@ export default class EditTable<T extends Item> extends React.Component<
         bordered
         dataSource={this.state.data}
         columns={columnsFinal}
+        // @ts-ignore
         pagination={{
           pageSize: this.pageSize,
           current: this.state.currentPage,
           onChange: this.pageOnChange.bind(this)
         }}
-        rowClassName={(record: object, index: number) => 'editable-row'}
+        rowClassName={(record: object, index: number) =>
+          mode === 'row' ? 'editable-row' : 'editTable-full'
+        }
         {...otherProps}
-        footer={() => (
-          <Button
-            icon='plus'
-            onClick={this.addNew}
-            style={{width: '100%'}}
-            disabled={!!maxNum && this.state.data?.length >= maxNum}>
-            {btnText?.add ? btnText?.add : '新增'}
-          </Button>
-        )}
+        {...this.renderDefaultConfig()}
       />
     );
   }
