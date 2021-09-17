@@ -61,12 +61,33 @@ interface EditTableProps<T> {
    * 编辑模式
    */
   mode: EditTableMode;
+  /**
+   * 自定义主键
+   */
   rowKey: string;
+  /**
+   * 隐藏操作按钮
+   */
   hideOperation?: boolean;
+  /**
+   * 隐藏取消按钮的二次确认
+   */
   hideCancelConfirm?: boolean;
+  /**
+   * 数据抛出方法自定义
+   */
   onChangeWithOutForm?: (data: T[]) => void;
+  /**
+   * 数据抛出到父级组件，通常为form表单
+   */
   onChange?: (data: T[]) => void;
+  /**
+   * 导出数据的格式自定义
+   */
   formatData4Form?: (data: T[]) => any;
+  /**
+   * 按钮文字自定义
+   */
   btnText?: {
     save?: string;
     add?: string;
