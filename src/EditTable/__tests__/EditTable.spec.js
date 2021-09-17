@@ -117,6 +117,80 @@ describe.skip('edittable base test', () => {
 });
 
 describe('editable method', () => {
+  it('renderDeleteConfirmButton 方法测试 hideDeleteConfirm=true', () => {
+    const {wrapper, props} = setup();
+    const instance = wrapper.instance();
+    expect(
+      instance.renderDeleteConfirmButton({hideDeleteConfirm: true}, {key: '1'})
+    ).toMatchSnapshot();
+  });
+  it('renderDeleteConfirmButton 方法测试 hideDeleteConfirm=false', () => {
+    const {wrapper, props} = setup();
+    const instance = wrapper.instance();
+    expect(
+      instance.renderDeleteConfirmButton({hideDeleteConfirm: false}, {key: '1'})
+    ).toMatchSnapshot();
+  });
+  it('renderAddAndDeleteButton 方法测试 type=add direction=bottom index=1', () => {
+    const {wrapper, props} = setup({
+      direction: 'bottom'
+    });
+    const instance = wrapper.instance();
+    const type = 'add';
+    const index = 1;
+    wrapper.setState({
+      data: [{}]
+    });
+    expect(instance.renderAddAndDeleteButton(type, index)).toEqual(false);
+  });
+  it('renderAddAndDeleteButton 方法测试 type=add direction=bottom index=0', () => {
+    const {wrapper, props} = setup({
+      direction: 'bottom'
+    });
+    const instance = wrapper.instance();
+    const type = 'add';
+    const index = 0;
+    wrapper.setState({
+      data: [{}]
+    });
+    expect(instance.renderAddAndDeleteButton(type, index)).toEqual(true);
+  });
+  it('renderAddAndDeleteButton 方法测试 type=add direction=top index=0', () => {
+    const {wrapper, props} = setup({
+      direction: 'top'
+    });
+    const instance = wrapper.instance();
+    const type = 'add';
+    const index = 0;
+    wrapper.setState({
+      data: [{}]
+    });
+    expect(instance.renderAddAndDeleteButton(type, index)).toEqual(true);
+  });
+  it('renderAddAndDeleteButton 方法测试 type=add direction=top index=1', () => {
+    const {wrapper, props} = setup({
+      direction: 'top'
+    });
+    const instance = wrapper.instance();
+    const type = 'add';
+    const index = 1;
+    wrapper.setState({
+      data: [{}]
+    });
+    expect(instance.renderAddAndDeleteButton(type, index)).toEqual(false);
+  });
+  it('renderAddAndDeleteButton 方法测试 type=delete index=1', () => {
+    const {wrapper, props} = setup({
+      direction: 'top'
+    });
+    const instance = wrapper.instance();
+    const type = 'delete';
+    const index = 1;
+    wrapper.setState({
+      data: [{}]
+    });
+    expect(instance.renderAddAndDeleteButton(type, index)).toEqual(false);
+  });
   it('compileData 方法测试 data=undefined', () => {
     const {wrapper, props} = setup();
     const instance = wrapper.instance();
@@ -133,6 +207,14 @@ describe('editable method', () => {
     const {wrapper, props} = setup();
     const instance = wrapper.instance();
     expect(instance.compileData([{id: 1}])).toEqual([{id: 1, key: undefined}]);
+  });
+
+  it('compileData 方法测试 mode=full data数组长度为0', () => {
+    const {wrapper, props} = setup({
+      mode: 'full'
+    });
+    const instance = wrapper.instance();
+    instance.compileData([]);
   });
 
   it('isEditing 默认为空，传入key为123 返回false', () => {
@@ -229,6 +311,38 @@ describe('editable method', () => {
     });
     wrapper.instance().addNew();
     expect(wrapper.state('currentPage')).toBe(1);
+  });
+
+  it('addNew 方法调用 mode=full 校验不通过', () => {
+    const {wrapper, props, dataSource} = setup({
+      mode: 'full'
+    });
+    const instance = wrapper.instance();
+    const form = {
+      validateFields: callback => callback({}, {})
+    };
+    expect(instance.addNew({}, form)).toEqual(undefined);
+  });
+
+  it('addNew 方法调用 mode=full 校验通过', () => {
+    const {wrapper, props, dataSource} = setup({
+      mode: 'full'
+    });
+    const instance = wrapper.instance();
+    const form = {
+      validateFields: callback => callback(undefined, {})
+    };
+    instance.addNew({}, form);
+  });
+
+  it('addNew 方法调用 maxNum', () => {
+    const {wrapper, props, dataSource} = setup({
+      maxNum: 2
+    });
+    wrapper.setState({
+      data: [{}, {}, {}]
+    });
+    expect(wrapper.instance().addNew()).toEqual(undefined);
   });
 
   it('renderEditConfig 方法测试 config为对象', () => {
@@ -570,6 +684,26 @@ describe('editable method', () => {
     expect(deleteSpy).toBeCalledWith('3', 'cancel');
     expect(instance.state.editingKey).toBe('');
     expect(revertStatusSpy).toBeCalled();
+  });
+
+  it('renderDefaultConfig 方法测试 mode=row', () => {
+    const {wrapper} = setup({
+      mode: 'row'
+    });
+    const instance = wrapper.instance();
+
+    const {footer} = instance.renderDefaultConfig();
+    expect(footer()).toMatchSnapshot();
+  });
+
+  it('renderDefaultConfig 方法测试 mode=full', () => {
+    const {wrapper} = setup({
+      mode: 'full'
+    });
+    const instance = wrapper.instance();
+    expect(instance.renderDefaultConfig()).toEqual({
+      pagination: false
+    });
   });
 
   it('editComponent 存在情况测试', () => {

@@ -6,6 +6,65 @@ exports[`editable method renderCell 方法测试 1`] = `
 </UNDEFINED>
 `;
 
+exports[`editable method renderDefaultConfig 方法测试 mode=row 1`] = `
+<Button
+  block={false}
+  ghost={false}
+  htmlType="button"
+  icon="plus"
+  loading={false}
+  onClick={[Function]}
+  style={
+    Object {
+      "width": "100%",
+    }
+  }
+>
+  新增
+</Button>
+`;
+
+exports[`editable method renderDeleteConfirmButton 方法测试 hideDeleteConfirm=false 1`] = `
+<Popconfirm
+  disabled={false}
+  icon={
+    <Icon
+      theme="filled"
+      type="exclamation-circle"
+    />
+  }
+  okType="primary"
+  onConfirm={[Function]}
+  placement="top"
+  title="确认删除?"
+  transitionName="zoom-big"
+  trigger="click"
+>
+  <a
+    style={
+      Object {
+        "marginRight": 8,
+      }
+    }
+  >
+    删除
+  </a>
+</Popconfirm>
+`;
+
+exports[`editable method renderDeleteConfirmButton 方法测试 hideDeleteConfirm=true 1`] = `
+<a
+  onClick={[Function]}
+  style={
+    Object {
+      "marginRight": 8,
+    }
+  }
+>
+  删除
+</a>
+`;
+
 exports[`快照测试 Editable全页快照 1`] = `
 <withStore(Table)
   bordered={true}
