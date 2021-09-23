@@ -213,6 +213,8 @@ export default class TsStep extends Component<McStepProps, StepState> {
               {'上一步'}
             </Button>
           );
+        } else {
+          return null;
         }
       default:
         if (showPrev) {
@@ -223,6 +225,8 @@ export default class TsStep extends Component<McStepProps, StepState> {
               {'上一步'}
             </Button>
           );
+        } else {
+          return null;
         }
     }
     return null;
