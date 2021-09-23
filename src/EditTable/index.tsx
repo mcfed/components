@@ -406,7 +406,7 @@ export default class EditTable<T extends Item> extends React.Component<
     );
   }
   save(form: WrappedFormUtils, key: string) {
-    const {onSave} = this.props;
+    const {onSave, mode} = this.props;
     form.validateFields((error: any, row: T) => {
       if (error) {
         return;
@@ -423,7 +423,7 @@ export default class EditTable<T extends Item> extends React.Component<
       } else {
         newData.push(row);
       }
-      if (onSave) {
+      if (onSave && mode === 'row') {
         onSave(newData[index], (status: boolean) => {
           // 如果返回为false，则不继续执行前端数据保存操作
           if (status === true) {
