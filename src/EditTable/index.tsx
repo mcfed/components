@@ -25,7 +25,7 @@ interface EditableRowProps
   index: number;
 }
 
-const EditableFormRow = function(others) {
+const EditableFormRow = function(others: any) {
   return Form.create({
     onFieldsChange: function(props, changedFields, allFields) {
       if (changedFields && 'onSearch' in others) {
@@ -491,7 +491,7 @@ export default class EditTable<T extends Item> extends React.Component<
       message.error('请先保存编辑项再进行添加操作！');
       return false;
     }
-    localStorage.setItem('hideCancelConfirm', true);
+    localStorage.setItem('hideCancelConfirm', 'true');
     // 如果是全表单编辑模式下
     if (mode === 'full') {
       let fullFlag = false;
