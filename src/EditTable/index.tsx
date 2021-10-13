@@ -25,7 +25,16 @@ interface EditableRowProps
   index: number;
 }
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableFormRow = function(others: any) {
+  return Form.create({
+    onFieldsChange: function(props, changedFields, allFields) {
+      if (changedFields && 'onSearch' in others) {
+        others.onSearch(allFields);
+      }
+    }
+  })(EditableRow);
+};
+//const EditableFormRow = Form.create()(EditableRow);
 
 declare type EditTableMode = 'full' | 'row'; // 全表格编辑 | 单行编辑
 
@@ -198,7 +207,10 @@ export default class EditTable<T extends Item> extends React.Component<
                           </EditableContext.Consumer>
                           <EditableContext.Consumer>
                             {form =>
-                              !props.hideCancelConfirm ? (
+                              !JSON.parse(
+                                localStorage.getItem('hideCancelConfirm') ||
+                                  'true'
+                              ) ? (
                                 <Popconfirm
                                   title='确认取消?'
                                   onConfirm={() =>
@@ -479,6 +491,7 @@ export default class EditTable<T extends Item> extends React.Component<
       message.error('请先保存编辑项再进行添加操作！');
       return false;
     }
+    localStorage.setItem('hideCancelConfirm', 'true');
     // 如果是全表单编辑模式下
     if (mode === 'full') {
       let fullFlag = false;
@@ -632,7 +645,7 @@ export default class EditTable<T extends Item> extends React.Component<
     } = this.props;
     const components = {
       body: {
-        row: EditableFormRow
+        row: EditableFormRow(otherProps)
         // cell: EditableCell
       }
     };
