@@ -225,7 +225,8 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
             overlayClassName={overlayClassName}
             overlay={this.renderMenuItem(endArray)}>
             <Button>
-              <Icon type='ellipsis' />
+              {/* <Icon type='ellipsis' /> */}
+              更多
             </Button>
           </Dropdown>
         ) : null}

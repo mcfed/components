@@ -128,6 +128,14 @@ interface EditTableProps<T> {
    * 是否隐藏删除按钮的二次确认
    */
   hideDeleteConfirm?: boolean;
+  /**
+   * 是否隐藏编辑按钮
+   */
+  hideEditBtn?: boolean;
+  /**
+   * 点击编辑时是否要清空阿里云key值
+   */
+  emptyRacAliyunKeyFlag?: boolean;
 }
 
 interface State<T> {
@@ -235,11 +243,15 @@ export default class EditTable<T extends Item> extends React.Component<
                         </span>
                       ) : (
                         <span>
-                          <a
-                            style={{marginRight: 8}}
-                            onClick={() => this.edit(record.key)}>
-                            {props.btnText?.edit ? props.btnText?.edit : '编辑'}
-                          </a>
+                          {!props.hideEditBtn && (
+                            <a
+                              style={{marginRight: 8}}
+                              onClick={() => this.edit(record.key)}>
+                              {props.btnText?.edit
+                                ? props.btnText?.edit
+                                : '编辑'}
+                            </a>
+                          )}
                           {this.renderDeleteConfirmButton(props, record)}
                         </span>
                       )}
@@ -341,12 +353,37 @@ export default class EditTable<T extends Item> extends React.Component<
   };
 
   edit = (key: string) => {
+    const {emptyRacAliyunKeyFlag} = this.props;
+
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他编辑操作！');
       return false;
     }
-    this.setState({editingKey: key});
+
+    if (emptyRacAliyunKeyFlag) {
+      this.emptyRacAliyunKey(key);
+    }
+
+    this.setState({
+      editingKey: key
+    });
+
     this.activeStatus();
+  };
+
+  // 清空阿里云key的值
+  emptyRacAliyunKey = (key: string) => {
+    const newData = [...this.state.data];
+
+    newData.map((item: any) => {
+      if (item.racAliyunKey && item.key === key) {
+        item.racAliyunKey = undefined;
+      }
+    });
+
+    this.setState({
+      data: newData
+    });
   };
 
   // 双击td事件
