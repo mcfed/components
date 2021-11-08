@@ -190,18 +190,15 @@ export default class EditTable<T extends Item> extends React.Component<
                     <div className='operation-button-full'>
                       {this.renderAddAndDeleteButton('delete', index) &&
                         this.renderDeleteConfirmButton(props, record)}
-                      {!props.hideAddBtn &&
-                        this.renderAddAndDeleteButton('add', index) && (
-                          <EditableContext.Consumer>
-                            {form => (
-                              <a onClick={(e: any) => this.addNew(e, form)}>
-                                {props.btnText?.add
-                                  ? props.btnText?.add
-                                  : '添加'}
-                              </a>
-                            )}
-                          </EditableContext.Consumer>
-                        )}
+                      {this.renderAddAndDeleteButton('add', index) && (
+                        <EditableContext.Consumer>
+                          {form => (
+                            <a onClick={(e: any) => this.addNew(e, form)}>
+                              {props.btnText?.add ? props.btnText?.add : '添加'}
+                            </a>
+                          )}
+                        </EditableContext.Consumer>
+                      )}
                     </div>
                   );
                 } else {
@@ -659,8 +656,15 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   renderDefaultConfig() {
-    const {mode, btnText} = this.props;
+    const {mode, btnText, hideAddBtn} = this.props;
+    console.log('hideAddBtn', hideAddBtn);
+
     if (mode === 'row') {
+      // hideAddBtn为true隐藏add按钮
+      if (hideAddBtn) {
+        return;
+      }
+
       return {
         footer: () => (
           <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
