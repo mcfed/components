@@ -136,6 +136,10 @@ interface EditTableProps<T> {
    * 点击编辑时是否要清空阿里云key值
    */
   emptyRacAliyunKeyFlag?: boolean;
+  /**
+   * 是否隐藏add按钮
+   */
+  hideAddBtn?: boolean;
 }
 
 interface State<T> {
@@ -186,15 +190,18 @@ export default class EditTable<T extends Item> extends React.Component<
                     <div className='operation-button-full'>
                       {this.renderAddAndDeleteButton('delete', index) &&
                         this.renderDeleteConfirmButton(props, record)}
-                      {this.renderAddAndDeleteButton('add', index) && (
-                        <EditableContext.Consumer>
-                          {form => (
-                            <a onClick={(e: any) => this.addNew(e, form)}>
-                              {props.btnText?.add ? props.btnText?.add : '添加'}
-                            </a>
-                          )}
-                        </EditableContext.Consumer>
-                      )}
+                      {!props.hideAddBtn &&
+                        this.renderAddAndDeleteButton('add', index) && (
+                          <EditableContext.Consumer>
+                            {form => (
+                              <a onClick={(e: any) => this.addNew(e, form)}>
+                                {props.btnText?.add
+                                  ? props.btnText?.add
+                                  : '添加'}
+                              </a>
+                            )}
+                          </EditableContext.Consumer>
+                        )}
                     </div>
                   );
                 } else {
