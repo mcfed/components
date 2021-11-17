@@ -12,6 +12,7 @@ import {Row, Col} from 'antd';
 
 const Button = ButtonGroups.CustomButton;
 
+type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 interface AdvancedFormProps extends FormProps {
   /**
    * 组件之前的间隔
@@ -187,6 +188,15 @@ export default class AdvancedSearchForm extends React.Component<
       </div>
     );
   }
+  isPropsTrue(prop: fnOrBoolType) {
+    if (typeof prop === 'function') {
+      return prop.call(this, this.form);
+    }
+    if (typeof prop === 'boolean') {
+      return prop;
+    }
+    return true;
+  }
   renderFields() {
     const {children, columns} = this.props;
     let cols = 6;
@@ -197,6 +207,10 @@ export default class AdvancedSearchForm extends React.Component<
       //搜索项若需要设置多倍宽度 columns 为设置倍数
       const {columns} = it.props;
       const spanCol = Number(columns) ? cols * Number(columns) : cols;
+      // FormItem 设置 renderable 为 false 时，不返回 col，避免空占位情况
+      if (!this.isPropsTrue(it?.props?.renderable)) {
+        return null;
+      }
       return (
         <Col span={spanCol} key={idx}>
           {React.createElement(it.type, it.props, it.props.children)}
