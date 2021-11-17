@@ -203,20 +203,21 @@ export default class AdvancedSearchForm extends React.Component<
     if (columns !== undefined) {
       cols = 24 / columns;
     }
-    return React.Children.toArray(children).map((it: any, idx: number) => {
-      //搜索项若需要设置多倍宽度 columns 为设置倍数
-      const {columns} = it.props;
-      const spanCol = Number(columns) ? cols * Number(columns) : cols;
-      // FormItem 设置 renderable 为 false 时，不返回 col，避免空占位情况
-      if (!this.isPropsTrue(it?.props?.renderable)) {
-        return null;
-      }
-      return (
-        <Col span={spanCol} key={idx}>
-          {React.createElement(it.type, it.props, it.props.children)}
-        </Col>
-      );
-    });
+    return (
+      React.Children.toArray(children)
+        // 过滤 renderable 为 false 的 FormItem
+        ?.filter((item: any) => this.isPropsTrue(item?.props?.renderable))
+        ?.map((it: any, idx: number) => {
+          //搜索项若需要设置多倍宽度 columns 为设置倍数
+          const {columns} = it.props;
+          const spanCol = Number(columns) ? cols * Number(columns) : cols;
+          return (
+            <Col span={spanCol} key={idx}>
+              {React.createElement(it.type, it.props, it.props.children)}
+            </Col>
+          );
+        })
+    );
   }
 
   formatClassName() {
