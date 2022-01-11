@@ -342,12 +342,107 @@ export default class EditTable<T extends Item> extends React.Component<
       : [];
   }
   UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
+    const list = [
+      {
+        title: '操作',
+        dataIndex: '操作',
+        className: 'operation',
+        render: (text: any, record: any, index: number) => {
+          const editable = this.isEditing(record);
+          if (this.props.mode === 'full') {
+            return (
+              <div className='operation-button-full'>
+                {this.renderAddAndDeleteButton('delete', index) &&
+                  this.renderDeleteConfirmButton(this.props, record)}
+                {this.renderAddAndDeleteButton('add', index) && (
+                  <EditableContext.Consumer>
+                    {form => (
+                      <a onClick={(e: any) => this.addNew(e, form)}>
+                        {this.props.btnText?.add
+                          ? this.props.btnText?.add
+                          : '添加'}
+                      </a>
+                    )}
+                  </EditableContext.Consumer>
+                )}
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                {editable ? (
+                  <span>
+                    <EditableContext.Consumer>
+                      {form => (
+                        <a
+                          onClick={() => this.save(form, record.key)}
+                          style={{marginRight: 8}}>
+                          {this.props.btnText?.save
+                            ? this.props.btnText?.save
+                            : '保存'}
+                        </a>
+                      )}
+                    </EditableContext.Consumer>
+                    <EditableContext.Consumer>
+                      {form =>
+                        !JSON.parse(
+                          localStorage.getItem('hideCancelConfirm') || 'true'
+                        ) ? (
+                          <Popconfirm
+                            title='确认取消?'
+                            onConfirm={() => this.cancel(form, record.key)}>
+                            <a>
+                              {this.props.btnText?.cancel
+                                ? this.props.btnText?.cancel
+                                : '取消'}
+                            </a>
+                          </Popconfirm>
+                        ) : (
+                          <a onClick={() => this.cancel(form, record.key)}>
+                            {this.props.btnText?.cancel
+                              ? this.props.btnText?.cancel
+                              : '取消'}
+                          </a>
+                        )
+                      }
+                    </EditableContext.Consumer>
+                  </span>
+                ) : (
+                  <span>
+                    {!this.props.hideEditBtn && (
+                      <a
+                        style={{marginRight: 8}}
+                        onClick={() => this.edit(record.key)}>
+                        {this.props.btnText?.edit
+                          ? this.props.btnText?.edit
+                          : '编辑'}
+                      </a>
+                    )}
+                    {this.renderDeleteConfirmButton(this.props, record)}
+                  </span>
+                )}
+              </div>
+            );
+          }
+        }
+      }
+    ];
+
     /* istanbul ignore else */
     if (JSON.stringify(this.props.data) !== JSON.stringify(nextprops.data)) {
       this.setState({
         data: this.compileData(nextprops.data),
         editingKey: ''
       });
+    }
+
+    // hideOperation改变需要重新设置columns
+    if (this.props.hideOperation !== nextprops.hideOperation) {
+      if (nextprops.hideOperation === false) {
+        this.setState({
+          columns: [...this.state.columns, ...list]
+        });
+      }
     }
   }
 
@@ -657,7 +752,6 @@ export default class EditTable<T extends Item> extends React.Component<
 
   renderDefaultConfig() {
     const {mode, btnText, hideAddBtn} = this.props;
-    console.log('hideAddBtn', hideAddBtn);
 
     if (mode === 'row') {
       // hideAddBtn为true隐藏add按钮
