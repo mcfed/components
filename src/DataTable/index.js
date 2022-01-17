@@ -125,7 +125,8 @@ class DataTable extends Component {
       width: '100%'
     },
     showConfig: false,
-    columns: []
+    columns: [],
+    showCheckedClear: true
   };
   showPopover() {
     this.setState({
@@ -188,8 +189,22 @@ class DataTable extends Component {
   }
 
   renderTableFooter() {
-    const {showCheckedClear} = this.props;
-    return showCheckedClear && <div></div>;
+    const {showCheckedClear, rowSelection} = this.props;
+    const len =
+      rowSelection && rowSelection.selectedRowKeys
+        ? rowSelection.selectedRowKeys.length
+        : 0;
+    return (
+      showCheckedClear &&
+      rowSelection && (
+        <div className='checkedClear'>
+          <span>已选 {len} 项</span>
+          <Button type='link' disabled={len === 0}>
+            清空
+          </Button>
+        </div>
+      )
+    );
   }
 
   render() {
@@ -243,14 +258,7 @@ class DataTable extends Component {
           columns={newColumns}
           pagination={!pagination ? false : Object.assign({}, pagination, page)}
         />
-        {this.props.rowSelection && (
-          <div className='checkedClear'>
-            <span>
-              已选 {this.props.rowSelection.selectedRowKeys.length} 项
-            </span>
-            <Button type='text'>清空</Button>
-          </div>
-        )}
+        {this.renderTableFooter()}
       </div>
     );
   }
