@@ -5,3 +5,4 @@ import 'antd/es/button/style';
 import 'antd/es/row/style';
 import 'antd/es/col/style';
 import 'antd/es/form/style';
+import './index.less';

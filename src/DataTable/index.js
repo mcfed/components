@@ -186,8 +186,21 @@ class DataTable extends Component {
       />
     );
   }
+
+  renderTableFooter() {
+    const {showCheckedClear} = this.props;
+    return showCheckedClear && <div></div>;
+  }
+
   render() {
-    let {pagination, showConfig, page, defaultSort, ...otherProps} = this.props;
+    let {
+      pagination,
+      showConfig,
+      page,
+      defaultSort,
+      showCheckedClear,
+      ...otherProps
+    } = this.props;
     let {visible, columns} = this.state;
     let newColumns;
     // console.log(this.props,"datatablerender")
@@ -223,12 +236,22 @@ class DataTable extends Component {
     }
     // console.log("newColumns", newColumns);
     return (
-      <Table
-        key={defaultSort && defaultSort.columnKey}
-        {...otherProps}
-        columns={newColumns}
-        pagination={!pagination ? false : Object.assign({}, pagination, page)}
-      />
+      <div className='DataTable'>
+        <Table
+          key={defaultSort && defaultSort.columnKey}
+          {...otherProps}
+          columns={newColumns}
+          pagination={!pagination ? false : Object.assign({}, pagination, page)}
+        />
+        {this.props.rowSelection && (
+          <div className='checkedClear'>
+            <span>
+              已选 {this.props.rowSelection.selectedRowKeys.length} 项
+            </span>
+            <Button type='text'>清空</Button>
+          </div>
+        )}
+      </div>
     );
   }
 }
@@ -250,6 +273,10 @@ DataTable.propTypes = {
   /**
   分页器  同antd table pagination
   **/
-  pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
+  pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  /**
+  是否展示清空勾选项的按钮 默认为true
+  **/
+  showCheckedClear: PropTypes.bool
 };
 export default DataTable;
