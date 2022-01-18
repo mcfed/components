@@ -295,6 +295,6 @@ DataTable.propTypes = {
   /**
   传入清空勾选项按钮点击事件
   **/
-  clearSelectRows: PropTypes.bool
+  clearSelectRows: PropTypes.func
 };
 export default DataTable;
