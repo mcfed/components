@@ -126,7 +126,7 @@ class DataTable extends Component {
     },
     showConfig: false,
     columns: [],
-    showCheckedClear: true
+    showSelectClear: false
   };
   showPopover() {
     this.setState({
@@ -188,23 +188,28 @@ class DataTable extends Component {
     );
   }
 
-  renderTableFooter() {
-    const {showCheckedClear, rowSelection} = this.props;
+  clear() {
+    const {clearSelectRows} = this.props;
+    clearSelectRows && clearSelectRows();
+  }
+
+  renderTableClear() {
+    const {showSelectClear, rowSelection, dataSource = []} = this.props;
     const len =
       rowSelection && rowSelection.selectedRowKeys
         ? rowSelection.selectedRowKeys.length
         : 0;
-    return (
-      showCheckedClear &&
-      rowSelection && (
-        <div className='checkedClear'>
-          <span>已选 {len} 项</span>
-          <Button type='link' disabled={len === 0}>
-            清空
-          </Button>
-        </div>
-      )
-    );
+    return dataSource.length > 0 && showSelectClear && rowSelection ? (
+      <div className='checkedClear'>
+        <span>已选 {len} 项</span>
+        <Button
+          type='link'
+          disabled={len === 0}
+          onClick={this.clear.bind(this)}>
+          清空
+        </Button>
+      </div>
+    ) : null;
   }
 
   render() {
@@ -213,7 +218,7 @@ class DataTable extends Component {
       showConfig,
       page,
       defaultSort,
-      showCheckedClear,
+      showSelectClear,
       ...otherProps
     } = this.props;
     let {visible, columns} = this.state;
@@ -258,7 +263,7 @@ class DataTable extends Component {
           columns={newColumns}
           pagination={!pagination ? false : Object.assign({}, pagination, page)}
         />
-        {this.renderTableFooter()}
+        {this.renderTableClear()}
       </div>
     );
   }
@@ -283,8 +288,12 @@ DataTable.propTypes = {
   **/
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   /**
-  是否展示清空勾选项的按钮 默认为true
+  是否展示清空勾选项的按钮 默认为false
   **/
-  showCheckedClear: PropTypes.bool
+  showSelectClear: PropTypes.bool,
+  /**
+  传入清空勾选项按钮点击事件
+  **/
+  clearSelectRows: PropTypes.bool
 };
 export default DataTable;
