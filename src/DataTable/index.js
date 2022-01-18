@@ -219,6 +219,7 @@ class DataTable extends Component {
       page,
       defaultSort,
       showSelectClear,
+      clearSelectRows,
       ...otherProps
     } = this.props;
     let {visible, columns} = this.state;
