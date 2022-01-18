@@ -1,5 +1,16 @@
 .DataTable {
   position: relative;
+  .line() {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 1px;
+    height: 1.6em;
+    background-color: #e6e9f0;
+    transform: translateY(-50%);
+    transition: background-color 0.3s;
+    content: '';
+  }
   .ant-table-wrapper {
     .ant-table {
       .ant-table-content {
@@ -10,16 +21,8 @@
               tr {
                 th {
                   position: relative;
-                  &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-                    position: absolute;
-                    top: 50%;
-                    right: 0;
-                    width: 1px;
-                    height: 1.6em;
-                    background-color: #e6e9f0;
-                    transform: translateY(-50%);
-                    transition: background-color 0.3s;
-                    content: '';
+                  &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(.ant-table-expand-icon-th):not([colspan])::before {
+                    .line();
                   }
                 }
               }
@@ -32,16 +35,8 @@
               tr {
                 th {
                   position: relative;
-                  &:not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-                    position: absolute;
-                    top: 50%;
-                    right: 0;
-                    width: 1px;
-                    height: 1.6em;
-                    background-color: #e6e9f0;
-                    transform: translateY(-50%);
-                    transition: background-color 0.3s;
-                    content: '';
+                  &:not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(.ant-table-expand-icon-th):not([colspan])::before {
+                    .line();
                   }
                 }
               }
