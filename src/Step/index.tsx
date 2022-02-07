@@ -208,6 +208,8 @@ export default class TsStep extends Component<McStepProps, StepState> {
         if (showPrev && showFinalLastStep) {
           return (
             <Button
+              ghost
+              type='primary'
               onClick={() => this.goToStep(step - 1)}
               loading={this.getLoading('prev')}>
               {'上一步'}
@@ -220,6 +222,8 @@ export default class TsStep extends Component<McStepProps, StepState> {
         if (showPrev) {
           return (
             <Button
+              ghost
+              type='primary'
               onClick={() => this.goToStep(step - 1)}
               loading={this.getLoading('prev')}>
               {'上一步'}
@@ -262,10 +266,10 @@ export default class TsStep extends Component<McStepProps, StepState> {
       <Button.Group
         style={{textAlign: btnAlign}}
         className={isBtnAdjust ? 'Step-buttonGroup' : ''}>
-        {this.renderCancelBtn()}
-        {this.renderCustomBtn()}
-        {this.renderPrev()}
         {this.renderNextAndFinisah()}
+        {this.renderPrev()}
+        {this.renderCustomBtn()}
+        {this.renderCancelBtn()}
       </Button.Group>
     );
   }
@@ -277,7 +281,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
     const renderDom = steps[currentIndex] || steps[0];
 
     return (
-      <React.Fragment>
+      <div className='mcStep'>
         <Steps current={currentIndex}>
           {steps.map((item: any) => (
             <Steps.Step
@@ -296,7 +300,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
         />
 
         {this.renderStepButtonGroups()}
-      </React.Fragment>
+      </div>
     );
   }
 }
