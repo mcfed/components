@@ -1,15 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {
-  Table,
-  Icon,
-  Checkbox,
-  Button,
-  Row,
-  Col,
-  Form,
-  ConfigProvider
-} from 'antd';
+import {Table, Icon, Checkbox, Button, Row, Col, Form} from 'antd';
 
 export class TableMenu extends Component {
   state = {
@@ -266,19 +257,15 @@ class DataTable extends Component {
     }
     // console.log("newColumns", newColumns);
     return (
-      <ConfigProvider autoInsertSpaceInButton={false}>
-        <div className='DataTable'>
-          <Table
-            key={defaultSort && defaultSort.columnKey}
-            {...otherProps}
-            columns={newColumns}
-            pagination={
-              !pagination ? false : Object.assign({}, pagination, page)
-            }
-          />
-          {this.renderTableClear()}
-        </div>
-      </ConfigProvider>
+      <div className='DataTable'>
+        <Table
+          key={defaultSort && defaultSort.columnKey}
+          {...otherProps}
+          columns={newColumns}
+          pagination={!pagination ? false : Object.assign({}, pagination, page)}
+        />
+        {this.renderTableClear()}
+      </div>
     );
   }
 }
