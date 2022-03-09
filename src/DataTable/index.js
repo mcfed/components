@@ -206,7 +206,9 @@ class DataTable extends Component {
           type='link'
           disabled={len === 0}
           onClick={this.clear.bind(this)}>
-          清空
+          <span style={len == 0 ? {color: '#afb5c7'} : {color: '#3385ff'}}>
+            清空
+          </span>
         </Button>
       </div>
     ) : null;
