@@ -47,7 +47,8 @@ class Confirm extends React.Component<ConfirmType> {
     return Modal.confirm({
       title: title,
       content: content,
-      onOk: onConfirm
+      onOk: onConfirm,
+      icon: <Icon type="info-circle" />
     });
   }
   //此处的createElement 直接用children 无法正常使用 小坑
