@@ -1,6 +1,7 @@
 import React, {Component, ReactNode} from 'react';
 import {Button, Steps, Modal} from 'antd';
 import {StepsProps} from 'antd/lib/steps/index';
+import {ButtonProps} from 'antd/lib/button';
 
 export const ref: any = React.createRef();
 
@@ -11,7 +12,18 @@ type BtnLoadingProps = {
   finish?: boolean;
 };
 
-type BtnLoadingStatus = 'cancel' | 'prev' | 'next' | 'finish';
+type BtnType = 'cancel' | 'prev' | 'next' | 'finish';
+
+type BtnCustomProps = {
+  text?: string;
+};
+
+type BtnsProps = {
+  cancel?: ButtonProps & BtnCustomProps;
+  prev?: ButtonProps & BtnCustomProps;
+  next?: ButtonProps & BtnCustomProps;
+  finish?: ButtonProps & BtnCustomProps;
+};
 
 export interface McStepProps extends StepsProps {
   /**
@@ -62,6 +74,7 @@ export interface McStepProps extends StepsProps {
   backPath?: string;
   /**
    * 按钮状态控制
+   * @deprecated 后续版本将会被废弃，统一由btnStatus属性做管控
    */
   btnLoading?: BtnLoadingProps;
   /**
@@ -85,6 +98,10 @@ export interface McStepProps extends StepsProps {
    * 父组件props属性
    */
   history: any;
+  /**
+   * 按钮属性放开
+   */
+  btnsProps: BtnsProps;
 }
 
 interface StepState {
@@ -120,42 +137,55 @@ export default class TsStep extends Component<McStepProps, StepState> {
 
   goToStep = (step: number): void => {
     const {history, steps} = this.props;
-    history?.push(steps[step - 1]?.path);
+    // history.push(undefined) 也会触发页面更新，引起部分渲染有问题
+    steps[step - 1]?.path && history?.push(steps[step - 1]?.path);
     this.setState({
       currentIndex: step - 1,
       step
     });
   };
 
-  handleCancel(): void {
+  handleCancel(e: any): void {
     const {cancelConfirm, cancelConfirmTitle, backPath, history} = this.props;
+    const btnProps = this.getBtnProps('cancel');
     if (cancelConfirm || cancelConfirmTitle) {
       Modal.confirm({
         title: !!cancelConfirmTitle ? cancelConfirmTitle : undefined,
         content: cancelConfirm,
-        onOk: () => history.push(backPath)
+        onOk: () => {
+          history.push(backPath);
+          btnProps?.onClick?.(e);
+        }
       });
     } else {
       history.push(backPath);
+      btnProps?.onClick?.(e);
     }
   }
 
-  handleFinish(): void {
+  handleFinish(e: any): void {
     const {finalSubmitFunctionName} = this.props;
+    const btnProps = this.getBtnProps('finish');
     if (finalSubmitFunctionName) {
       ref?.current && ref?.current[finalSubmitFunctionName]();
     } else {
       ref?.current?.onSubmit('handleSubmit');
     }
+    btnProps?.onClick?.(e);
   }
 
-  getLoading(status: BtnLoadingStatus): boolean {
+  getLoading(status: BtnType): boolean {
     const {btnLoading} = this.props;
     if (btnLoading) {
       return btnLoading[status] || false;
     } else {
       return false;
     }
+  }
+
+  getBtnProps(type: BtnType): ButtonProps & BtnCustomProps & {} {
+    const {btnsProps} = this.props;
+    return btnsProps?.[type] ?? {};
   }
 
   renderCancelBtn(): ReactNode | null {
@@ -166,6 +196,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
       cancelText
     } = this.props;
     const {currentIndex, step} = this.state;
+    const btnProps = this.getBtnProps('cancel');
     if (showFinalCancel || step !== steps?.length) {
       let flag: boolean = false;
       if (typeof showCancel === 'boolean') {
@@ -176,6 +207,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
       }
       return flag ? (
         <Button
+          {...btnProps}
           onClick={this.handleCancel.bind(this)}
           loading={this.getLoading('cancel')}>
           {cancelText || '取消'}
@@ -201,48 +233,48 @@ export default class TsStep extends Component<McStepProps, StepState> {
   renderPrev(): ReactNode | null {
     const {steps, showPrev = true, showFinalLastStep = true} = this.props;
     const {step} = this.state;
+    const btnProps = this.getBtnProps('prev');
+    const btn = (
+      <Button
+        ghost
+        type='primary'
+        {...btnProps}
+        onClick={(e: any) => {
+          this.goToStep(step - 1);
+          btnProps?.onClick?.(e);
+        }}
+        loading={this.getLoading('prev')}>
+        {'上一步'}
+      </Button>
+    );
     switch (step) {
       case 1:
         return null;
       case steps?.length:
         if (showPrev && showFinalLastStep) {
-          return (
-            <Button
-              ghost
-              type='primary'
-              onClick={() => this.goToStep(step - 1)}
-              loading={this.getLoading('prev')}>
-              {'上一步'}
-            </Button>
-          );
+          return btn;
         } else {
           return null;
         }
       default:
         if (showPrev) {
-          return (
-            <Button
-              ghost
-              type='primary'
-              onClick={() => this.goToStep(step - 1)}
-              loading={this.getLoading('prev')}>
-              {'上一步'}
-            </Button>
-          );
+          return btn;
         } else {
           return null;
         }
     }
-    return null;
   }
 
   renderNextAndFinisah(): ReactNode {
     const {steps, finishText, isBtnAdjust} = this.props;
     const {step} = this.state;
+    const finishBtnProps = this.getBtnProps('finish');
+    const nextBtnProps = this.getBtnProps('next');
     if (step === steps?.length) {
       return (
         <Button
           type={isBtnAdjust ? 'primary' : 'default'}
+          {...finishBtnProps}
           onClick={this.handleFinish.bind(this)}
           loading={this.getLoading('finish')}>
           {finishText || '完成'}
@@ -252,7 +284,11 @@ export default class TsStep extends Component<McStepProps, StepState> {
       return (
         <Button
           type={isBtnAdjust ? 'primary' : 'default'}
-          onClick={() => ref?.current?.onSubmit('handleSubmit')}
+          {...nextBtnProps}
+          onClick={(e: any) => {
+            ref?.current?.onSubmit('handleSubmit');
+            nextBtnProps?.onClick?.(e);
+          }}
           loading={this.getLoading('next')}>
           {'下一步'}
         </Button>
