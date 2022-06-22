@@ -101,7 +101,7 @@ export interface McStepProps extends StepsProps {
   /**
    * 按钮属性放开
    */
-  btnsProps: BtnsProps;
+  btnsProps?: BtnsProps;
 }
 
 interface StepState {
