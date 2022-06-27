@@ -207,9 +207,9 @@ export default class TsStep extends Component<McStepProps, StepState> {
       }
       return flag ? (
         <Button
+          loading={this.getLoading('cancel')}
           {...btnProps}
-          onClick={this.handleCancel.bind(this)}
-          loading={this.getLoading('cancel')}>
+          onClick={this.handleCancel.bind(this)}>
           {cancelText || '取消'}
         </Button>
       ) : null;
@@ -238,12 +238,12 @@ export default class TsStep extends Component<McStepProps, StepState> {
       <Button
         ghost
         type='primary'
+        loading={this.getLoading('prev')}
         {...btnProps}
         onClick={(e: any) => {
           this.goToStep(step - 1);
           btnProps?.onClick?.(e);
-        }}
-        loading={this.getLoading('prev')}>
+        }}>
         {'上一步'}
       </Button>
     );
@@ -274,9 +274,9 @@ export default class TsStep extends Component<McStepProps, StepState> {
       return (
         <Button
           type={isBtnAdjust ? 'primary' : 'default'}
+          loading={this.getLoading('finish')}
           {...finishBtnProps}
-          onClick={this.handleFinish.bind(this)}
-          loading={this.getLoading('finish')}>
+          onClick={this.handleFinish.bind(this)}>
           {finishText || '完成'}
         </Button>
       );
@@ -284,12 +284,12 @@ export default class TsStep extends Component<McStepProps, StepState> {
       return (
         <Button
           type={isBtnAdjust ? 'primary' : 'default'}
+          loading={this.getLoading('next')}
           {...nextBtnProps}
           onClick={(e: any) => {
             ref?.current?.onSubmit('handleSubmit');
             nextBtnProps?.onClick?.(e);
-          }}
-          loading={this.getLoading('next')}>
+          }}>
           {'下一步'}
         </Button>
       );
