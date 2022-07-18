@@ -102,6 +102,14 @@ export interface McStepProps extends StepsProps {
    * 按钮属性放开
    */
   btnsProps?: BtnsProps;
+  /**
+   * view-普通页面，modal-弹窗页面，默认 view
+   *
+   * 仅影响底部按钮的排列顺序
+   *
+   * 普通页面和弹窗页面两个场景下，底部按钮的排列顺序相反
+   */
+  mode?: string;
 }
 
 interface StepState {
@@ -297,15 +305,21 @@ export default class TsStep extends Component<McStepProps, StepState> {
   }
 
   renderStepButtonGroups() {
-    const {btnAlign = 'left', isBtnAdjust = false} = this.props;
+    const {btnAlign = 'left', isBtnAdjust = false, mode = 'view'} = this.props;
+    let btns: any[] = [
+      this.renderNextAndFinisah(),
+      this.renderPrev(),
+      this.renderCustomBtn(),
+      this.renderCancelBtn()
+    ];
+    if (mode === 'modal') {
+      btns = btns.reverse();
+    }
     return (
       <Button.Group
         style={{textAlign: btnAlign}}
         className={isBtnAdjust ? 'Step-buttonGroup' : ''}>
-        {this.renderNextAndFinisah()}
-        {this.renderPrev()}
-        {this.renderCustomBtn()}
-        {this.renderCancelBtn()}
+        {btns}
       </Button.Group>
     );
   }
