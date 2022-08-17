@@ -112,7 +112,7 @@ interface EditTableProps<T> {
    * 保存单条数据时触发的自定义方法
    */
   onSave?: (data: T, callback: Function) => void;
-   /**
+  /**
    * 编辑单条数据时触发的自定义方法
    */
   onEdit?: (callback: Function) => void;
@@ -464,28 +464,28 @@ export default class EditTable<T extends Item> extends React.Component<
   };
 
   edit = (key: string) => {
-    const {emptyRacAliyunKeyFlag,onEdit} = this.props;
+    const {emptyRacAliyunKeyFlag, onEdit} = this.props;
 
     if (this.state.editingKey !== '') {
       message.error('请先保存编辑项再进行其他编辑操作！');
       return false;
-    } 
+    }
 
     if (emptyRacAliyunKeyFlag) {
       this.emptyRacAliyunKey(key);
     }
 
-    if(onEdit){
+    if (onEdit) {
       onEdit((status: boolean) => {
-        if(status === true){
+        if (status === true) {
           this.setState({
             editingKey: key
           });
-      
+
           this.activeStatus();
         }
-        return
       });
+      return;
     }
 
     this.setState({
