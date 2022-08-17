@@ -115,7 +115,7 @@ interface EditTableProps<T> {
   /**
    * 编辑单条数据时触发的自定义方法
    */
-  onEdit?: (callback: Function) => void;
+  onEdit?: (data: T, callback: Function) => void;
   /**
    * 可添加的数据条数最大值
    */
@@ -474,9 +474,9 @@ export default class EditTable<T extends Item> extends React.Component<
     if (emptyRacAliyunKeyFlag) {
       this.emptyRacAliyunKey(key);
     }
-
+    const editData = this.state.data?.filter(c => c.key === key)[0];
     if (onEdit) {
-      onEdit((status: boolean) => {
+      onEdit(editData, (status: boolean) => {
         if (status === true) {
           this.setState({
             editingKey: key
