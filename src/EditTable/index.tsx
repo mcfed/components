@@ -113,6 +113,10 @@ interface EditTableProps<T> {
    */
   onSave?: (data: T, callback: Function) => void;
   /**
+   * 取消单条数据时触发的自定义方法
+   */
+  onCancle?: (callback: Function) => void;
+  /**
    * 编辑单条数据时触发的自定义方法
    */
   onEdit?: (data: T, callback: Function) => void;
@@ -650,6 +654,7 @@ export default class EditTable<T extends Item> extends React.Component<
   }
 
   cancel = (form: WrappedFormUtils, key: string) => {
+    const {onCancle, mode} = this.props;
     let obj = this.state.data.filter(d => d.key === key)[0];
     let Bdelete = false;
     for (let b in obj) {
@@ -658,6 +663,22 @@ export default class EditTable<T extends Item> extends React.Component<
         break;
       }
     }
+
+    if (onCancle && mode === 'row') {
+      onCancle((status: boolean) => {
+        // 如果返回为false，则不继续执行前端取消操作
+        if (status === true) {
+          if (Bdelete) {
+            this.delete(key, 'cancel');
+          }
+          this.setState({editingKey: ''});
+
+          this.revertStatus();
+        }
+      });
+      return;
+    }
+
     if (Bdelete) {
       this.delete(key, 'cancel');
     }
