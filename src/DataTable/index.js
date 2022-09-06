@@ -125,7 +125,8 @@ class DataTable extends Component {
       width: '100%'
     },
     showConfig: false,
-    columns: []
+    columns: [],
+    showSelectClear: false
   };
   showPopover() {
     this.setState({
@@ -186,8 +187,43 @@ class DataTable extends Component {
       />
     );
   }
+
+  clear() {
+    const {clearSelectRows} = this.props;
+    clearSelectRows && clearSelectRows();
+  }
+
+  renderTableClear() {
+    const {showSelectClear, rowSelection, dataSource = []} = this.props;
+    const len =
+      rowSelection && rowSelection.selectedRowKeys
+        ? rowSelection.selectedRowKeys.length
+        : 0;
+    return dataSource.length > 0 && showSelectClear && rowSelection ? (
+      <div className='checkedClear'>
+        <span>已选 {len} 项</span>
+        <Button
+          type='link'
+          disabled={len === 0}
+          onClick={this.clear.bind(this)}>
+          <span style={len == 0 ? {color: '#afb5c7'} : {color: '#3385ff'}}>
+            清空
+          </span>
+        </Button>
+      </div>
+    ) : null;
+  }
+
   render() {
-    let {pagination, showConfig, page, defaultSort, ...otherProps} = this.props;
+    let {
+      pagination,
+      showConfig,
+      page,
+      defaultSort,
+      showSelectClear,
+      clearSelectRows,
+      ...otherProps
+    } = this.props;
     let {visible, columns} = this.state;
     let newColumns;
     // console.log(this.props,"datatablerender")
@@ -223,12 +259,15 @@ class DataTable extends Component {
     }
     // console.log("newColumns", newColumns);
     return (
-      <Table
-        key={defaultSort && defaultSort.columnKey}
-        {...otherProps}
-        columns={newColumns}
-        pagination={!pagination ? false : Object.assign({}, pagination, page)}
-      />
+      <div className='DataTable'>
+        <Table
+          key={defaultSort && defaultSort.columnKey}
+          {...otherProps}
+          columns={newColumns}
+          pagination={!pagination ? false : Object.assign({}, pagination, page)}
+        />
+        {this.renderTableClear()}
+      </div>
     );
   }
 }
@@ -250,6 +289,14 @@ DataTable.propTypes = {
   /**
   分页器  同antd table pagination
   **/
-  pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object])
+  pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  /**
+  是否展示清空勾选项的按钮 默认为false
+  **/
+  showSelectClear: PropTypes.bool,
+  /**
+  传入清空勾选项按钮点击事件
+  **/
+  clearSelectRows: PropTypes.func
 };
 export default DataTable;

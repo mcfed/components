@@ -1,6 +1,35 @@
-.Step-buttonGroup {
-  .ant-btn {
-    margin-right: 8px;
-    border-radius: 4px;
+.mcStep {
+  .ant-steps {
+    .ant-steps-item {
+      .ant-steps-item-container {
+        .ant-steps-item-content {
+          .ant-steps-item-title {
+            height: 32px;
+            line-height: 32px;
+            font-size: 16px;
+            font-weight: 400;
+          }
+          .ant-steps-item-description {
+            height: 22px;
+            line-height: 22px;
+            font-size: 14px;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+  .Step-buttonGroup {
+    .ant-btn {
+      margin-right: 8px;
+      // ButtonGroups 组件中全局强制设定了按钮组中的按钮边角，故这里用!important
+      border-radius: 2px !important;
+    }
+  }
+  .ant-btn-group {
+    width: 100%;
+    .ant-btn-primary + .ant-btn:not(.ant-btn-primary):not([disabled]) {
+      border-color: #ced2de;
+    }
   }
 }
