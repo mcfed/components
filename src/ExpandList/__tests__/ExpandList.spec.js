@@ -14,14 +14,14 @@ const setup = props => {
   };
 };
 
-describe('快照测试', () => {
+describe.skip('快照测试', () => {
   it('ExpandList 快照测试', () => {
     const {wrapper} = setup();
     expect(wrapper).toMatchSnapshot();
   });
 });
 
-describe('ExpandList render 是否正确渲染', () => {
+describe.skip('ExpandList render 是否正确渲染', () => {
   it('render', () => {
     const {wrapper} = setup();
     expect(wrapper.find('List').exists()).toBe(true);
@@ -40,7 +40,7 @@ describe('ExpandList render 是否正确渲染', () => {
   });
 });
 
-describe('方法测试全覆盖', () => {
+describe.skip('方法测试全覆盖', () => {
   it('getInitData 是否正确调用', () => {
     const {wrapper} = setup({
       pageSize: 2

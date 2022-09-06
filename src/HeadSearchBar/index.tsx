@@ -199,14 +199,18 @@ export default class AdvancedSearchForm extends React.Component<
   }
   renderFields() {
     const {children, columns} = this.props;
+    const {isCollapse} = this.state;
     let cols = 6;
+    let len = React.Children.toArray(children).length;
     if (columns !== undefined) {
       cols = 24 / columns;
+      isCollapse && (len = columns);
     }
     return (
       React.Children.toArray(children)
         // 过滤 renderable 为 false 的 FormItem
         ?.filter((item: any) => this.isPropsTrue(item?.props?.renderable))
+        ?.slice(0, len)
         ?.map((it: any, idx: number) => {
           //搜索项若需要设置多倍宽度 columns 为设置倍数
           const {columns} = it.props;
