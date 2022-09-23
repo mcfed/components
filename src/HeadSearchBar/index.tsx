@@ -201,13 +201,28 @@ export default class AdvancedSearchForm extends React.Component<
     const {children, columns} = this.props;
     const {isCollapse} = this.state;
     let cols = 6;
-    let len = React.Children.toArray(children).length;
+    const childrenArray = React.Children.toArray(children);
+    let len = childrenArray.length;
     if (columns !== undefined) {
       cols = 24 / columns;
       isCollapse && (len = columns);
+      /** 收起时，可能存在一列放不下columns个数子项的情况，故需要去除多余的子项 */
+      let showChildrenNum = 0;
+      childrenArray
+        .map((item: any) => {
+          const {columns} = item.props;
+          return Number(columns) ? cols * Number(columns) : cols;
+        })
+        .reduce((prev: number, curr: number, index: number, arr: number[]) => {
+          if (prev <= 24) {
+            showChildrenNum = index;
+          }
+          return prev + curr;
+        });
+      isCollapse && showChildrenNum > 0 && (len = showChildrenNum);
     }
     return (
-      React.Children.toArray(children)
+      childrenArray
         // 过滤 renderable 为 false 的 FormItem
         ?.filter((item: any) => this.isPropsTrue(item?.props?.renderable))
         ?.slice(0, len)
