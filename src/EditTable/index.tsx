@@ -148,6 +148,7 @@ interface EditTableProps<T> {
    * 是否隐藏add按钮
    */
   hideAddBtn?: boolean;
+  value?: T[];
 }
 
 interface State<T> {
@@ -318,7 +319,7 @@ export default class EditTable<T extends Item> extends React.Component<
     if (this.props.columns && this.props.columns.length > 0) {
       this.setState(
         {
-          data: this.compileData(this.props.data),
+          data: this.compileData(this.props.value || this.props.data),
           columns: [...this.props.columns, ...this.state.columns]
         },
         () => {
@@ -445,9 +446,9 @@ export default class EditTable<T extends Item> extends React.Component<
     ];
 
     /* istanbul ignore else */
-    if (JSON.stringify(this.props.data) !== JSON.stringify(nextprops.data)) {
+    if (JSON.stringify(this.props.value) !== JSON.stringify(nextprops.value)) {
       this.setState({
-        data: this.compileData(nextprops.data),
+        data: this.compileData(nextprops.value!),
         editingKey: ''
       });
     }
