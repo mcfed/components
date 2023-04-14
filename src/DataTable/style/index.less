@@ -67,3 +67,46 @@
     padding: 16px 0;
   }
 }
+
+.check-disabled {
+  pointer-events: none;
+  color: #AFB5C7;
+}
+
+.custom-table {
+  colgroup {
+    .ant-table-selection-col {
+      width: 70px !important;
+    }
+  }
+  .ant-table-thead {
+    tr {
+      th:first-child{
+        .ant-table-selection {
+          .ant-checkbox-wrapper {
+            display: none;
+            height: 0 !important;
+            width: 0 !important;
+          }
+          .ant-checkbox {
+            display: none !important;
+          }
+          .ant-dropdown-trigger {
+            i {
+              padding: 0 4px;
+            }
+            &::before {
+              width: 30px;
+              height: 1.6em;
+              transform: translateY(-50%);
+              transition: background-color 0.3s;
+              content: '全选';
+              font-weight: 400;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
