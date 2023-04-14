@@ -5,6 +5,7 @@ exports[`快照测试 DataTable 快照测试 1`] = `
   className="DataTable"
 >
   <withStore(Table)
+    className=""
     columns={Array []}
     pagination={
       Object {
