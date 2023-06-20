@@ -10,7 +10,7 @@ const CHECK_TYPE = {
   反选当前页: 'checkCurInvert',
   单选: 'checkOne'
 };
-const CHECK_DISABLED_CLASS = 'check-disabled'
+const CHECK_DISABLED_CLASS = 'check-disabled';
 
 export class TableMenu extends Component {
   state = {
@@ -201,19 +201,25 @@ class DataTable extends Component {
   clear() {
     const {clearSelectRows} = this.props;
     clearSelectRows && clearSelectRows();
-    this.props.setCheckType('')
+    this.props.setCheckType('');
   }
 
   renderTableClear() {
-    const {showSelectClear, rowSelection, dataSource = [], page, checkType} = this.props;
+    const {
+      showSelectClear,
+      rowSelection,
+      dataSource = [],
+      page,
+      checkType
+    } = this.props;
     let len =
       rowSelection && rowSelection.selectedRowKeys
         ? rowSelection.selectedRowKeys.length
         : 0;
     if (checkType == CHECK_TYPE.全选所有) {
-      len = page?.total
+      len = page?.total;
       if (!!this.props?.disabledCount) {
-        len = len - this.props?.disabledCount
+        len = len - this.props?.disabledCount;
       }
     }
     return dataSource.length > 0 && showSelectClear && rowSelection ? (
@@ -234,14 +240,14 @@ class DataTable extends Component {
   // 取两个数组的交集
   getIntersection = (arr1, arr2) => {
     const set1 = new Set(arr1);
-    return arr2.filter((item) => set1.has(item));
-  }
+    return arr2.filter(item => set1.has(item));
+  };
 
   // 取出数组B中存在但数组A中不存在的元素
   getDifference = (arrA, arrB) => {
     const setA = new Set(arrA);
-    return arrB.filter((item) => !setA.has(item));
-  }
+    return arrB.filter(item => !setA.has(item));
+  };
 
   render() {
     let {
@@ -256,6 +262,7 @@ class DataTable extends Component {
       checkType,
       setCheckType,
       checkAll,
+      className,
       ...otherProps
     } = this.props;
     let {visible, columns} = this.state;
@@ -295,15 +302,15 @@ class DataTable extends Component {
      * checkbox-全部选择功能支持
      */
     if (checkAll) {
-      this.props.rowSelection.hideDefaultSelections = true
+      this.props.rowSelection.hideDefaultSelections = true;
       this.props.rowSelection.selections = [
         {
           key: CHECK_TYPE.全选所有,
           text: '全选所有',
-          onSelect: (changableRowKeys) => {
+          onSelect: changableRowKeys => {
             if (changableRowKeys?.length > 0) {
-              setSelectedRowKeys(changableRowKeys)
-              setCheckType(CHECK_TYPE.全选所有)
+              setSelectedRowKeys(changableRowKeys);
+              setCheckType(CHECK_TYPE.全选所有);
             }
           }
         },
@@ -311,74 +318,107 @@ class DataTable extends Component {
         {
           key: CHECK_TYPE.全选当前页,
           text: '全选当前页',
-          onSelect: checkType == CHECK_TYPE.全选所有 ? (changableRowKeys) => {
-            // setSelectedRowKeys([])
-            // setSelectedRowKeys(changableRowKeys)
-            setCheckType(CHECK_TYPE.全选当前页)
-          } : (changableRowKeys) => {
-            let arr = []
-            arr = [...selectedRowKeys, ...changableRowKeys]
-            arr = Array.from(new Set(arr))
-            setSelectedRowKeys(arr)
-            setCheckType(CHECK_TYPE.全选当前页)
-          }
+          onSelect:
+            checkType == CHECK_TYPE.全选所有
+              ? changableRowKeys => {
+                  // setSelectedRowKeys([])
+                  // setSelectedRowKeys(changableRowKeys)
+                  setCheckType(CHECK_TYPE.全选当前页);
+                }
+              : changableRowKeys => {
+                  let arr = [];
+                  arr = [...selectedRowKeys, ...changableRowKeys];
+                  arr = Array.from(new Set(arr));
+                  setSelectedRowKeys(arr);
+                  setCheckType(CHECK_TYPE.全选当前页);
+                }
         },
         /** 目前只有【初始状态】或者【全选所有】的情况下才可以反选所有,其他情况暂不放开 */
         {
           key: CHECK_TYPE.反选所有,
-          text: <span className={`${checkType == CHECK_TYPE.全选所有 || checkType == CHECK_TYPE.反选所有 || checkType == '' ? '' : CHECK_DISABLED_CLASS}`}>反选所有</span>,
-          onSelect: (checkType == CHECK_TYPE.全选所有 || checkType == CHECK_TYPE.反选所有 || checkType == '' ) ? changableRowKeys => {
-            // 如果是初始状态(反选所有==全选所有)
-            // 如果是全选所有状态，则清空
-            if (checkType == '' || checkType == CHECK_TYPE.反选所有) {
-              setSelectedRowKeys(changableRowKeys)
-              setCheckType(CHECK_TYPE.全选所有)
-            } else if (checkType == CHECK_TYPE.全选所有) {
-              setSelectedRowKeys([])
-              setCheckType(CHECK_TYPE.反选所有)
-            }
-          } : null
+          text: (
+            <span
+              className={`${
+                checkType == CHECK_TYPE.全选所有 ||
+                checkType == CHECK_TYPE.反选所有 ||
+                checkType == ''
+                  ? ''
+                  : CHECK_DISABLED_CLASS
+              }`}>
+              反选所有
+            </span>
+          ),
+          onSelect:
+            checkType == CHECK_TYPE.全选所有 ||
+            checkType == CHECK_TYPE.反选所有 ||
+            checkType == ''
+              ? changableRowKeys => {
+                  // 如果是初始状态(反选所有==全选所有)
+                  // 如果是全选所有状态，则清空
+                  if (checkType == '' || checkType == CHECK_TYPE.反选所有) {
+                    setSelectedRowKeys(changableRowKeys);
+                    setCheckType(CHECK_TYPE.全选所有);
+                  } else if (checkType == CHECK_TYPE.全选所有) {
+                    setSelectedRowKeys([]);
+                    setCheckType(CHECK_TYPE.反选所有);
+                  }
+                }
+              : null
         },
         /** 目前【全选所有】的场景下才不支持反选所有 */
         {
           key: CHECK_TYPE.反选当前页,
-          text: <span className={`${checkType == CHECK_TYPE.全选所有 ? CHECK_DISABLED_CLASS : ''}`}>反选当前页</span>,
-          onSelect: checkType == CHECK_TYPE.全选所有 ? null : changableRowKeys => {
-            // 当前页已选中的
-            let jiaoji = this.getIntersection(selectedRowKeys, changableRowKeys)
-            // 当前页未选中的
-            let chaji = this.getDifference(jiaoji, changableRowKeys)
-            // 所有的key，去除当前页已选中的，添加当前页未选中的
-            let arr = [];
-            arr = this.getDifference(jiaoji, selectedRowKeys)
-            arr = arr.concat(chaji)
-            setSelectedRowKeys(arr)
-            setCheckType(CHECK_TYPE.反选当前页)
-          }
+          text: (
+            <span
+              className={`${
+                checkType == CHECK_TYPE.全选所有 ? CHECK_DISABLED_CLASS : ''
+              }`}>
+              反选当前页
+            </span>
+          ),
+          onSelect:
+            checkType == CHECK_TYPE.全选所有
+              ? null
+              : changableRowKeys => {
+                  // 当前页已选中的
+                  let jiaoji = this.getIntersection(
+                    selectedRowKeys,
+                    changableRowKeys
+                  );
+                  // 当前页未选中的
+                  let chaji = this.getDifference(jiaoji, changableRowKeys);
+                  // 所有的key，去除当前页已选中的，添加当前页未选中的
+                  let arr = [];
+                  arr = this.getDifference(jiaoji, selectedRowKeys);
+                  arr = arr.concat(chaji);
+                  setSelectedRowKeys(arr);
+                  setCheckType(CHECK_TYPE.反选当前页);
+                }
         }
-      ]
+      ];
       const onSelect = (record, selected, selectedRows) => {
-        let arr = [].concat(selectedRowKeys)
+        let arr = [].concat(selectedRowKeys);
         if (selected == true) {
-          arr.push(record?.id)
+          arr.push(record?.id);
         } else {
           arr?.map((key, index) => {
             if (key == record?.id) {
-              arr.splice(index, 1)
+              arr.splice(index, 1);
             }
-          })
+          });
         }
-        setCheckType(CHECK_TYPE.单选)
-        setSelectedRowKeys(arr)
-      }
-      this.props.rowSelection.onSelect = onSelect
+        setCheckType(CHECK_TYPE.单选);
+        setSelectedRowKeys(arr);
+      };
+      this.props.rowSelection.onSelect = onSelect;
     }
-    
+
     // console.log("newColumns", newColumns);
+    const mergedClassName = checkAll ? `${className} custom-table` : className;
     return (
       <div className='DataTable'>
         <Table
-          className={`${checkAll?'custom-table': ''}`}
+          className={mergedClassName}
           key={defaultSort && defaultSort.columnKey}
           {...otherProps}
           columns={newColumns}
