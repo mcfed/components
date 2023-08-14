@@ -410,7 +410,10 @@ class DataTable extends Component {
         setCheckType(CHECK_TYPE.单选);
         setSelectedRowKeys(arr);
       };
-      this.props.rowSelection.onSelect = onSelect;
+      // 针对特殊rowKey需要自行处理onSelect
+      if (!this.props.rowSelection.onSelect) {
+        this.props.rowSelection.onSelect = onSelect;
+      }
     }
 
     // console.log("newColumns", newColumns);
