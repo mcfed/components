@@ -70,8 +70,8 @@ describe('Panel 组件是否渲染 default props', () => {
       okText: 'okText'
     };
     const footer = wrapper.instance().renderFooterButton(locale);
-    expect(footer[0].props.children).toBe(locale.okText);
-    expect(footer[1].props.children).toBe(locale.cancelText);
+    expect(footer[0].props.children).toBe(locale.cancelText);
+    expect(footer[1].props.children).toBe(locale.okText);
     done();
   });
 
