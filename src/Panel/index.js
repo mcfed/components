@@ -49,6 +49,9 @@ export default class Panel extends Component {
       ? this.props.form.getFieldsError
       : function() {};
     return [
+      <Button key='cancel' onClick={onCancel}>
+        {locale.cancelText}
+      </Button>,
       <Button
         key='submit'
         loading={confirmLoading}
@@ -56,9 +59,6 @@ export default class Panel extends Component {
         disabled={hasErrors(getFieldsError())}
         type='primary'>
         {locale.okText}
-      </Button>,
-      <Button key='cancel' onClick={onCancel}>
-        {locale.cancelText}
       </Button>
     ];
   }
