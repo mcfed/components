@@ -10,7 +10,7 @@ export {default as ButtonGroups} from './ButtonGroups';
 export {default as EditRow} from './EditRow';
 export {default as ModalSelect} from './ModalSelect';
 export {default as WrapperDatePicker} from './WrapperDatePicker';
-export {default as DataTable} from './DataTable';
+export {default as DataTable} from './DataTableV2';
 export {default as Permission} from './Permission';
 export {default as Panel} from './Panel';
 export {default as ModalOrView} from './ModalOrView';
