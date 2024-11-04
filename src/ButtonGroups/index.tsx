@@ -47,7 +47,8 @@ class Confirm extends React.Component<ConfirmType> {
     return Modal.confirm({
       title: title,
       content: content,
-      onOk: onConfirm
+      onOk: onConfirm,
+      icon: <Icon type='info-circle' />
     });
   }
   //此处的createElement 直接用children 无法正常使用 小坑
@@ -100,7 +101,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       ...btnProps
     } = it.props;
     const title = this.formatTooltipTitle(it.props);
-    return btnProps.disabled === true
+    return btnProps.disabled === true || needTooltip === false
       ? React.createElement(
           //@ts-ignore
           Button,
@@ -153,7 +154,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
           handleClick(actionkey);
         }
       },
-      otherProps.disabled === true
+      otherProps.disabled === true || needTooltip === false
         ? React.createElement(
             //@ts-ignore
             Button,
@@ -225,7 +226,8 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
             overlayClassName={overlayClassName}
             overlay={this.renderMenuItem(endArray)}>
             <Button>
-              <Icon type='ellipsis' />
+              {/* <Icon type='ellipsis' /> */}
+              更多
             </Button>
           </Dropdown>
         ) : null}

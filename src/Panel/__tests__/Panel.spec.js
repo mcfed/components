@@ -70,8 +70,8 @@ describe('Panel 组件是否渲染 default props', () => {
       okText: 'okText'
     };
     const footer = wrapper.instance().renderFooterButton(locale);
-    expect(footer[0].props.children).toBe(locale.okText);
-    expect(footer[1].props.children).toBe(locale.cancelText);
+    expect(footer[0].props.children).toBe(locale.cancelText);
+    expect(footer[1].props.children).toBe(locale.okText);
     done();
   });
 
@@ -114,10 +114,10 @@ describe('panel 组件设置locale参数后返回值的验证 mount方式', () =
     const wrapperDom = mount(<Panel locale={{okText: '测试'}}>abc</Panel>);
     const localeTest = Object.assign({}, Locale, {okText: '测试'});
     expect(wrapperDom.find('Button').get(0).props.children).toEqual(
-      localeTest.okText
+      localeTest.cancelText
     );
     expect(wrapperDom.find('Button').get(1).props.children).toEqual(
-      localeTest.cancelText
+      localeTest.okText
     );
     done();
   });

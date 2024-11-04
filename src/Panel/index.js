@@ -4,6 +4,11 @@ import {Button, Spin} from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import Locale from './locale.js';
 
+function hasErrors(fieldsError) {
+  if (fieldsError)
+    return Object.keys(fieldsError).some(field => fieldsError[field]);
+  else return false;
+}
 export default class Panel extends Component {
   renderHeader() {
     let header;
@@ -40,16 +45,20 @@ export default class Panel extends Component {
 
   renderFooterButton(locale) {
     const {onOk, onCancel, confirmLoading} = this.props;
+    const getFieldsError = this.props.form
+      ? this.props.form.getFieldsError
+      : function() {};
     return [
+      <Button key='cancel' onClick={onCancel}>
+        {locale.cancelText}
+      </Button>,
       <Button
         key='submit'
         loading={confirmLoading}
         onClick={onOk}
+        disabled={hasErrors(getFieldsError())}
         type='primary'>
         {locale.okText}
-      </Button>,
-      <Button key='cancel' onClick={onCancel}>
-        {locale.cancelText}
       </Button>
     ];
   }

@@ -12,6 +12,7 @@ import {Row, Col} from 'antd';
 
 const Button = ButtonGroups.CustomButton;
 
+type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 interface AdvancedFormProps extends FormProps {
   /**
    * 组件之前的间隔
@@ -58,6 +59,10 @@ interface AdvancedFormProps extends FormProps {
    * 默认是否展开 如果不传  默认为true
    */
   defaultCollapse?: boolean;
+  /**
+   * 重置按钮事件监听方法
+   */
+  filterResetHandler: () => void;
 }
 
 interface AdvancedFormState {
@@ -76,6 +81,7 @@ export default class AdvancedSearchForm extends React.Component<
     defaultParams: {},
     autoSubmitForm: true,
     filterSubmitHandler: (value: any) => {},
+    filterResetHandler: () => {},
     showSearchButton: false,
     needCollapse: false,
     defaultCollapse: false
@@ -107,8 +113,15 @@ export default class AdvancedSearchForm extends React.Component<
       this.form = instance.props.form;
     }
   }
-  handleResetForm() {
-    this.form.resetFields();
+  handleResetForm(e: any) {
+    e.preventDefault();
+    const {filterResetHandler} = this.props;
+    if (filterResetHandler) {
+      filterResetHandler.call(this);
+      this.form.resetFields();
+    } else {
+      this.form.resetFields();
+    }
   }
   handleCollapse() {
     this.setState({
@@ -175,22 +188,55 @@ export default class AdvancedSearchForm extends React.Component<
       </div>
     );
   }
+  isPropsTrue(prop: fnOrBoolType) {
+    if (typeof prop === 'function') {
+      return prop.call(this, this.form);
+    }
+    if (typeof prop === 'boolean') {
+      return prop;
+    }
+    return true;
+  }
   renderFields() {
     const {children, columns} = this.props;
+    const {isCollapse} = this.state;
     let cols = 6;
+    const childrenArray = React.Children.toArray(children);
+    let len = childrenArray.length;
     if (columns !== undefined) {
       cols = 24 / columns;
+      isCollapse && (len = columns);
+      /** 收起时，可能存在一列放不下columns个数子项的情况，故需要去除多余的子项 */
+      let showChildrenNum = 0;
+      childrenArray
+        .map((item: any) => {
+          const {columns} = item.props;
+          return Number(columns) ? cols * Number(columns) : cols;
+        })
+        .reduce((prev: number, curr: number, index: number, arr: number[]) => {
+          if (prev <= 24) {
+            showChildrenNum = index;
+          }
+          return prev + curr;
+        });
+      isCollapse && showChildrenNum > 0 && (len = showChildrenNum);
     }
-    return React.Children.toArray(children).map((it: any, idx: number) => {
-      //搜索项若需要设置多倍宽度 columns 为设置倍数
-      const {columns} = it.props;
-      const spanCol = Number(columns) ? cols * Number(columns) : cols;
-      return (
-        <Col span={spanCol} key={idx}>
-          {React.createElement(it.type, it.props, it.props.children)}
-        </Col>
-      );
-    });
+    return (
+      childrenArray
+        // 过滤 renderable 为 false 的 FormItem
+        ?.filter((item: any) => this.isPropsTrue(item?.props?.renderable))
+        ?.slice(0, len)
+        ?.map((it: any, idx: number) => {
+          //搜索项若需要设置多倍宽度 columns 为设置倍数
+          const {columns} = it.props;
+          const spanCol = Number(columns) ? cols * Number(columns) : cols;
+          return (
+            <Col span={spanCol} key={idx}>
+              {React.createElement(it.type, it.props, it.props.children)}
+            </Col>
+          );
+        })
+    );
   }
 
   formatClassName() {

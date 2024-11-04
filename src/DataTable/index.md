@@ -32,11 +32,19 @@
 
 > 功能扩展开启 showConfig 后，自动增加配置列 fixed 右侧
 
-| 参数       |      说明      |  类型 | 默认值 |
-| ---------- | :------------: | ----: | -----: |
-| showConfig | 开启列配置模式 | Array |  false |
+| 参数            | 说明                   | 类型     | 默认值 |
+| --------------- | :--------------------- | :------- | :----- |
+| showConfig      | 开启列配置模式         | Array    | false  |
+| showSelectClear | 开启清空勾选项功能     | Boolean  | false  |
+| clearSelectRows | 清空勾选项按钮点击事件 | Function | /      |
 
 > showConfig 存在 BUG 还需要修订，表格基本上功能可正常使用
+
+## UPDATE:
+
+1. 2022/01/18 优化内容（v0.7.25）
+
+   新增 `showSelectClear`, `clearSelectRows`，支持展示表格当前选中项数量以及清空当前选中项
 
 ## TODO:
 
