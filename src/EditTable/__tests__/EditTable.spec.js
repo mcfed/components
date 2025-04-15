@@ -1,5 +1,6 @@
 import {shallow} from 'enzyme';
 import React from 'react';
+import {PlusOutlined} from '@ant-design/icons';
 import {Button} from 'antd';
 
 import EditTable from '../index.tsx';
@@ -107,7 +108,7 @@ describe.skip('edittable base test', () => {
     const {wrapper, props} = setup();
     expect(wrapper.find('Table').prop('footer')()).toEqual(
       <Button
-        icon='plus'
+        icon={<PlusOutlined />}
         onClick={wrapper.instance().addNew}
         style={{width: '100%'}}>
         新增

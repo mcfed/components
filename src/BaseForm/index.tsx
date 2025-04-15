@@ -1,7 +1,8 @@
 import * as React from 'react';
 // import Form from 'antd/es/form';
 import {FormProps} from 'antd/lib/form';
-import {Form} from 'antd';
+import {Form} from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 
 export interface CustomFormComponentProps extends FormProps {
   /**

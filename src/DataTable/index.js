@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Table, Icon, Checkbox, Button, Row, Col, Form} from 'antd';
+import {Form} from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {Table, Checkbox, Button, Row, Col} from 'antd';
 // import './style/index.less'
 
 const CHECK_TYPE = {

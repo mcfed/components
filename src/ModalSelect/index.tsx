@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Modal, Icon} from 'antd';
+import {Button, Modal} from 'antd';
 import {TableProps} from 'antd/es/table/interface';
 import {ModalProps} from 'antd/es/modal/Modal';
 import {DataTable} from '../index';

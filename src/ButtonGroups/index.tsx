@@ -7,7 +7,8 @@ import * as React from 'react';
 // import Modal, {ModalFuncProps} from 'antd/es/modal';
 import {ButtonGroupProps} from 'antd/es/button';
 import {ModalFuncProps} from 'antd/es/modal';
-import {Button, Tooltip, Menu, Icon, Dropdown, Modal} from 'antd';
+import {InfoCircleOutlined} from '@ant-design/icons';
+import {Button, Tooltip, Menu, Dropdown, Modal} from 'antd';
 import CustomButton from './Button';
 
 interface ButtonGroupsType extends ButtonGroupProps {
@@ -48,7 +49,7 @@ class Confirm extends React.Component<ConfirmType> {
       title: title,
       content: content,
       onOk: onConfirm,
-      icon: <Icon type='info-circle' />
+      icon: <InfoCircleOutlined />
     });
   }
   //此处的createElement 直接用children 无法正常使用 小坑

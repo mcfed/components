@@ -1,9 +1,12 @@
 import * as React from 'react';
-import {Table, Button, message, Form, Popconfirm} from 'antd';
-import {FormComponentProps} from 'antd/lib/form';
+import {PlusOutlined} from '@ant-design/icons';
+import {Form} from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {Table, Button, message, Popconfirm} from 'antd';
+import {FormComponentProps} from '@ant-design/compatible/lib/form';
 import {ColumnProps} from 'antd/lib/table/interface';
+import {WrappedFormUtils} from '@ant-design/compatible/lib/form/Form';
 import {GetFieldDecoratorOptions} from 'antd/lib/form/Form';
-import {WrappedFormUtils} from 'antd/lib/form/Form';
 import {HTMLAttributes} from 'react';
 
 const FormItem = Form.Item;
@@ -855,7 +858,10 @@ export default class EditTable<T extends Item> extends React.Component<
 
       return {
         footer: () => (
-          <Button icon='plus' onClick={this.addNew} style={{width: '100%'}}>
+          <Button
+            icon={<PlusOutlined />}
+            onClick={this.addNew}
+            style={{width: '100%'}}>
             {btnText?.add ? btnText?.add : '新增'}
           </Button>
         )

@@ -1,5 +1,16 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Button, Dropdown, Menu, Checkbox, Tooltip, Icon} from 'antd';
+
+import {
+  ColumnHeightOutlined,
+  MenuOutlined,
+  RedoOutlined,
+  SettingOutlined,
+  VerticalAlignBottomOutlined,
+  VerticalAlignMiddleOutlined,
+  VerticalAlignTopOutlined
+} from '@ant-design/icons';
+
+import {Button, Dropdown, Menu, Checkbox, Tooltip} from 'antd';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
 import './index.less';
 
@@ -189,7 +200,7 @@ const TableToolbar = ({
                 className={`column-settings-item ${
                   isDisabled ? 'disabled-column' : ''
                 }`}>
-                <Icon type='menu' style={{marginRight: 16}} />
+                <MenuOutlined style={{marginRight: 16}} />
                 <Checkbox
                   checked={visibleColumns.includes(col.dataIndex)}
                   onChange={e => {
@@ -212,7 +223,7 @@ const TableToolbar = ({
                               onColumnFixedChange(col.dataIndex, 'left')
                             }
                             className='toolbar-btn'>
-                            <Icon type='vertical-align-top' />
+                            <VerticalAlignTopOutlined />
                           </Button>
                         </Tooltip>
                       )}
@@ -223,7 +234,7 @@ const TableToolbar = ({
                               onColumnFixedChange(col.dataIndex, undefined)
                             }
                             className='toolbar-btn'>
-                            <Icon type='vertical-align-middle' />
+                            <VerticalAlignMiddleOutlined />
                           </Button>
                         </Tooltip>
                       )}
@@ -234,7 +245,7 @@ const TableToolbar = ({
                               onColumnFixedChange(col.dataIndex, 'right')
                             }
                             className='toolbar-btn'>
-                            <Icon type='vertical-align-bottom' />
+                            <VerticalAlignBottomOutlined />
                           </Button>
                         </Tooltip>
                       )}
@@ -253,13 +264,13 @@ const TableToolbar = ({
     <div className='ToolBar'>
       <Tooltip title='刷新'>
         <Button onClick={onRefresh} className='toolbar-btn'>
-          <Icon type='redo' spin={loading} />
+          <RedoOutlined spin={loading} />
         </Button>
       </Tooltip>
       <Tooltip title='密度'>
         <Dropdown overlay={densityMenu}>
           <Button className='toolbar-btn'>
-            <Icon type='column-height' />
+            <ColumnHeightOutlined />
           </Button>
         </Dropdown>
       </Tooltip>
@@ -271,7 +282,7 @@ const TableToolbar = ({
           trigger={['click']}
           overlayClassName='column-settings-overlay'>
           <Button className='toolbar-btn'>
-            <Icon type='setting' />
+            <SettingOutlined />
           </Button>
         </Dropdown>
       </Tooltip>

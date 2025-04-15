@@ -5,7 +5,9 @@ import {stringify} from 'qs';
 // import Select from 'antd/es/select';
 import {FormItemProps} from 'antd/es/form';
 import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
-import {Form, Select} from 'antd';
+import {Form} from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {Select} from 'antd';
 
 import {FormRefContext, LayoutRefContext} from '../BaseForm';
 import {FetchUtils} from '@mcfed/utils';

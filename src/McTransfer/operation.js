@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Icon} from 'antd';
+import {LeftOutlined, RightOutlined} from '@ant-design/icons';
+import {Button} from 'antd';
 import PropTypes from 'prop-types';
 
 export function noop() {}
@@ -21,7 +22,7 @@ const Operation = ({
       onClick={moveToLeft}>
       {
         <span>
-          <Icon type='left' />
+          <LeftOutlined />
           {leftArrowText}
         </span>
       }
@@ -36,7 +37,7 @@ const Operation = ({
       {
         <span>
           {rightArrowText}
-          <Icon type='right' />
+          <RightOutlined />
         </span>
       }
     </Button>

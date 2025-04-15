@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Row, Col, Icon, Button, Input} from 'antd';
+import {Icon as LegacyIcon} from '@ant-design/compatible';
+import {Row, Col, Button, Input} from 'antd';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import classNames from 'classnames';
 import SubmitForm from '../BaseForm';
@@ -199,7 +200,7 @@ export default class AdvancedSearchForm extends React.Component {
         {children.length > 3 ? (
           <Button type='ghost' onClick={this.toggleExpand.bind(this)}>
             {expand ? contextLocale.upText : contextLocale.downText}
-            <Icon type={expand ? 'up' : 'down'} />
+            <LegacyIcon type={expand ? 'up' : 'down'} />
           </Button>
         ) : (
           ''

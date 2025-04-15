@@ -1,6 +1,8 @@
 import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
-import {Form, Input, Button, Col, Row, Select, Modal} from 'antd';
+import {Form} from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
+import {Input, Button, Col, Row, Select, Modal} from 'antd';
 import {downList} from './data';
 //const { TextArea } = Input;
 const FormItem = Form.Item;

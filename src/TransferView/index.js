@@ -1,5 +1,5 @@
 import React from 'react';
-import {Transfer, Checkbox, Icon, Input, Select} from 'antd';
+import {Transfer, Checkbox, Input, Select} from 'antd';
 
 //重写方法所需依赖
 import _defineProperty from 'babel-runtime/helpers/defineProperty';

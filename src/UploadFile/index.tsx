@@ -1,5 +1,6 @@
 import React from 'react';
-import {Upload, Button, Icon} from 'antd';
+import {UploadOutlined} from '@ant-design/icons';
+import {Upload, Button} from 'antd';
 import {UploadProps} from 'antd/lib/upload';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import Locale from './locale';
@@ -81,7 +82,7 @@ export default class UploadFile extends React.Component<
         beforeUpload={this.beforeUpload.bind(this)}
         onRemove={this.onRemove.bind(this)}>
         <Button>
-          <Icon type='upload' />
+          <UploadOutlined />
           {React.createElement(
             LocaleReceiver,
             {

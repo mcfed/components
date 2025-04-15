@@ -1,6 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {Form} from 'antd';
+import {Form} from '@ant-design/compatible';
+import '@ant-design/compatible/assets/index.css';
 import TextMaskInput from '../index';
 
 const Mask = props => {
