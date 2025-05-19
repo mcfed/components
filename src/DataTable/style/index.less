@@ -1,3 +1,5 @@
+@import (reference) '~antd/lib/style/themes/index.less';
+
 .DataTable {
   position: relative;
   .line() {
@@ -65,6 +67,12 @@
     height: 64px;
     line-height: 32px;
     padding: 16px 0;
+    .checkedClear-disabled {
+      color: #afb5c7;
+    }
+    .checkedClear-active {
+      color: @primary-color;
+    }
   }
 }
 

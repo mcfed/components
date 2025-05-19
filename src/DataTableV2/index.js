@@ -128,7 +128,10 @@ class DataTable extends Component {
       <div className='checkedClear'>
         <span>已选 {len} 项</span>
         <Button type='link' disabled={len === 0} onClick={this.clear}>
-          <span style={len == 0 ? {color: '#afb5c7'} : {color: '#3385ff'}}>
+          <span
+            className={
+              len == 0 ? 'checkedClear-disabled' : 'checkedClear-active'
+            }>
             清空
           </span>
         </Button>

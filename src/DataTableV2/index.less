@@ -1,3 +1,5 @@
+@import (reference) '~antd/lib/style/themes/index.less';
+
 .TableRender-DataTable {
   position: relative;
   .line() {
@@ -145,6 +147,14 @@
       height: 64px;
       line-height: 32px;
       padding: 16px 0;
+    }
+    .checkedClear {
+      .checkedClear-disabled {
+        color: #afb5c7;
+      }
+      .checkedClear-active {
+        color: @primary-color;
+      }
     }
   }
 
@@ -346,7 +356,7 @@
 
   .ant-menu-item-selected {
     background-color: #e6f7ff;
-    color: #1890ff;
+    color: @primary-color;
     font-weight: bold;
   }
 }
