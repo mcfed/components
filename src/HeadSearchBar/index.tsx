@@ -84,13 +84,13 @@ export default class AdvancedSearchForm extends React.Component<
     filterResetHandler: () => {},
     showSearchButton: false,
     needCollapse: false,
-    defaultCollapse: false
+    defaultCollapse: false,
   };
   constructor(props: AdvancedFormProps) {
     super(props);
     if (props.defaultCollapse !== undefined) {
       this.state = {
-        isCollapse: props.defaultCollapse
+        isCollapse: props.defaultCollapse,
       };
     }
   }
@@ -103,7 +103,7 @@ export default class AdvancedSearchForm extends React.Component<
       this.form.validateFieldsAndScroll((err: any, values: object) => {
         filterSubmitHandler.call(
           this,
-          Object.assign({}, defaultParams, values)
+          Object.assign({}, defaultParams, values),
         );
       });
     }
@@ -125,7 +125,7 @@ export default class AdvancedSearchForm extends React.Component<
   }
   handleCollapse() {
     this.setState({
-      isCollapse: !this.state.isCollapse
+      isCollapse: !this.state.isCollapse,
     });
   }
   renderButton(locale: any) {
@@ -169,7 +169,7 @@ export default class AdvancedSearchForm extends React.Component<
           type='link'>
           {this.state.isCollapse ? collapseText : openCollapseText}
         </Button>
-      ) : null
+      ) : null,
     ];
   }
   renderSearchBar() {
@@ -181,9 +181,9 @@ export default class AdvancedSearchForm extends React.Component<
             componentName: 'HeadSearchBar',
             defaultLocale: Locale,
             //@ts-ignore
-            children: () => undefined //为通过类型检查
-          },
-          this.renderButton.bind(this)
+            children: () => undefined, //为通过类型检查
+          } as any,
+          this.renderButton.bind(this),
         )}
       </div>
     );
@@ -247,7 +247,7 @@ export default class AdvancedSearchForm extends React.Component<
       'head-searchbar-panel',
       {'head-searchbar-show-button': showSearchButton},
       {'head-searchbar-collapsed': needCollapse && this.state.isCollapse},
-      {'head-searchbar-not-collapse': needCollapse && !this.state.isCollapse}
+      {'head-searchbar-not-collapse': needCollapse && !this.state.isCollapse},
     );
   }
 

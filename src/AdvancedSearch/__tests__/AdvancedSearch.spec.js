@@ -12,62 +12,60 @@ const setup = (props = {}) => {
 
   return {
     props,
-    wrapper
+    wrapper,
   };
 };
 
 describe('AdvancedSearchForm shallow render', () => {
-  it('render without params', done => {
+  it('render without params', (done) => {
     const {wrapper, props} = setup();
     expect(wrapper.instance()).toBeInstanceOf(AdvancedSearchForm);
-    // expect(wrapper.find('[name="keyType"]').exists()).toBe(true)
-    // expect(wrapper.find('[name="keyWord"]').exists()).toBe(true)
     done();
   });
 
-  it('render with one children', done => {
+  it('render with one children', (done) => {
     const wrapper = shallow(
       <AdvancedSearchForm
         keysOption={[
           {
             label: 'name',
-            value: 0
-          }
+            value: 0,
+          },
         ]}>
         <Input name='callState' label='呼叫类型' />
-      </AdvancedSearchForm>
+      </AdvancedSearchForm>,
     );
-    expect(wrapper.find('Input[name="callState"]').exists()).toBe(true);
+    expect(wrapper.html()).toContain('name="callState"');
     done();
   });
-  it('render with childrens', done => {
+  it('render with childrens', (done) => {
     const wrapper = shallow(
       <AdvancedSearchForm
         keysOption={[
           {
             label: 'name',
-            value: 0
-          }
+            value: 0,
+          },
         ]}>
         <Input name='callState' label='呼叫类型' />
         <Select name='inputAcc' label='hr' />
-      </AdvancedSearchForm>
+      </AdvancedSearchForm>,
     );
-    expect(wrapper.find('Input[name="callState"]').exists()).toBe(true);
-    expect(wrapper.find('Select[name="inputAcc"]').exists()).toBe(true);
+    expect(wrapper.html()).toContain('name="callState"');
+    expect(wrapper.html()).toContain('name="inputAcc"');
     done();
   });
-  xit('render with params', done => {
+  xit('render with params', (done) => {
     const props = {
       keysOption: [
         {
           label: 'name',
-          value: 0
-        }
+          value: 0,
+        },
       ],
       showConfig: true,
       module: 1,
-      filterSubmitHandler: jest.fn()
+      filterSubmitHandler: jest.fn(),
     };
     const {wrapper} = setup(props);
     expect(wrapper.find('Button[icon="setting"]').exists()).toBe(true);
@@ -76,14 +74,14 @@ describe('AdvancedSearchForm shallow render', () => {
     // expect(wrapper.find('Button[icon="down1"]').exists()).toBe(true)
   });
 
-  xit('render with childrens than 7 max render 7', done => {
+  xit('render with childrens than 7 max render 7', (done) => {
     const wrapper = shallow(
       <AdvancedSearchForm
         keysOption={[
           {
             label: 'name',
-            value: 0
-          }
+            value: 0,
+          },
         ]}>
         <Input name='callState' label='呼叫类型' />
         <Input name='callState1' label='呼叫类型' />
@@ -97,7 +95,7 @@ describe('AdvancedSearchForm shallow render', () => {
         <Input name='callState9' label='呼叫类型' />
         <Input name='callState10' label='呼叫类型' />
         <Select name='inputAcc' label='hr' />
-      </AdvancedSearchForm>
+      </AdvancedSearchForm>,
     );
     expect(wrapper.find('FormItem[colon=false]')).toHaveLength(7);
     //  expect(wrapper.find('CalendarPicker[name="callTime"]').exists()).toBe(true)
@@ -106,15 +104,15 @@ describe('AdvancedSearchForm shallow render', () => {
 });
 
 describe('AdvancedSearchForm mount render and behavior', () => {
-  xit('render with childrens expand', done => {
+  xit('render with childrens expand', (done) => {
     const wrapper = mount(
       <AdvancedSearchForm
         filterSubmitHandler={jest.fn()}
         keysOption={[
           {
             label: 'name',
-            value: 0
-          }
+            value: 0,
+          },
         ]}>
         <Input name='callState' label='呼叫类型' />
         <Input name='callState1' label='呼叫类型' />
@@ -128,11 +126,11 @@ describe('AdvancedSearchForm mount render and behavior', () => {
         <Input name='callState9' label='呼叫类型' />
         <Input name='callState10' label='呼叫类型' />
         <Select name='inputAcc' label='hr' />
-      </AdvancedSearchForm>
+      </AdvancedSearchForm>,
     );
     expect(wrapper.find('FormItem>FormItem[colon=false]')).toHaveLength(7);
     const e = {
-      preventDefault: jest.fn()
+      preventDefault: jest.fn(),
     };
     expect(wrapper.state('expand')).toBe(false);
     // wrapper.find('Button[shape="circle"][icon="down"]').simulate('click',e)
@@ -142,25 +140,25 @@ describe('AdvancedSearchForm mount render and behavior', () => {
     done();
   });
 
-  it.skip('submit filterSubmitHandler', done => {
+  it.skip('submit filterSubmitHandler', (done) => {
     const props = {
       keysOption: [
         {
           label: 'name',
-          value: 0
-        }
+          value: 0,
+        },
       ],
-      filterSubmitHandler: jest.fn()
+      filterSubmitHandler: jest.fn(),
     };
     const wrapper = shallow(
       <AdvancedSearchForm {...props}>
         <Input name='callState' label='呼叫类型' defaultValue='11' />
         <Input name='callState2' label='呼叫类型' />
-      </AdvancedSearchForm>
+      </AdvancedSearchForm>,
     );
     // console.log(wrapper.find('Button[htmlType="submit"]'))
     const e = {
-      preventDefault: jest.fn()
+      preventDefault: jest.fn(),
     };
     wrapper.find('Button[htmlType="submit"]').simulate('submit', e);
     console.log(e.preventDefault.mock.calls);

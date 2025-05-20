@@ -14,12 +14,12 @@ export default class DynamicForm extends React.Component {
         {...otherProp}
         className={className}
         ref={this.saveFormRef.bind(this)}>
-        {formData.map(item => {
+        {formData?.map((item) => {
           const {component, ...others} = item;
           return React.createElement(
             FormItem,
             {key: others.name, name: others.name, children: others.children},
-            React.createElement(component, others)
+            React.createElement(component, others),
           );
         })}
       </BaseForm>
@@ -31,5 +31,5 @@ DynamicForm.propTypes = {
   /**
   tab 配置
   **/
-  formData: PropTypes.array
+  formData: PropTypes.array,
 };

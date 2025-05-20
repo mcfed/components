@@ -6,41 +6,41 @@ import {Button} from 'antd';
 import EditTable from '../index.tsx';
 import {any} from 'prop-types';
 
-const setup = props => {
+const setup = (props) => {
   const columns = [
     {
       title: '姓名',
       dataIndex: 'name',
-      key: 'name'
+      key: 'name',
     },
     {
       title: '年龄',
       dataIndex: 'age',
-      key: 'age'
+      key: 'age',
     },
     {
       title: '住址',
       dataIndex: 'address',
-      key: 'address'
-    }
+      key: 'address',
+    },
   ];
   const dataSource = [
     {
       key: '1',
       name: '胡彦斌',
       age: 32,
-      address: '西湖区湖底公园1号'
+      address: '西湖区湖底公园1号',
     },
     {
       key: '2',
       name: '胡彦祖',
       age: 42,
-      address: '西湖区湖底公园1号'
-    }
+      address: '西湖区湖底公园1号',
+    },
   ];
 
   const defaultProps = {
-    onChange: jest.fn()
+    onChange: jest.fn(),
   };
 
   const wrapper = shallow(
@@ -48,14 +48,14 @@ const setup = props => {
       data={dataSource}
       columns={columns}
       {...Object.assign({}, defaultProps, props)}
-    />
+    />,
   );
 
   return {
     wrapper,
     props,
     dataSource,
-    columns
+    columns,
   };
 };
 
@@ -68,7 +68,7 @@ describe.skip('edittable base test', () => {
 
   it('默认state', () => {
     const {wrapper, props} = setup({
-      data: undefined
+      data: undefined,
     });
 
     expect(wrapper.state('data')).toEqual([]);
@@ -85,22 +85,22 @@ describe.skip('edittable base test', () => {
     const {wrapper, props, dataSource, columns} = setup();
 
     expect(wrapper.find('Table').prop('columns')).toEqual(
-      wrapper.state('columns').map(col => {
+      wrapper.state('columns').map((col) => {
         if (!col.editComponent) {
           return col;
         }
         return {
           ...col,
-          onCell: record => ({
+          onCell: (record) => ({
             record,
             editConfig: col.editConfig,
             editDom: col.editComponent,
             dataIndex: col.dataIndex,
             title: col.title,
-            editing: this.isEditing(record)
-          })
+            editing: this.isEditing(record),
+          }),
         };
-      })
+      }),
     );
   });
 
@@ -112,7 +112,7 @@ describe.skip('edittable base test', () => {
         onClick={wrapper.instance().addNew}
         style={{width: '100%'}}>
         新增
-      </Button>
+      </Button>,
     );
   });
 });
@@ -122,73 +122,76 @@ describe('editable method', () => {
     const {wrapper, props} = setup();
     const instance = wrapper.instance();
     expect(
-      instance.renderDeleteConfirmButton({hideDeleteConfirm: true}, {key: '1'})
+      instance.renderDeleteConfirmButton({hideDeleteConfirm: true}, {key: '1'}),
     ).toMatchSnapshot();
   });
   it('renderDeleteConfirmButton 方法测试 hideDeleteConfirm=false', () => {
     const {wrapper, props} = setup();
     const instance = wrapper.instance();
     expect(
-      instance.renderDeleteConfirmButton({hideDeleteConfirm: false}, {key: '1'})
+      instance.renderDeleteConfirmButton(
+        {hideDeleteConfirm: false},
+        {key: '1'},
+      ),
     ).toMatchSnapshot();
   });
   it('renderAddAndDeleteButton 方法测试 type=add direction=bottom index=1', () => {
     const {wrapper, props} = setup({
-      direction: 'bottom'
+      direction: 'bottom',
     });
     const instance = wrapper.instance();
     const type = 'add';
     const index = 1;
     wrapper.setState({
-      data: [{}]
+      data: [{}],
     });
     expect(instance.renderAddAndDeleteButton(type, index)).toEqual(false);
   });
   it('renderAddAndDeleteButton 方法测试 type=add direction=bottom index=0', () => {
     const {wrapper, props} = setup({
-      direction: 'bottom'
+      direction: 'bottom',
     });
     const instance = wrapper.instance();
     const type = 'add';
     const index = 0;
     wrapper.setState({
-      data: [{}]
+      data: [{}],
     });
     expect(instance.renderAddAndDeleteButton(type, index)).toEqual(true);
   });
   it('renderAddAndDeleteButton 方法测试 type=add direction=top index=0', () => {
     const {wrapper, props} = setup({
-      direction: 'top'
+      direction: 'top',
     });
     const instance = wrapper.instance();
     const type = 'add';
     const index = 0;
     wrapper.setState({
-      data: [{}]
+      data: [{}],
     });
     expect(instance.renderAddAndDeleteButton(type, index)).toEqual(true);
   });
   it('renderAddAndDeleteButton 方法测试 type=add direction=top index=1', () => {
     const {wrapper, props} = setup({
-      direction: 'top'
+      direction: 'top',
     });
     const instance = wrapper.instance();
     const type = 'add';
     const index = 1;
     wrapper.setState({
-      data: [{}]
+      data: [{}],
     });
     expect(instance.renderAddAndDeleteButton(type, index)).toEqual(false);
   });
   it('renderAddAndDeleteButton 方法测试 type=delete index=1', () => {
     const {wrapper, props} = setup({
-      direction: 'top'
+      direction: 'top',
     });
     const instance = wrapper.instance();
     const type = 'delete';
     const index = 1;
     wrapper.setState({
-      data: [{}]
+      data: [{}],
     });
     expect(instance.renderAddAndDeleteButton(type, index)).toEqual(false);
   });
@@ -212,7 +215,7 @@ describe('editable method', () => {
 
   it('compileData 方法测试 mode=full data数组长度为0', () => {
     const {wrapper, props} = setup({
-      mode: 'full'
+      mode: 'full',
     });
     const instance = wrapper.instance();
     instance.compileData([]);
@@ -221,7 +224,7 @@ describe('editable method', () => {
   it('isEditing 默认为空，传入key为123 返回false', () => {
     const {wrapper, props} = setup();
     const record = {
-      key: 123
+      key: 123,
     };
     expect(wrapper.instance().isEditing(record)).toBe(false);
   });
@@ -229,7 +232,7 @@ describe('editable method', () => {
   it('isEditing 默认为空，传入key为空 返回true', () => {
     const {wrapper, props} = setup();
     const record = {
-      key: ''
+      key: '',
     };
     expect(wrapper.instance().isEditing(record)).toBe(true);
   });
@@ -252,31 +255,31 @@ describe('editable method', () => {
   it('delete 方法调用', () => {
     const onchangeFn = jest.fn();
     const {wrapper, props, dataSource} = setup({
-      onChange: onchangeFn
+      onChange: onchangeFn,
     });
     const key = '1';
     let oldData = wrapper.state('data');
     wrapper.instance().delete(key);
-    expect(wrapper.state('data')).toEqual(oldData.filter(c => c.key !== key));
+    expect(wrapper.state('data')).toEqual(oldData.filter((c) => c.key !== key));
     expect(onchangeFn.mock.calls.length).toBe(1);
   });
 
   it('delete 方法调用 type=delete', () => {
     const onchangeFn = jest.fn();
     const {wrapper, props, dataSource} = setup({
-      onChange: onchangeFn
+      onChange: onchangeFn,
     });
     const instance = wrapper.instance();
 
     const key = '1';
     let oldData = wrapper.state('data');
     wrapper.setState({
-      editingKey: '1'
+      editingKey: '1',
     });
     expect(instance.delete(key, 'delete')).toEqual(false);
 
     wrapper.setState({
-      editingKey: ''
+      editingKey: '',
     });
   });
 
@@ -285,12 +288,12 @@ describe('editable method', () => {
       callback(true);
     });
     const {wrapper, props, dataSource} = setup({
-      onDelete: onDeleteFn
+      onDelete: onDeleteFn,
     });
     const key = '1';
     let oldData = wrapper.state('data');
     wrapper.instance().delete(key, 'delete');
-    expect(wrapper.state('data')).toEqual(oldData.filter(c => c.key !== key));
+    expect(wrapper.state('data')).toEqual(oldData.filter((c) => c.key !== key));
     expect(onDeleteFn.mock.calls.length).toBe(1);
   });
 
@@ -308,7 +311,7 @@ describe('editable method', () => {
 
   it('addNew 方法调用 direction=bottom', () => {
     const {wrapper, props, dataSource} = setup({
-      direction: 'bottom'
+      direction: 'bottom',
     });
     wrapper.instance().addNew();
     expect(wrapper.state('currentPage')).toBe(1);
@@ -316,32 +319,32 @@ describe('editable method', () => {
 
   it('addNew 方法调用 mode=full 校验不通过', () => {
     const {wrapper, props, dataSource} = setup({
-      mode: 'full'
+      mode: 'full',
     });
     const instance = wrapper.instance();
     const form = {
-      validateFields: callback => callback({}, {})
+      validateFields: (callback) => callback({}, {}),
     };
     expect(instance.addNew({}, form)).toEqual(undefined);
   });
 
   it('addNew 方法调用 mode=full 校验通过', () => {
     const {wrapper, props, dataSource} = setup({
-      mode: 'full'
+      mode: 'full',
     });
     const instance = wrapper.instance();
     const form = {
-      validateFields: callback => callback(undefined, {})
+      validateFields: (callback) => callback(undefined, {}),
     };
     instance.addNew({}, form);
   });
 
   it('addNew 方法调用 maxNum', () => {
     const {wrapper, props, dataSource} = setup({
-      maxNum: 2
+      maxNum: 2,
     });
     wrapper.setState({
-      data: [{}, {}, {}]
+      data: [{}, {}, {}],
     });
     expect(wrapper.instance().addNew()).toEqual(undefined);
   });
@@ -391,7 +394,7 @@ describe('editable method', () => {
         .mockImplementation((text, record, instance, form) => (
           <div>{text}</div>
         )),
-      editConfig: {}
+      editConfig: {},
     };
     expect(instance.renderCell(text, record, cellConfig)).toMatchSnapshot();
   });
@@ -400,7 +403,7 @@ describe('editable method', () => {
     const {wrapper, props} = setup();
     const params = {
       form: undefined,
-      key: '1'
+      key: '1',
     };
     wrapper.instance().cancel(params);
     //判断 是否删除 逻辑？
@@ -410,10 +413,10 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const render = instance.state.columns.filter(
-      item => item.dataIndex === '操作'
+      (item) => item.dataIndex === '操作',
     )[0].render;
     const record = {
-      key: '1'
+      key: '1',
     };
     instance.save = jest.fn();
     instance.isEditing = jest.fn(() => true);
@@ -431,10 +434,10 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const render = instance.state.columns.filter(
-      item => item.dataIndex === '操作'
+      (item) => item.dataIndex === '操作',
     )[0].render;
     const record = {
-      key: '1'
+      key: '1',
     };
     const renderWrapper = render('', record);
     // dom 点击事件覆盖
@@ -442,7 +445,7 @@ describe('editable method', () => {
     renderWrapper.props.children.props.children[1].props.onConfirm();
   });
 
-  it('UNSAFE_UNSAFE_componentWillReceiveProps 生命周期测试', () => {
+  it('UNSAFE_componentWillReceiveProps 生命周期测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const nextprops = {
@@ -451,9 +454,9 @@ describe('editable method', () => {
           key: '3',
           name: '胡彦组',
           age: 32,
-          address: '西湖区湖底公园1号'
-        }
-      ]
+          address: '西湖区湖底公园1号',
+        },
+      ],
     };
     instance.UNSAFE_componentWillReceiveProps(nextprops);
   });
@@ -509,7 +512,7 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     instance.revertStatus();
-    instance.state.columns.map(item => {
+    instance.state.columns.map((item) => {
       expect(item.editingStatus).toBeFalsy();
     });
   });
@@ -518,7 +521,7 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     instance.activeStatus();
-    instance.state.columns.map(item => {
+    instance.state.columns.map((item) => {
       expect(item.editingStatus).toBeTruthy();
     });
   });
@@ -527,17 +530,17 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     wrapper.setState({
-      data: [{key: '110'}]
+      data: [{key: '110'}],
     });
     const form = {
-      validateFields: jest.fn(cb => {
+      validateFields: jest.fn((cb) => {
         cb(false, null);
       }),
       getFieldInstance: jest.fn().mockReturnValue({
-        validateFields: jest.fn(cb => {
+        validateFields: jest.fn((cb) => {
           cb(false, null);
-        })
-      })
+        }),
+      }),
     };
     const key1 = '1';
     const key2 = '110';
@@ -552,21 +555,21 @@ describe('editable method', () => {
       callback(true);
     });
     const {wrapper} = setup({
-      onSave: onSaveFn
+      onSave: onSaveFn,
     });
     const instance = wrapper.instance();
     wrapper.setState({
-      data: [{key: '1'}]
+      data: [{key: '1'}],
     });
     const form = {
-      validateFields: jest.fn(cb => {
+      validateFields: jest.fn((cb) => {
         cb(false, null);
       }),
       getFieldInstance: jest.fn().mockReturnValue({
-        validateFields: jest.fn(cb => {
+        validateFields: jest.fn((cb) => {
           cb(false, null);
-        })
-      })
+        }),
+      }),
     };
     const key1 = '1';
     const key2 = '110';
@@ -583,9 +586,9 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const form = {
-      validateFields: jest.fn(cb => {
+      validateFields: jest.fn((cb) => {
         cb(true, null);
-      })
+      }),
     };
     const key = '1';
     instance.save(form, key);
@@ -595,14 +598,14 @@ describe('editable method', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const form = {
-      validateFields: jest.fn(cb => {
+      validateFields: jest.fn((cb) => {
         cb(false, null);
       }),
       getFieldInstance: jest.fn().mockReturnValue({
-        validateFields: jest.fn(cb => {
+        validateFields: jest.fn((cb) => {
           cb(true, null);
-        })
-      })
+        }),
+      }),
     };
     const key = '1';
     instance.save(form, key);
@@ -611,7 +614,7 @@ describe('editable method', () => {
   it('handleChangeData 方法测试', () => {
     const onChangeFn = jest.fn();
     const {wrapper} = setup({
-      onChange: onChangeFn
+      onChange: onChangeFn,
     });
     const instance = wrapper.instance();
     const data = [];
@@ -626,7 +629,7 @@ describe('editable method', () => {
     const {wrapper} = setup({
       onChange: onChangeFn,
       formatData4Form: formatData4FormFn,
-      onChangeWithOutForm: onChangeWithOutFormFn
+      onChangeWithOutForm: onChangeWithOutFormFn,
     });
     const instance = wrapper.instance();
     const data = [];
@@ -637,7 +640,7 @@ describe('editable method', () => {
 
   it('handleChangeData 方法测试 onChange===undefined', () => {
     const {wrapper} = setup({
-      onChange: undefined
+      onChange: undefined,
     });
     const instance = wrapper.instance();
     const data = [];
@@ -649,7 +652,7 @@ describe('editable method', () => {
     const formatData4FormFn = jest.fn();
     const {wrapper} = setup({
       onChange: onChangeFn,
-      formatData4Form: formatData4FormFn
+      formatData4Form: formatData4FormFn,
     });
     const instance = wrapper.instance();
     const data = [];
@@ -679,7 +682,7 @@ describe('editable method', () => {
       key: '3',
       name: '',
       age: '',
-      address: ''
+      address: '',
     });
     instance.cancel({}, '3');
     expect(deleteSpy).toBeCalledWith('3', 'cancel');
@@ -689,7 +692,7 @@ describe('editable method', () => {
 
   it('renderDefaultConfig 方法测试 mode=row', () => {
     const {wrapper} = setup({
-      mode: 'row'
+      mode: 'row',
     });
     const instance = wrapper.instance();
 
@@ -699,11 +702,11 @@ describe('editable method', () => {
 
   it('renderDefaultConfig 方法测试 mode=full', () => {
     const {wrapper} = setup({
-      mode: 'full'
+      mode: 'full',
     });
     const instance = wrapper.instance();
     expect(instance.renderDefaultConfig()).toEqual({
-      pagination: false
+      pagination: false,
     });
   });
 
@@ -714,19 +717,19 @@ describe('editable method', () => {
           title: '姓名',
           dataIndex: 'name',
           key: 'name545555',
-          editComponent: <div></div>
+          editComponent: <div></div>,
         },
         {
           title: '年龄',
           dataIndex: 'age',
-          key: 'age'
+          key: 'age',
         },
         {
           title: '住址',
           dataIndex: 'address',
-          key: 'address'
-        }
-      ]
+          key: 'address',
+        },
+      ],
     };
     setup(props);
   });

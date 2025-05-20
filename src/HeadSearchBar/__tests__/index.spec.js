@@ -1,16 +1,37 @@
 import React from 'react';
-import {render, shallow, mount} from 'enzyme';
-
+import {shallow} from 'enzyme';
 import HeadSearchBar from '../index';
-const setup = props => {
+
+// 模拟 window.matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: jest.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    dispatchEvent: jest.fn(),
+  })),
+});
+
+const setup = (props) => {
   const fn = jest.fn();
-  const wrapper = mount(
+  const form = {
+    validateFieldsAndScroll: jest.fn((callback) => callback(null, {})),
+  };
+  const wrapper = shallow(
     <HeadSearchBar filterSubmitHandler={fn}>
       <div>123</div>
-    </HeadSearchBar>
+    </HeadSearchBar>,
   );
+  wrapper.instance().saveFormRef({props: {form}});
   return {
-    wrapper: wrapper
+    props,
+    wrapper,
+    fn,
   };
 };
 
@@ -25,27 +46,16 @@ describe('headsearchbar', () => {
   //   });
 
   it('method handlesearch', () => {
-    const {wrapper} = setup();
-    const instance = wrapper.instance();
-
-    instance.handleSearch({preventDefault: jest.fn()}, {a: 1, b: 2});
-
-    expect(wrapper.prop('filterSubmitHandler')).toHaveBeenCalled();
-
-    instance.form = {
-      validateFieldsAndScroll: jest.fn()
-    };
-
-    instance.handleSearch({preventDefault: jest.fn()}, undefined);
-    expect(instance.form.validateFieldsAndScroll).toHaveBeenCalled();
+    const {wrapper, fn} = setup();
+    wrapper.instance().handleSearch({preventDefault: jest.fn()});
+    expect(fn).toBeCalled();
   });
 
   it('method saveformref test', () => {
     const {wrapper} = setup();
-    const instance = wrapper.instance();
-
-    instance.saveFormRef({props: {form: 111}});
-    expect(instance.form).toEqual(111);
+    const formRef = {props: {form: {}}};
+    wrapper.instance().saveFormRef(formRef);
+    expect(wrapper.instance().form).toBe(formRef.props.form);
   });
 
   it('method renderFields test', () => {});

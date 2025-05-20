@@ -4,12 +4,11 @@ import {stringify} from 'qs';
 // import Form, {FormItemProps} from 'antd/es/form';
 // import Select from 'antd/es/select';
 import {FormItemProps} from 'antd/es/form';
-import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
+import {GetFieldDecoratorOptions} from '@ant-design/compatible/lib/form/Form';
 import {Form} from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {Select} from 'antd';
 import type {Rule} from 'antd/es/form';
-
 import {FormRefContext, LayoutRefContext} from '../BaseForm';
 import {FetchUtils} from '@mcfed/utils';
 
@@ -93,14 +92,14 @@ type CustFormItemType = CustFormItemProps & GetFieldDecoratorOptions;
 
 interface FormItemState {
   fixedFieldName: string;
-  fixedFieldLabel: string;
+  fixedFieldLabel: string | React.ReactNode;
   fixedFieldRules: Rule[];
   childData: any[];
 }
 
 export class FormItem extends React.Component<CustFormItemType, FormItemState> {
   static defaultProps = {
-    containerTo: true
+    containerTo: true,
   };
   constructor(props: CustFormItemType) {
     super(props);
@@ -109,7 +108,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
       childData: [],
       fixedFieldName: '',
       fixedFieldLabel: '',
-      fixedFieldRules: []
+      fixedFieldRules: [],
     };
 
     //childData init
@@ -118,7 +117,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
         childData: options,
         fixedFieldName: props.name || '',
         fixedFieldLabel: props.label || '',
-        fixedFieldRules: props.rules || []
+        fixedFieldRules: props.rules || [],
       };
     }
   }
@@ -130,7 +129,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
         this.props.fetch,
         fetchMethod,
         this.props.fetchParams,
-        this.props.fetchCallback
+        this.props.fetchCallback,
       );
     }
   }
@@ -148,7 +147,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
           fetch,
           fetchMethod,
           nextProps.fetchParams,
-          nextProps.fetchCallback
+          nextProps.fetchCallback,
         );
       }
 
@@ -162,7 +161,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
             fetch,
             fetchMethod,
             fetchParams,
-            nextProps.fetchCallback
+            nextProps.fetchCallback,
           );
         }
       }
@@ -175,7 +174,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
     fetchUrl: string,
     fetchMethod: string,
     fetchParams?: fetchParamsType,
-    fetchCallback?: fetchCallbackType
+    fetchCallback?: fetchCallbackType,
   ) {
     const params = this.compileFetchParams(fetchParams);
     if (fetchMethod === 'post' || fetchMethod === 'POST') {
@@ -236,7 +235,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
       throw 'childData 格式有误';
     }
     this.setState({
-      childData: dataList
+      childData: dataList,
     });
   }
   isPropsTrue(prop: fnOrBoolType) {
@@ -276,7 +275,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
   loopRenderTreeNode(
     data: any[],
     loopProp: string,
-    renderItem: any
+    renderItem: any,
   ): React.ReactNode {
     const renderItemFinal =
       renderItem !== undefined ? renderItem : this.renderTreeItem;
@@ -285,7 +284,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
         return React.cloneElement(
           renderItemFinal(item),
           {},
-          this.loopRenderTreeNode(item[loopProp], loopProp, renderItem)
+          this.loopRenderTreeNode(item[loopProp], loopProp, renderItem),
         );
       }
       return React.cloneElement(renderItemFinal(item));
@@ -317,7 +316,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
       !element.props.changeCalendarContainer
     ) {
       containerToProps = {
-        getPopupContainer: (triggerNode: any) => triggerNode.parentNode
+        getPopupContainer: (triggerNode: any) => triggerNode.parentNode,
       };
     }
 
@@ -325,20 +324,20 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
       {},
       otherProps,
       containerToProps,
-      this.fieldDisabledProp(disabled)
+      this.fieldDisabledProp(disabled),
     );
     if (dataSourceProp !== undefined) {
       return React.createElement(
         element.type,
         {...elementProps, [dataSourceProp]: childData},
-        children
+        children,
       );
     }
     if (childData.length > 0) {
       return React.createElement(
         element.type,
         elementProps,
-        _this.renderChildNode(childData)
+        _this.renderChildNode(childData),
       );
     }
     //@ts-ignore
@@ -346,7 +345,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
       return React.createElement(
         element.type,
         {...elementProps, treeData: []},
-        children
+        children,
       );
     }
     return React.createElement(element.type, elementProps, children);
@@ -358,21 +357,21 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
     if (label === undefined) {
       wrapperColsProps = {
         wrapperCol: {
-          span: 24
-        }
+          span: 24,
+        },
       };
     } else if (columns !== 1 && Number(columns)) {
       const labelColSpan = Math.round(
         //@ts-ignore
-        formLayout.labelCol.span / Number(columns)
+        formLayout.labelCol.span / Number(columns),
       );
       wrapperColsProps = {
         labelCol: {
-          span: labelColSpan
+          span: labelColSpan,
         },
         wrapperCol: {
-          span: 24 - labelColSpan
-        }
+          span: 24 - labelColSpan,
+        },
       };
     }
 
@@ -392,19 +391,27 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
 
   getFixedFieldProps = () => {
     const {name, label, rules, children} = this.props;
-    
-    if (!children || typeof children === 'string' || typeof children === 'number' || typeof children === 'boolean') {
+
+    if (
+      !children ||
+      typeof children === 'string' ||
+      typeof children === 'number' ||
+      typeof children === 'boolean'
+    ) {
       return {
         fixedFieldName: name || '',
         fixedFieldLabel: label || '',
-        fixedFieldRules: rules || []
+        fixedFieldRules: rules || [],
       };
     }
 
     return {
-      fixedFieldName: name !== undefined ? name : (children as any).props?.name || '',
-      fixedFieldLabel: label !== undefined ? label : (children as any).props?.label || '',
-      fixedFieldRules: rules !== undefined ? rules : (children as any).props?.rules || []
+      fixedFieldName:
+        name !== undefined ? name : (children as any).props?.name || '',
+      fixedFieldLabel:
+        label !== undefined ? label : (children as any).props?.label || '',
+      fixedFieldRules:
+        rules !== undefined ? rules : (children as any).props?.rules || [],
     };
   };
 
@@ -412,9 +419,9 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
     //针对hidden input antd 有margin 空开 处理
     const element = this.props.children;
     let styles = {};
-    if (element.props.type === 'hidden') {
+    if (element?.props?.type === 'hidden') {
       styles = {
-        style: {marginBottom: 0}
+        style: {marginBottom: 0},
       };
     }
     return styles;
@@ -444,11 +451,8 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
     const transferValue = this.compileValue(element);
     const isFormContextComing = getFieldDecorator !== undefined;
     const wrapperColsProps = this.compileWrapperCols();
-    const {
-      fixedFieldName,
-      fixedFieldLabel,
-      fixedFieldRules
-    } = this.getFixedFieldProps();
+    const {fixedFieldName, fixedFieldLabel, fixedFieldRules} =
+      this.getFixedFieldProps();
     const styleProps = this.compileStyleProps();
 
     return this.fieldRenderableProp(renderable) && isFormContextComing ? (
@@ -461,12 +465,12 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
           wrapperColsProps,
           otherProps,
           {
-            rules: fixedFieldRules
-          }
+            rules: fixedFieldRules,
+          },
         )}>
         {getFieldDecorator(fixedFieldName, {
           ...otherProps,
-          initialValue: transferValue
+          initialValue: transferValue,
         })(this.renderFields(element))}
       </Form.Item>
     ) : null;
@@ -476,9 +480,9 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
 export default function FormItemRender(props: CustFormItemType) {
   return (
     <FormRefContext.Consumer>
-      {formRef => (
+      {(formRef) => (
         <LayoutRefContext.Consumer>
-          {formLayout => (
+          {(formLayout) => (
             <FormItem {...props} formLayout={formLayout} formRef={formRef}>
               {props.children}
             </FormItem>

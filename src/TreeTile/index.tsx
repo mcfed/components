@@ -27,7 +27,7 @@ type checkedKeysObjectType = {
 class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
   static defaultProps = {
     dataSource: [],
-    title: '请选择'
+    title: '请选择',
   };
 
   constructor(props: TreeTileProps) {
@@ -36,7 +36,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
       indeterminate: false,
       checkAll: false,
       dataSourceKeys: [],
-      checkedKeys: []
+      checkedKeys: [],
     };
   }
 
@@ -44,17 +44,17 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     let {dataSource} = this.props;
     let dataSourceKeys = this.getKeysFromMap(dataSource, []);
     this.setState({
-      dataSourceKeys
+      dataSourceKeys,
     });
 
     let {checkedKeys} = this.props;
     if (checkedKeys instanceof Array) {
       this.setState({
-        checkedKeys
+        checkedKeys,
       });
     } else {
       this.setState({
-        checkedKeys: []
+        checkedKeys: [],
       });
     }
   }
@@ -73,7 +73,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
     data.map((item: any) => {
       if (item.children) {
         return (
-          <TreeNode title={item.title} key={item.key} dataRef={item}>
+          <TreeNode title={item.title} key={item.key} data={item}>
             {this.renderTreeNodes(item.children)}
           </TreeNode>
         );
@@ -94,16 +94,16 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
       {
         checkedKeys: checkedKeys,
         indeterminate: false,
-        checkAll: e.target.checked
+        checkAll: e.target.checked,
       },
       () => {
         this.onChange(checkedKeys);
-      }
+      },
     );
   };
 
   isCheckedKeysArrayType = (
-    keys: checkedKeysType
+    keys: checkedKeysType,
   ): keys is checkedKeysArrayType => {
     return keys instanceof Array;
   };
@@ -120,11 +120,11 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
             checkedKeys.length !== 0 &&
             checkedKeys.length < dataSourceKeys.length,
           checkAll:
-            !!checkedKeys && checkedKeys.length === dataSourceKeys.length
+            !!checkedKeys && checkedKeys.length === dataSourceKeys.length,
         },
         () => {
           this.onChange(checkedKeys);
-        }
+        },
       );
     }
   };
@@ -156,7 +156,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
             checkable
             blockNode={false}
             defaultExpandAll
-            onCheck={this.onCheck}
+            onCheck={this.onCheck as any}
             checkedKeys={checkedKeys}>
             {this.renderTreeNodes(dataSource)}
           </Tree>

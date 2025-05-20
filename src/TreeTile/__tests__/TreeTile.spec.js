@@ -1,17 +1,21 @@
-import {shallow, mount, render} from 'enzyme';
 import React from 'react';
-import TreeTile from '../index.tsx';
+import {shallow} from 'enzyme';
+import TreeTile from '../index';
+import {Card, Checkbox} from 'antd';
 
-const setup = props => {
-  const onChange = item => <div>{item}</div>;
+const setup = () => {
+  const props = {
+    dataSource: [],
+    title: '测试标题',
+  };
   const wrapper = shallow(<TreeTile {...props} />);
   return {
+    props,
     wrapper,
-    props
   };
 };
 
-describe('快照测试', () => {
+describe('TreeTile 组件测试', () => {
   it('TreeTile 快照测试', () => {
     const {wrapper} = setup();
     expect(wrapper).toMatchSnapshot();
@@ -28,9 +32,9 @@ describe.skip('TreeTile render 是否正确渲染', () => {
           {
             title: 'Child Node1',
             value: '0-0-0',
-            key: '0-0-0'
-          }
-        ]
+            key: '0-0-0',
+          },
+        ],
       },
       {
         title: 'Node2',
@@ -40,26 +44,26 @@ describe.skip('TreeTile render 是否正确渲染', () => {
           {
             title: 'Child Node3',
             value: '0-1-0',
-            key: '0-1-0'
+            key: '0-1-0',
           },
           {
             title: 'Child Node4',
             value: '0-1-1',
-            key: '0-1-1'
+            key: '0-1-1',
           },
           {
             title: 'Child Node5',
             value: '0-1-2',
-            key: '0-1-2'
-          }
-        ]
-      }
+            key: '0-1-2',
+          },
+        ],
+      },
     ],
     checkedKeys = ['0-1-2'];
   const defaultProps = {
     title: '测试用例',
     checkedKeys: checkedKeys,
-    dataSource: treeData
+    dataSource: treeData,
   };
   it('TreeTile 不传 title 参数时渲染是否正确', () => {
     const {wrapper, props} = setup({});
@@ -71,7 +75,7 @@ describe.skip('TreeTile render 是否正确渲染', () => {
     expect(wrapper.find('Tree').length).toBe(0);
   });
 
-  it('TreeTile 不传 checkedKeys 时渲染是否正确', () => {
+  it('TreeTile 不传 checkedKeys expect(wrapper.', () => {
     const {wrapper, props} = setup({});
     expect(wrapper.instance().state.checkedKeys).toEqual([]);
   });
@@ -107,9 +111,9 @@ describe.skip('TreeTile 方法测试', () => {
           {
             title: 'Child Node1',
             value: '0-0-0',
-            key: '0-0-0'
-          }
-        ]
+            key: '0-0-0',
+          },
+        ],
       },
       {
         title: 'Node2',
@@ -119,20 +123,20 @@ describe.skip('TreeTile 方法测试', () => {
           {
             title: 'Child Node3',
             value: '0-1-0',
-            key: '0-1-0'
+            key: '0-1-0',
           },
           {
             title: 'Child Node4',
             value: '0-1-1',
-            key: '0-1-1'
+            key: '0-1-1',
           },
           {
             title: 'Child Node5',
             value: '0-1-2',
-            key: '0-1-2'
-          }
-        ]
-      }
+            key: '0-1-2',
+          },
+        ],
+      },
     ],
     checkedKeys = [];
   const onChange = jest.fn();
@@ -140,7 +144,7 @@ describe.skip('TreeTile 方法测试', () => {
     title: '测试用例',
     checkedKeys: checkedKeys,
     dataSource: treeData,
-    onChange: onChange
+    onChange: onChange,
   };
 
   it('getKeysFromMap 方法调用', () => {

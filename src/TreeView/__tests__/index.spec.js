@@ -12,7 +12,7 @@ const setup = (props = {}) => {
 
   return {
     props,
-    wrapper
+    wrapper,
   };
 };
 
@@ -20,7 +20,7 @@ const tPickerSetup = (props = {}) => {
   const wrapper = shallow(<TreeSelectPicker {...props} />);
   return {
     props,
-    wrapper
+    wrapper,
   };
 };
 
@@ -28,7 +28,7 @@ const tViewPanelSetup = (props = {}) => {
   const wrapper = shallow(<TreeViewPanel {...props} />);
   return {
     props,
-    wrapper
+    wrapper,
   };
 };
 
@@ -43,8 +43,8 @@ const treeData = [
         children: [
           {title: '0-0-0-0', key: '0-0-0-0'},
           {title: '0-0-0-1', key: '0-0-0-1'},
-          {title: '0-0-0-2', key: '0-0-0-2'}
-        ]
+          {title: '0-0-0-2', key: '0-0-0-2'},
+        ],
       },
       {
         title: '0-0-1',
@@ -52,22 +52,22 @@ const treeData = [
         children: [
           {title: '0-0-1-0', key: '0-0-1-0'},
           {title: '0-0-1-1', key: '0-0-1-1'},
-          {title: '0-0-1-2', key: '0-0-1-2'}
-        ]
+          {title: '0-0-1-2', key: '0-0-1-2'},
+        ],
       },
       {
         title: '0-0-2',
         key: '0-0-2',
         children: [
           {title: '0-0-2-0', key: '0-0-2-0'},
-          {title: '0-0-2-1', key: '0-0-2-1'}
-        ]
+          {title: '0-0-2-1', key: '0-0-2-1'},
+        ],
       },
       {
         title: '0-0-3',
-        key: '0-0-3'
-      }
-    ]
+        key: '0-0-3',
+      },
+    ],
   },
   {
     title: undefined,
@@ -75,20 +75,20 @@ const treeData = [
     children: [
       {title: '0-1-0-0', key: '0-1-0-0'},
       {title: '0-1-0-1', key: '0-1-0-1'},
-      {title: '0-1-0-2', key: '0-1-0-2'}
-    ]
+      {title: '0-1-0-2', key: '0-1-0-2'},
+    ],
   },
   {
     title: '0-2',
-    key: '0-2'
+    key: '0-2',
   },
   {
     title: undefined,
-    key: '0-3'
-  }
+    key: '0-3',
+  },
 ];
 
-const renderItem = item => {
+const renderItem = (item) => {
   return <TreeNode title={item.title} key={item.key} dataRef={item}></TreeNode>;
 };
 
@@ -97,7 +97,7 @@ describe('TreeView 是否渲染', () => {
     const {wrapper, props} = setup({
       treeData,
       renderItem,
-      checkedKeys: ['0-2']
+      checkedKeys: ['0-2'],
     });
     expect(wrapper.find('.ant-tree-list').exists()).toBe(true);
   });
@@ -107,7 +107,7 @@ describe('TreeView 是否渲染', () => {
       treeData,
       renderItem,
       checkedKeys: ['0-2'],
-      isTreeInModal: true
+      isTreeInModal: true,
     });
     expect(wrapper.find('.tree-in-modal').exists()).toBe(true);
   });
@@ -119,7 +119,7 @@ describe('TreeView 限制滚动的高度', () => {
     expect(wrapper.find('.ant-tree-view').prop('style')).toEqual({
       border: '1px solid #d9d9d9',
       maxHeight: 100,
-      overflowY: 'auto'
+      overflowY: 'auto',
     });
   });
 });
@@ -132,13 +132,13 @@ describe('TreeView events handle', () => {
     treeData,
     renderItem,
     onSelect: jest.fn(),
-    onChange: jest.fn()
+    onChange: jest.fn(),
   });
-  it('UNSAFE_UNSAFE_componentWillReceiveProps change checkedKeys', () => {
+  it('UNSAFE_componentWillReceiveProps change checkedKeys', () => {
     wrapper.instance().UNSAFE_componentWillReceiveProps({value: checkedKeys});
     expect(wrapper.state().checkedKeys).toEqual(checkedKeys);
   });
-  it('UNSAFE_UNSAFE_componentWillReceiveProps canot change checkedKeys', () => {
+  it('UNSAFE_componentWillReceiveProps canot change checkedKeys', () => {
     wrapper.instance().UNSAFE_componentWillReceiveProps({value: undefined});
     expect(wrapper.state().checkedKeys).toEqual(checkedKeys);
   });
@@ -162,7 +162,7 @@ describe('TreeView events handle', () => {
 });
 
 describe.skip('TreeView shallow render', () => {
-  it('render without params', done => {
+  it('render without params', (done) => {
     const {wrapper, props} = setup();
     expect(wrapper.find('.ant-tree-view').exists()).toBe(true);
     done();
@@ -175,17 +175,17 @@ describe.skip('TreeView shallow render', () => {
           value: 'abc',
           children: [
             {
-              value: 'efg'
+              value: 'efg',
             },
             {
-              value: 'hij'
-            }
-          ]
-        }
+              value: 'hij',
+            },
+          ],
+        },
       ],
-      renderItem: ita => {
+      renderItem: (ita) => {
         console.log(ita);
-      }
+      },
     });
     expect(wrapper.instance()).toBeInstanceOf(TreeView);
   });
@@ -214,7 +214,7 @@ describe('TrewViewPanel render', () => {
   it('TrewViewPanel rendered inside is true', () => {
     const {wrapper, props} = tViewPanelSetup({
       treeData: treeData,
-      inside: true
+      inside: true,
     });
     wrapper.setState({inside: true});
     expect(wrapper.state().inside).toBe(true);

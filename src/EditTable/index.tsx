@@ -4,9 +4,9 @@ import {Form} from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {Table, Button, message, Popconfirm} from 'antd';
 import {FormComponentProps} from '@ant-design/compatible/lib/form';
-import {ColumnProps} from 'antd/lib/table/interface';
+import {ColumnType as ColumnProps} from 'antd/lib/table/interface';
 import {WrappedFormUtils} from '@ant-design/compatible/lib/form/Form';
-import {GetFieldDecoratorOptions} from 'antd/lib/form/Form';
+import {GetFieldDecoratorOptions} from '@ant-design/compatible/lib/form/Form';
 import {HTMLAttributes} from 'react';
 
 const FormItem = Form.Item;
@@ -28,13 +28,13 @@ interface EditableRowProps
   index: number;
 }
 
-const EditableFormRow = function(others: any) {
+const EditableFormRow = function (others: any) {
   return Form.create({
-    onFieldsChange: function(props, changedFields, allFields) {
+    onFieldsChange: function (props, changedFields, allFields) {
       if (changedFields && 'onSearch' in others) {
         others.onSearch(allFields);
       }
-    }
+    },
   })(EditableRow);
 };
 const _EditableFormRow = Form.create()(EditableRow);
@@ -170,7 +170,7 @@ type HTMLElementEvent<T extends HTMLElement> = Event & {
 
 type EditConfigFunctionType = (
   data: any,
-  editingKey: any
+  editingKey: any,
 ) => GetFieldDecoratorOptions;
 
 export default class EditTable<T extends Item> extends React.Component<
@@ -178,7 +178,7 @@ export default class EditTable<T extends Item> extends React.Component<
   State<T>
 > {
   static defaultProps = {
-    mode: 'row'
+    mode: 'row',
   };
   pageSize = 10; // 设定table的每页条数
   constructor(props: Readonly<EditTableProps<T>>) {
@@ -203,7 +203,7 @@ export default class EditTable<T extends Item> extends React.Component<
                         this.renderDeleteConfirmButton(props, record)}
                       {this.renderAddAndDeleteButton('add', index) && (
                         <EditableContext.Consumer>
-                          {form => (
+                          {(form) => (
                             <a onClick={(e: any) => this.addNew(e, form)}>
                               {props.btnText?.add ? props.btnText?.add : '添加'}
                             </a>
@@ -218,7 +218,7 @@ export default class EditTable<T extends Item> extends React.Component<
                       {editable ? (
                         <span>
                           <EditableContext.Consumer>
-                            {form => (
+                            {(form) => (
                               <a
                                 onClick={() => this.save(form, record.key)}
                                 style={{marginRight: 8}}>
@@ -229,11 +229,11 @@ export default class EditTable<T extends Item> extends React.Component<
                             )}
                           </EditableContext.Consumer>
                           <EditableContext.Consumer>
-                            {form =>
+                            {(form) =>
                               this.props?.hideCancelConfirm === false ||
                               !JSON.parse(
                                 localStorage.getItem('hideCancelConfirm') ||
-                                  'true'
+                                  'true',
                               ) ? (
                                 <Popconfirm
                                   title='确认取消?'
@@ -274,10 +274,10 @@ export default class EditTable<T extends Item> extends React.Component<
                     </div>
                   );
                 }
-              }
-            }
+              },
+            },
           ],
-      currentPage: 1
+      currentPage: 1,
     };
   }
 
@@ -322,14 +322,14 @@ export default class EditTable<T extends Item> extends React.Component<
       this.setState(
         {
           data: this.compileData(this.props.data),
-          columns: [...this.props.columns, ...this.state.columns]
+          columns: [...this.props.columns, ...this.state.columns],
         },
         () => {
-          let keyList = this.state.columns.map(c => c.dataIndex);
+          let keyList = this.state.columns.map((c) => c.dataIndex);
           this.setState({
-            keyList
+            keyList,
           });
-        }
+        },
       );
     }
   }
@@ -355,13 +355,11 @@ export default class EditTable<T extends Item> extends React.Component<
     return data.map
       ? data.map((it: any, idex: number) => ({
           ...it,
-          key: it[rowKey]
+          key: it[rowKey],
         }))
       : [];
   }
-  UNSAFE_UNSAFE_componentWillReceiveProps(
-    nextprops: Readonly<EditTableProps<T>>
-  ) {
+  UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
     const list = [
       {
         title: '操作',
@@ -376,7 +374,7 @@ export default class EditTable<T extends Item> extends React.Component<
                   this.renderDeleteConfirmButton(this.props, record)}
                 {this.renderAddAndDeleteButton('add', index) && (
                   <EditableContext.Consumer>
-                    {form => (
+                    {(form) => (
                       <a onClick={(e: any) => this.addNew(e, form)}>
                         {this.props.btnText?.add
                           ? this.props.btnText?.add
@@ -393,7 +391,7 @@ export default class EditTable<T extends Item> extends React.Component<
                 {editable ? (
                   <span>
                     <EditableContext.Consumer>
-                      {form => (
+                      {(form) => (
                         <a
                           onClick={() => this.save(form, record.key)}
                           style={{marginRight: 8}}>
@@ -404,10 +402,10 @@ export default class EditTable<T extends Item> extends React.Component<
                       )}
                     </EditableContext.Consumer>
                     <EditableContext.Consumer>
-                      {form =>
+                      {(form) =>
                         this.props?.hideCancelConfirm === false ||
                         !JSON.parse(
-                          localStorage.getItem('hideCancelConfirm') || 'true'
+                          localStorage.getItem('hideCancelConfirm') || 'true',
                         ) ? (
                           <Popconfirm
                             title='确认取消?'
@@ -445,15 +443,15 @@ export default class EditTable<T extends Item> extends React.Component<
               </div>
             );
           }
-        }
-      }
+        },
+      },
     ];
 
     /* istanbul ignore else */
     if (JSON.stringify(this.props.data) !== JSON.stringify(nextprops.data)) {
       this.setState({
         data: this.compileData(nextprops.data),
-        editingKey: ''
+        editingKey: '',
       });
     }
 
@@ -461,7 +459,7 @@ export default class EditTable<T extends Item> extends React.Component<
     if (this.props.hideOperation !== nextprops.hideOperation) {
       if (nextprops.hideOperation === false) {
         this.setState({
-          columns: [...this.state.columns, ...list]
+          columns: [...this.state.columns, ...list],
         });
       }
     }
@@ -483,12 +481,12 @@ export default class EditTable<T extends Item> extends React.Component<
     if (emptyRacAliyunKeyFlag) {
       this.emptyRacAliyunKey(key);
     }
-    const editData = this.state.data?.filter(c => c.key === key)[0];
+    const editData = this.state.data?.filter((c) => c.key === key)[0];
     if (onEdit) {
       onEdit(editData, (status: boolean) => {
         if (status === true) {
           this.setState({
-            editingKey: key
+            editingKey: key,
           });
 
           this.activeStatus();
@@ -498,7 +496,7 @@ export default class EditTable<T extends Item> extends React.Component<
     }
 
     this.setState({
-      editingKey: key
+      editingKey: key,
     });
 
     this.activeStatus();
@@ -515,7 +513,7 @@ export default class EditTable<T extends Item> extends React.Component<
     });
 
     this.setState({
-      data: newData
+      data: newData,
     });
   };
 
@@ -541,14 +539,14 @@ export default class EditTable<T extends Item> extends React.Component<
   revertStatus() {
     // 恢复每一列的编辑状态，去除所有editingStatus
     this.state.columns.map(
-      (item: ColumnsItem<T>) => (item.editingStatus = false)
+      (item: ColumnsItem<T>) => (item.editingStatus = false),
     );
   }
 
   activeStatus() {
     // 激活每一列的编辑状态，所有列editingStatus设为true
     this.state.columns.map(
-      (item: ColumnsItem<T>) => (item.editingStatus = true)
+      (item: ColumnsItem<T>) => (item.editingStatus = true),
     );
   }
 
@@ -560,18 +558,18 @@ export default class EditTable<T extends Item> extends React.Component<
     }
     let newData = [...this.state.data];
     if (onDelete && type === 'delete') {
-      const deleteData = this.state.data?.filter(c => c.key === key)[0];
+      const deleteData = this.state.data?.filter((c) => c.key === key)[0];
       onDelete(deleteData, (status: boolean) => {
         // 如果返回为false，则不继续执行前端数据删除操作
         if (status === true) {
           this.setState(
             {
-              data: newData.filter(c => c.key !== key),
-              editingKey: ''
+              data: newData.filter((c) => c.key !== key),
+              editingKey: '',
             },
             () => {
               this.handleChangeData(this.state.data);
-            }
+            },
           );
         }
       });
@@ -579,12 +577,12 @@ export default class EditTable<T extends Item> extends React.Component<
     }
     this.setState(
       {
-        data: newData.filter(c => c.key !== key),
-        editingKey: ''
+        data: newData.filter((c) => c.key !== key),
+        editingKey: '',
       },
       () => {
         this.handleChangeData(this.state.data);
-      }
+      },
     );
   }
 
@@ -597,7 +595,7 @@ export default class EditTable<T extends Item> extends React.Component<
       newData.splice(index, 1, {
         ...item,
         ...newRow,
-        key: item.key
+        key: item.key,
       });
     } else {
       newData.push(newRow);
@@ -622,7 +620,7 @@ export default class EditTable<T extends Item> extends React.Component<
         return;
       }
       const index = [...this.state.data].findIndex(
-        (item: Item) => key === item.key
+        (item: Item) => key === item.key,
       );
       const newData = this.handleDataForSave(row, key);
       if (onSave && mode === 'row') {
@@ -660,7 +658,7 @@ export default class EditTable<T extends Item> extends React.Component<
 
   cancel = (form: WrappedFormUtils, key: string) => {
     const {onCancle, mode} = this.props;
-    let obj = this.state.data.filter(d => d.key === key)[0];
+    let obj = this.state.data.filter((d) => d.key === key)[0];
     let Bdelete = false;
     for (let b in obj) {
       if (obj[b] === '') {
@@ -698,7 +696,7 @@ export default class EditTable<T extends Item> extends React.Component<
     const columns = this.props.columns;
     const configs = columns?.map((item: any) => ({
       dataIndex: item.dataIndex,
-      config: this.renderEditConfig(item.editConfig, {}, {} as any)
+      config: this.renderEditConfig(item.editConfig, {}, {} as any),
     }));
     let obj: any = {};
     configs?.map((item: any) => {
@@ -734,7 +732,7 @@ export default class EditTable<T extends Item> extends React.Component<
     }
     let key = new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
     let obj: any = {
-      key: key
+      key: key,
     };
     let keyList = [...this.state.keyList];
     /* istanbul ignore else */
@@ -754,26 +752,26 @@ export default class EditTable<T extends Item> extends React.Component<
       // 默认页数为10条，该属性为默认配置不暴露，故此处直接设为10来处理
       const page = Math.ceil(data?.length / this.pageSize);
       this.setState({
-        currentPage: page
+        currentPage: page,
       });
     } else {
       data = [obj, ...this.state.data];
       this.setState({
-        currentPage: 1
+        currentPage: 1,
       });
     }
     // data.push(obj);
     this.setState(
       {
         data,
-        editingKey: key
+        editingKey: key,
       },
       () => {
         // 目前只开放全编辑表格模式下，添加一条空数据后，需要直接抛出
         if (mode === 'full') {
           this.handleChangeData(data);
         }
-      }
+      },
     );
 
     this.activeStatus();
@@ -783,7 +781,7 @@ export default class EditTable<T extends Item> extends React.Component<
   renderEditConfig(
     config: GetFieldDecoratorOptions | EditConfigFunctionType,
     instance: any,
-    form: WrappedFormUtils
+    form: WrappedFormUtils,
   ): GetFieldDecoratorOptions | null {
     if (Object.prototype.toString.call(config) === '[object Object]') {
       // @ts-ignore
@@ -798,7 +796,7 @@ export default class EditTable<T extends Item> extends React.Component<
 
   pageOnChange(page: number, pageSize?: number) {
     this.setState({
-      currentPage: page
+      currentPage: page,
     });
   }
 
@@ -821,14 +819,14 @@ export default class EditTable<T extends Item> extends React.Component<
                     ? editConfig &&
                       this.renderEditConfig(editConfig, instance, form)
                         ?.initialValue
-                    : record[dataIndex]
+                    : record[dataIndex],
               })(
                 React.createElement(component.type, {
                   ...component.props,
                   ...(mode !== 'row'
                     ? {
-                        onChange: function(
-                          e: HTMLElementEvent<HTMLInputElement>
+                        onChange: function (
+                          e: HTMLElementEvent<HTMLInputElement>,
                         ) {
                           // e is event
                           if (e.target) {
@@ -837,10 +835,10 @@ export default class EditTable<T extends Item> extends React.Component<
                             setFieldsValue({[dataIndex]: e});
                           }
                           instance.save(form, record.key);
-                        }
+                        },
                       }
-                    : {})
-                })
+                    : {}),
+                }),
               )}
             </FormItem>
           );
@@ -866,12 +864,12 @@ export default class EditTable<T extends Item> extends React.Component<
             style={{width: '100%'}}>
             {btnText?.add ? btnText?.add : '新增'}
           </Button>
-        )
+        ),
       };
     } else {
       // 当前全表格编辑默认不需要分页
       return {
-        pagination: false
+        pagination: false,
       };
     }
   }
@@ -891,10 +889,10 @@ export default class EditTable<T extends Item> extends React.Component<
       body: {
         row: (otherProps as any)?.onSearch
           ? EditableFormRow(otherProps)
-          : _EditableFormRow
+          : _EditableFormRow,
         // row: EditableFormRow(otherProps)
         // cell: EditableCell
-      }
+      },
     };
     const instance = this;
 
@@ -911,12 +909,12 @@ export default class EditTable<T extends Item> extends React.Component<
           return mode === 'full' || this.isEditing(row)
             ? this.renderCell(text, row, col)
             : // ts 中 render 为table clumns 关键字，用renderCol 替换
-            // : col.render
-            // ? col.render(text, row, instance)
-            col.renderCol
-            ? col.renderCol(text, row, instance)
-            : text;
-        }
+              // : col.render
+              // ? col.render(text, row, instance)
+              col.renderCol
+              ? col.renderCol(text, row, instance)
+              : text;
+        },
       };
     });
 
@@ -925,12 +923,12 @@ export default class EditTable<T extends Item> extends React.Component<
         components={components}
         bordered
         dataSource={this.state.data}
-        columns={columnsFinal}
+        columns={columnsFinal as any}
         // @ts-ignore
         pagination={{
           pageSize: this.pageSize,
           current: this.state.currentPage,
-          onChange: this.pageOnChange.bind(this)
+          onChange: this.pageOnChange.bind(this),
         }}
         rowClassName={(record: object, index: number) =>
           mode === 'row' ? 'editable-row' : 'editTable-full'

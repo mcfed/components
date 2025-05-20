@@ -1,23 +1,25 @@
 import * as React from 'react';
-import {TableProps, ColumnProps} from 'antd/es/table/interface';
-import {Table} from 'antd';
+import {Table, TableProps} from 'antd';
+import type {ColumnType} from 'antd/es/table/interface';
 
 interface defaultSortType {
   columnKey: string;
   order: 'descend' | 'ascend';
 }
 
-interface DataTableColumnProps<T> extends ColumnProps<T> {
+interface DataTableColumnProps<T> extends ColumnType<T> {
   visible?: boolean;
+  dataIndex?: string;
 }
 
-interface DataTableProps<T> extends TableProps<T> {
+interface DataTableProps<T extends object>
+  extends Omit<TableProps<T>, 'columns'> {
   /**
     表格列的配置描述 同antd table columns
   **/
   columns: DataTableColumnProps<T>[];
   /**
-  默认排序参数  {columnKey,order} columnkey代表需要排序的columns的dataIndex order 选项为‘descend ascend’之一
+  默认排序参数  {columnKey,order} columnkey代表需要排序的columns的dataIndex order 选项为'descend ascend'之一
   e.g. {columnKey:'name',order:'descend'}
   **/
   defaultSort?: defaultSortType;
@@ -27,11 +29,11 @@ interface DataTableProps<T> extends TableProps<T> {
   page?: object;
 }
 
-interface DataTableState<T> {
+interface DataTableState<T extends object> {
   columns: DataTableColumnProps<T>[];
 }
 
-export default class DataTable<T> extends React.Component<
+export default class DataTable<T extends object> extends React.Component<
   DataTableProps<T>,
   DataTableState<T>
 > {
@@ -42,23 +44,23 @@ export default class DataTable<T> extends React.Component<
       showTotal: (total: any) => `共${total}条`,
       size: 'middle',
       showSizeChanger: true,
-      pageSizeOptions: ['10', '20', '50', '100']
+      pageSizeOptions: ['10', '20', '50', '100'],
     },
     style: {
-      width: '100%'
+      width: '100%',
     },
     showConfig: false,
-    columns: []
+    columns: [],
   };
   constructor(props: DataTableProps<T>) {
     super(props);
     this.state = {
-      columns: props.columns
+      columns: props.columns,
     };
   }
   UNSAFE_componentWillReceiveProps(next: DataTableProps<T>) {
     this.setState({
-      columns: next.columns
+      columns: next.columns,
     });
   }
   render() {

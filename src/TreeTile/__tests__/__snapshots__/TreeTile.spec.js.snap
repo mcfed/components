@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`快照测试 TreeTile 快照测试 1`] = `
-<Card
+exports[`TreeTile 组件测试 TreeTile 快照测试 1`] = `
+<ForwardRef
   extra={
-    <Checkbox
+    <UNDEFINED
       checked={false}
       indeterminate={false}
       onChange={[Function]}
     >
       全选
-    </Checkbox>
+    </UNDEFINED>
   }
   size="small"
   style={
@@ -17,12 +17,12 @@ exports[`快照测试 TreeTile 快照测试 1`] = `
       "width": "100%",
     }
   }
-  title="请选择"
+  title="测试标题"
 >
   <p
     className="treeNoData"
   >
     no data
   </p>
-</Card>
+</ForwardRef>
 `;

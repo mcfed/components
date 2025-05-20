@@ -4,10 +4,11 @@ exports[`formitem base test complete render 1`] = `null`;
 
 exports[`formitem base test test render 1`] = `
 <div
-  class="ant-row ant-form-item"
+  class="ant-row ant-legacy-form-item"
+  rules=""
 >
   <div
-    class="ant-col ant-col-3 ant-form-item-label"
+    class="ant-col ant-col-3 ant-legacy-form-item-label"
   >
     <label
       class=""
@@ -17,13 +18,13 @@ exports[`formitem base test test render 1`] = `
     </label>
   </div>
   <div
-    class="ant-col ant-col-18 ant-form-item-control-wrapper"
+    class="ant-col ant-col-18 ant-legacy-form-item-control-wrapper"
   >
     <div
-      class="ant-form-item-control"
+      class="ant-legacy-form-item-control"
     >
       <span
-        class="ant-form-item-children"
+        class="ant-legacy-form-item-children"
       >
         <input
           class="ant-input"
