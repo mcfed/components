@@ -112,13 +112,13 @@ describe('方法测试', () => {
     expect(props.onChange.mock.calls.length).toBe(0);
   });
 
-  it('componentWillReceiveProps 测试 ', () => {
+  it('UNSAFE_componentWillReceiveProps 测试 ', () => {
     const {wrapper} = setup({
       value: ['2019-05-31', '2019-07-31']
     });
     const value = ['2019-06-31', '2019-07-31'];
     expect(
-      wrapper.instance().componentWillReceiveProps({
+      wrapper.instance().UNSAFE_componentWillReceiveProps({
         value: value
       })
     );
@@ -129,13 +129,13 @@ describe('方法测试', () => {
       JSON.stringify(moment(value[1]))
     );
   });
-  it('componentWillReceiveProps 测试 分支', () => {
+  it('UNSAFE_componentWillReceiveProps 测试 分支', () => {
     const {wrapper} = setup({
       value: ['2019-05-31', '2019-07-31']
     });
     const value = ['2019-05-31', '2019-07-31'];
     expect(
-      wrapper.instance().componentWillReceiveProps({
+      wrapper.instance().UNSAFE_componentWillReceiveProps({
         value: value
       })
     );

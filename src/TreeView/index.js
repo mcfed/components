@@ -8,9 +8,6 @@ const DirectoryTree = Tree.DirectoryTree;
 export {TreeNode};
 
 export default class TreeView extends Component {
-  // state = {
-  // 	checkedKeys: [],
-  // }
   constructor(props) {
     super(props);
     this.state = {
@@ -19,7 +16,7 @@ export default class TreeView extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (JSON.stringify(nextProps.value) != JSON.stringify(this.props.value)) {
       this.setState({
         checkedKeys: nextProps.value
@@ -40,6 +37,7 @@ export default class TreeView extends Component {
       return React.cloneElement(renderItem(item));
     });
   }
+
   onCheck = (checkedKeys, e) => {
     const {filterNode} = this.props;
     let filterKeys = [];
@@ -61,7 +59,6 @@ export default class TreeView extends Component {
   };
 
   onSelect = (selectedKeys, e, selectedNodes) => {
-    // console.log(selectedKeys,e.node)
     const {onSelect} = this.props;
     this.setState({selectedKeys});
     if (onSelect) {
@@ -70,11 +67,11 @@ export default class TreeView extends Component {
   };
 
   onExpand = (expandedKeys, e) => {
-    // console.log(expandedKeys,'----',this.state.expandedKeys)
     this.setState({
       expandedKeys: expandedKeys
     });
   };
+
   render() {
     const {
       treeData,
@@ -86,8 +83,7 @@ export default class TreeView extends Component {
       scrollHeight
     } = this.props;
     const {checkedKeys, expandedKeys} = this.state;
-    // console.log(treeData)
-    //style={{maxHeight:scrollHeight,overflowY:'auto',border:'1px solid #d9d9d9'}}
+
     return (
       <div
         className='ant-tree-view'

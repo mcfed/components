@@ -23,7 +23,7 @@ describe('datatable method test', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const columns = [{dataIndex: 1}, {dataIndex: 2}];
-    instance.componentWillReceiveProps({columns: columns});
+    instance.UNSAFE_componentWillReceiveProps({columns: columns});
     expect(wrapper.state('columns')).toEqual(columns);
   });
 

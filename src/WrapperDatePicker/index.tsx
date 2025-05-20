@@ -73,7 +73,7 @@ export default class WrapperDatePicker extends React.Component<
   // ) {
   //   // console.log(nextprops, prevstate);
   // }
-  componentWillReceiveProps(nextProps: WrapperDatePickerProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: WrapperDatePickerProps) {
     if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
       this.setState({
         value: this.valueInit(nextProps)

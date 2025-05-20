@@ -8,6 +8,7 @@ import {GetFieldDecoratorOptions} from 'antd/es/form/Form';
 import {Form} from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {Select} from 'antd';
+import type {Rule} from 'antd/es/form';
 
 import {FormRefContext, LayoutRefContext} from '../BaseForm';
 import {FetchUtils} from '@mcfed/utils';
@@ -90,7 +91,14 @@ interface CustFormItemProps extends FormItemProps {
 
 type CustFormItemType = CustFormItemProps & GetFieldDecoratorOptions;
 
-export class FormItem extends React.Component<CustFormItemType, any> {
+interface FormItemState {
+  fixedFieldName: string;
+  fixedFieldLabel: string;
+  fixedFieldRules: Rule[];
+  childData: any[];
+}
+
+export class FormItem extends React.Component<CustFormItemType, FormItemState> {
   static defaultProps = {
     containerTo: true
   };
@@ -98,16 +106,20 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     super(props);
     const options = props.options;
     this.state = {
-      childData: []
+      childData: [],
+      fixedFieldName: '',
+      fixedFieldLabel: '',
+      fixedFieldRules: []
     };
 
     //childData init
-    if (options !== undefined) {
-      if (options instanceof Array) {
-        this.state = {
-          childData: options
-        };
-      }
+    if (options instanceof Array) {
+      this.state = {
+        childData: options,
+        fixedFieldName: props.name || '',
+        fixedFieldLabel: props.label || '',
+        fixedFieldRules: props.rules || []
+      };
     }
   }
   componentDidMount() {
@@ -122,7 +134,7 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       );
     }
   }
-  componentWillReceiveProps(nextProps: CustFormItemProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CustFormItemProps) {
     const {options, fetch, fetchParams} = nextProps;
     if (!this.isObjectJSONSame(options, this.props.options)) {
       this.setChildData(options);
@@ -378,14 +390,23 @@ export class FormItem extends React.Component<CustFormItemType, any> {
     return defaultValue;
   }
 
-  fixedPropFieldFrom() {
+  getFixedFieldProps = () => {
     const {name, label, rules, children} = this.props;
+    
+    if (!children || typeof children === 'string' || typeof children === 'number' || typeof children === 'boolean') {
+      return {
+        fixedFieldName: name || '',
+        fixedFieldLabel: label || '',
+        fixedFieldRules: rules || []
+      };
+    }
+
     return {
-      fixedFieldName: name !== undefined ? name : children.props.name,
-      fixedFieldLabel: label !== undefined ? label : children.props.label,
-      fixedFieldRules: rules !== undefined ? rules : children.props.rules
+      fixedFieldName: name !== undefined ? name : (children as any).props?.name || '',
+      fixedFieldLabel: label !== undefined ? label : (children as any).props?.label || '',
+      fixedFieldRules: rules !== undefined ? rules : (children as any).props?.rules || []
     };
-  }
+  };
 
   compileStyleProps() {
     //针对hidden input antd 有margin 空开 处理
@@ -427,7 +448,7 @@ export class FormItem extends React.Component<CustFormItemType, any> {
       fixedFieldName,
       fixedFieldLabel,
       fixedFieldRules
-    } = this.fixedPropFieldFrom();
+    } = this.getFixedFieldProps();
     const styleProps = this.compileStyleProps();
 
     return this.fieldRenderableProp(renderable) && isFormContextComing ? (

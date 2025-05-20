@@ -56,7 +56,7 @@ export default class DataTable<T> extends React.Component<
       columns: props.columns
     };
   }
-  componentWillReceiveProps(next: DataTableProps<T>) {
+  UNSAFE_componentWillReceiveProps(next: DataTableProps<T>) {
     this.setState({
       columns: next.columns
     });

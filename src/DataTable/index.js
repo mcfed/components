@@ -149,7 +149,7 @@ class DataTable extends Component {
     super(props);
     this.state.columns = props.columns;
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let {columns} = nextProps;
     this.setState({
       columns: columns

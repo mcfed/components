@@ -10,7 +10,7 @@ export default class TimeRangePicker extends Component {
     super(props);
     this.state = {...this.translateTime(props.value)};
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // console.log(this.props.value,nextProps.value,JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value))
     if (JSON.stringify(this.props.value) !== JSON.stringify(nextProps.value)) {
       this.setState({...this.translateTime(nextProps.value)});

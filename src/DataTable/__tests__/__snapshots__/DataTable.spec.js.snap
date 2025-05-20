@@ -4,7 +4,7 @@ exports[`快照测试 DataTable 快照测试 1`] = `
 <div
   className="DataTable"
 >
-  <withStore(Table)
+  <ForwardRef(InternalTable)
     columns={Array []}
     pagination={
       Object {

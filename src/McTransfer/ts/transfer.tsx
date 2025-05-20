@@ -128,7 +128,7 @@ export default class Item<T extends ItemProps> extends React.Component<
     this.initStateByProps(this.props);
   }
 
-  componentWillReceiveProps(nextProps: any) {
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
     /* istanbul ignore else */
     if (
       nextProps.dataSource.toString() !== this.props.dataSource.toString() ||

@@ -38,7 +38,7 @@ export default class UploadFile extends React.Component<
     }
   }
 
-  componentWillReceiveProps(next: UploadFileProps) {
+  UNSAFE_componentWillReceiveProps(next: UploadFileProps) {
     let _this = this;
     const {listType = ''} = this.props;
     if (JSON.stringify(this.props.value) !== JSON.stringify(next.value)) {

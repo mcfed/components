@@ -121,7 +121,7 @@ class NewTransferList extends Transfer.List {
     super(props);
     this.refCheckbox = React.createRef();
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     // console.log(
     //   JSON.stringify(nextProps.filter),
     //   JSON.stringify(this.props.filter)

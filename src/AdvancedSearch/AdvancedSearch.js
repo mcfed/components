@@ -41,7 +41,7 @@ export default class AdvancedSearchForm extends React.Component {
     }
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.loading !== this.props.loading) {
       this.setState({
         loading: nextProps.loading

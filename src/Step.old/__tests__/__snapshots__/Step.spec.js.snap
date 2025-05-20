@@ -65,19 +65,11 @@ exports[`快照测试 全页快照 1`] = `
   />
   <ButtonGroup>
     <Button
-      block={false}
-      ghost={false}
-      htmlType="button"
-      loading={false}
       onClick={[Function]}
     >
       取消
     </Button>
     <Button
-      block={false}
-      ghost={false}
-      htmlType="button"
-      loading={false}
       onClick={[Function]}
     >
       下一步

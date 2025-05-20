@@ -53,7 +53,7 @@ export default class SwitchConfirm extends React.Component<
   //     checked: this.translateChecked(this.props, this.props.checked)
   //   });
   // }
-  componentWillReceiveProps(nextProps: SwitchConfirmProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: SwitchConfirmProps) {
     if (
       this.props.checked !== nextProps.checked ||
       this.props.currentOption !== nextProps.currentOption

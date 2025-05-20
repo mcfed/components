@@ -50,7 +50,7 @@ class CollapsePanelClass
       active: this.compileActive()
     };
   }
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.setActiveStatus();
   }
   setActiveStatus(): void {

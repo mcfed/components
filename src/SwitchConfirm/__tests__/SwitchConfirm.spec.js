@@ -93,21 +93,21 @@ describe('switchconfirm method test', () => {
   //   expect(wrapper.state('checked')).toEqual(true);
   // });
 
-  it('componentWillReceiveProps test 1', () => {
+  it('UNSAFE_componentWillReceiveProps test 1', () => {
     const {wrapper, props} = setup();
     const instance = wrapper.instance();
 
-    instance.componentWillReceiveProps({
+    instance.UNSAFE_componentWillReceiveProps({
       checked: true,
       currentOption: 'on'
     });
     expect(wrapper.state('checked')).toEqual(true);
   });
-  it('componentWillReceiveProps test 2', () => {
+  it('UNSAFE_componentWillReceiveProps test 2', () => {
     const {wrapper, props} = setup();
     const instance = wrapper.instance();
 
-    instance.componentWillReceiveProps(props);
+    instance.UNSAFE_componentWillReceiveProps(props);
     expect(wrapper.state('checked')).toEqual(false);
   });
 

@@ -23,7 +23,7 @@ class ConditionForm extends PureComponent {
     });
     //console.log("conditionSelect", conditionSelect);
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     //console.log('nextProps', nextProps)
     this.setState({
       conditionSelect: nextProps.conditionSelect

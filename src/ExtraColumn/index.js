@@ -12,7 +12,7 @@ export class ExtraColumnForTest extends React.Component {
       end: data && data[2]
     });
   }
-  componentWillReceiveProps(nextprops) {
+  UNSAFE_componentWillReceiveProps(nextprops) {
     /* istanbul ignore else */
     if (nextprops.value !== undefined && nextprops.value !== this.state.data) {
       // 新增时初始数组为["","",""]

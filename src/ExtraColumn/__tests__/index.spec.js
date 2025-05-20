@@ -39,13 +39,13 @@ describe('方法测试全覆盖', () => {
     expect(wrapper.text()).toBe('this is DatePickerDom');
   });
 
-  it('componentWillReceiveProps 生命周期测试', () => {
+  it('UNSAFE_componentWillReceiveProps 生命周期测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const nextprops = {
       value: ['192.168.1.2', '-', '192.168.1.20']
     };
-    instance.componentWillReceiveProps(nextprops);
+    instance.UNSAFE_componentWillReceiveProps(nextprops);
     const expectState = {
       data: ['192.168.1.2', '-', '192.168.1.20'],
       start: '192.168.1.2',

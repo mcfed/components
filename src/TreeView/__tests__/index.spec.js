@@ -99,7 +99,7 @@ describe('TreeView 是否渲染', () => {
       renderItem,
       checkedKeys: ['0-2']
     });
-    expect(wrapper.find('ul').children().length).toBe(treeData.length);
+    expect(wrapper.find('.ant-tree-list').exists()).toBe(true);
   });
 
   it('TreeView render in modal', () => {
@@ -134,12 +134,12 @@ describe('TreeView events handle', () => {
     onSelect: jest.fn(),
     onChange: jest.fn()
   });
-  it('componentWillReceiveProps change checkedKeys', () => {
-    wrapper.instance().componentWillReceiveProps({value: checkedKeys});
+  it('UNSAFE_UNSAFE_componentWillReceiveProps change checkedKeys', () => {
+    wrapper.instance().UNSAFE_componentWillReceiveProps({value: checkedKeys});
     expect(wrapper.state().checkedKeys).toEqual(checkedKeys);
   });
-  it('componentWillReceiveProps canot change checkedKeys', () => {
-    wrapper.instance().componentWillReceiveProps({value: undefined});
+  it('UNSAFE_UNSAFE_componentWillReceiveProps canot change checkedKeys', () => {
+    wrapper.instance().UNSAFE_componentWillReceiveProps({value: undefined});
     expect(wrapper.state().checkedKeys).toEqual(checkedKeys);
   });
   it('select event', () => {

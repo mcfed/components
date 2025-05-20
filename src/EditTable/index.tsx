@@ -359,7 +359,9 @@ export default class EditTable<T extends Item> extends React.Component<
         }))
       : [];
   }
-  UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
+  UNSAFE_UNSAFE_componentWillReceiveProps(
+    nextprops: Readonly<EditTableProps<T>>
+  ) {
     const list = [
       {
         title: '操作',

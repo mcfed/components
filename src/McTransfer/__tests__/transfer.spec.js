@@ -54,11 +54,11 @@ describe('方法测试全覆盖', () => {
     }
   };
 
-  it('componentWillReceiveProps 生命周期测试', () => {
+  it('UNSAFE_componentWillReceiveProps 生命周期测试', () => {
     const {wrapper} = setup(props, {disableLifecycleMethods: true});
     const instance = wrapper.instance();
     const initStateByPropsSpy = jest.spyOn(instance, 'initStateByProps');
-    instance.componentWillReceiveProps({
+    instance.UNSAFE_componentWillReceiveProps({
       dataSource: [{key: 'a'}],
       targetKeys: ['a'],
       selectedKeys: ['b']
@@ -66,11 +66,11 @@ describe('方法测试全覆盖', () => {
     expect(initStateByPropsSpy).not.toHaveBeenCalled();
   });
 
-  it('componentWillReceiveProps branch 测试', () => {
+  it('UNSAFE_componentWillReceiveProps branch 测试', () => {
     const {wrapper} = setup(props, {disableLifecycleMethods: true});
     const instance = wrapper.instance();
     const initStateByPropsSpy = jest.spyOn(instance, 'initStateByProps');
-    instance.componentWillReceiveProps({
+    instance.UNSAFE_componentWillReceiveProps({
       dataSource: [{key: 'b'}],
       targetKeys: ['b'],
       selectedKeys: ['a']

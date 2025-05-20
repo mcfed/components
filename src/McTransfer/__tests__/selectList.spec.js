@@ -59,20 +59,20 @@ describe('方法测试全覆盖', () => {
     instance.componentWillMount();
   });
 
-  it('componentWillReceiveProps filter 为空 生命周期测试', () => {
+  it('UNSAFE_componentWillReceiveProps filter 为空 生命周期测试', () => {
     const {wrapper} = setup(props, {disableLifecycleMethods: true});
     const instance = wrapper.instance();
     instance.handleFilter = jest.fn();
     instance.state.filter = '';
-    instance.componentWillReceiveProps({dataSource: [{key: 'a'}]});
+    instance.UNSAFE_componentWillReceiveProps({dataSource: [{key: 'a'}]});
   });
 
-  it('componentWillReceiveProps filter 不为空 生命周期测试', () => {
+  it('UNSAFE_componentWillReceiveProps filter 不为空 生命周期测试', () => {
     const {wrapper} = setup(props, {disableLifecycleMethods: true});
     const instance = wrapper.instance();
     instance.handleFilter = jest.fn();
     instance.state.filter = '1';
-    instance.componentWillReceiveProps({dataSource: [{key: 'a'}]});
+    instance.UNSAFE_componentWillReceiveProps({dataSource: [{key: 'a'}]});
     const handleFilterSpy = jest.spyOn(instance, 'handleFilter');
     expect(handleFilterSpy).toHaveBeenCalled();
   });

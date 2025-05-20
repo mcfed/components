@@ -49,7 +49,7 @@ export default class SelectList extends React.Component {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     /* istanbul ignore else */
     if (nextProps.dataSource !== this.props.dataSource) {
       if (this.state.filter !== '') {

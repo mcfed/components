@@ -17,7 +17,7 @@ export default class FullScreen extends Component<IFullScreenProps> {
     this.element = React.createRef();
   }
 
-  componentWillReceiveProps(nextProps: IFullScreenProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: IFullScreenProps) {
     if (this.props.fullscreen !== nextProps.fullscreen) {
       // const { fullscreen } = nextProps;
       this.toggleFullscreen(nextProps.fullscreen);

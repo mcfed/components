@@ -38,9 +38,6 @@ exports[`快照测试 Step 1`] = `
     }
   >
     <Button
-      block={false}
-      ghost={false}
-      htmlType="button"
       loading={false}
       onClick={[Function]}
       type="default"

@@ -4,9 +4,7 @@ exports[`快照测试 全页快照 1`] = `
 <Group
   className="ExtraColumn"
 >
-  <Row
-    gutter={0}
-  >
+  <Row>
     <Col
       span={10}
     >

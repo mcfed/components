@@ -69,7 +69,7 @@ class DataTable extends Component {
     disabledColumns: []
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.columns !== this.props.columns) {
       this.setState({
         columns: nextProps.columns,

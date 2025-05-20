@@ -111,7 +111,7 @@ export default class SelectList<T extends ItemProps> extends React.Component<
       this
     );
   }
-  componentWillReceiveProps(nextProps: {dataSource: T[]}) {
+  UNSAFE_componentWillReceiveProps(nextProps: {dataSource: T[]}) {
     /* istanbul ignore else */
     if (nextProps.dataSource !== this.props.dataSource) {
       if (this.state.filter !== '') {

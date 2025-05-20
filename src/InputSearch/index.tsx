@@ -33,7 +33,7 @@ export default class InputSearch extends React.Component<
       value: props.value
     };
   }
-  componentWillReceiveProps(nextProps: any) {
+  UNSAFE_componentWillReceiveProps(nextProps: any) {
     if (this.props.value !== nextProps.value) {
       this.setState({
         value: nextProps.value

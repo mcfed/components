@@ -442,7 +442,7 @@ describe('editable method', () => {
     renderWrapper.props.children.props.children[1].props.onConfirm();
   });
 
-  it('UNSAFE_componentWillReceiveProps 生命周期测试', () => {
+  it('UNSAFE_UNSAFE_componentWillReceiveProps 生命周期测试', () => {
     const {wrapper} = setup();
     const instance = wrapper.instance();
     const nextprops = {

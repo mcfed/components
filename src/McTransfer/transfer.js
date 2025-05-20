@@ -31,7 +31,7 @@ export default class Transfer extends React.Component {
     this.initStateByProps(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     /* istanbul ignore else */
     if (
       nextProps.dataSource.toString() !== this.props.dataSource.toString() ||

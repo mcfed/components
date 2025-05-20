@@ -17,7 +17,7 @@ class ExpandList extends React.Component {
     this.getInitData();
   }
 
-  componentWillReceiveProps() {
+  UNSAFE_componentWillReceiveProps() {
     this.getInitData();
   }
 

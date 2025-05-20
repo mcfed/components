@@ -28,10 +28,10 @@ const setup = (props, control) => {
 };
 
 describe.skip('CollapsePanel 组件方法测试', () => {
-  it('componentWillReceiveProps 测试', () => {
+  it('UNSAFE_componentWillReceiveProps 测试', () => {
     const {wrapper} = setup();
     wrapper.instance().setActiveStatus = jest.fn();
-    wrapper.instance().componentWillReceiveProps();
+    wrapper.instance().UNSAFE_componentWillReceiveProps();
 
     expect(wrapper.instance().setActiveStatus).toHaveBeenCalled();
   });
