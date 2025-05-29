@@ -359,7 +359,8 @@ export default class EditTable<T extends Item> extends React.Component<
         }))
       : [];
   }
-  UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
+
+  getList() {
     const list = [
       {
         title: '操作',
@@ -446,6 +447,11 @@ export default class EditTable<T extends Item> extends React.Component<
         },
       },
     ];
+    return list;
+  }
+
+  UNSAFE_componentWillReceiveProps(nextprops: Readonly<EditTableProps<T>>) {
+    const list = this.getList();
 
     /* istanbul ignore else */
     if (JSON.stringify(this.props.data) !== JSON.stringify(nextprops.data)) {
@@ -543,7 +549,14 @@ export default class EditTable<T extends Item> extends React.Component<
       ...item,
       editingStatus: false,
     }));
-    this.setState({columns: result as any});
+
+    if (this.props.hideOperation) {
+      this.setState({columns: result as any});
+    } else {
+      const list = this.getList();
+      result.pop();
+      this.setState({columns: [...result, ...list]});
+    }
   }
 
   activeStatus() {
@@ -553,7 +566,13 @@ export default class EditTable<T extends Item> extends React.Component<
       ...item,
       editingStatus: true,
     }));
-    this.setState({columns: result as any});
+    if (this.props.hideOperation) {
+      this.setState({columns: result as any});
+    } else {
+      const list = this.getList();
+      result.pop();
+      this.setState({columns: [...result, ...list]});
+    }
   }
 
   delete(key: string, type: string) {
