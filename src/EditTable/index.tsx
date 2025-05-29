@@ -537,17 +537,21 @@ export default class EditTable<T extends Item> extends React.Component<
   // };
 
   revertStatus() {
+    const {columns} = this.state;
     // 恢复每一列的编辑状态，去除所有editingStatus
-    this.state.columns.map(
+    const result = columns.map(
       (item: ColumnsItem<T>) => (item.editingStatus = false),
     );
+    this.setState({columns: result as any});
   }
 
   activeStatus() {
+    const {columns} = this.state;
     // 激活每一列的编辑状态，所有列editingStatus设为true
-    this.state.columns.map(
+    const result = columns.map(
       (item: ColumnsItem<T>) => (item.editingStatus = true),
     );
+    this.setState({columns: result as any});
   }
 
   delete(key: string, type: string) {
