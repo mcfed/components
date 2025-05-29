@@ -555,7 +555,11 @@ export default class EditTable<T extends Item> extends React.Component<
     } else {
       const list = this.getList();
       result.pop();
-      this.setState({columns: [...result, ...list]});
+      const newList = list.map((item: any) => ({
+        ...item,
+        editingStatus: false,
+      }));
+      this.setState({columns: [...result, ...newList]});
     }
   }
 
@@ -571,7 +575,11 @@ export default class EditTable<T extends Item> extends React.Component<
     } else {
       const list = this.getList();
       result.pop();
-      this.setState({columns: [...result, ...list]});
+      const newList = list.map((item: any) => ({
+        ...item,
+        editingStatus: true,
+      }));
+      this.setState({columns: [...result, ...newList]});
     }
   }
 
