@@ -1,14 +1,14 @@
 import React from 'react';
 import {Button, Modal} from 'antd';
-import {TableProps} from 'antd/es/table/interface';
+import {TableProps} from 'antd/es/table';
 import {ModalProps} from 'antd/es/modal/Modal';
-import {DataTable} from '../index';
+import DataTable from '../DataTable';
 interface CProps {
   tableProps?: (value: any, onChange: any) => TableProps<any> | TableProps<any>;
   modalProps: (
     value: any,
     onChange: any,
-    changeModalShow: any
+    changeModalShow: any,
   ) => ModalProps | ModalProps;
   customRenderContent?: (value: any, changeModalShow: any) => React.ReactNode;
   trggierELement: (value: any, changeModalShow: any) => any;
@@ -18,12 +18,12 @@ interface CProps {
 
 export default class ModalSelect extends React.Component<CProps, any> {
   state = {
-    isModalShow: false
+    isModalShow: false,
   };
 
   handleChangeModalVisible(isShow: boolean) {
     this.setState({
-      isModalShow: isShow
+      isModalShow: isShow,
     });
   }
 
@@ -68,7 +68,7 @@ export default class ModalSelect extends React.Component<CProps, any> {
           width={700}
           maskClosable={false}
           {...formatModalProps}
-          visible={this.state.isModalShow}>
+          open={this.state.isModalShow}>
           {this.renderContent()}
         </Modal>
       </div>
