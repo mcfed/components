@@ -5,6 +5,7 @@ import '@ant-design/compatible/assets/index.css';
 import {Table, Checkbox, Button, Row, Col} from 'antd';
 import TableToolbar from './TableToolbar';
 import TableSettingsContainer from './tableSettingsContainer';
+import ResizableTitle from './components/ResizableTitle';
 import './index.less';
 
 const CHECK_TYPE = {
@@ -12,7 +13,7 @@ const CHECK_TYPE = {
   反选所有: 'checkInvert',
   全选当前页: 'checkCurAll',
   反选当前页: 'checkCurInvert',
-  单选: 'checkOne'
+  单选: 'checkOne',
 };
 const CHECK_DISABLED_CLASS = 'check-disabled';
 
@@ -20,32 +21,38 @@ class DataTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: props.columns,
+      columns: props.columns.map((col) => ({
+        ...col,
+        width: col.width || 150, // 默认列宽
+      })),
       disabledColumns: props.columns
-        .filter(col => col.disabled)
-        .map(col => col.dataIndex),
+        .filter((col) => col.disabled)
+        .map((col) => col.dataIndex),
       settings: {
         density: 'small',
-        visibleColumns: props.columns.map(col => col.dataIndex),
+        visibleColumns:
+          this.props.settings?.visibleColumns ||
+          props.columns.map((col) => col.dataIndex),
         sortedInfo: {},
-        groupedInfo: {}
-      }
+        groupedInfo: {},
+      },
     };
     this.namespace = props.namespace || 'default';
   }
 
   componentDidMount() {
     const savedSettings = JSON.parse(
-      localStorage.getItem(`tableSettings_${this.namespace}`)
+      localStorage.getItem(`tableSettings_${this.namespace}`),
     );
     if (savedSettings) {
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         settings: {
           ...prevState.settings,
           ...savedSettings,
+          ...(this.props.settings ?? {}),
           visibleColumns:
-            savedSettings.visibleColumns || prevState.settings.visibleColumns
-        }
+            savedSettings.visibleColumns || prevState.settings.visibleColumns,
+        },
       }));
     }
   }
@@ -54,43 +61,57 @@ class DataTable extends Component {
     page: {},
     prefixCls: 'ant-table',
     pagination: {
-      showTotal: total => `共 ${total} 条`,
+      showTotal: (total) => `共 ${total} 条`,
       size: 'middle',
       showSizeChanger: true,
-      pageSizeOptions: ['10', '20', '50', '100']
+      pageSizeOptions: ['10', '20', '50', '100'],
     },
     style: {
-      width: '100%'
+      width: '100%',
     },
     showConfig: false,
     columns: [],
     showSelectClear: false,
     onRefresh: () => {},
-    disabledColumns: []
+    disabledColumns: [],
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.columns !== this.props.columns) {
       this.setState({
-        columns: nextProps.columns,
+        columns: nextProps.columns.map((col) => ({
+          ...col,
+          width: col.width || 150, // 默认列宽
+        })),
         disabledColumns: nextProps.columns
-          .filter(col => col.disabled)
-          .map(col => col.dataIndex)
+          .filter((col) => col.disabled)
+          .map((col) => col.dataIndex),
       });
     }
   }
 
-  handleColumnOrderChange = newColumns => {
+  handleColumnOrderChange = (newColumns) => {
     this.setState({
-      columns: newColumns.map(col => ({
+      columns: newColumns.map((col) => ({
         ...col,
-        sortOrder: col.sortOrder || undefined
-      }))
+        sortOrder: col.sortOrder || undefined,
+      })),
     });
   };
 
+  handleColumnResize =
+    (index) =>
+    (e, {size}) => {
+      const nextColumns = [...this.state.columns];
+      nextColumns[index] = {
+        ...nextColumns[index],
+        width: size.width,
+      };
+      this.setState({columns: nextColumns});
+    };
+
   handleColumnFixedChange = (dataIndex, fixed) => {
-    const newColumns = this.state.columns.map(col => {
+    const newColumns = this.state.columns.map((col) => {
       if (col.dataIndex === dataIndex) {
         return {...col, fixed};
       }
@@ -112,7 +133,7 @@ class DataTable extends Component {
       rowSelection,
       dataSource = [],
       page,
-      checkType
+      checkType,
     } = this.props;
     let len =
       rowSelection && rowSelection.selectedRowKeys
@@ -165,12 +186,12 @@ class DataTable extends Component {
     let {columns} = this.state;
 
     if (defaultSort) {
-      columns = columns.map(it => {
+      columns = columns.map((it) => {
         if (defaultSort.columnKey === it.dataIndex) {
           return {
             ...it,
             defaultSortOrder: defaultSort.order,
-            sortOrder: defaultSort.order
+            sortOrder: defaultSort.order,
           };
         }
         return it;
@@ -183,27 +204,27 @@ class DataTable extends Component {
         {
           key: CHECK_TYPE.全选所有,
           text: '全选所有',
-          onSelect: changableRowKeys => {
+          onSelect: (changableRowKeys) => {
             if (changableRowKeys?.length > 0) {
               setSelectedRowKeys(changableRowKeys);
               setCheckType(CHECK_TYPE.全选所有);
             }
-          }
+          },
         },
         {
           key: CHECK_TYPE.全选当前页,
           text: '全选当前页',
           onSelect:
             checkType == CHECK_TYPE.全选所有
-              ? changableRowKeys => {
+              ? (changableRowKeys) => {
                   setCheckType(CHECK_TYPE.全选当前页);
                 }
-              : changableRowKeys => {
+              : (changableRowKeys) => {
                   let arr = [...selectedRowKeys, ...changableRowKeys];
                   arr = Array.from(new Set(arr));
                   setSelectedRowKeys(arr);
                   setCheckType(CHECK_TYPE.全选当前页);
-                }
+                },
         },
         {
           key: CHECK_TYPE.反选所有,
@@ -223,7 +244,7 @@ class DataTable extends Component {
             checkType == CHECK_TYPE.全选所有 ||
             checkType == CHECK_TYPE.反选所有 ||
             checkType == ''
-              ? changableRowKeys => {
+              ? (changableRowKeys) => {
                   if (checkType == '' || checkType == CHECK_TYPE.反选所有) {
                     setSelectedRowKeys(changableRowKeys);
                     setCheckType(CHECK_TYPE.全选所有);
@@ -232,7 +253,7 @@ class DataTable extends Component {
                     setCheckType(CHECK_TYPE.反选所有);
                   }
                 }
-              : null
+              : null,
         },
         {
           key: CHECK_TYPE.反选当前页,
@@ -247,20 +268,20 @@ class DataTable extends Component {
           onSelect:
             checkType == CHECK_TYPE.全选所有
               ? null
-              : changableRowKeys => {
-                  const jiaoji = selectedRowKeys.filter(key =>
-                    changableRowKeys.includes(key)
+              : (changableRowKeys) => {
+                  const jiaoji = selectedRowKeys.filter((key) =>
+                    changableRowKeys.includes(key),
                   );
                   const chaji = changableRowKeys.filter(
-                    key => !jiaoji.includes(key)
+                    (key) => !jiaoji.includes(key),
                   );
                   const arr = selectedRowKeys
-                    .filter(key => !jiaoji.includes(key))
+                    .filter((key) => !jiaoji.includes(key))
                     .concat(chaji);
                   setSelectedRowKeys(arr);
                   setCheckType(CHECK_TYPE.反选当前页);
-                }
-        }
+                },
+        },
       ];
 
       if (!this.props.rowSelection.onSelect) {
@@ -269,7 +290,7 @@ class DataTable extends Component {
           if (selected) {
             arr.push(record?.id);
           } else {
-            arr = arr.filter(key => key !== record?.id);
+            arr = arr.filter((key) => key !== record?.id);
           }
           setCheckType(CHECK_TYPE.单选);
           setSelectedRowKeys(arr);
@@ -283,11 +304,11 @@ class DataTable extends Component {
       <TableSettingsContainer
         columns={this.state.columns}
         initialSettings={this.state.settings}
-        onSettingsChange={newSettings => {
+        onSettingsChange={(newSettings) => {
           this.setState({settings: newSettings});
           localStorage.setItem(
             `tableSettings_${this.namespace}`,
-            JSON.stringify(newSettings)
+            JSON.stringify(newSettings),
           );
         }}
         namespace={this.namespace}>
@@ -298,11 +319,11 @@ class DataTable extends Component {
           updateVisibleColumns,
           resetSettings,
           sortedInfo,
-          groupedInfo
+          groupedInfo,
         }) => {
           let newColumns = columns.filter(
-            col =>
-              visibleColumns.includes(col.dataIndex) || col.title === '操作'
+            (col) =>
+              visibleColumns.includes(col.dataIndex) || col.title === '操作',
           );
 
           return (
@@ -326,12 +347,24 @@ class DataTable extends Component {
               <Table
                 className={mergedClassName}
                 {...otherProps}
-                columns={newColumns.map(col => ({
+                columns={newColumns.map((col, index) => ({
                   ...col,
                   sorter: col.sorter,
                   sortOrder: sortedInfo[col.dataIndex],
-                  fixed: col.fixed
+                  fixed: col.fixed,
+                  width: col.width,
+                  onHeaderCell: (column) => ({
+                    width: column.width,
+                    onResize: this.handleColumnResize(index),
+                  }),
                 }))}
+                components={{
+                  ...(this.props.components ?? {}),
+                  header: {
+                    cell: ResizableTitle,
+                    ...(this.props.components?.header ?? {}),
+                  },
+                }}
                 pagination={
                   !pagination ? false : Object.assign({}, pagination, page)
                 }
@@ -341,7 +374,7 @@ class DataTable extends Component {
                   if (sorter) {
                     const newSortedInfo = {};
                     if (Array.isArray(sorter)) {
-                      sorter.forEach(item => {
+                      sorter.forEach((item) => {
                         newSortedInfo[item.field] = item.order;
                       });
                     } else {
@@ -350,7 +383,7 @@ class DataTable extends Component {
                     if (typeof this.props.onSettingsChange === 'function') {
                       this.props.onSettingsChange({
                         ...this.state.settings,
-                        sortedInfo: newSortedInfo
+                        sortedInfo: newSortedInfo,
                       });
                     }
                   }
@@ -375,7 +408,7 @@ DataTable.propTypes = {
   defaultSort: PropTypes.object,
   pagination: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   showSelectClear: PropTypes.bool,
-  clearSelectRows: PropTypes.func
+  clearSelectRows: PropTypes.func,
 };
 
 DataTable.CHECK_TYPE = CHECK_TYPE;
