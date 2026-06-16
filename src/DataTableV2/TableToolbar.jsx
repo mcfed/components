@@ -7,7 +7,7 @@ import {
   SettingOutlined,
   VerticalAlignBottomOutlined,
   VerticalAlignMiddleOutlined,
-  VerticalAlignTopOutlined
+  VerticalAlignTopOutlined,
 } from '@ant-design/icons';
 
 import {Button, Dropdown, Menu, Checkbox, Tooltip} from 'antd';
@@ -26,27 +26,29 @@ const TableToolbar = ({
   disabledColumns,
   resetSettings,
   density,
-  loading
+  loading,
 }) => {
   const [columnSettingsVisible, setColumnSettingsVisible] = useState(false);
   const [currentDensity, setCurrentDensity] = useState(density || 'small');
 
   const resizeObserverRef = useRef(null);
+  const columnsRef = useRef(columns);
+  columnsRef.current = columns;
 
   useEffect(() => {
     const targetElement = document.querySelector(
-      '.ant-table > .ant-table-content > .ant-table-scroll table tbody tr'
+      '.ant-table > .ant-table-content > .ant-table-scroll table tbody tr',
     );
     if (targetElement) {
-      const resizeObserver = new ResizeObserver(entries => {
+      const resizeObserver = new ResizeObserver((entries) => {
         for (let entry of entries) {
           const {width, height} = entry.contentRect;
           requestAnimationFrame(() => {
             const allLeftNode = document.querySelectorAll(
-              '.ant-table > .ant-table-content > .ant-table-fixed-left table tbody tr'
+              '.ant-table > .ant-table-content > .ant-table-fixed-left table tbody tr',
             );
             const allRightNode = document.querySelectorAll(
-              '.ant-table > .ant-table-content > .ant-table-fixed-right table tbody tr'
+              '.ant-table > .ant-table-content > .ant-table-fixed-right table tbody tr',
             );
 
             allLeftNode?.forEach((item, index) => {
@@ -102,12 +104,12 @@ const TableToolbar = ({
     </Menu>
   );
 
-  const handleDragEnd = result => {
+  const handleDragEnd = (result) => {
     if (!result.destination) {
       return;
     }
 
-    const newColumns = Array.from(columns);
+    const newColumns = Array.from(columnsRef.current);
     const [reorderedItem] = newColumns.splice(result.source.index, 1);
     newColumns.splice(result.destination.index, 0, reorderedItem);
 
@@ -115,7 +117,7 @@ const TableToolbar = ({
   };
 
   const moveColumn = (index, direction) => {
-    const newColumns = Array.from(columns);
+    const newColumns = Array.from(columnsRef.current);
     const [movedItem] = newColumns.splice(index, 1);
     newColumns.splice(index + direction, 0, movedItem);
     onColumnOrderChange(newColumns);
@@ -128,11 +130,11 @@ const TableToolbar = ({
           checked={columns.every(
             (col, index) =>
               index === columns.length - 1 ||
-              visibleColumns.includes(col.dataIndex)
+              visibleColumns.includes(col.dataIndex),
           )}
-          onChange={e => {
+          onChange={(e) => {
             const newVisibleColumns = e.target.checked
-              ? columns.slice(0, -1).map(col => col.dataIndex)
+              ? columns.slice(0, -1).map((col) => col.dataIndex)
               : ['操作'];
             onColumnVisibilityChange(newVisibleColumns);
           }}>
@@ -150,7 +152,7 @@ const TableToolbar = ({
       <div className='column-settings-list'>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId='column-list'>
-            {provided => (
+            {(provided) => (
               <div {...provided.droppableProps} ref={provided.innerRef}>
                 {renderColumnGroups()}
                 {provided.placeholder}
@@ -163,21 +165,23 @@ const TableToolbar = ({
   );
 
   const getColumnGroups = () => {
-    const leftFixedColumns = columns.filter(col => col.fixed === 'left');
-    const rightFixedColumns = columns.filter(col => col.fixed === 'right');
-    const unfixedColumns = columns.filter(col => !col.fixed);
+    const leftFixedColumns = columns.filter((col) => col.fixed === 'left');
+    const rightFixedColumns = columns.filter((col) => col.fixed === 'right');
+    const unfixedColumns = columns.filter((col) => !col.fixed);
 
     return [
       {title: '固定在左侧', columns: leftFixedColumns},
       {title: '不固定', columns: unfixedColumns},
-      {title: '固定在右侧', columns: rightFixedColumns}
-    ].filter(group => group.columns.length > 0);
+      {title: '固定在右侧', columns: rightFixedColumns},
+    ].filter((group) => group.columns.length > 0);
   };
 
   const renderColumnGroups = () => {
     const groups = getColumnGroups();
     return (
-      <>{groups.map(group => renderColumnGroup(group.title, group.columns))}</>
+      <>
+        {groups.map((group) => renderColumnGroup(group.title, group.columns))}
+      </>
     );
   };
 
@@ -190,9 +194,9 @@ const TableToolbar = ({
           <Draggable
             key={col.dataIndex}
             draggableId={col.dataIndex}
-            index={columns.findIndex(c => c.dataIndex === col.dataIndex)}
+            index={columns.findIndex((c) => c.dataIndex === col.dataIndex)}
             isDragDisabled={isDisabled || col.dataIndex === '操作'}>
-            {provided => (
+            {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
@@ -203,11 +207,11 @@ const TableToolbar = ({
                 <MenuOutlined style={{marginRight: 16}} />
                 <Checkbox
                   checked={visibleColumns.includes(col.dataIndex)}
-                  onChange={e => {
+                  onChange={(e) => {
                     if (isDisabled || col.dataIndex === '操作') return;
                     const newVisibleColumns = e.target.checked
                       ? [...visibleColumns, col.dataIndex]
-                      : visibleColumns.filter(c => c !== col.dataIndex);
+                      : visibleColumns.filter((c) => c !== col.dataIndex);
                     onColumnVisibilityChange(newVisibleColumns);
                   }}
                   disabled={isDisabled || col.dataIndex === '操作'}>

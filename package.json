@@ -1,6 +1,6 @@
 {
   "name": "@mcfed/components",
-  "version": "1.0.0-beta5.3",
+  "version": "1.0.0-beta5.5",
   "description": "@mcfed for components",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -9,6 +9,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "npm test -- --watch",
+    "demo:datatablev2": "node demo/DataTableV2/devServer.js",
     "build": "npm run tsc",
     "tsc": "node scripts/build.js && node scripts/tsc.js",
     "prepublish": "npm run build"
