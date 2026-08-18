@@ -4,6 +4,22 @@ import {Form} from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {Input, Button, Col, Row, Select, Modal} from 'antd';
 import {downList} from './data';
+import {t} from '../i18n';
+import {
+  CONDITION_FIELD_APP_NAME,
+  CONDITION_FIELD_AUDIT_LEVEL,
+  CONDITION_FIELD_DATABASE_TYPE,
+  CONDITION_FIELD_LOGIN_TIME,
+  CONDITION_FIELD_LOGOUT_TIME,
+  CONDITION_FIELD_RESULT,
+  CONDITION_FIELD_RETURN_ROWS,
+  CONDITION_FIELD_TIME_DOMAIN,
+  CONDITION_VALUE_FAILURE,
+  CONDITION_VALUE_HIGH,
+  CONDITION_VALUE_LOW,
+  CONDITION_VALUE_MIDDLE,
+  CONDITION_VALUE_SUCCESS,
+} from '../constants/chineseContracts';
 //const { TextArea } = Input;
 const FormItem = Form.Item;
 class ConditionForm extends PureComponent {
@@ -14,33 +30,33 @@ class ConditionForm extends PureComponent {
     isMulti: false,
     isShowSec: false,
     isShowfirstSV: true,
-    callbackArr: []
+    callbackArr: [],
   };
   componentDidMount() {
     let {conditionSelect} = this.props;
     this.setState({
-      conditionSelect
+      conditionSelect,
     });
     //console.log("conditionSelect", conditionSelect);
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
     //console.log('nextProps', nextProps)
     this.setState({
-      conditionSelect: nextProps.conditionSelect
+      conditionSelect: nextProps.conditionSelect,
     });
   }
 
   //条件因子 下拉框点击事件
-  factorHandleChange = value => {
+  factorHandleChange = (value) => {
     const {setFieldsValue} = this.props.form;
     let {conditionSelect} = this.state;
     this.setState({
       isfirstSVList: false,
-      isShowSec: false
+      isShowSec: false,
     });
     setFieldsValue({
       'condition-selection': undefined,
-      'value-selection': undefined
+      'value-selection': undefined,
     });
     //通过value反查对应的factorOperate
     function getOperateByFac(value) {
@@ -57,27 +73,29 @@ class ConditionForm extends PureComponent {
           firstSVList: downList[i].value.map((v, index) => {
             return (
               <Select.Option key={index} value={v}>
-                {v}
+                {downList[i].valueLocaleKeys
+                  ? t(downList[i].valueLocaleKeys[v])
+                  : v}
               </Select.Option>
             );
-          })
+          }),
         });
         break;
       }
     }
     setFieldsValue({
-      factorLabel: `$${value}`
+      factorLabel: `$${value}`,
     });
     this.setState({
-      selection: getOperateByFac(value).split(',')
+      selection: getOperateByFac(value).split(','),
     });
   };
   //= in like 等 下拉框点击事件
-  selectionHandleChange = value => {
+  selectionHandleChange = (value) => {
     const {setFieldsValue, getFieldValue} = this.props.form;
 
     setFieldsValue({
-      'condition-selection': `${value}`
+      'condition-selection': `${value}`,
     });
     let cs = getFieldValue('condition-selection');
     if (cs === 'between') {
@@ -87,43 +105,43 @@ class ConditionForm extends PureComponent {
     }
     if (cs === 'is not null' || cs === 'is null') {
       this.setState({
-        isShowfirstSV: false
+        isShowfirstSV: false,
       });
       setFieldsValue({
-        'value-selection': undefined
+        'value-selection': undefined,
       });
     } else {
       this.setState({
-        isShowfirstSV: true
+        isShowfirstSV: true,
       });
     }
 
     //三级下拉框多选
     let cf = getFieldValue('condition-factor');
     const cfMultArr = [
-      '应用程序名',
-      '执行结果',
-      '时间域',
-      '审计级别',
-      '数据库类型'
+      CONDITION_FIELD_APP_NAME,
+      CONDITION_FIELD_RESULT,
+      CONDITION_FIELD_TIME_DOMAIN,
+      CONDITION_FIELD_AUDIT_LEVEL,
+      CONDITION_FIELD_DATABASE_TYPE,
     ]; //, '服务端IP',  '物理地址', '主机名'
     if (cfMultArr.includes(cf) && (cs === 'in' || cs === 'not in')) {
       this.setState(
         {
-          isMulti: true
+          isMulti: true,
         },
         setFieldsValue({
-          'value-selection': undefined
-        })
+          'value-selection': undefined,
+        }),
       );
     } else {
       this.setState(
         {
-          isMulti: false
+          isMulti: false,
         },
         setFieldsValue({
-          'value-selection': undefined
-        })
+          'value-selection': undefined,
+        }),
       );
     }
   };
@@ -144,9 +162,9 @@ class ConditionForm extends PureComponent {
     } else {
       if (vs == '' || vs == undefined) {
         Modal.error({
-          title: '系统提示',
-          okText: '确定',
-          content: `请将条件填写完整！`
+          title: t('conditionForm.systemPrompt'),
+          okText: t('common.ok'),
+          content: t('conditionForm.incompleteCondition'),
         });
         return;
       }
@@ -175,37 +193,37 @@ class ConditionForm extends PureComponent {
         cs === 'in' || cs === 'not in'
           ? `(${inSql})`
           : vs == ``
-          ? ``
-          : `'${vs}'`;
+            ? ``
+            : `'${vs}'`;
     }
 
     let vs2Sql = vs2 ? ` and '${vs2}'` : ``;
     if (
-      getFieldValue('factorLabel') === '$登录时间' ||
-      getFieldValue('factorLabel') === '$退出时间'
+      getFieldValue('factorLabel') === `$${CONDITION_FIELD_LOGIN_TIME}` ||
+      getFieldValue('factorLabel') === `$${CONDITION_FIELD_LOGOUT_TIME}`
     ) {
       if (
         !this.validTime(vs[0]) ||
         (!this.validTime(vs2) && cs === 'between')
       ) {
         Modal.error({
-          title: '系统提示',
-          okText: '确定',
-          content: `时间格式不正确`
+          title: t('conditionForm.systemPrompt'),
+          okText: t('common.ok'),
+          content: t('conditionForm.invalidTimeFormat'),
         });
         return;
       }
     }
-    if (getFieldValue('factorLabel') === '$返回/影响行数') {
+    if (getFieldValue('factorLabel') === `$${CONDITION_FIELD_RETURN_ROWS}`) {
       if (
         !this.validAllNaturalNum(vs[0]) ||
         vs[0] > 2147483648 ||
         vs[0] < -2147483648
       ) {
         Modal.error({
-          title: '系统提示',
-          okText: '确定',
-          content: `输入的返回／影响行数超出取值范围。`
+          title: t('conditionForm.systemPrompt'),
+          okText: t('common.ok'),
+          content: t('conditionForm.outOfRange'),
         });
         return;
       }
@@ -216,9 +234,9 @@ class ConditionForm extends PureComponent {
         cs === 'between'
       ) {
         Modal.error({
-          title: '系统提示',
-          okText: '确定',
-          content: `输入的返回／影响行数超出取值范围。`
+          title: t('conditionForm.systemPrompt'),
+          okText: t('common.ok'),
+          content: t('conditionForm.outOfRange'),
         });
         return;
       }
@@ -227,9 +245,9 @@ class ConditionForm extends PureComponent {
     let sql = `"${getFieldValue('factorLabel')}" ${cs} ${isBrack}${vs2Sql}`;
     if (sql.includes('undefined')) {
       Modal.error({
-        title: '系统提示',
-        okText: '确定',
-        content: `请将条件填写完整！`
+        title: t('conditionForm.systemPrompt'),
+        okText: t('common.ok'),
+        content: t('conditionForm.incompleteCondition'),
       });
       return;
     }
@@ -248,25 +266,26 @@ class ConditionForm extends PureComponent {
     this.props.callbackParentSql(callbackArr);
   };
 
-  convertValue = v => {
-    v = v.replace('成功', '0');
-    v = v.replace('失败', '1');
-    v = v.replace('高', '3');
-    v = v.replace('中', '2');
-    v = v.replace('低', '1');
+  convertValue = (v) => {
+    v = v.replace(CONDITION_VALUE_SUCCESS, '0');
+    v = v.replace(CONDITION_VALUE_FAILURE, '1');
+    v = v.replace(CONDITION_VALUE_HIGH, '3');
+    v = v.replace(CONDITION_VALUE_MIDDLE, '2');
+    v = v.replace(CONDITION_VALUE_LOW, '1');
     return v;
   };
-  onTextChange = v => {
+  onTextChange = (v) => {
     this.setState({
-      sql: v
+      sql: v,
     });
     this.props.callbackParentSql(v);
   };
-  validTime = str => {
-    var regDate = /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1} ([0-2][0-9]):([0-5][0-9]):([0-5][0-9])$/;
+  validTime = (str) => {
+    var regDate =
+      /^[0-9]{4}-[0-1]?[0-9]{1}-[0-3]?[0-9]{1} ([0-2][0-9]):([0-5][0-9]):([0-5][0-9])$/;
     return regDate.test(str);
   };
-  validAllNaturalNum = str => {
+  validAllNaturalNum = (str) => {
     var re = /^-?[0-9]*$/; //判断字符串是否为正整数
     if (!re.test(str)) {
       return false;
@@ -283,13 +302,13 @@ class ConditionForm extends PureComponent {
       firstSVList,
       isMulti,
       isShowSec,
-      isShowfirstSV
+      isShowfirstSV,
     } = this.state;
     //console.log('conditionSelect', conditionSelect)
     const conditionRender = conditionSelect.map((v, i) => {
       return (
         <Select.Option key={i} value={v.value}>
-          {v.label}
+          {v.labelKey ? t(v.labelKey) : v.label}
         </Select.Option>
       );
     });
@@ -303,39 +322,41 @@ class ConditionForm extends PureComponent {
     const formItemLayout = {
       labelCol: {
         xs: {span: 24},
-        sm: {span: 8}
+        sm: {span: 8},
       },
       wrapperCol: {
         xs: {span: 24},
-        sm: {span: 12}
-      }
+        sm: {span: 12},
+      },
     };
 
     return (
       <div>
         <Row gutter={12}>
           <Col md={6}>
-            <FormItem {...formItemLayout} label='条件因子'>
+            <FormItem {...formItemLayout} label={t('conditionForm.factor')}>
               {getFieldDecorator('condition-factor')(
-                <Select placeholder='请选择' onChange={this.factorHandleChange}>
+                <Select
+                  placeholder={t('common.pleaseSelect')}
+                  onChange={this.factorHandleChange}>
                   {conditionRender}
-                </Select>
+                </Select>,
               )}
             </FormItem>
           </Col>
           <Col md={3}>
             {getFieldDecorator('factorLabel')(
-              <Input placeholder='' disabled />
+              <Input placeholder='' disabled />,
             )}
           </Col>
           <Col md={3}>
             <FormItem {...formItemLayout} label=''>
               {getFieldDecorator('condition-selection')(
                 <Select
-                  placeholder='请选择'
+                  placeholder={t('common.pleaseSelect')}
                   onChange={this.selectionHandleChange}>
                   {selectionRender}
-                </Select>
+                </Select>,
               )}
             </FormItem>
           </Col>
@@ -346,13 +367,13 @@ class ConditionForm extends PureComponent {
                   <Select
                     mode={isMulti ? 'tags' : 'combobox'}
                     key={isMulti ? 'tags' : 'combobox'}
-                    placeholder='请选择'
+                    placeholder={t('common.pleaseSelect')}
                     style={{width: '100%', marginRight: 5}}>
                     {firstSVList}
                   </Select>
                 ) : (
-                  <Input placeholder='请输入' />
-                )
+                  <Input placeholder={t('common.pleaseInput')} />
+                ),
               )}
             </Col>
           ) : (
@@ -362,7 +383,7 @@ class ConditionForm extends PureComponent {
             <Col md={4}>
               <FormItem {...formItemLayout} label='AND' colon={false}>
                 {getFieldDecorator('value-selection2')(
-                  <Input placeholder='请输入' />
+                  <Input placeholder={t('common.pleaseInput')} />,
                 )}
               </FormItem>
             </Col>
@@ -378,10 +399,10 @@ class ConditionForm extends PureComponent {
                 <Select.Option key='or' value='OR'>
                   OR
                 </Select.Option>
-              </Select>
+              </Select>,
             )}
             <Button type='primary' onClick={this.addSql}>
-              添加
+              {t('conditionForm.add')}
             </Button>
           </Col>
         </Row>
@@ -405,12 +426,12 @@ ConditionForm.propTypes = {
   /**
    * 把textarea输入框的值回传出去的回调方法
    */
-  callbackParentSql: PropTypes.func.isRequired
+  callbackParentSql: PropTypes.func.isRequired,
 };
 
 ConditionForm.defaultProps = {
   conditionSelect: [],
-  callbackParentSql: function() {}
+  callbackParentSql: function () {},
 };
 
 export default ConditionForm;

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 // import 'core-js/fn/array/includes';
 import SelectList from './selectList';
 import Operation from './operation';
+import {t} from '../i18n';
 
 import prefixCls from './constants';
 export function noop() {}
@@ -17,7 +18,7 @@ export default class Transfer extends React.Component {
       leftSource: [],
       rightSrouce: [],
       sourceSelectedKeys: [],
-      targetSelectedKeys: []
+      targetSelectedKeys: [],
     };
 
     this.handleSelect = this.handleSelect.bind(this);
@@ -58,7 +59,7 @@ export default class Transfer extends React.Component {
     const oldSourceSelectedKeys = this.state.sourceSelectedKeys;
     const oldTargetSelectedKeys = this.state.targetSelectedKeys;
 
-    props.dataSource.forEach(item => {
+    props.dataSource.forEach((item) => {
       /* istanbul ignore else */
       if (props.rowKey) {
         item.key = props.rowKey(item); // eslint-disable-line
@@ -94,7 +95,7 @@ export default class Transfer extends React.Component {
 
     /* istanbul ignore else */
     if (props.selectedKeys) {
-      props.selectedKeys.forEach(key => {
+      props.selectedKeys.forEach((key) => {
         if (props.targetKeys.includes(key)) {
           targetSelectedKeys.push(key);
         } else {
@@ -107,7 +108,7 @@ export default class Transfer extends React.Component {
       leftSource,
       rightSrouce,
       sourceSelectedKeys,
-      targetSelectedKeys
+      targetSelectedKeys,
     });
   }
 
@@ -125,7 +126,7 @@ export default class Transfer extends React.Component {
     if (!this.props.selectedKeys) {
       this.setState({
         sourceSelectedKeys: leftKeys,
-        targetSelectedKeys: rightKeys
+        targetSelectedKeys: rightKeys,
       });
     }
   }
@@ -139,7 +140,7 @@ export default class Transfer extends React.Component {
 
     const newMoveKeys = [];
     // disable key can be selected in props, so there should fitler disabled keys
-    dataSource.forEach(item => {
+    dataSource.forEach((item) => {
       /* istanbul ignore else */
       if (!item.disabled && moveKeys.includes(item.key)) {
         newMoveKeys.push(item.key);
@@ -149,14 +150,16 @@ export default class Transfer extends React.Component {
     const newTargetKeys =
       direction === 'right'
         ? newMoveKeys.concat(targetKeys)
-        : targetKeys.filter(targetKey => newMoveKeys.indexOf(targetKey) === -1);
+        : targetKeys.filter(
+            (targetKey) => newMoveKeys.indexOf(targetKey) === -1,
+          );
     const newTargetData = dataSource.filter(
-      item => newTargetKeys.indexOf(item.key) > -1
+      (item) => newTargetKeys.indexOf(item.key) > -1,
     );
     // empty checked keys
     const oppositeDirection = direction === 'right' ? 'left' : 'right';
     this.setState({
-      [this.getSelectedKeysName(oppositeDirection)]: []
+      [this.getSelectedKeysName(oppositeDirection)]: [],
     });
     this.handleSelect(oppositeDirection, []);
     /* istanbul ignore else */
@@ -180,20 +183,31 @@ export default class Transfer extends React.Component {
       filterOption,
       showSearch,
       footer,
-      locale,
+      locale: customLocale,
       searchRender,
       hideLeftSearch,
       hideRightSearch,
-      mode
+      mode,
     } = this.props;
+    const locale = Object.assign(
+      {
+        itemUnit: t('transfer.items'),
+        itemsUnit: t('transfer.items'),
+        notFoundContent: t('transfer.notFound'),
+        searchPlaceholder: t('transfer.searchPlaceholder'),
+      },
+      customLocale,
+    );
+    const defaultTitles = [t('transfer.source'), t('transfer.target')];
+    const mergedTitles = titles && titles.length ? titles : defaultTitles;
     const leftActive = targetSelectedKeys.length > 0;
     const rightActive = sourceSelectedKeys.length > 0;
 
     const cls = classNames(
       {
-        [`${prefixCls}`]: true
+        [`${prefixCls}`]: true,
       },
-      className
+      className,
     );
 
     return (
@@ -204,14 +218,14 @@ export default class Transfer extends React.Component {
             dataSource={this.state.leftSource}
             render={this.props.render}
             selectedKeys={this.state.sourceSelectedKeys}
-            handleSelect={selectedKeys =>
+            handleSelect={(selectedKeys) =>
               this.handleSelect('left', selectedKeys)
             }
             showSearch={showSearch ? showSearch && !hideLeftSearch : false}
             filterOption={filterOption}
             itemsUnit={locale.itemsUnit}
             itemUnit={locale.itemUnit}
-            titleText={titles[0]}
+            titleText={mergedTitles[0]}
             rowHeight={this.props.rowHeight}
             style={this.props.leftStyle || this.props.listStyle}
             footer={footer}
@@ -235,14 +249,14 @@ export default class Transfer extends React.Component {
             dataSource={this.state.rightSrouce}
             render={this.props.render}
             selectedKeys={this.state.targetSelectedKeys}
-            handleSelect={selectedKeys =>
+            handleSelect={(selectedKeys) =>
               this.handleSelect('right', selectedKeys)
             }
             showSearch={showSearch ? showSearch && !hideRightSearch : false}
             filterOption={filterOption}
             itemsUnit={locale.itemsUnit}
             itemUnit={locale.itemUnit}
-            titleText={titles[1]}
+            titleText={mergedTitles[1]}
             rowHeight={this.props.rowHeight}
             style={this.props.rightStyle || this.props.listStyle}
             footer={footer}
@@ -262,12 +276,12 @@ Transfer.defaultProps = {
   dataSource: [],
   selectedKeys: undefined,
   onSelectChange: undefined,
-  titles: ['', ''],
+  titles: undefined,
   className: undefined,
   filterOption: undefined,
   listStyle: {
     width: 200,
-    height: 300
+    height: 300,
   },
   operations: ['', ''],
   showSearch: false,
@@ -280,7 +294,7 @@ Transfer.defaultProps = {
   hideRightSearch: false,
   rowHeight: 32,
   header: undefined,
-  mode: 'normal'
+  mode: 'normal',
 };
 
 Transfer.propTypes = {
@@ -292,7 +306,7 @@ Transfer.propTypes = {
   onSelectChange: PropTypes.func,
   listStyle: PropTypes.shape({
     height: PropTypes.number.isRequired, // not support %
-    width: PropTypes.any
+    width: PropTypes.any,
   }),
   className: PropTypes.string,
   titles: PropTypes.array,
@@ -305,5 +319,5 @@ Transfer.propTypes = {
   footer: PropTypes.func,
   rowKey: PropTypes.func, // eslint-disable-line,
   hideLeftSearch: PropTypes.bool,
-  hideRightSearch: PropTypes.bool
+  hideRightSearch: PropTypes.bool,
 };

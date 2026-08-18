@@ -1,6 +1,24 @@
-export default {
-  searchText: '搜索',
-  collapseText: '展开',
-  openCollapseText: '收起',
-  resetBtnText: '重置'
-};
+import {t} from '../i18n';
+
+const locale = {};
+
+Object.defineProperties(locale, {
+  searchText: {
+    enumerable: true,
+    get: () => t('advancedSearch.searchText'),
+  },
+  resetText: {
+    enumerable: true,
+    get: () => t('advancedSearch.resetText'),
+  },
+  upText: {
+    enumerable: true,
+    get: () => t('advancedSearch.upText'),
+  },
+  downText: {
+    enumerable: true,
+    get: () => t('advancedSearch.downText'),
+  },
+});
+
+export default locale;

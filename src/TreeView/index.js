@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Tree, Input, Button, TreeSelect} from 'antd';
+import {t} from '../i18n';
 
 const Search = Input.Search;
 const TreeNode = Tree.TreeNode;
@@ -12,26 +13,26 @@ export default class TreeView extends Component {
     super(props);
     this.state = {
       checkedKeys: props.value,
-      expandedKeys: []
+      expandedKeys: [],
     };
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (JSON.stringify(nextProps.value) != JSON.stringify(this.props.value)) {
       this.setState({
-        checkedKeys: nextProps.value
+        checkedKeys: nextProps.value,
       });
     }
   }
 
   loopTreeNode(data) {
     let {renderItem} = this.props;
-    return data.map(item => {
+    return data.map((item) => {
       if (item.children && item.children.length) {
         return React.cloneElement(
           renderItem(item),
           {},
-          this.loopTreeNode(item.children)
+          this.loopTreeNode(item.children),
         );
       }
       return React.cloneElement(renderItem(item));
@@ -50,11 +51,11 @@ export default class TreeView extends Component {
     }
     this.setState(
       {
-        checkedKeys: filterKeys
+        checkedKeys: filterKeys,
       },
       () => {
         this.props.onChange(this.state.checkedKeys);
-      }
+      },
     );
   };
 
@@ -68,7 +69,7 @@ export default class TreeView extends Component {
 
   onExpand = (expandedKeys, e) => {
     this.setState({
-      expandedKeys: expandedKeys
+      expandedKeys: expandedKeys,
     });
   };
 
@@ -80,7 +81,7 @@ export default class TreeView extends Component {
       value,
       onSelect,
       defaultKey,
-      scrollHeight
+      scrollHeight,
     } = this.props;
     const {checkedKeys, expandedKeys} = this.state;
 
@@ -92,7 +93,7 @@ export default class TreeView extends Component {
             ? {
                 maxHeight: scrollHeight,
                 overflowY: 'auto',
-                border: '1px solid #d9d9d9'
+                border: '1px solid #d9d9d9',
               }
             : {}
         }>
@@ -116,7 +117,7 @@ export class TreeSelectPicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: props.value
+      value: props.value,
     };
   }
   //
@@ -125,23 +126,17 @@ export class TreeSelectPicker extends Component {
     // console.log(value,label)
     this.setState(
       {
-        value: value
+        value: value,
       },
-      function() {
+      function () {
         onChange(value);
-      }
+      },
     );
   }
 
   render() {
-    const {
-      onChange,
-      treeData,
-      children,
-      value,
-      allowClear,
-      ...otherProps
-    } = this.props;
+    const {onChange, treeData, children, value, allowClear, ...otherProps} =
+      this.props;
     // console.log(children,this.state.value)
     if (allowClear == true) {
       return (
@@ -172,7 +167,7 @@ export class TreeViewPanel extends Component {
     key: '',
     inside: false,
     label: '',
-    value: ''
+    value: '',
   };
   onSearch(value, event) {
     const {searchCallback} = this.props;
@@ -181,19 +176,19 @@ export class TreeViewPanel extends Component {
       searchCallback(value);
     } else {
       this.setState({
-        key: value
+        key: value,
       });
     }
   }
   onSelect(node, value) {
     this.setState({
       label: node.props.title,
-      value: node.props.value
+      value: node.props.value,
     });
   }
   filterTree(data, regexp) {
     // let { renderNode } = this.props
-    return new Array().concat(data).filter(item => {
+    return new Array().concat(data).filter((item) => {
       if (item.children && item.children.length) {
         // console.log(this.filterTree(item.children,regexp))
         item.children = this.filterTree(item.children, regexp);
@@ -209,7 +204,7 @@ export class TreeViewPanel extends Component {
     const {key, inside, label, value} = this.state;
     if (label != '') {
       this.setState({
-        inside: !status
+        inside: !status,
       });
     }
   }
@@ -223,7 +218,7 @@ export class TreeViewPanel extends Component {
         <div className='tree-view-panel-box'>
           <Search
             style={{marginBottom: 8}}
-            placeholder='Search'
+            placeholder={t('common.search')}
             onSearch={this.onSearch.bind(this)}
           />
           <TreeView
@@ -240,7 +235,7 @@ export class TreeViewPanel extends Component {
     const {key, inside, label} = this.state;
     return isShowExpend ? (
       <Button onClick={this.onMouseHandler.bind(this, inside)}>
-        {!inside ? '收起' : '展开'}
+        {!inside ? t('common.collapse') : t('common.expand')}
       </Button>
     ) : null;
   }

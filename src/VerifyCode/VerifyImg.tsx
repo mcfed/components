@@ -1,5 +1,6 @@
 import React, {ReactNode} from 'react';
 import VerifyCode, {VerifyCodeProps} from './VerifyCode';
+import {t} from '../i18n';
 
 export interface IMGVerifyCodeProps extends VerifyCodeProps {
   /**
@@ -21,13 +22,13 @@ export class ImgVerifyCode extends VerifyCode<
   IMGVerifyCodeState
 > {
   state = {
-    random: new Date().valueOf()
+    random: new Date().valueOf(),
   };
   handlerClick() {
     const {retry} = this.props;
     retry && retry();
     this.setState({
-      random: new Date().valueOf()
+      random: new Date().valueOf(),
     });
   }
   renderAddon(): ReactNode {
@@ -36,7 +37,7 @@ export class ImgVerifyCode extends VerifyCode<
       <img
         className='addon-content'
         src={`${url}`}
-        alt='看不清，换一张'
+        alt={t('verifyCode.changeCaptcha')}
         onClick={this.handlerClick.bind(this)}
       />
     );

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Steps} from 'antd';
+import {t} from '../i18n';
 export default interface StepProps {
   steps: any[];
   history?: any;
@@ -9,16 +10,16 @@ export default interface StepProps {
 export const defaultStepProps = {
   steps: [],
   location: {
-    pathname: ''
+    pathname: '',
   },
   history: {
-    push() {}
-  }
+    push() {},
+  },
 };
 
 const initialState = {
   currentIndex: 0,
-  step: 1
+  step: 1,
 };
 
 type State = typeof initialState;
@@ -44,13 +45,13 @@ export default class Step extends React.Component<StepProps, State> {
 
     this.setState({
       currentIndex: currentStepNum - 1,
-      step: currentStepNum
+      step: currentStepNum,
     });
   }
 
   goRoutes = (route: number | string) => {
     const {
-      props: {steps}
+      props: {steps},
     } = this;
     let currentPath: string;
     let currentStep = 1;
@@ -69,15 +70,15 @@ export default class Step extends React.Component<StepProps, State> {
       });
     }
     const ifNeedJump =
-      steps.filter(item => item.path === currentPath).length > 0;
+      steps.filter((item) => item.path === currentPath).length > 0;
     if (ifNeedJump) {
       this.props.history.push(currentPath);
       this.setState({
         currentIndex,
-        step: currentStep
+        step: currentStep,
       });
     } else {
-      console.log('请输入正确的地址！');
+      console.log(t('mcSteps.invalidPath'));
     }
   };
 
@@ -92,7 +93,7 @@ export default class Step extends React.Component<StepProps, State> {
       ...this.props,
       forwardRef: ref,
       goRoutes,
-      getCurrentStep
+      getCurrentStep,
     };
     if (!Comp.constructor) {
       let Component = Comp(props);

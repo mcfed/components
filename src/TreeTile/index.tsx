@@ -1,5 +1,6 @@
 import React from 'react';
 import {Tree, Card, Checkbox} from 'antd';
+import {t} from '../i18n';
 const TreeNode = Tree.TreeNode;
 
 interface TreeTileProps {
@@ -27,7 +28,6 @@ type checkedKeysObjectType = {
 class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
   static defaultProps = {
     dataSource: [],
-    title: '请选择',
   };
 
   constructor(props: TreeTileProps) {
@@ -131,19 +131,20 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
 
   render() {
     const {title, dataSource} = this.props;
+    const cardTitle = title || t('treeTile.title');
     let {checkedKeys} = this.state;
     return (
       //@ts-ignore
       <Card
         // @ts-ignore: 自定义属性，忽略检查
         size='small'
-        title={title}
+        title={cardTitle}
         extra={
           <Checkbox
             onChange={this.onCheckAll}
             indeterminate={this.state.indeterminate}
             checked={this.state.checkAll}>
-            全选
+            {t('common.selectAll')}
           </Checkbox>
         }
         style={{width: '100%'}}>
@@ -161,7 +162,7 @@ class TreeTile extends React.Component<TreeTileProps, TreeTileStates> {
             {this.renderTreeNodes(dataSource)}
           </Tree>
         ) : (
-          <p className='treeNoData'>no data</p>
+          <p className='treeNoData'>{t('treeTile.noData')}</p>
         )}
       </Card>
     );

@@ -10,6 +10,7 @@ import {ModalFuncProps} from 'antd/es/modal';
 import {InfoCircleOutlined} from '@ant-design/icons';
 import {Button, Tooltip, Menu, Dropdown, Modal} from 'antd';
 import CustomButton from './Button';
+import {t} from '../i18n';
 
 interface ButtonGroupsType extends ButtonGroupProps {
   /**
@@ -49,7 +50,7 @@ class Confirm extends React.Component<ConfirmType> {
       title: title,
       content: content,
       onOk: onConfirm,
-      icon: <InfoCircleOutlined />
+      icon: <InfoCircleOutlined />,
     });
   }
   //此处的createElement 直接用children 无法正常使用 小坑
@@ -59,9 +60,9 @@ class Confirm extends React.Component<ConfirmType> {
       children.type,
       {
         ...children.props,
-        onClick: this.handleConfirmClick.bind(this)
+        onClick: this.handleConfirmClick.bind(this),
       },
-      children.props.children
+      children.props.children,
     );
   }
 }
@@ -70,9 +71,9 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
   static CustomButton: typeof CustomButton;
   static defaultProps = {
     showSize: 5,
-    handleClick: function(actionkey: string) {},
+    handleClick: function (actionkey: string) {},
     viewMode: 'text',
-    mode: 'ButtonGroup'
+    mode: 'ButtonGroup',
   };
   // static CustomButton: typeof CustomButton;
   filterChildren(childrenArray: any) {
@@ -110,9 +111,9 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
             ...btnProps,
             onClick: () => {
               handleClick(actionkey);
-            }
+            },
           },
-          children
+          children,
         )
       : React.createElement(
           Tooltip,
@@ -124,10 +125,10 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
               ...btnProps,
               onClick: () => {
                 handleClick(actionkey);
-              }
+              },
             },
-            children
-          )
+            children,
+          ),
         );
   }
 
@@ -149,32 +150,35 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
       //@ts-ignore
       {
         key: idx,
-        title: !!confirmTitle ? confirmTitle : undefined,
-        content: confirm,
+        title: !!confirmTitle ? confirmTitle : t('buttonGroups.confirmTitle'),
+        content:
+          typeof confirm === 'string'
+            ? confirm
+            : t('buttonGroups.confirmContent'),
         onConfirm: () => {
           handleClick(actionkey);
-        }
+        },
       },
       otherProps.disabled === true || needTooltip === false
         ? React.createElement(
             //@ts-ignore
             Button,
             {...otherProps},
-            children
+            children,
           )
         : React.createElement(
             Tooltip,
             {
               key: idx,
-              title: title
+              title: title,
             },
             React.createElement(
               //@ts-ignore
               Button,
               {...otherProps},
-              children
-            )
-          )
+              children,
+            ),
+          ),
     );
   }
   renderReactElement(it: any, idx: number) {
@@ -197,7 +201,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     return React.createElement(
       Tooltip,
       Object.assign({}, {key: idx, title: tip}),
-      React.cloneElement(it, Object.assign({}, it.props), children)
+      React.cloneElement(it, Object.assign({}, it.props), children),
     );
   }
   renderMenuItem(itemList: any) {
@@ -228,7 +232,7 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
             overlay={this.renderMenuItem(endArray)}>
             <Button>
               {/* <Icon type='ellipsis' /> */}
-              更多
+              {t('common.more')}
             </Button>
           </Dropdown>
         ) : null}
@@ -236,14 +240,8 @@ export class ButtonGroups extends React.Component<ButtonGroupsType> {
     );
   }
   renderChildren() {
-    const {
-      mode,
-      handleClick,
-      children,
-      showSize,
-      viewMode,
-      ...otherProps
-    } = this.props;
+    const {mode, handleClick, children, showSize, viewMode, ...otherProps} =
+      this.props;
     return (
       <Button.Group {...otherProps}>
         {mode === 'ButtonGroup'

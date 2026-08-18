@@ -3,17 +3,19 @@ import PropTypes from 'prop-types';
 import {Form} from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {Table, Checkbox, Button, Row, Col} from 'antd';
+import {t} from '../i18n';
+import {TABLE_OPERATION_COLUMN} from '../constants/chineseContracts';
 import TableToolbar from './TableToolbar';
 import TableSettingsContainer from './tableSettingsContainer';
 import ResizableTitle from './components/ResizableTitle';
 import './index.less';
 
 const CHECK_TYPE = {
-  全选所有: 'checkAll',
-  反选所有: 'checkInvert',
-  全选当前页: 'checkCurAll',
-  反选当前页: 'checkCurInvert',
-  单选: 'checkOne',
+  all: 'checkAll',
+  invert: 'checkInvert',
+  currentAll: 'checkCurAll',
+  currentInvert: 'checkCurInvert',
+  single: 'checkOne',
 };
 const CHECK_DISABLED_CLASS = 'check-disabled';
 
@@ -61,7 +63,7 @@ class DataTable extends Component {
     page: {},
     prefixCls: 'ant-table',
     pagination: {
-      showTotal: (total) => `共 ${total} 条`,
+      showTotal: (total) => t('dataTable.total', {total}),
       size: 'middle',
       showSizeChanger: true,
       pageSizeOptions: ['10', '20', '50', '100'],
@@ -139,7 +141,7 @@ class DataTable extends Component {
       rowSelection && rowSelection.selectedRowKeys
         ? rowSelection.selectedRowKeys.length
         : 0;
-    if (checkType == CHECK_TYPE.全选所有) {
+    if (checkType == CHECK_TYPE.all) {
       len = page?.total;
       if (!!this.props?.disabledCount) {
         len = len - this.props?.disabledCount;
@@ -147,13 +149,13 @@ class DataTable extends Component {
     }
     return dataSource.length > 0 && showSelectClear && rowSelection ? (
       <div className='checkedClear'>
-        <span>已选 {len} 项</span>
+        <span>{t('dataTable.selected', {count: len})}</span>
         <Button type='link' disabled={len === 0} onClick={this.clear}>
           <span
             className={
               len == 0 ? 'checkedClear-disabled' : 'checkedClear-active'
             }>
-            清空
+            {t('common.clear')}
           </span>
         </Button>
       </div>
@@ -202,71 +204,71 @@ class DataTable extends Component {
       this.props.rowSelection.hideDefaultSelections = true;
       this.props.rowSelection.selections = [
         {
-          key: CHECK_TYPE.全选所有,
-          text: '全选所有',
+          key: CHECK_TYPE.all,
+          text: t('dataTable.checkAll'),
           onSelect: (changableRowKeys) => {
             if (changableRowKeys?.length > 0) {
               setSelectedRowKeys(changableRowKeys);
-              setCheckType(CHECK_TYPE.全选所有);
+              setCheckType(CHECK_TYPE.all);
             }
           },
         },
         {
-          key: CHECK_TYPE.全选当前页,
-          text: '全选当前页',
+          key: CHECK_TYPE.currentAll,
+          text: t('dataTable.checkCurrentAll'),
           onSelect:
-            checkType == CHECK_TYPE.全选所有
+            checkType == CHECK_TYPE.all
               ? (changableRowKeys) => {
-                  setCheckType(CHECK_TYPE.全选当前页);
+                  setCheckType(CHECK_TYPE.currentAll);
                 }
               : (changableRowKeys) => {
                   let arr = [...selectedRowKeys, ...changableRowKeys];
                   arr = Array.from(new Set(arr));
                   setSelectedRowKeys(arr);
-                  setCheckType(CHECK_TYPE.全选当前页);
+                  setCheckType(CHECK_TYPE.currentAll);
                 },
         },
         {
-          key: CHECK_TYPE.反选所有,
+          key: CHECK_TYPE.invert,
           text: (
             <span
               className={`${
-                checkType == CHECK_TYPE.全选所有 ||
-                checkType == CHECK_TYPE.反选所有 ||
+                checkType == CHECK_TYPE.all ||
+                checkType == CHECK_TYPE.invert ||
                 checkType == ''
                   ? ''
                   : CHECK_DISABLED_CLASS
               }`}>
-              反选所有
+              {t('dataTable.checkInvert')}
             </span>
           ),
           onSelect:
-            checkType == CHECK_TYPE.全选所有 ||
-            checkType == CHECK_TYPE.反选所有 ||
+            checkType == CHECK_TYPE.all ||
+            checkType == CHECK_TYPE.invert ||
             checkType == ''
               ? (changableRowKeys) => {
-                  if (checkType == '' || checkType == CHECK_TYPE.反选所有) {
+                  if (checkType == '' || checkType == CHECK_TYPE.invert) {
                     setSelectedRowKeys(changableRowKeys);
-                    setCheckType(CHECK_TYPE.全选所有);
-                  } else if (checkType == CHECK_TYPE.全选所有) {
+                    setCheckType(CHECK_TYPE.all);
+                  } else if (checkType == CHECK_TYPE.all) {
                     setSelectedRowKeys([]);
-                    setCheckType(CHECK_TYPE.反选所有);
+                    setCheckType(CHECK_TYPE.invert);
                   }
                 }
               : null,
         },
         {
-          key: CHECK_TYPE.反选当前页,
+          key: CHECK_TYPE.currentInvert,
           text: (
             <span
               className={`${
-                checkType == CHECK_TYPE.全选所有 ? CHECK_DISABLED_CLASS : ''
+                checkType == CHECK_TYPE.all ? CHECK_DISABLED_CLASS : ''
               }`}>
-              反选当前页
+              {t('dataTable.checkCurrentInvert')}
             </span>
           ),
           onSelect:
-            checkType == CHECK_TYPE.全选所有
+            checkType == CHECK_TYPE.all
               ? null
               : (changableRowKeys) => {
                   const jiaoji = selectedRowKeys.filter((key) =>
@@ -279,7 +281,7 @@ class DataTable extends Component {
                     .filter((key) => !jiaoji.includes(key))
                     .concat(chaji);
                   setSelectedRowKeys(arr);
-                  setCheckType(CHECK_TYPE.反选当前页);
+                  setCheckType(CHECK_TYPE.currentInvert);
                 },
         },
       ];
@@ -292,7 +294,7 @@ class DataTable extends Component {
           } else {
             arr = arr.filter((key) => key !== record?.id);
           }
-          setCheckType(CHECK_TYPE.单选);
+          setCheckType(CHECK_TYPE.single);
           setSelectedRowKeys(arr);
         };
       }
@@ -323,7 +325,8 @@ class DataTable extends Component {
         }) => {
           let newColumns = columns.filter(
             (col) =>
-              visibleColumns.includes(col.dataIndex) || col.title === '操作',
+              visibleColumns.includes(col.dataIndex) ||
+              col.title === TABLE_OPERATION_COLUMN,
           );
 
           return (

@@ -8,6 +8,8 @@ import {ColumnType as ColumnProps} from 'antd/lib/table/interface';
 import {WrappedFormUtils} from '@ant-design/compatible/lib/form/Form';
 import {GetFieldDecoratorOptions} from '@ant-design/compatible/lib/form/Form';
 import {HTMLAttributes} from 'react';
+import {t} from '../i18n';
+import {TABLE_OPERATION_COLUMN} from '../constants/chineseContracts';
 
 const FormItem = Form.Item;
 const EditableContext = React.createContext({} as WrappedFormUtils);
@@ -191,8 +193,8 @@ export default class EditTable<T extends Item> extends React.Component<
         ? []
         : [
             {
-              title: '操作',
-              dataIndex: '操作',
+              title: t('common.operation'),
+              dataIndex: TABLE_OPERATION_COLUMN,
               className: 'operation',
               render: (text: any, record: any, index: number) => {
                 const editable = this.isEditing(record);
@@ -205,7 +207,9 @@ export default class EditTable<T extends Item> extends React.Component<
                         <EditableContext.Consumer>
                           {(form) => (
                             <a onClick={(e: any) => this.addNew(e, form)}>
-                              {props.btnText?.add ? props.btnText?.add : '添加'}
+                              {props.btnText?.add
+                                ? props.btnText?.add
+                                : t('common.addRow')}
                             </a>
                           )}
                         </EditableContext.Consumer>
@@ -224,7 +228,7 @@ export default class EditTable<T extends Item> extends React.Component<
                                 style={{marginRight: 8}}>
                                 {props.btnText?.save
                                   ? props.btnText?.save
-                                  : '保存'}
+                                  : t('common.save')}
                               </a>
                             )}
                           </EditableContext.Consumer>
@@ -236,14 +240,14 @@ export default class EditTable<T extends Item> extends React.Component<
                                   'true',
                               ) ? (
                                 <Popconfirm
-                                  title='确认取消?'
+                                  title={t('step.cancelConfirmTitle')}
                                   onConfirm={() =>
                                     this.cancel(form, record.key)
                                   }>
                                   <a>
                                     {props.btnText?.cancel
                                       ? props.btnText?.cancel
-                                      : '取消'}
+                                      : t('common.cancel')}
                                   </a>
                                 </Popconfirm>
                               ) : (
@@ -251,7 +255,7 @@ export default class EditTable<T extends Item> extends React.Component<
                                   onClick={() => this.cancel(form, record.key)}>
                                   {props.btnText?.cancel
                                     ? props.btnText?.cancel
-                                    : '取消'}
+                                    : t('common.cancel')}
                                 </a>
                               )
                             }
@@ -265,7 +269,7 @@ export default class EditTable<T extends Item> extends React.Component<
                               onClick={() => this.edit(record.key)}>
                               {props.btnText?.edit
                                 ? props.btnText?.edit
-                                : '编辑'}
+                                : t('common.edit')}
                             </a>
                           )}
                           {this.renderDeleteConfirmButton(props, record)}
@@ -287,16 +291,16 @@ export default class EditTable<T extends Item> extends React.Component<
         <a
           style={{marginRight: 8}}
           onClick={() => this.delete(record.key, 'delete')}>
-          {props.btnText?.delete ? props.btnText?.delete : '删除'}
+          {props.btnText?.delete ? props.btnText?.delete : t('common.delete')}
         </a>
       );
     } else {
       return (
         <Popconfirm
-          title='确认删除?'
+          title={t('editTable.deleteConfirmTitle')}
           onConfirm={() => this.delete(record.key, 'delete')}>
           <a style={{marginRight: 8}}>
-            {props.btnText?.delete ? props.btnText?.delete : '删除'}
+            {props.btnText?.delete ? props.btnText?.delete : t('common.delete')}
           </a>
         </Popconfirm>
       );
@@ -363,8 +367,8 @@ export default class EditTable<T extends Item> extends React.Component<
   getList() {
     const list = [
       {
-        title: '操作',
-        dataIndex: '操作',
+        title: t('common.operation'),
+        dataIndex: TABLE_OPERATION_COLUMN,
         className: 'operation',
         render: (text: any, record: any, index: number) => {
           const editable = this.isEditing(record);
@@ -379,7 +383,7 @@ export default class EditTable<T extends Item> extends React.Component<
                       <a onClick={(e: any) => this.addNew(e, form)}>
                         {this.props.btnText?.add
                           ? this.props.btnText?.add
-                          : '添加'}
+                          : t('common.addRow')}
                       </a>
                     )}
                   </EditableContext.Consumer>
@@ -398,7 +402,7 @@ export default class EditTable<T extends Item> extends React.Component<
                           style={{marginRight: 8}}>
                           {this.props.btnText?.save
                             ? this.props.btnText?.save
-                            : '保存'}
+                            : t('common.save')}
                         </a>
                       )}
                     </EditableContext.Consumer>
@@ -409,19 +413,19 @@ export default class EditTable<T extends Item> extends React.Component<
                           localStorage.getItem('hideCancelConfirm') || 'true',
                         ) ? (
                           <Popconfirm
-                            title='确认取消?'
+                            title={t('step.cancelConfirmTitle')}
                             onConfirm={() => this.cancel(form, record.key)}>
                             <a>
                               {this.props.btnText?.cancel
                                 ? this.props.btnText?.cancel
-                                : '取消'}
+                                : t('common.cancel')}
                             </a>
                           </Popconfirm>
                         ) : (
                           <a onClick={() => this.cancel(form, record.key)}>
                             {this.props.btnText?.cancel
                               ? this.props.btnText?.cancel
-                              : '取消'}
+                              : t('common.cancel')}
                           </a>
                         )
                       }
@@ -435,7 +439,7 @@ export default class EditTable<T extends Item> extends React.Component<
                         onClick={() => this.edit(record.key)}>
                         {this.props.btnText?.edit
                           ? this.props.btnText?.edit
-                          : '编辑'}
+                          : t('common.edit')}
                       </a>
                     )}
                     {this.renderDeleteConfirmButton(this.props, record)}
@@ -480,7 +484,7 @@ export default class EditTable<T extends Item> extends React.Component<
     const {emptyRacAliyunKeyFlag, onEdit} = this.props;
 
     if (this.state.editingKey !== '') {
-      message.error('请先保存编辑项再进行其他编辑操作！');
+      message.error(t('conditionForm.saveBeforeEdit'));
       return false;
     }
 
@@ -526,7 +530,7 @@ export default class EditTable<T extends Item> extends React.Component<
   // 双击td事件
   editColumn = (key: string) => {
     if (this.state.editingKey !== '') {
-      message.error('请先保存编辑项再进行其他编辑操作！');
+      message.error(t('conditionForm.saveBeforeEdit'));
       return false;
     }
     this.setState({editingKey: key});
@@ -586,7 +590,7 @@ export default class EditTable<T extends Item> extends React.Component<
   delete(key: string, type: string) {
     const {onDelete, mode} = this.props;
     if (type === 'delete' && this.state.editingKey !== '' && mode === 'row') {
-      message.error('请先保存编辑项再进行其他删除操作！');
+      message.error(t('conditionForm.saveBeforeDelete'));
       return false;
     }
     let newData = [...this.state.data];
@@ -741,7 +745,7 @@ export default class EditTable<T extends Item> extends React.Component<
   addNew = (e: any, form?: WrappedFormUtils) => {
     const {mode, maxNum, maxErrorMsg} = this.props;
     if (this.state.editingKey !== '' && mode === 'row') {
-      message.error('请先保存编辑项再进行添加操作！');
+      message.error(t('conditionForm.saveBeforeAdd'));
       return false;
     }
     localStorage.setItem('hideCancelConfirm', 'true');
@@ -760,7 +764,7 @@ export default class EditTable<T extends Item> extends React.Component<
       }
     }
     if (maxNum && this.state.data?.length >= maxNum) {
-      message.error(maxErrorMsg || `最多可添加${maxNum}条数据`);
+      message.error(maxErrorMsg || t('conditionForm.maxRows', {maxNum}));
       return;
     }
     let key = new Date().valueOf() + '' + Math.floor(Math.random() * 10 + 1);
@@ -895,7 +899,7 @@ export default class EditTable<T extends Item> extends React.Component<
             icon={<PlusOutlined />}
             onClick={this.addNew}
             style={{width: '100%'}}>
-            {btnText?.add ? btnText?.add : '新增'}
+            {btnText?.add ? btnText?.add : t('common.add')}
           </Button>
         ),
       };

@@ -12,6 +12,8 @@ import {
 
 import {Button, Dropdown, Menu, Checkbox, Tooltip} from 'antd';
 import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd';
+import {t} from '../i18n';
+import {TABLE_OPERATION_COLUMN} from '../constants/chineseContracts';
 import './index.less';
 
 const TableToolbar = ({
@@ -93,13 +95,13 @@ const TableToolbar = ({
       selectedKeys={[currentDensity]}
       className='density-menu'>
       <Menu.Item key='small' className='density-menu-item'>
-        默认
+        {t('common.default')}
       </Menu.Item>
       <Menu.Item key='middle' className='density-menu-item'>
-        中等
+        {t('common.medium')}
       </Menu.Item>
       <Menu.Item key='default' className='density-menu-item'>
-        宽松
+        {t('common.comfortable')}
       </Menu.Item>
     </Menu>
   );
@@ -135,10 +137,10 @@ const TableToolbar = ({
           onChange={(e) => {
             const newVisibleColumns = e.target.checked
               ? columns.slice(0, -1).map((col) => col.dataIndex)
-              : ['操作'];
+              : [TABLE_OPERATION_COLUMN];
             onColumnVisibilityChange(newVisibleColumns);
           }}>
-          列展示
+          {t('dataTable.columnDisplay')}
         </Checkbox>
         <Button
           type='link'
@@ -146,7 +148,7 @@ const TableToolbar = ({
             console.log('Reset button clicked');
             resetSettings();
           }}>
-          重置
+          {t('common.reset')}
         </Button>
       </div>
       <div className='column-settings-list'>
@@ -170,9 +172,9 @@ const TableToolbar = ({
     const unfixedColumns = columns.filter((col) => !col.fixed);
 
     return [
-      {title: '固定在左侧', columns: leftFixedColumns},
-      {title: '不固定', columns: unfixedColumns},
-      {title: '固定在右侧', columns: rightFixedColumns},
+      {title: t('common.fixedLeft'), columns: leftFixedColumns},
+      {title: t('common.unfixed'), columns: unfixedColumns},
+      {title: t('common.fixedRight'), columns: rightFixedColumns},
     ].filter((group) => group.columns.length > 0);
   };
 
@@ -195,7 +197,9 @@ const TableToolbar = ({
             key={col.dataIndex}
             draggableId={col.dataIndex}
             index={columns.findIndex((c) => c.dataIndex === col.dataIndex)}
-            isDragDisabled={isDisabled || col.dataIndex === '操作'}>
+            isDragDisabled={
+              isDisabled || col.dataIndex === TABLE_OPERATION_COLUMN
+            }>
             {(provided) => (
               <div
                 ref={provided.innerRef}
@@ -208,20 +212,23 @@ const TableToolbar = ({
                 <Checkbox
                   checked={visibleColumns.includes(col.dataIndex)}
                   onChange={(e) => {
-                    if (isDisabled || col.dataIndex === '操作') return;
+                    if (isDisabled || col.dataIndex === TABLE_OPERATION_COLUMN)
+                      return;
                     const newVisibleColumns = e.target.checked
                       ? [...visibleColumns, col.dataIndex]
                       : visibleColumns.filter((c) => c !== col.dataIndex);
                     onColumnVisibilityChange(newVisibleColumns);
                   }}
-                  disabled={isDisabled || col.dataIndex === '操作'}>
+                  disabled={
+                    isDisabled || col.dataIndex === TABLE_OPERATION_COLUMN
+                  }>
                   {col.titleTableSet ? col.titleTableSet : col.title}
                 </Checkbox>
                 <div className='column-settings-item-actions'>
                   {!isDisabled && (
                     <>
                       {col.fixed !== 'left' && (
-                        <Tooltip title='固定在左侧'>
+                        <Tooltip title={t('common.fixedLeft')}>
                           <Button
                             onClick={() =>
                               onColumnFixedChange(col.dataIndex, 'left')
@@ -232,7 +239,7 @@ const TableToolbar = ({
                         </Tooltip>
                       )}
                       {col.fixed && (
-                        <Tooltip title='取消固定'>
+                        <Tooltip title={t('common.cancelFixed')}>
                           <Button
                             onClick={() =>
                               onColumnFixedChange(col.dataIndex, undefined)
@@ -243,7 +250,7 @@ const TableToolbar = ({
                         </Tooltip>
                       )}
                       {col.fixed !== 'right' && (
-                        <Tooltip title='固定在右侧'>
+                        <Tooltip title={t('common.fixedRight')}>
                           <Button
                             onClick={() =>
                               onColumnFixedChange(col.dataIndex, 'right')
@@ -266,19 +273,19 @@ const TableToolbar = ({
 
   return (
     <div className='ToolBar'>
-      <Tooltip title='刷新'>
+      <Tooltip title={t('common.refresh')}>
         <Button onClick={onRefresh} className='toolbar-btn'>
           <RedoOutlined spin={loading} />
         </Button>
       </Tooltip>
-      <Tooltip title='密度'>
+      <Tooltip title={t('dataTable.density')}>
         <Dropdown overlay={densityMenu}>
           <Button className='toolbar-btn'>
             <ColumnHeightOutlined />
           </Button>
         </Dropdown>
       </Tooltip>
-      <Tooltip title='列设置'>
+      <Tooltip title={t('dataTable.columnSettings')}>
         <Dropdown
           overlay={columnSettingsMenu}
           visible={columnSettingsVisible}

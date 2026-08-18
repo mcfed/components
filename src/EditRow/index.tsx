@@ -1,12 +1,13 @@
 import React, {Fragment} from 'react';
 import {Button} from 'antd';
 import {ButtonProps} from 'antd/es/button/button';
+import {t} from '../i18n';
 
 interface Cprops {
   renderItem: (
     it: any,
     idx: number,
-    callback: (data: any, json: any) => void
+    callback: (data: any, json: any) => void,
   ) => React.ReactNode;
   btnText?: {
     delete?: React.ReactNode;
@@ -33,13 +34,13 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
   constructor(props: Cprops) {
     super(props);
     this.state = {
-      ranges: formatRanges(props.value)
+      ranges: formatRanges(props.value),
     };
   }
 
   static getDerivedStateFromProps(props: Cprops, state: Cstate) {
     return {
-      ranges: formatRanges(props.value)
+      ranges: formatRanges(props.value),
     };
   }
 
@@ -54,7 +55,7 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
     this.handleSetRanges(
       this.state.ranges.map((it: any, idx) => {
         return index === idx ? Object.assign({}, it, data) : it;
-      })
+      }),
     );
   }
   handleAddRange() {
@@ -64,7 +65,7 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
     this.handleSetRanges(
       this.state.ranges.filter((it: any, idx: number) => {
         return index !== idx;
-      })
+      }),
     );
   }
   render() {
@@ -76,13 +77,13 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
             {this.props.renderItem(
               it,
               idx,
-              this.handleChangeItem.bind(this, idx)
+              this.handleChangeItem.bind(this, idx),
             )}
             <Button
               {...deleteButtonProps}
               onClick={this.handleDelItem.bind(this, idx)}
               className='editrow-item-del'>
-              {btnText?.delete || '删除'}
+              {btnText?.delete || t('common.delete')}
             </Button>
           </div>
         ))}
@@ -90,7 +91,7 @@ export default class EditRow extends React.Component<Cprops, Cstate> {
           {...addButtonProps}
           onClick={this.handleAddRange.bind(this)}
           className='editrow-item-add'>
-          {btnText?.add || '添加'}
+          {btnText?.add || t('common.addRow')}
         </Button>
       </div>
     );

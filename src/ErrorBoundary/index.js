@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {t} from '../i18n';
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -10,7 +11,7 @@ export default class ErrorBoundary extends React.Component {
     // Catch errors in any components below and re-render with error message
     this.setState({
       error: error,
-      errorInfo: errorInfo
+      errorInfo: errorInfo,
     });
     // You can also log error messages to an error reporting service here
   }
@@ -20,7 +21,7 @@ export default class ErrorBoundary extends React.Component {
       // Error path
       return (
         <div className='error-boundary-container'>
-          <h2>出错了.</h2>
+          <h2>{t('errorBoundary.legacyTitle')}</h2>
           <details style={{whiteSpace: 'pre-wrap'}}>
             {this.state.error && this.state.error.toString()}
             <br />

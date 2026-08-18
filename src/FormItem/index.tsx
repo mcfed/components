@@ -11,6 +11,7 @@ import {Select} from 'antd';
 import type {Rule} from 'antd/es/form';
 import {FormRefContext, LayoutRefContext} from '../BaseForm';
 import {FetchUtils} from '@mcfed/utils';
+import {t} from '../i18n';
 
 type fnOrBoolType = ((form: any) => boolean) | boolean | undefined;
 type fetchParamsType = object | ((form: any) => object);
@@ -232,7 +233,7 @@ export class FormItem extends React.Component<CustFormItemType, FormItemState> {
       return;
     }
     if (!(dataList instanceof Array)) {
-      throw 'childData 格式有误';
+      throw t('formItem.childDataInvalid');
     }
     this.setState({
       childData: dataList,

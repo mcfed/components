@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Td from './td';
+import {t} from '../i18n';
 
 interface DetailProps<T = any> {
   mode: 'array' | 'object';
@@ -15,24 +16,23 @@ interface DetailProps<T = any> {
 export default class DetailTable extends React.Component<DetailProps, {}> {
   static defaultProps = {
     columnNumber: 2,
-    title: 'datailtable',
     tableClass: 'ant-table ant-table-bordered ant-table-detail',
     labelKey: 'name',
-    valueKey: 'value'
+    valueKey: 'value',
   };
   showDom(dataSource: any) {
     let Data = [];
     if (this.props.mode === 'object' && Array.isArray(dataSource)) {
-      throw Error('使用对象模式，数据必须为object');
+      throw Error(t('detailTable.objectModeRequired'));
     }
     if (!Array.isArray(dataSource) && this.props.mode !== 'object') {
-      throw Error('数据为对象时，mode需要为object');
+      throw Error(t('detailTable.objectDataModeRequired'));
     }
     if (this.props.mode && this.props.mode === 'object') {
       for (let a in dataSource) {
         Data.push({
           [this.props.labelKey]: a,
-          [this.props.valueKey]: dataSource[a]
+          [this.props.valueKey]: dataSource[a],
         });
       }
     } else {
@@ -41,7 +41,7 @@ export default class DetailTable extends React.Component<DetailProps, {}> {
     let columnNumber =
       this.props.columnNumber === undefined ? 1 : this.props.columnNumber;
     if (columnNumber <= 0) {
-      throw Error('列数必须大于0');
+      throw Error(t('detailTable.columnNumberRequired'));
     }
     let array: any[] = [];
     while (Data.length > 0) {
@@ -76,9 +76,10 @@ export default class DetailTable extends React.Component<DetailProps, {}> {
 
   render() {
     const {dataSource, title, tableClass} = this.props;
+    const tableTitle = title || t('detailTable.title');
     return (
       <div className={tableClass}>
-        <div className='ant-table-title'>{title}</div>
+        <div className='ant-table-title'>{tableTitle}</div>
         <div className='ant-table-content'>
           <div className='ant-table-body'>
             <table style={{width: '100%'}}>

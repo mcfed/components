@@ -1,5 +1,6 @@
 import React from 'react';
 import {List, Button} from 'antd';
+import {t} from '../i18n';
 import fetch from 'cross-fetch';
 
 interface ExpandListProps {
@@ -41,7 +42,7 @@ class ExpandList extends React.Component<ExpandListProps, initializeState> {
     header: '',
     pageSize: 10,
     fetchListUrl: '',
-    renderItems: function(item: any) {}
+    renderItems: function (item: any) {},
   };
 
   constructor(props: ExpandListProps) {
@@ -53,7 +54,7 @@ class ExpandList extends React.Component<ExpandListProps, initializeState> {
       current: 1,
       data: [],
       list: [],
-      pageSize: pageSize || 1
+      pageSize: pageSize || 1,
     };
   }
 
@@ -81,7 +82,7 @@ class ExpandList extends React.Component<ExpandListProps, initializeState> {
         initLoading,
         data: res.slice(0, totalnow),
         current: 1,
-        list: res
+        list: res,
       });
     });
   }
@@ -89,7 +90,7 @@ class ExpandList extends React.Component<ExpandListProps, initializeState> {
   getData = (callback: any) => {
     const {fetchListUrl} = this.props;
     fetch(fetchListUrl, {
-      method: 'GET'
+      method: 'GET',
     })
       .then((json: any) => {
         return json.json();
@@ -113,11 +114,11 @@ class ExpandList extends React.Component<ExpandListProps, initializeState> {
       {
         data: list.slice(0, totalnow),
         // current,
-        initLoading
+        initLoading,
       },
       () => {
         window.dispatchEvent(new Event('resize'));
-      }
+      },
     );
   };
 
@@ -133,7 +134,7 @@ class ExpandList extends React.Component<ExpandListProps, initializeState> {
     const loadMore =
       !initLoading && !loading ? (
         <div style={{textAlign: 'center', margin: 8}}>
-          <a onClick={this.onLoadMore}>加载更多</a>
+          <a onClick={this.onLoadMore}>{t('expandList.loadMore')}</a>
         </div>
       ) : null;
 

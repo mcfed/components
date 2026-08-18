@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Table, TableProps} from 'antd';
 import type {ColumnType} from 'antd/es/table/interface';
+import {t} from '../i18n';
 
 interface defaultSortType {
   columnKey: string;
@@ -41,7 +42,7 @@ export default class DataTable<T extends object> extends React.Component<
     page: {},
     prefixCls: 'ant-table',
     pagination: {
-      showTotal: (total: any) => `共${total}条`,
+      showTotal: (total: any) => t('dataTable.total', {total}),
       size: 'middle',
       showSizeChanger: true,
       pageSizeOptions: ['10', '20', '50', '100'],

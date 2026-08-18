@@ -1,6 +1,7 @@
 import React, {ReactNode} from 'react';
 import {Button} from 'antd';
 import VerifyCode, {VerifyCodeProps} from './VerifyCode';
+import {t} from '../i18n';
 
 export interface SMSVerifyProps extends VerifyCodeProps {
   /**
@@ -28,12 +29,12 @@ export interface SMSVerifyState {
 
 export class SMSVerifyCode extends VerifyCode<SMSVerifyProps, SMSVerifyState> {
   static defaultProps = {
-    interval: 60
+    interval: 60,
   };
 
   state: SMSVerifyState = {
     timer: undefined,
-    countdown: undefined
+    countdown: undefined,
   };
 
   handleClick() {
@@ -41,12 +42,12 @@ export class SMSVerifyCode extends VerifyCode<SMSVerifyProps, SMSVerifyState> {
     const {retry, interval} = this.props;
     retry && retry();
     this.setState({
-      countdown: interval
+      countdown: interval,
     });
     const timer = setInterval(() => {
       if (this.state.countdown) {
         this.setState(({countdown}) => ({
-          countdown: (countdown as number) - 1
+          countdown: (countdown as number) - 1,
         }));
       } else if (this.state.timer) {
         clearInterval(this.state.timer);
@@ -57,7 +58,7 @@ export class SMSVerifyCode extends VerifyCode<SMSVerifyProps, SMSVerifyState> {
 
   renderAddon(): ReactNode {
     const {countdown} = this.state;
-    const {title = '获取验证码', disabled = false} = this.props;
+    const {title = t('verifyCode.getCode'), disabled = false} = this.props;
     if (countdown) {
       return <Button className='sms-btn' disabled>{`${countdown}s`}</Button>;
     }

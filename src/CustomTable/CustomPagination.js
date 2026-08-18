@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import RcPagination from 'rc-pagination';
 import Pager from 'rc-pagination/es/Pager';
+import {t} from '../i18n';
 
 import MiniSelect from 'antd/lib/pagination/MiniSelect';
 import enUS from 'rc-pagination/es/locale/en_US';
@@ -13,7 +14,7 @@ import {Pagination, Select} from 'antd';
 
 var __rest =
   (this && this.__rest) ||
-  function(s, e) {
+  function (s, e) {
     var t = {};
     for (var p in s) {
       if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
@@ -70,8 +71,8 @@ class CustomRcPagination extends RcPagination {
             page: i,
             active: active,
             showTitle: props.showTitle,
-            itemRender: props.itemRender
-          })
+            itemRender: props.itemRender,
+          }),
         );
       }
     } else {
@@ -86,13 +87,13 @@ class CustomRcPagination extends RcPagination {
             onClick: this.jumpPrev,
             tabIndex: '0',
             onKeyPress: this.runIfEnterJumpPrev,
-            className: prefixCls + '-jump-prev'
+            className: prefixCls + '-jump-prev',
           },
           props.itemRender(
             this.getJumpPrevPage(),
             'jump-prev',
-            React.createElement('a', {className: prefixCls + '-item-link'})
-          )
+            React.createElement('a', {className: prefixCls + '-item-link'}),
+          ),
         );
         jumpNext = React.createElement(
           'li',
@@ -102,17 +103,31 @@ class CustomRcPagination extends RcPagination {
             tabIndex: '0',
             onClick: this.jumpNext,
             onKeyPress: this.runIfEnterJumpNext,
-            className: prefixCls + '-jump-next'
+            className: prefixCls + '-jump-next',
           },
           props.itemRender(
             this.getJumpNextPage(),
             'jump-next',
-            React.createElement('a', {className: prefixCls + '-item-link'})
-          )
+            React.createElement('a', {className: prefixCls + '-item-link'}),
+          ),
         );
       }
       lastPager = React.createElement(Pager, {
-        locale: props.locale,
+        locale: Object.assign(
+          {
+            items_per_page: t('pagination.itemsPerPage'),
+            jump_to: t('pagination.jumpTo'),
+            jump_to_confirm: t('pagination.jumpToConfirm'),
+            page: t('pagination.page'),
+            prev_page: t('pagination.prevPage'),
+            next_page: t('pagination.nextPage'),
+            prev_5: t('pagination.prev5'),
+            next_5: t('pagination.next5'),
+            prev_3: t('pagination.prev3'),
+            next_3: t('pagination.next3'),
+          },
+          props.locale,
+        ),
         last: true,
         rootPrefixCls: prefixCls,
         onClick: this.handleChange,
@@ -121,7 +136,7 @@ class CustomRcPagination extends RcPagination {
         page: allPages,
         active: false,
         showTitle: props.showTitle,
-        itemRender: props.itemRender
+        itemRender: props.itemRender,
       });
       firstPager = React.createElement(Pager, {
         locale: props.locale,
@@ -132,7 +147,7 @@ class CustomRcPagination extends RcPagination {
         page: 1,
         active: false,
         showTitle: props.showTitle,
-        itemRender: props.itemRender
+        itemRender: props.itemRender,
       });
 
       var left = Math.max(1, current - pageBufferSize);
@@ -158,14 +173,14 @@ class CustomRcPagination extends RcPagination {
             page: _i,
             active: _active,
             showTitle: props.showTitle,
-            itemRender: props.itemRender
-          })
+            itemRender: props.itemRender,
+          }),
         );
       }
 
       if (current - 1 >= pageBufferSize * 2 && current !== 1 + 2) {
         pagerList[0] = React.cloneElement(pagerList[0], {
-          className: prefixCls + '-item-after-jump-prev'
+          className: prefixCls + '-item-after-jump-prev',
         });
         //  pagerList.unshift(jumpPrev);
       }
@@ -176,8 +191,8 @@ class CustomRcPagination extends RcPagination {
         pagerList[pagerList.length - 1] = React.cloneElement(
           pagerList[pagerList.length - 1],
           {
-            className: prefixCls + '-item-before-jump-next'
-          }
+            className: prefixCls + '-item-before-jump-next',
+          },
         );
       }
       /*
@@ -200,8 +215,8 @@ class CustomRcPagination extends RcPagination {
         {className: prefixCls + '-total-text'},
         props.showTotal(props.total, [
           (current - 1) * pageSize + 1,
-          current * pageSize > props.total ? props.total : current * pageSize
-        ])
+          current * pageSize > props.total ? props.total : current * pageSize,
+        ]),
       );
     }
     var prevDisabled = !this.hasPrev();
@@ -212,7 +227,7 @@ class CustomRcPagination extends RcPagination {
         className: prefixCls + ' ' + props.className,
         style: props.style,
         unselectable: 'unselectable',
-        ref: this.savePaginationNode
+        ref: this.savePaginationNode,
       },
       totalText,
       React.createElement(
@@ -227,13 +242,13 @@ class CustomRcPagination extends RcPagination {
             ' ' +
             prefixCls +
             '-prev',
-          'aria-disabled': prevDisabled
+          'aria-disabled': prevDisabled,
         },
         props.itemRender(
           prevPage,
           'prev',
-          React.createElement('a', {className: prefixCls + '-item-link'})
-        )
+          React.createElement('a', {className: prefixCls + '-item-link'}),
+        ),
       ),
       pagerList,
       React.createElement(
@@ -248,13 +263,13 @@ class CustomRcPagination extends RcPagination {
             ' ' +
             prefixCls +
             '-next',
-          'aria-disabled': nextDisabled
+          'aria-disabled': nextDisabled,
         },
         props.itemRender(
           nextPage,
           'next',
-          React.createElement('a', {className: prefixCls + '-item-link'})
-        )
+          React.createElement('a', {className: prefixCls + '-item-link'}),
+        ),
       ),
       React.createElement(Options, {
         locale: props.locale,
@@ -266,8 +281,8 @@ class CustomRcPagination extends RcPagination {
         pageSize: this.state.pageSize,
         pageSizeOptions: this.props.pageSizeOptions,
         quickGo: this.props.showQuickJumper ? this.handleChange : null,
-        goButton: goButton
-      })
+        goButton: goButton,
+      }),
     );
   }
 }
@@ -275,7 +290,7 @@ class CustomRcPagination extends RcPagination {
 export default class CustomPagination extends Pagination {
   static defaultProps = {
     prefixCls: 'ant-pagination',
-    selectPrefixCls: 'ant-select'
+    selectPrefixCls: 'ant-select',
   };
 
   renderCustomPagination(locale) {
@@ -290,8 +305,8 @@ export default class CustomPagination extends Pagination {
       _extends({}, restProps, {
         className: classNames(className, {mini: isSmall}),
         selectComponentClass: isSmall ? MiniSelect : Select,
-        locale: locale
-      })
+        locale: locale,
+      }),
     );
     //return React.createElement(CustomRcPagination, _extends({}, restProps, { className: classNames(className, { mini: isSmall }), selectComponentClass: null, locale: locale }));
   }
@@ -301,7 +316,7 @@ export default class CustomPagination extends Pagination {
     return React.createElement(
       LocaleReceiver,
       {componentName: 'Pagination', defaultLocale: enUS},
-      this.renderCustomPagination.bind(this)
+      this.renderCustomPagination.bind(this),
     );
   }
 }

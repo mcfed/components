@@ -1,6 +1,7 @@
 import React from 'react';
 import {List, Button} from 'antd';
 import PropTypes from 'prop-types';
+import {t} from '../i18n';
 
 import fetch from 'cross-fetch';
 
@@ -10,7 +11,7 @@ class ExpandList extends React.Component {
     loading: false,
     current: 1,
     data: [],
-    list: []
+    list: [],
   };
 
   componentDidMount() {
@@ -24,7 +25,7 @@ class ExpandList extends React.Component {
   getInitData() {
     const {pageSize} = this.props;
     let {current, initLoading} = this.state;
-    this.getData(res => {
+    this.getData((res) => {
       if (current * pageSize < res.length) {
         initLoading = false;
       }
@@ -32,20 +33,20 @@ class ExpandList extends React.Component {
         initLoading,
         data: res.slice(0, current * pageSize),
         current: 1,
-        list: res
+        list: res,
       });
     });
   }
 
-  getData = callback => {
+  getData = (callback) => {
     const {fetchListUrl} = this.props;
     fetch(fetchListUrl, {
-      method: 'GET'
+      method: 'GET',
     })
-      .then(json => {
+      .then((json) => {
         return json.json();
       })
-      .then(result => {
+      .then((result) => {
         if (result.code === 0) {
           callback(result.data.items);
         }
@@ -63,11 +64,11 @@ class ExpandList extends React.Component {
       {
         data: list.slice(0, current * pageSize),
         current,
-        initLoading
+        initLoading,
       },
       () => {
         window.dispatchEvent(new Event('resize'));
-      }
+      },
     );
   };
 
@@ -77,7 +78,7 @@ class ExpandList extends React.Component {
     const loadMore =
       !initLoading && !loading ? (
         <div style={{textAlign: 'center', margin: 8}}>
-          <a onClick={this.onLoadMore}>加载更多</a>
+          <a onClick={this.onLoadMore}>{t('expandList.loadMore')}</a>
         </div>
       ) : null;
 
@@ -90,7 +91,7 @@ class ExpandList extends React.Component {
         header={header}
         size='large'
         dataSource={data}
-        renderItem={item => renderItems(item)}
+        renderItem={(item) => renderItems(item)}
       />
     );
   }
@@ -112,13 +113,13 @@ ExpandList.propTypes = {
   /**
    * renderItems 渲染的items子项
    */
-  renderItems: PropTypes.func.isRequired
+  renderItems: PropTypes.func.isRequired,
 };
 ExpandList.defaultProps = {
   header: '',
   pageSize: 10,
   fetchListUrl: '',
-  renderItems: function() {}
+  renderItems: function () {},
 };
 
 export default ExpandList;

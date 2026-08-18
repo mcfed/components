@@ -2,6 +2,7 @@ import React, {Component, ReactNode} from 'react';
 import {Button, Steps, Modal} from 'antd';
 import {StepsProps} from 'antd/lib/steps/index';
 import {ButtonProps} from 'antd/lib/button';
+import {t} from '../i18n';
 
 export const ref: any = React.createRef();
 
@@ -120,7 +121,7 @@ interface StepState {
 export default class TsStep extends Component<McStepProps, StepState> {
   state = {
     currentIndex: 0,
-    step: 1
+    step: 1,
   };
 
   componentWillMount(): void {
@@ -139,7 +140,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
 
     this.setState({
       currentIndex: currentStepNum - 1,
-      step: currentStepNum
+      step: currentStepNum,
     });
   }
 
@@ -149,7 +150,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
     steps[step - 1]?.path && history?.push(steps[step - 1]?.path);
     this.setState({
       currentIndex: step - 1,
-      step
+      step,
     });
   };
 
@@ -158,12 +159,17 @@ export default class TsStep extends Component<McStepProps, StepState> {
     const btnProps = this.getBtnProps('cancel');
     if (cancelConfirm || cancelConfirmTitle) {
       Modal.confirm({
-        title: !!cancelConfirmTitle ? cancelConfirmTitle : undefined,
-        content: cancelConfirm,
+        title: !!cancelConfirmTitle
+          ? cancelConfirmTitle
+          : t('step.cancelConfirmTitle'),
+        content:
+          typeof cancelConfirm === 'string'
+            ? cancelConfirm
+            : t('step.cancelConfirmContent'),
         onOk: () => {
           history.push(backPath);
           btnProps?.onClick?.(e);
-        }
+        },
       });
     } else {
       history.push(backPath);
@@ -201,7 +207,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
       showCancel = true,
       showFinalCancel = false,
       steps,
-      cancelText
+      cancelText,
     } = this.props;
     const {currentIndex, step} = this.state;
     const btnProps = this.getBtnProps('cancel');
@@ -218,7 +224,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
           loading={this.getLoading('cancel')}
           {...btnProps}
           onClick={this.handleCancel.bind(this)}>
-          {cancelText || '取消'}
+          {cancelText || t('common.cancel')}
         </Button>
       ) : null;
     } else {
@@ -252,7 +258,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
           this.goToStep(step - 1);
           btnProps?.onClick?.(e);
         }}>
-        {'上一步'}
+        {t('step.prev')}
       </Button>
     );
     switch (step) {
@@ -285,7 +291,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
           loading={this.getLoading('finish')}
           {...finishBtnProps}
           onClick={this.handleFinish.bind(this)}>
-          {finishText || '完成'}
+          {finishText || t('step.finish')}
         </Button>
       );
     } else {
@@ -298,7 +304,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
             ref?.current?.onSubmit('handleSubmit');
             nextBtnProps?.onClick?.(e);
           }}>
-          {'下一步'}
+          {t('step.next')}
         </Button>
       );
     }
@@ -310,7 +316,7 @@ export default class TsStep extends Component<McStepProps, StepState> {
       this.renderNextAndFinisah(),
       this.renderPrev(),
       this.renderCustomBtn(),
-      this.renderCancelBtn()
+      this.renderCancelBtn(),
     ];
     if (mode === 'modal') {
       btns = btns.reverse();

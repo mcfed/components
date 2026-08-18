@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import {Button, Steps} from 'antd';
+import {t} from '../i18n';
 
 export const ref = React.createRef();
 
 export default class Step extends Component {
   state = {
     currentIndex: 0,
-    step: 1
+    step: 1,
   };
 
   componentWillMount() {
@@ -24,18 +25,18 @@ export default class Step extends Component {
 
     this.setState({
       currentIndex: currentStepNum - 1,
-      step: currentStepNum
+      step: currentStepNum,
     });
   }
 
-  goToStep = step => {
+  goToStep = (step) => {
     const {
-      props: {steps}
+      props: {steps},
     } = this;
     this.props.history.push(steps[step - 1].path);
     this.setState({
       currentIndex: step - 1,
-      step
+      step,
     });
   };
 
@@ -49,7 +50,7 @@ export default class Step extends Component {
           ? showCancel
           : showCancel(currentIndex)) ? (
           <Button onClick={() => this.props.history.push(this.props.backPath)}>
-            {this.props.cancelText}
+            {this.props.cancelText || t('common.cancel')}
           </Button>
         ) : (
           ''
@@ -62,7 +63,7 @@ export default class Step extends Component {
               /* istanbul ignore next */
               return showPrev && this.props.showFinalLastStep ? (
                 <Button onClick={() => this.goToStep(step - 1)}>
-                  {'上一步'}
+                  {t('step.prev')}
                 </Button>
               ) : (
                 ''
@@ -70,7 +71,7 @@ export default class Step extends Component {
             default:
               return showPrev ? (
                 <Button onClick={() => this.goToStep(step - 1)}>
-                  {'上一步'}
+                  {t('step.prev')}
                 </Button>
               ) : (
                 ''
@@ -79,7 +80,7 @@ export default class Step extends Component {
         })()}
         {step !== steps.length ? (
           <Button onClick={() => ref.current.onSubmit('handleSubmit')}>
-            {'下一步'}
+            {t('step.next')}
           </Button>
         ) : (
           ''
@@ -93,7 +94,7 @@ export default class Step extends Component {
                   ref.current[this.props.finalSubmitFunctionName]()
                 : ref.current.onSubmit('handleSubmit')
             }>
-            {this.props.finishText}
+            {this.props.finishText || t('step.finish')}
           </Button>
         ) : (
           ''
@@ -110,7 +111,7 @@ export default class Step extends Component {
     return (
       <React.Fragment>
         <Steps current={currentIndex}>
-          {steps.map(item => (
+          {steps.map((item) => (
             <Steps.Step
               key={item.text}
               title={item.text}
@@ -134,16 +135,14 @@ export default class Step extends Component {
 
 Step.defaultProps = {
   steps: [],
-  cancelText: '取消',
-  finishText: '完成',
   showPrev: true,
   showFinalLastStep: true,
   showCancel: true,
   backPath: '/',
   location: {
-    pathname: ''
+    pathname: '',
   },
   history: {
-    push() {}
-  }
+    push() {},
+  },
 };

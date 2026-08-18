@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 import {Form} from '@ant-design/compatible';
 import '@ant-design/compatible/assets/index.css';
 import {Table, Checkbox, Button, Row, Col} from 'antd';
+import {t} from '../i18n';
+import {TABLE_OPERATION_COLUMN} from '../constants/chineseContracts';
 // import './style/index.less'
 
 const CHECK_TYPE = {
-  全选所有: 'checkAll',
-  反选所有: 'checkInvert',
-  全选当前页: 'checkCurAll',
-  反选当前页: 'checkCurInvert',
-  单选: 'checkOne'
+  all: 'checkAll',
+  invert: 'checkInvert',
+  currentAll: 'checkCurAll',
+  currentInvert: 'checkCurInvert',
+  single: 'checkOne',
 };
 const CHECK_DISABLED_CLASS = 'check-disabled';
 
 export class TableMenu extends Component {
   state = {
     visible: true,
-    columns: []
+    columns: [],
   };
   //请求远程数据接口
   componentWillMount() {
@@ -32,17 +34,17 @@ export class TableMenu extends Component {
     //  this.form.onSubmit()
     onClosePopup();
   }
-  saveFormRef = form => (this.form = form);
+  saveFormRef = (form) => (this.form = form);
   handleSubmit(values) {
     var {onSelectChange} = this.props;
     this.setState({
-      columns: values
+      columns: values,
     });
   }
   handleChange(values) {
     const {onSelectChange} = this.props;
     this.setState({
-      columns: values
+      columns: values,
     });
   }
   render() {
@@ -53,16 +55,16 @@ export class TableMenu extends Component {
       children,
       defaultValue,
       columns,
-      onClosePopup
+      onClosePopup,
     } = this.props;
     const saveFormRef = this.saveFormRef;
     const formFullItemLayout = {
       labelCol: {
-        span: 6
+        span: 6,
       },
       wrapperCol: {
-        span: 18
-      }
+        span: 18,
+      },
     };
     return (
       <div
@@ -72,7 +74,7 @@ export class TableMenu extends Component {
           height: 200,
           padding: '10px',
           border: '1px solid #cfdae5',
-          background: '#fff'
+          background: '#fff',
         }}>
         <Form onSubmit={handleSubmit} ref={saveFormRef} layout='inline'>
           <Checkbox.Group
@@ -82,8 +84,8 @@ export class TableMenu extends Component {
             onChange={this.handleChange.bind(this)}>
             <Row>
               {columns
-                .filter(it => {
-                  return it.title != '操作';
+                .filter((it) => {
+                  return it.title != TABLE_OPERATION_COLUMN;
                 })
                 .map((it, idx) => {
                   return (
@@ -100,14 +102,14 @@ export class TableMenu extends Component {
           </Checkbox.Group>
           <div style={{textAlign: 'right'}}>
             <Button size='small' onClick={onClosePopup}>
-              取消
+              {t('common.cancel')}
             </Button>
             <Button
               size='small'
               type='primary'
               onClick={this.handleOk.bind(this)}
               style={{marginLeft: '10px'}}>
-              确定
+              {t('common.ok')}
             </Button>
           </div>
         </Form>
@@ -120,29 +122,29 @@ class DataTable extends Component {
   state = {
     visible: false,
     columns: [],
-    displayColumns: []
+    displayColumns: [],
   };
   static defaultProps = {
     page: {},
     prefixCls: 'ant-table',
     pagination: {
-      showTotal: total => `共 ${total} 条`,
+      showTotal: (total) => t('dataTable.total', {total}),
       // showQuickJumper:true,
       size: 'middle',
       showSizeChanger: true,
-      pageSizeOptions: ['10', '20', '50', '100']
+      pageSizeOptions: ['10', '20', '50', '100'],
     },
     //  scroll:{ y: 500 },
     style: {
-      width: '100%'
+      width: '100%',
     },
     showConfig: false,
     columns: [],
-    showSelectClear: false
+    showSelectClear: false,
   };
   showPopover() {
     this.setState({
-      visible: true
+      visible: true,
     });
   }
   constructor(props) {
@@ -152,32 +154,32 @@ class DataTable extends Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
     let {columns} = nextProps;
     this.setState({
-      columns: columns
+      columns: columns,
     });
   }
 
   onSelectChange(checkedValues) {
     //console.log(checkedValues)
     this.setState({
-      columns: this.state.columns.map(col => {
+      columns: this.state.columns.map((col) => {
         if (checkedValues.indexOf(col.key) >= 0) {
           col.visible = true;
         } else {
           col.visible = false;
         }
         return col;
-      })
+      }),
     });
   }
   onClosePopup() {
     this.setState({
-      visible: false
+      visible: false,
     });
   }
   onPopupVisibleChange(boolean) {
     // console.log('show',arguments)
     this.setState({
-      visible: boolean
+      visible: boolean,
     });
   }
 
@@ -185,11 +187,11 @@ class DataTable extends Component {
     let {columns} = this.state;
     var defaultValue = columns
       .filter(
-        col =>
+        (col) =>
           col.type != 'config' &&
-          (col.visible === true || col.visible === undefined)
+          (col.visible === true || col.visible === undefined),
       )
-      .map(col => col.key);
+      .map((col) => col.key);
     return (
       <TableMenu
         defaultValue={defaultValue}
@@ -212,13 +214,13 @@ class DataTable extends Component {
       rowSelection,
       dataSource = [],
       page,
-      checkType
+      checkType,
     } = this.props;
     let len =
       rowSelection && rowSelection.selectedRowKeys
         ? rowSelection.selectedRowKeys.length
         : 0;
-    if (checkType == CHECK_TYPE.全选所有) {
+    if (checkType == CHECK_TYPE.all) {
       len = page?.total;
       if (!!this.props?.disabledCount) {
         len = len - this.props?.disabledCount;
@@ -226,7 +228,7 @@ class DataTable extends Component {
     }
     return dataSource.length > 0 && showSelectClear && rowSelection ? (
       <div className='checkedClear'>
-        <span>已选 {len} 项</span>
+        <span>{t('dataTable.selected', {count: len})}</span>
         <Button
           type='link'
           disabled={len === 0}
@@ -235,7 +237,7 @@ class DataTable extends Component {
             className={
               len == 0 ? 'checkedClear-disabled' : 'checkedClear-active'
             }>
-            清空
+            {t('common.clear')}
           </span>
         </Button>
       </div>
@@ -245,13 +247,13 @@ class DataTable extends Component {
   // 取两个数组的交集
   getIntersection = (arr1, arr2) => {
     const set1 = new Set(arr1);
-    return arr2.filter(item => set1.has(item));
+    return arr2.filter((item) => set1.has(item));
   };
 
   // 取出数组B中存在但数组A中不存在的元素
   getDifference = (arrA, arrB) => {
     const setA = new Set(arrA);
-    return arrB.filter(item => !setA.has(item));
+    return arrB.filter((item) => !setA.has(item));
   };
 
   render() {
@@ -275,7 +277,7 @@ class DataTable extends Component {
     // console.log(this.props,"datatablerender")
     if (showConfig) {
       // if(true){
-      newColumns = columns.filter(col => {
+      newColumns = columns.filter((col) => {
         return col.visible == true || col.visible == undefined;
         // return true
       });
@@ -296,7 +298,7 @@ class DataTable extends Component {
     /*增加是否有排序判断 增加列配置*/
     // console.log("defaultSort", defaultSort);
     if (defaultSort) {
-      newColumns = newColumns.map(it => {
+      newColumns = newColumns.map((it) => {
         defaultSort.columnKey == it.dataIndex
           ? (it = Object.assign(it, {defaultSortOrder: defaultSort.order}))
           : null;
@@ -310,85 +312,85 @@ class DataTable extends Component {
       this.props.rowSelection.hideDefaultSelections = true;
       this.props.rowSelection.selections = [
         {
-          key: CHECK_TYPE.全选所有,
-          text: '全选所有',
-          onSelect: changableRowKeys => {
+          key: CHECK_TYPE.all,
+          text: t('dataTable.checkAll'),
+          onSelect: (changableRowKeys) => {
             if (changableRowKeys?.length > 0) {
               setSelectedRowKeys(changableRowKeys);
-              setCheckType(CHECK_TYPE.全选所有);
+              setCheckType(CHECK_TYPE.all);
             }
-          }
+          },
         },
         /** 目前【全选所有】的场景下可以全选当前页, 清空其他页面的选择，当前页面勾选保持不置灰 */
         {
-          key: CHECK_TYPE.全选当前页,
-          text: '全选当前页',
+          key: CHECK_TYPE.currentAll,
+          text: t('dataTable.checkCurrentAll'),
           onSelect:
-            checkType == CHECK_TYPE.全选所有
-              ? changableRowKeys => {
+            checkType == CHECK_TYPE.all
+              ? (changableRowKeys) => {
                   // setSelectedRowKeys([])
                   // setSelectedRowKeys(changableRowKeys)
-                  setCheckType(CHECK_TYPE.全选当前页);
+                  setCheckType(CHECK_TYPE.currentAll);
                 }
-              : changableRowKeys => {
+              : (changableRowKeys) => {
                   let arr = [];
                   arr = [...selectedRowKeys, ...changableRowKeys];
                   arr = Array.from(new Set(arr));
                   setSelectedRowKeys(arr);
-                  setCheckType(CHECK_TYPE.全选当前页);
-                }
+                  setCheckType(CHECK_TYPE.currentAll);
+                },
         },
         /** 目前只有【初始状态】或者【全选所有】的情况下才可以反选所有,其他情况暂不放开 */
         {
-          key: CHECK_TYPE.反选所有,
+          key: CHECK_TYPE.invert,
           text: (
             <span
               className={`${
-                checkType == CHECK_TYPE.全选所有 ||
-                checkType == CHECK_TYPE.反选所有 ||
+                checkType == CHECK_TYPE.all ||
+                checkType == CHECK_TYPE.invert ||
                 checkType == ''
                   ? ''
                   : CHECK_DISABLED_CLASS
               }`}>
-              反选所有
+              {t('dataTable.checkInvert')}
             </span>
           ),
           onSelect:
-            checkType == CHECK_TYPE.全选所有 ||
-            checkType == CHECK_TYPE.反选所有 ||
+            checkType == CHECK_TYPE.all ||
+            checkType == CHECK_TYPE.invert ||
             checkType == ''
-              ? changableRowKeys => {
+              ? (changableRowKeys) => {
                   // 如果是初始状态(反选所有==全选所有)
                   // 如果是全选所有状态，则清空
-                  if (checkType == '' || checkType == CHECK_TYPE.反选所有) {
+                  if (checkType == '' || checkType == CHECK_TYPE.invert) {
                     setSelectedRowKeys(changableRowKeys);
-                    setCheckType(CHECK_TYPE.全选所有);
-                  } else if (checkType == CHECK_TYPE.全选所有) {
+                    setCheckType(CHECK_TYPE.all);
+                  } else if (checkType == CHECK_TYPE.all) {
                     setSelectedRowKeys([]);
-                    setCheckType(CHECK_TYPE.反选所有);
+                    setCheckType(CHECK_TYPE.invert);
                   }
                 }
-              : null
+              : null,
         },
         /** 目前【全选所有】的场景下才不支持反选所有 */
         {
-          key: CHECK_TYPE.反选当前页,
+          key: CHECK_TYPE.currentInvert,
           text: (
             <span
               className={`${
-                checkType == CHECK_TYPE.全选所有 ? CHECK_DISABLED_CLASS : ''
+                checkType == CHECK_TYPE.all ? CHECK_DISABLED_CLASS : ''
               }`}>
-              反选当前页
+              {t('dataTable.checkCurrentInvert')}
             </span>
           ),
           onSelect:
-            checkType == CHECK_TYPE.全选所有
+            checkType == CHECK_TYPE.all
               ? null
-              : changableRowKeys => {
+              : (changableRowKeys) => {
                   // 当前页已选中的
                   let jiaoji = this.getIntersection(
                     selectedRowKeys,
-                    changableRowKeys
+                    changableRowKeys,
                   );
                   // 当前页未选中的
                   let chaji = this.getDifference(jiaoji, changableRowKeys);
@@ -397,9 +399,9 @@ class DataTable extends Component {
                   arr = this.getDifference(jiaoji, selectedRowKeys);
                   arr = arr.concat(chaji);
                   setSelectedRowKeys(arr);
-                  setCheckType(CHECK_TYPE.反选当前页);
-                }
-        }
+                  setCheckType(CHECK_TYPE.currentInvert);
+                },
+        },
       ];
       const onSelect = (record, selected, selectedRows) => {
         let arr = [].concat(selectedRowKeys);
@@ -412,7 +414,7 @@ class DataTable extends Component {
             }
           });
         }
-        setCheckType(CHECK_TYPE.单选);
+        setCheckType(CHECK_TYPE.single);
         setSelectedRowKeys(arr);
       };
       // 针对特殊rowKey需要自行处理onSelect
@@ -463,7 +465,7 @@ DataTable.propTypes = {
   /**
   传入清空勾选项按钮点击事件
   **/
-  clearSelectRows: PropTypes.func
+  clearSelectRows: PropTypes.func,
 };
 DataTable.CHECK_TYPE = CHECK_TYPE;
 export default DataTable;

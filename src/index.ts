@@ -47,3 +47,9 @@ export {default as FullScreen} from './FullScreen';
 export {default as WrapperRef} from './WrapperRef';
 
 export {default as RFLayout} from './RFLayout';
+export {
+  default as mcfedComponentsI18n,
+  getMcfedLocale,
+  normalizeMcfedLocale,
+  setMcfedLocale,
+} from './i18n';
