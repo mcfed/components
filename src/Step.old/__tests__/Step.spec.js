@@ -2,6 +2,8 @@ import {shallow} from 'enzyme';
 import React from 'react';
 
 import Step, {ref} from '../index';
+import {setMcfedLocale} from '../../i18n';
+import enUS from '../../locales/en-US';
 
 class First extends React.Component {
   onSubmit() {
@@ -28,12 +30,12 @@ class Third extends React.Component {
   }
 }
 
-const setup = props => {
+const setup = (props) => {
   const wrapper = shallow(<Step {...props} />);
 
   return {
     wrapper,
-    props
+    props,
   };
 };
 
@@ -42,26 +44,26 @@ const steps = [
     text: '第一步',
     description: '我是第一步',
     path: 'first',
-    component: First
+    component: First,
   },
   {
     text: '第二步',
     description: '我是第二步',
     path: 'second',
-    component: Second
+    component: Second,
   },
   {
     text: '第三步',
     description: '我是第三步',
     path: 'third',
-    component: Third
-  }
+    component: Third,
+  },
 ];
 
 describe('快照测试', () => {
   it('全页快照', () => {
     const props = {
-      steps: steps
+      steps: steps,
     };
     const {wrapper} = setup(props);
 
@@ -80,16 +82,16 @@ describe('Step 点击事件', () => {
   delete window.location;
   window.location = {
     href: 'http://localhost/first',
-    assign: url => {}
+    assign: (url) => {},
   };
 
   const props = {
     steps: steps,
     history: {
-      push: jest.fn(path => {
+      push: jest.fn((path) => {
         window.location.href = `http://localhost/${path}`;
-      })
-    }
+      }),
+    },
   };
   it('点击下一步，能正确跳转，路由是否正确', () => {
     const {wrapper} = setup(props);
@@ -97,13 +99,9 @@ describe('Step 点击事件', () => {
     ref.current = {
       onSubmit: () => {
         wrapper.instance().goToStep(2);
-      }
+      },
     };
-    wrapper
-      .find('Button')
-      .last()
-      .props()
-      .onClick();
+    wrapper.find('Button').last().props().onClick();
     expect(wrapper.instance().props.history.push).toHaveBeenCalled();
     expect(window.location.href.indexOf('second') > -1).toBe(true);
     expect(wrapper.find('Button').length).toBe(3);
@@ -115,7 +113,7 @@ describe('Step 点击事件', () => {
     ref.current = {
       onSubmit: () => {
         wrapper.instance().goToStep(2);
-      }
+      },
     };
     expect(wrapper.find('Button').length).toBe(2);
   });
@@ -126,19 +124,19 @@ describe('Step 点击事件', () => {
     ref.current = {
       onSubmit: () => {
         wrapper.instance().goToStep(1);
-      }
+      },
     };
-    wrapper
-      .find('Button')
-      .at(1)
-      .props()
-      .onClick();
+    wrapper.find('Button').at(1).props().onClick();
     expect(wrapper.instance().props.history.push).toHaveBeenCalled();
     expect(window.location.href.indexOf('first') > -1).toBe(true);
   });
 });
 
 describe('Step 各参数是否生效', () => {
+  afterEach(() => {
+    setMcfedLocale('zh-CN');
+  });
+
   it('steps 数据参数测试', () => {
     const {wrapper} = setup({
       steps: [
@@ -146,31 +144,31 @@ describe('Step 各参数是否生效', () => {
           text: '第一步',
           description: '我是第一步',
           path: 'first',
-          component: First
+          component: First,
         },
         {
           text: '第二步',
           description: '我是第二步',
           path: 'second',
-          component: Second
-        }
-      ]
+          component: Second,
+        },
+      ],
     });
     expect(wrapper.find('Step').length).toBe(2);
-    expect(
-      wrapper
-        .find('Step')
-        .first()
-        .props().title
-    ).toBe('第一步');
-    expect(
-      wrapper
-        .find('Step')
-        .last()
-        .props().description
-    ).toBe('我是第二步');
+    expect(wrapper.find('Step').first().props().title).toBe('第一步');
+    expect(wrapper.find('Step').last().props().description).toBe('我是第二步');
     expect(wrapper.find('First').props().cancelText).toBe('取消');
     expect(wrapper.find('First').props().finishText).toBe('完成');
+  });
+
+  it('默认按钮文案随语言切换并透传给步骤组件', () => {
+    setMcfedLocale('en-US');
+    const {wrapper} = setup({steps});
+
+    expect(wrapper.find('First').props().cancelText).toBe(
+      enUS['common.cancel'],
+    );
+    expect(wrapper.find('First').props().finishText).toBe(enUS['step.finish']);
   });
 
   it('cancelText,finishText,showCancel 等其他参数测试', () => {
@@ -180,21 +178,21 @@ describe('Step 各参数是否生效', () => {
           text: '第一步',
           description: '我是第一步',
           path: 'first',
-          component: First
+          component: First,
         },
         {
           text: '第二步',
           description: '我是第二步',
           path: 'second',
-          component: Second
-        }
+          component: Second,
+        },
       ],
       cancelText: '我要取消',
       finishText: '返回',
       showCancel: false,
       backPath: 'index',
       showFinalLastStep: 'false',
-      finalSubmitFunctionName: 'handleSubmit'
+      finalSubmitFunctionName: 'handleSubmit',
     });
 
     expect(wrapper.find('First').props().cancelText).toBe('我要取消');
@@ -202,15 +200,10 @@ describe('Step 各参数是否生效', () => {
     expect(wrapper.find('First').props().backPath).toBe('index');
     expect(wrapper.find('First').props().showFinalLastStep).toBe('false');
     expect(wrapper.find('First').props().finalSubmitFunctionName).toBe(
-      'handleSubmit'
+      'handleSubmit',
     );
     expect(wrapper.find('Button').length).toBe(1);
-    expect(
-      wrapper
-        .find('Button')
-        .children()
-        .text()
-    ).toBe('下一步');
+    expect(wrapper.find('Button').children().text()).toBe('下一步');
   });
 });
 
@@ -222,25 +215,21 @@ describe('测试覆盖率', () => {
           text: '第一步',
           description: '我是第一步',
           path: 'first',
-          component: First
-        }
+          component: First,
+        },
       ],
       location: {
-        pathname: ['', 'first']
+        pathname: ['', 'first'],
       },
-      showFinalLastStep: true
+      showFinalLastStep: true,
     };
     const {wrapper} = setup(props);
     ref.current = {
       onSubmit: () => {
         wrapper.instance().goToStep(1);
-      }
+      },
     };
-    wrapper
-      .find('Button')
-      .first()
-      .props()
-      .onClick();
+    wrapper.find('Button').first().props().onClick();
   });
 
   it('最后一步，多步', () => {
@@ -250,37 +239,29 @@ describe('测试覆盖率', () => {
           text: '第一步',
           description: '我是第一步',
           path: 'first',
-          component: First
+          component: First,
         },
         {
           text: '第二步',
           description: '我是第二步',
           path: 'second',
-          component: Second
-        }
+          component: Second,
+        },
       ],
       location: {
-        pathname: ['', 'first']
+        pathname: ['', 'first'],
       },
-      showFinalLastStep: true
+      showFinalLastStep: true,
     };
     const {wrapper} = setup(props);
     ref.current = {
       onSubmit: () => {
         wrapper.instance().goToStep(2);
-      }
+      },
     };
 
-    wrapper
-      .find('Button')
-      .first()
-      .props()
-      .onClick();
-    wrapper
-      .find('Button')
-      .first()
-      .props()
-      .onClick();
+    wrapper.find('Button').first().props().onClick();
+    wrapper.find('Button').first().props().onClick();
   });
 
   it('最后一步，多步，有除了首尾两步之外的步数', () => {
@@ -290,50 +271,38 @@ describe('测试覆盖率', () => {
           text: '第一步',
           description: '我是第一步',
           path: 'first',
-          component: First
+          component: First,
         },
         {
           text: '第二步',
           description: '我是第二步',
           path: 'second',
-          component: Second
+          component: Second,
         },
         {
           text: '第三步',
           description: '我是第三步',
           path: 'third',
-          component: Third
-        }
+          component: Third,
+        },
       ],
       location: {
-        pathname: ['', 'first']
+        pathname: ['', 'first'],
       },
-      showFinalLastStep: true
+      showFinalLastStep: true,
     };
     const {wrapper} = setup(props);
     ref.current = {
       onSubmit: () => {
         wrapper.instance().goToStep(2);
-      }
+      },
     };
     // console.log(wrapper.debug())
     // 点击第一步的下一步
-    wrapper
-      .find('Button')
-      .first()
-      .props()
-      .onClick();
+    wrapper.find('Button').first().props().onClick();
     // 点击第二步的上一步
-    wrapper
-      .find('Button')
-      .first()
-      .props()
-      .onClick();
+    wrapper.find('Button').first().props().onClick();
     // 点击第一步的取消
-    wrapper
-      .find('Button')
-      .last()
-      .props()
-      .onClick();
+    wrapper.find('Button').last().props().onClick();
   });
 });

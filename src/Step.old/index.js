@@ -104,10 +104,12 @@ export default class Step extends Component {
   }
 
   render() {
-    const {steps} = this.props;
+    const {steps, cancelText, finishText} = this.props;
     const {step, currentIndex} = this.state;
     /* istanbul ignore next */
     const renderDom = steps[currentIndex] || steps[0];
+    const resolvedCancelText = cancelText || t('common.cancel');
+    const resolvedFinishText = finishText || t('step.finish');
     return (
       <React.Fragment>
         <Steps current={currentIndex}>
@@ -123,6 +125,8 @@ export default class Step extends Component {
         <renderDom.component
           ref={ref}
           {...this.props}
+          cancelText={resolvedCancelText}
+          finishText={resolvedFinishText}
           goToStep={this.goToStep}
           goToNext={() => this.goToStep(step + 1)}
         />

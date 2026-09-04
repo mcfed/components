@@ -22,7 +22,7 @@ exports[`TreeTile 组件测试 TreeTile 快照测试 1`] = `
   <p
     className="treeNoData"
   >
-    no data
+    暂无数据
   </p>
 </ForwardRef>
 `;
