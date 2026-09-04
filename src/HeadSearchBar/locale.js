@@ -7,15 +7,15 @@ Object.defineProperties(locale, {
     enumerable: true,
     get: () => t('advancedSearch.searchText'),
   },
-  resetText: {
+  resetBtnText: {
     enumerable: true,
     get: () => t('advancedSearch.resetText'),
   },
-  upText: {
+  collapseText: {
     enumerable: true,
     get: () => t('advancedSearch.upText'),
   },
-  downText: {
+  openCollapseText: {
     enumerable: true,
     get: () => t('advancedSearch.downText'),
   },
